@@ -42,12 +42,13 @@
    ;; this enlargens them and ensures their background (and foreground) match the
    ;; current theme.
    org-preview-latex-image-directory (concat doom-cache-dir "org-latex/")
-   org-format-latex-options (plist-put org-format-latex-options :scale 1.5)
-   org-format-latex-options
-   (plist-put org-format-latex-options
-              :background (face-attribute (or (cadr (assq 'default face-remapping-alist))
-                                              'default)
-                                          :background nil t)))
+   org-format-latex-options '(:foreground default
+                                          :background "Transparent"
+                                          :scale 1.5
+                                          :html-foreground "Black"
+                                          :html-background "Transparent"
+                                          :html-scale 1.0
+                                          :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
 ;;;;custom links
   ;;  Custom links
   (org-link-set-parameters

@@ -21,6 +21,7 @@
                            "bibtex %b"
                            "pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"
                            "pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f")
+
    )
 ;;;;;;; Org-latex-fragment
   (defvar +org-latex-fragment-last nil

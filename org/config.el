@@ -104,6 +104,9 @@
  (:mode org-mode
    :map org-mode-map
    "RET" #'org-return-indent
+   "M-o" #'org-open-at-point
+   "M-i" #'org-insert-last-stored-link
+   "M-I" #'org-insert-link
 
    ;; "C-c C-S-l" #'+org/remove-link
    ;;                          :n "C-c C-i" #'org-toggle-inline-images
@@ -114,6 +117,7 @@
      :desc "C-c C-c"           :n "m"  #'org-ctrl-c-ctrl-c
      :desc "Edit Special"      :n "'"  #'org-edit-special
      :desc "Effort"            :n "e"  #'org-set-effort
+     :desc "TODO"              :n "t"  #'org-todo
      :desc "Clocking Effort"   :n "E"  #'org-clock-modify-effort-estimate
      :desc "Property"          :n "p"  #'org-set-property
      :desc "Clock-in"          :n "i"  #'org-clock-clock-in
@@ -122,8 +126,8 @@
      :desc "Narrow to Element" :n "N"  #'org-narrow-to-element
      :desc "Widen"             :n "w"  #'widen
      :desc "Toggle heading"    :n "h"  #'org-toggle-heading
-     :desc "Toggle Image"      :n "ti" #'org-toggle-inline-images
-     :desc "Toggle Latex"      :n "tl" #'org-toggle-latex-fragment
+     :desc "Toggle Image"      :n "ci" #'org-toggle-inline-images
+     :desc "Toggle Latex"      :n "cl" #'org-toggle-latex-fragment
      :desc "Archive Subtree"   :n "A"  #'org-archive-subtree
      :desc "Toggle Archive"    :n "a"  #'org-toggle-archive-tag
      )

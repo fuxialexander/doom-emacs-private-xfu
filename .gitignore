@@ -3,3 +3,4 @@
 /default/config.el
 /default/packages.el
 /README.org
+*.elc
