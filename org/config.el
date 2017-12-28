@@ -107,6 +107,7 @@
    "M-o" #'org-open-at-point
    "M-i" #'org-insert-last-stored-link
    "M-I" #'org-insert-link
+   "s-p" #'org-ref-ivy-insert-cite-link
 
    ;; "C-c C-S-l" #'+org/remove-link
    ;;                          :n "C-c C-i" #'org-toggle-inline-images
