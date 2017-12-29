@@ -14,6 +14,7 @@
     ;; matlab
     ;; plantuml
     python
+    ipython
     ;; restclient ; ob-restclient
     ;; ruby
     ;; rust       ; ob-rust
@@ -26,7 +27,8 @@
     )
   "A list of org-babel languages to load.")
 
-
+(def-package! ob-ipython
+  :after ob-core)
 (after! org
   (setq org-src-fontify-natively t      ; make code pretty
         org-src-preserve-indentation t  ; use native major-mode indentation

@@ -194,4 +194,12 @@
 
      :m "S" #'org-save-all-org-buffers
      ))
+ (:after org-src
+   (:map org-src-mode-map
+     (:localleader
+       :desc "Finish" :n "'"  #'org-edit-src-exit
+       :desc "Finish" :n "m"  #'org-edit-src-exit
+       :desc "Abort"  :n "k"  #'org-edit-src-abort
+       )
+     ))
  )

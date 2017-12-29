@@ -21,6 +21,7 @@
   (package! ob-redis)
   (package! ob-restclient)
   (package! ob-rust)
+  (package! ob-ipython)
   (package! ob-sql-mode)
   (package! ob-translate))
 
