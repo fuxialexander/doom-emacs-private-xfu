@@ -29,6 +29,7 @@
     (setq buffer-face-mode-face '(:family "input mono condensed" :height 1.0))
     (buffer-face-mode)
     (setq-local line-spacing 0.2))
+
   (add-hook 'notmuch-show-mode-hook 'my-buffer-face-mode-notmuch-show)
   (add-hook 'notmuch-tree-mode-hook 'my-buffer-face-mode-notmuch)
   (add-hook 'notmuch-search-mode-hook 'my-buffer-face-mode-notmuch)
@@ -47,7 +48,10 @@
   (push 'notmuch-hello-mode evil-snipe-disabled-modes)
   (push 'notmuch-search-mode evil-snipe-disabled-modes)
   (push 'notmuch-show-mode evil-snipe-disabled-modes)
-
+  (defun notmuch-update ()
+    (interactive)
+    (start-process-shell-command "notmuch update" nil "cd ~/.mail/gmail && /usr/local/bin/gmi sync && /usr/local/bin/notmuch new && /usr/local/bin/afew -a -t")
+    (notmuch-hello-update))
   (setq notmuch-fcc-dirs nil
         notmuch-show-logo nil
         message-kill-buffer-on-exit t

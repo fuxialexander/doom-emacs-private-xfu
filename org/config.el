@@ -121,8 +121,8 @@
      :desc "TODO"              :n "t"  #'org-todo
      :desc "Clocking Effort"   :n "E"  #'org-clock-modify-effort-estimate
      :desc "Property"          :n "p"  #'org-set-property
-     :desc "Clock-in"          :n "i"  #'org-clock-clock-in
-     :desc "Clock-out"         :n "o"  #'org-clock-clock-out
+     :desc "Clock-in"          :n "i"  #'org-clock-in
+     :desc "Clock-out"         :n "o"  #'org-clock-out
      :desc "Narrow to Subtree" :n "n"  #'org-narrow-to-subtree
      :desc "Narrow to Element" :n "N"  #'org-narrow-to-element
      :desc "Widen"             :n "w"  #'widen
