@@ -36,6 +36,15 @@
 :END:
 %i
 %?" :prepend f :empty-lines 2 :created t :kill-buffer t)
+    ("tl" "Todo with link" entry
+     (file "~/Dropbox/org/inbox.org")
+     "* %^{Logging for...}
+:PROPERTIES:
+:Created: %U
+:Linked: %a
+:END:
+%i
+%?" :prepend f :empty-lines 2 :created t :kill-buffer t)
     ("ic" "Idea from Chrome" entry
      (file "~/Dropbox/org/idea.org")
      "* %^{Logging for...} :idea:
