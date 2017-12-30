@@ -4,3 +4,5 @@
 /default/packages.el
 /README.org
 *.elc
+/default/+evil-commands.el
+/default/+bindings.el
