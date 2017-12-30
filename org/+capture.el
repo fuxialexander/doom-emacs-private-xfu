@@ -27,7 +27,7 @@
 :SKIM_PAGE: %(int-to-string (my-as-get-skim-page))
 :END:
 %i
-%?" :prepend f :empty-lines 1 :kill-buffer t)
+%?" :prepend f  )
     ("t" "Todo" entry
      (file "~/Dropbox/org/inbox.org")
      "* %^{Logging for...}
@@ -35,7 +35,7 @@
 :Created: %U
 :END:
 %i
-%?" :prepend f :empty-lines 2 :created t :kill-buffer t)
+%?" :prepend f   )
     ("tl" "Todo with link" entry
      (file "~/Dropbox/org/inbox.org")
      "* %^{Logging for...}
@@ -44,7 +44,7 @@
 :Linked: %a
 :END:
 %i
-%?" :prepend f :empty-lines 2 :created t :kill-buffer t)
+%?" :prepend f   )
     ("ic" "Idea from Chrome" entry
      (file "~/Dropbox/org/idea.org")
      "* %^{Logging for...} :idea:
@@ -53,7 +53,7 @@
 :Linked: %(org-as-mac-chrome-get-frontmost-url)
 :END:
 %i
-%?" :prepend f :empty-lines 2 :created t :kill-buffer t)
+%?" :prepend f   )
     ("j" "Journal" entry
      (function my-org-move-point-to-capture)
      "* %^{Logging for...} :logs:
@@ -62,7 +62,7 @@
 :Linked: %a
 :END:
 %i
-%?" :empty-lines 2 :clock-in t :created t :kill-buffer t)
+%?"  :clock-in t  )
     ("M" "Meeting" entry
      (file+olp+datetree "~/Dropbox/org/meeting.org")
      "* %^{Logging for...} :logs:communication:
@@ -72,7 +72,7 @@
 - Things to discuss:
 
 %i
-%?" :empty-lines 2 :clock-in t :created t :kill-buffer t)
+%?"  :clock-in t  )
     ("m" "Meeting Minutes" entry
      (function my-org-move-point-to-capture)
      "* %^{Logging for...} :logs:
@@ -81,7 +81,7 @@
 :Linked: %a
 :END:
 %i
-%?" :empty-lines 2 :clock-in t :created t :kill-buffer t)
+%?"  :clock-in t  )
     ("u" "Write-up" entry
      (function my-org-move-point-to-capture)
      "* %^{Logging for...} :writeup:
@@ -90,7 +90,7 @@
 :Linked: %a
 :END:
 %i
-%?" :empty-lines 2 :clock-in t :created t :kill-buffer t)
+%?"  :clock-in t  )
     ("a" "Article" entry
      (file "~/Dropbox/org/ref.org")
      "* %^{Title}  :article:
@@ -100,7 +100,7 @@
 :END:
 %i
 Brief description:
-%?" :prepend f :empty-lines 2 :created t :kill-buffer t)
+%?" :prepend f   )
     ("i" "Idea" entry
      (file "~/Dropbox/org/idea.org")
      "* %A :idea:
@@ -109,7 +109,7 @@ Brief description:
 :Linked: %a
 :END:
 %i
-%?" :prepend f :empty-lines 2 :created t :kill-buffer t)
+%?" :prepend f   )
     ("dr" "Daily Review" entry
      (file+olp+datetree "~/Dropbox/org/review.org")
      "* %^{Review} :review:daily:
@@ -117,21 +117,21 @@ Brief description:
 :Created: %U
 :Linked: %a
 :END:
-%?" :created t :kill-buffer t)
+%?"  )
     ("wr" "Week Review" entry
      (file+olp+datetree "~/Dropbox/org/review.org")
      "* %^{Review for...|Mood|Research|Learn|Entertainment|Life} :review:week:%\\1:
 :PROPERTIES:
 :Created: %U
 :END:
-%?" :created t :kill-buffer t)
+%?"  )
     ("mr" "Month Review" entry
      (file+olp+datetree "~/Dropbox/org/review.org")
      "* %^{Review for...|Mood|Research|Learn|Entertainment|Life} :review:month:%\\1:
 :PROPERTIES:
 :Created: %U
 :END:
-%?" :created t :kill-buffer t)
+%?"  )
     ("W" "Web site" entry
      (file "~/Dropbox/org/inbox.org")
      "* %A :website:
@@ -140,7 +140,7 @@ Brief description:
 :Linked: %a
 :END:
 %i
-%?" :prepend f :empty-lines 2 :created t :kill-buffer t)))
+%?" :prepend f   )))
 
 
 (after! org

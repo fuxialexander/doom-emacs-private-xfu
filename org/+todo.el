@@ -188,7 +188,7 @@
                         (org-agenda-files :maxlevel . 9))
    org-refile-use-outline-path 'file
    org-outline-path-complete-in-steps nil
-   org-columns-default-format "%50ITEM(Task) %10CLOCKSUM %16TIMESTAMP_IA"
+   org-columns-default-format "%50ITEM(Task) %8CLOCKSUM %16TIMESTAMP_IA"
    org-global-properties (quote (("Effort_ALL" . "0 0:10 0:30 1:00 2:00 3:00 4:00 5:00 6:00 7:00")))
    org-use-fast-todo-selection t
    org-use-fast-tag-selection nil

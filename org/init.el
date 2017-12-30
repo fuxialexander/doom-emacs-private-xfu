@@ -5,6 +5,7 @@
 (defun +org-init-ui ()
   "Configures the UI for `org-mode'."
   (setq-default
+   org-agenda-compact-blocks t
    org-adapt-indentation nil
    org-agenda-dim-blocked-tasks nil
    org-agenda-files (directory-files +org-dir t "\\.org$" t)

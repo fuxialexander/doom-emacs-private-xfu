@@ -1,12 +1,12 @@
-;;; private/org/init.el -*- lexical-binding: t; -*-
+;;; private/org/config.el -*- lexical-binding: t; -*-
 
 (defvar +org-dir (expand-file-name "~/Dropbox/org/")
   "The directory where org files are kept.")
 
 ;; Ensure ELPA org is prioritized above built-in org.
-(when-let* ((path (locate-library "org" nil doom--package-load-path)))
-  (setq load-path (delete path load-path))
-  (push (file-name-directory path) load-path))
+;; (when-let* ((path (locate-library "org" nil doom--package-load-path)))
+;;   (setq load-path (delete path load-path))
+;;   (push (file-name-directory path) load-path))
 
 ;; Sub-modules
 (if (featurep! +todo)   (load! +todo))
@@ -32,12 +32,12 @@
   (setq org-bullets-bullet-list '("#" "#" "#" "#" "#" "#" "#" "#")))
 
 (use-package evil-org
-             :ensure t
-             :after org
-             ;; :config
-             ;; (add-hook 'org-mode-hook 'evil-org-mode)
-             ;; (add-hook 'evil-org-mode-hook (lambda () (evil-org-set-key-theme)))
-             )
+  :ensure t
+  :after org
+  ;; :config
+  ;; (add-hook 'org-mode-hook 'evil-org-mode)
+  ;; (add-hook 'evil-org-mode-hook (lambda () (evil-org-set-key-theme)))
+  )
 
 ;;;;; Org-super-agenda
 (def-package! org-super-agenda
