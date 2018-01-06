@@ -32,8 +32,17 @@ Uses the capture template specified by KEY. Otherwise, prompts you for one."
 
 (defvar +org-capture-window-params
   `((name . "org-capture")
-    (width . 70)
-    (height . 25)
+    (fullscreen . fullwidth)
+    (height . 40)
+    (vertical-scroll-bars . nil)
+    (horizontal-scroll-bars . nil)
+    (left-fringe . 0)
+    (right-fringe . 0)
+    (menu-bar-lines . 0)
+    (tool-bar-lines . 0)
+    (undecorated . t)
+    (no-special-glyphs . t)
+    (ns-appearance . nil)
     (window-system . ,(cond (IS-MAC 'ns)
                             (IS-LINUX 'x)
                             (t 'w32)))
@@ -58,11 +67,12 @@ Uses the capture template specified by KEY. Otherwise, prompts you for one."
 you're done. This can be called from an external shell script."
   (interactive)
   (require 'org)
-  (let (after-make-frame-functions before-make-frame-hook)
+  (let (after-make-frame-functions after-make-frame-functions)
     (let ((frame (if (+org-capture-frame-p)
                      (selected-frame)
                    (make-frame +org-capture-window-params))))
       (with-selected-frame frame
+        (x-focus-frame frame)
         (condition-case ex
             (cl-letf (((symbol-function #'pop-to-buffer)
                        (symbol-function #'switch-to-buffer)))

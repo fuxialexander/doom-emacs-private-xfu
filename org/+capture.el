@@ -27,7 +27,7 @@
 :SKIM_PAGE: %(int-to-string (my-as-get-skim-page))
 :END:
 %i
-%?" :prepend f  )
+%?")
     ("t" "Todo" entry
      (file "~/Dropbox/org/inbox.org")
      "* %^{Logging for...}
@@ -35,7 +35,7 @@
 :Created: %U
 :END:
 %i
-%?" :prepend f   )
+%?" )
     ("tl" "Todo with link" entry
      (file "~/Dropbox/org/inbox.org")
      "* %^{Logging for...}
@@ -44,7 +44,7 @@
 :Linked: %a
 :END:
 %i
-%?" :prepend f   )
+%?" )
     ("ic" "Idea from Chrome" entry
      (file "~/Dropbox/org/idea.org")
      "* %^{Logging for...} :idea:
@@ -53,7 +53,7 @@
 :Linked: %(org-as-mac-chrome-get-frontmost-url)
 :END:
 %i
-%?" :prepend f   )
+%?" )
     ("j" "Journal" entry
      (function my-org-move-point-to-capture)
      "* %^{Logging for...} :logs:
@@ -100,7 +100,7 @@
 :END:
 %i
 Brief description:
-%?" :prepend f   )
+%?" )
     ("i" "Idea" entry
      (file "~/Dropbox/org/idea.org")
      "* %A :idea:
@@ -109,7 +109,7 @@ Brief description:
 :Linked: %a
 :END:
 %i
-%?" :prepend f   )
+%?")
     ("dr" "Daily Review" entry
      (file+olp+datetree "~/Dropbox/org/review.org")
      "* %^{Review} :review:daily:
@@ -140,7 +140,7 @@ Brief description:
 :Linked: %a
 :END:
 %i
-%?" :prepend f   )))
+%?")))
 
 
 (after! org

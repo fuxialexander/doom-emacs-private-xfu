@@ -12,14 +12,11 @@
       (select-window (get-buffer-window buf)) (call-interactively 'elfeed))
   (+workspace/display))
 
-
 ;;;###autoload
 (defun +rss/quit ()
   (interactive)
-  (doom-kill-matching-buffers "^\\*elfeed")
-  (dolist (file +rss-elfeed-files)
-    (when-let* ((buf (get-file-buffer (expand-file-name file +rss-org-dir))))
-      (kill-buffer buf)))
+  ;; (doom-kill-matching-buffers "^\\*elfeed")
+  (dolist (file +rss-elfeed-files) (when-let* ((buf (get-file-buffer (expand-file-name file +rss-org-dir)))) (kill-buffer buf)))
   (+workspace/delete "rss"))
 
 
@@ -48,12 +45,7 @@
 ;;;###autoload
 (defun +rss-popup-pane (buf)
   "Display BUF in a popup."
-  (doom-popup-buffer buf
-    '(:align +rss-split-direction
-      :size 0.75
-      :select t
-      :autokill t
-      :autoclose t)))
+  (select-window (display-buffer-at-bottom buf '((window-height . 0.6)))))
 
 ;;;###autoload
 (defun +rss/open (entry)

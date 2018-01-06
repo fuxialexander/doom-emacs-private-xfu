@@ -6,6 +6,7 @@
   "Configures the UI for `org-mode'."
   (setq-default
    org-agenda-compact-blocks t
+   org-id-link-to-org-use-id t
    org-adapt-indentation nil
    org-agenda-dim-blocked-tasks nil
    org-agenda-files (directory-files +org-dir t "\\.org$" t)
@@ -111,60 +112,22 @@
                :key #'file-truename
                :test #'equal))
     (add-to-list 'recentf-exclude #'+org-is-agenda-file))
-  (set! :popup
-    '("*Calendar*"         :size 0.4 :noselect t)
-    '(" *Org todo*"        :size 5   :noselect t)
-    '("*Org Note*"         :size 10)
-    '("*Org Select*"       :size 20  :noselect t)
-    '("*Org Links*"        :size 5   :noselect t)
-    '("*Org Export Dispatcher*" :noselect t)
-    '(" *Agenda Commands*" :noselect t)
-    '("^\\*Org Agenda"     :regexp t :size 20 :autoclose t)
-    '("*Org Clock*"        :noselect t)
-    '("^\\*Org Src"        :regexp t :size 0.35 :noesc t)
-    '("*Edit Formulas*"    :size 10)
-    '("^\\*Org-Babel"      :regexp t :size 25 :noselect t)
-    '("^CAPTURE.*\\.org$"  :regexp t :size 20))
-
-  ;; Org has a scorched-earth window management system I'm not fond of. i.e.
-  ;; it kills all windows and monopolizes the frame. No thanks. We can do
-  ;; better with shackle's help.
-  (defun doom*suppress-delete-other-windows (orig-fn &rest args)
-    (cl-letf (((symbol-function 'delete-other-windows)
-               (symbol-function 'ignore)))
-      (apply orig-fn args)))
-  (advice-add #'org-add-log-note :around #'doom*suppress-delete-other-windows)
-  (advice-add #'org-capture-place-template :around #'doom*suppress-delete-other-windows)
-  (advice-add #'org-export--dispatch-ui :around #'doom*suppress-delete-other-windows)
-
-  ;; Hand off the src-block window to a shackle popup window.
-  (defun doom*org-src-pop-to-buffer (buffer _context)
-    "Open the src-edit in a way that shackle can detect."
-    (if (eq org-src-window-setup 'switch-invisibly)
-        (set-buffer buffer)
-      (pop-to-buffer buffer)))
-  (advice-add #'org-src-switch-to-buffer :override #'doom*org-src-pop-to-buffer)
-
-  ;; Ensure todo, agenda, and other minor popups are delegated to shackle.
-  (defun doom*org-pop-to-buffer (&rest args)
-    "Use `pop-to-buffer' instead of `switch-to-buffer' to open buffer.'"
-    (let ((buf (car args)))
-      (pop-to-buffer
-       (cond ((stringp buf) (get-buffer-create buf))
-             ((bufferp buf) buf)
-             (t (error "Invalid buffer %s" buf))))))
-  (advice-add #'org-switch-to-buffer-other-window :override #'doom*org-pop-to-buffer)
+  ;; (set! :popup
+  ;;   '("*Calendar*"         :size 0.4 :noselect t)
+  ;;   '(" *Org todo*"        :size 5   :noselect t)
+  ;;   '("*Org Note*"         :size 10)
+  ;;   '("*Org Select*"       :size 20  :noselect t)
+  ;;   '("*Org Links*"        :size 5   :noselect t)
+  ;;   '("*Org Export Dispatcher*" :noselect t)
+  ;;   '(" *Agenda Commands*" :noselect t)
+  ;;   '("^\\*Org Agenda"     :regexp t :size 20 :autoclose t)
+  ;;   '("*Org Clock*"        :noselect t)
+  ;;   '("^\\*Org Src"        :regexp t :size 0.35 :noesc t)
+  ;;   '("*Edit Formulas*"    :size 10)
+  ;;   '("^\\*Org-Babel"      :regexp t :size 25 :noselect t)
+  ;;   '("^CAPTURE.*\\.org$"  :regexp t :size 20))
 
 
-  ;; org-agenda
-  (setq org-agenda-window-setup 'other-window
-        org-agenda-restore-windows-after-quit nil)
-  ;; Hide modeline in org-agenda
-  (add-hook 'org-agenda-finalize-hook #'doom-hide-modeline-mode)
-  (add-hook 'org-agenda-finalize-hook #'org-fit-window-to-buffer)
-  ;; Don't monopolize frame!
-  (advice-add #'org-agenda :around #'doom*suppress-delete-other-windows)
-  ;; ensure quit keybindings work propertly
   (map! :map* org-agenda-mode-map
         :m [escape] 'org-agenda-Quit
         :m "ESC"    'org-agenda-Quit)
@@ -276,59 +239,59 @@
       (message "Getting targets...done")
       (delete-dups (nreverse targets))))
 ;;;;; Org-edit-src-code
-  (defun org-edit-src-code (&optional code edit-buffer-name)
-    "Edit the source or example block at point.
-\\<org-src-mode-map>
-The code is copied to a separate buffer and the appropriate mode
-is turned on.  When done, exit with `\\[org-edit-src-exit]'.  This \
-will remove the
-original code in the Org buffer, and replace it with the edited
-version.  See `org-src-window-setup' to configure the display of
-windows containing the Org buffer and the code buffer.
+;;   (defun org-edit-src-code (&optional code edit-buffer-name)
+;;     "Edit the source or example block at point.
+;; \\<org-src-mode-map>
+;; The code is copied to a separate buffer and the appropriate mode
+;; is turned on.  When done, exit with `\\[org-edit-src-exit]'.  This \
+;; will remove the
+;; original code in the Org buffer, and replace it with the edited
+;; version.  See `org-src-window-setup' to configure the display of
+;; windows containing the Org buffer and the code buffer.
 
-When optional argument CODE is a string, edit it in a dedicated
-buffer instead.
+;; When optional argument CODE is a string, edit it in a dedicated
+;; buffer instead.
 
-When optional argument EDIT-BUFFER-NAME is non-nil, use it as the
-name of the sub-editing buffer."
-    (interactive)
-    (let* ((element (org-element-at-point))
-           (type (org-element-type element)))
-      (unless (and (memq type '(example-block src-block))
-                   (org-src--on-datum-p element))
-        (user-error "Not in a source or example block"))
-      (let* ((lang
-              (if (eq type 'src-block) (org-element-property :language element)
-                "example"))
-             (lang-f (and (eq type 'src-block) (org-src--get-lang-mode lang)))
-             (babel-info (and (eq type 'src-block)
-                              (org-babel-get-src-block-info 'light)))
-             deactivate-mark)
-        (when (and (eq type 'src-block) (not (functionp lang-f)))
-          (error "No such language mode: %s" lang-f))
-        (org-src--edit-element
-         element
-         (or edit-buffer-name
-             (org-src--construct-edit-buffer-name (buffer-name) lang))
-         lang-f
-         (and (null code)
-              (lambda () (org-escape-code-in-region (point-min) (point-max))))
-         (and code (org-unescape-code-in-string code)))
-        ;; Finalize buffer.
-        (setq-local org-coderef-label-format
-                    (or (org-element-property :label-fmt element)
-                        org-coderef-label-format))
-        (when (eq type 'src-block)
-          (setq-local org-src--babel-info babel-info)
-          (setq-local params (nth 2 babel-info))
-          (setq-local dir (cdr (assq :dir params)))
-          (if (bound-and-true-p dir)
-              (cd (file-name-as-directory (expand-file-name dir)))
-            )
-          (let ((edit-prep-func (intern (concat "org-babel-edit-prep:" lang))))
-            (when (fboundp edit-prep-func)
-              (funcall edit-prep-func babel-info))))
-        t)))
+;; When optional argument EDIT-BUFFER-NAME is non-nil, use it as the
+;; name of the sub-editing buffer."
+;;     (interactive)
+;;     (let* ((element (org-element-at-point))
+;;            (type (org-element-type element)))
+;;       (unless (and (memq type '(example-block src-block))
+;;                    (org-src--on-datum-p element))
+;;         (user-error "Not in a source or example block"))
+;;       (let* ((lang
+;;               (if (eq type 'src-block) (org-element-property :language element)
+;;                 "example"))
+;;              (lang-f (and (eq type 'src-block) (org-src--get-lang-mode lang)))
+;;              (babel-info (and (eq type 'src-block)
+;;                               (org-babel-get-src-block-info 'light)))
+;;              deactivate-mark)
+;;         (when (and (eq type 'src-block) (not (functionp lang-f)))
+;;           (error "No such language mode: %s" lang-f))
+;;         (org-src--edit-element
+;;          element
+;;          (or edit-buffer-name
+;;              (org-src--construct-edit-buffer-name (buffer-name) lang))
+;;          lang-f
+;;          (and (null code)
+;;               (lambda () (org-escape-code-in-region (point-min) (point-max))))
+;;          (and code (org-unescape-code-in-string code)))
+;;         ;; Finalize buffer.
+;;         (setq-local org-coderef-label-format
+;;                     (or (org-element-property :label-fmt element)
+;;                         org-coderef-label-format))
+;;         (when (eq type 'src-block)
+;;           (setq-local org-src--babel-info babel-info)
+;;           (setq-local params (nth 2 babel-info))
+;;           (setq-local dir (cdr (assq :dir params)))
+;;           (if (bound-and-true-p dir)
+;;               (cd (file-name-as-directory (expand-file-name dir)))
+;;             )
+;;           (let ((edit-prep-func (intern (concat "org-babel-edit-prep:" lang))))
+;;             (when (fboundp edit-prep-func)
+;;               (funcall edit-prep-func babel-info))))
+;;         t)))
 ;;;;; Org-mode fast-todo-selection
   (defun org-fast-todo-selection ()
     "Fast TODO keyword selection with single keys.
@@ -429,11 +392,7 @@ Returns the new TODO keyword, or nil if no state change should occur."
            (save-excursion (goto-char (org-element-property :begin context))
                            (call-interactively 'counsel-org-tag)) t)))))
   (add-hook 'org-ctrl-c-ctrl-c-hook 'spacemacs//org-ctrl-c-ctrl-c-counsel-org-tag)
-  (add-hook 'org-capture-before-finalize-hook 'counsel-org-tag)
-
-  )
-
-
+  (add-hook 'org-capture-before-finalize-hook 'counsel-org-tag))
 
 ;;;; Hooks
 ;;
@@ -460,12 +419,13 @@ unfold to point on startup."
       (sp--looking-at-p "\\s-*]")))
 
   ;; make delimiter auto-closing a little more conservative
-  (sp-with-modes 'org-mode
-    (sp-local-pair "*" nil :unless '(sp-point-after-word-p sp-point-before-word-p sp-point-at-bol-p))
-    (sp-local-pair "_" nil :unless '(sp-point-after-word-p sp-point-before-word-p))
-    (sp-local-pair "/" nil :unless '(sp-point-after-word-p sp-point-before-word-p +org-sp-point-in-checkbox-p))
-    (sp-local-pair "~" nil :unless '(sp-point-after-word-p sp-point-before-word-p))
-    (sp-local-pair "=" nil :unless '(sp-point-after-word-p sp-point-before-word-p))))
+  (after! smartparens
+    (sp-with-modes 'org-mode
+      (sp-local-pair "*" nil :unless '(sp-point-after-word-p sp-point-before-word-p sp-point-at-bol-p))
+      (sp-local-pair "_" nil :unless '(sp-point-after-word-p sp-point-before-word-p))
+      (sp-local-pair "/" nil :unless '(sp-point-after-word-p sp-point-before-word-p +org-sp-point-in-checkbox-p))
+      (sp-local-pair "~" nil :unless '(sp-point-after-word-p sp-point-before-word-p))
+      (sp-local-pair "=" nil :unless '(sp-point-after-word-p sp-point-before-word-p)))))
 
 (defun +org|enable-auto-reformat-tables ()
   "Realign tables exiting insert mode (`evil-mode')."
