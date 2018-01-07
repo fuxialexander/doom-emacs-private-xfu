@@ -112,22 +112,9 @@
                :key #'file-truename
                :test #'equal))
     (add-to-list 'recentf-exclude #'+org-is-agenda-file))
-  ;; (set! :popup
-  ;;   '("*Calendar*"         :size 0.4 :noselect t)
-  ;;   '(" *Org todo*"        :size 5   :noselect t)
-  ;;   '("*Org Note*"         :size 10)
-  ;;   '("*Org Select*"       :size 20  :noselect t)
-  ;;   '("*Org Links*"        :size 5   :noselect t)
-  ;;   '("*Org Export Dispatcher*" :noselect t)
-  ;;   '(" *Agenda Commands*" :noselect t)
-  ;;   '("^\\*Org Agenda"     :regexp t :size 20 :autoclose t)
-  ;;   '("*Org Clock*"        :noselect t)
-  ;;   '("^\\*Org Src"        :regexp t :size 0.35 :noesc t)
-  ;;   '("*Edit Formulas*"    :size 10)
-  ;;   '("^\\*Org-Babel"      :regexp t :size 25 :noselect t)
-  ;;   '("^CAPTURE.*\\.org$"  :regexp t :size 20))
 
 
+  (add-hook 'org-agenda-finalize-hook #'doom-hide-modeline-mode)
   (map! :map* org-agenda-mode-map
         :m [escape] 'org-agenda-Quit
         :m "ESC"    'org-agenda-Quit)
@@ -291,7 +278,8 @@
 ;;           (let ((edit-prep-func (intern (concat "org-babel-edit-prep:" lang))))
 ;;             (when (fboundp edit-prep-func)
 ;;               (funcall edit-prep-func babel-info))))
-;;         t)))
+  ;;         t)))
+
 ;;;;; Org-mode fast-todo-selection
   (defun org-fast-todo-selection ()
     "Fast TODO keyword selection with single keys.

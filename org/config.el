@@ -122,6 +122,7 @@ If run interactively, get ENTRY from context."
   (+org-hacks)
   (+org-overrides)
 
+
   (push 'org-agenda-mode evil-snipe-disabled-modes)
   (add-hook 'org-agenda-mode-hook #'(lambda () (evil-vimish-fold-mode -1)))
   (set! :evil-state 'org-agenda-mode 'motion))
@@ -139,6 +140,16 @@ If run interactively, get ENTRY from context."
      +org|unfold-to-2nd-level-or-point
      +org|show-paren-mode-compatibility
      ))
+
+  (def-hydra! +org@org-agenda-filter (:color pink :hint nil)
+    "
+_;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
+    (";" org-agenda-filter-by-tag)
+    ("h" org-agenda-filter-by-top-headline)
+    ("c" org-agenda-filter-by-category)
+    ("r" org-agenda-filter-by-regexp)
+    ("d" org-agenda-filter-remove-all)
+    ("q" nil "cancel" :color blue))
 
 (map!
  (:mode org-mode
@@ -219,17 +230,15 @@ If run interactively, get ENTRY from context."
      :m "i"        #'org-agenda-clock-in
      :m "o"        #'org-agenda-clock-out
 
+     :m "J"        #'org-agenda-later
+     :m "K"        #'org-agenda-earlier
+
      :m "C"        #'org-agenda-capture
      :m "m"        #'org-agenda-bulk-mark
      :m "u"        #'org-agenda-bulk-unmark
      :m "U"        #'org-agenda-bulk-unmark-all
 
-     :m "f;"       #'org-agenda-filter-by-tag
-     :m "fh"       #'org-agenda-filter-by-top-headline
-     :m "fc"       #'org-agenda-filter-by-category
-     :m "fe"       #'org-agenda-filter-by-effort
-     :m "fr"       #'org-agenda-filter-by-regexp
-     :m "ff"       #'org-agenda-filter-remove-all
+     :m "f"        #'+org@org-agenda-filter/body
 
      :m "-"        #'org-agenda-manipulate-query-subtract
      :m "="        #'org-agenda-manipulate-query-add
@@ -257,3 +266,9 @@ If run interactively, get ENTRY from context."
        :desc "Abort"  :n "k"  #'org-edit-src-abort
        )))
  )
+
+(after! org
+  (set! :popup "^CAPTURE.*\\.org$" '((side . bottom) (size . 0.4)) '((select . t)))
+  (set! :popup "^\\*Org Agenda" '((slot . 0) (side . bottom)) '((select . t)))
+  (set! :popup "^\\*Org Src" '((size . 0.4) (side . right)) '((quit) (select . t)))
+  )

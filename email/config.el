@@ -1,5 +1,25 @@
 ;;; private/email/config.el -*- lexical-binding: t; -*-
 
+;; ** Prodigy
+(def-package! prodigy
+  :ensure t
+  :init
+  ;; After initialization, start these services
+  :config
+  ;; Tag
+  ;; Define a new tag with ARGS.
+  (prodigy-define-tag
+    :name 'email
+    :ready-message "Checking Email using IMAP IDLE. Ctrl-C to shutdown.")
+  ;; Service
+  ;; Define a new service with ARGS.
+  (prodigy-define-service
+    :name "imapnotify-gmail"
+    :command "imapnotify"
+    :args (list "-c" (expand-file-name "imapnotify.js" (getenv "HOME")))
+    :tags '(email)
+    :kill-signal 'sigkill)
+  (prodigy-start-service (prodigy-find-service "imapnotify-gmail")))
 
 ;;;; Notmuch
 (def-package! notmuch
@@ -26,7 +46,7 @@
   (defun my-buffer-face-mode-notmuch ()
     "Sets a fixed width (monospace) font in current buffer"
     (interactive)
-    (setq buffer-face-mode-face '(:family "input mono condensed" :height 1.0))
+    (setq buffer-face-mode-face '(:family "SF Mono" :height 1.0))
     (buffer-face-mode)
     (setq-local line-spacing 0.2))
 
@@ -54,6 +74,7 @@
     (notmuch-hello-update))
   (setq notmuch-fcc-dirs nil
         notmuch-show-logo nil
+        notmuch-message-headers-visible nil
         message-kill-buffer-on-exit t
         message-send-mail-function 'message-send-mail-with-sendmail
         notmuch-search-oldest-first nil
