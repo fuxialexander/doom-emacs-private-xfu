@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: babel remote
+# key: brt_
+# --
+#+NAME: $1
+#+BEGIN_SRC $2 :dir /ssh:xfu@${3:$$(yas-choose-value '("hpc9:/research/kevinyip10/xfu" "proj26:/mnt/nas3/xfu"))}/$4 :tangle /ssh:xfu@$3/$4/$1
+$0
+#+END_SRC
+
+#+RESULTS: $1

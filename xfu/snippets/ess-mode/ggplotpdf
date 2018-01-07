@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: ggplotpdf
+# key: gpdf_
+# --
+## ** $1
+pdf("${1:$(camelize yas-text)}.pdf")
+ggplot($2, aes($3)) +
+  $0 +
+  ggtitle("$1") +
+  theme_minimal()
+dev.off()

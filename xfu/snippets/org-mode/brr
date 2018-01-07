@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: hpc7 jupyter r
+# key: brr_
+# --
+#+NAME: $1
+#+BEGIN_SRC jupyter-R :kernel rik_ssh_hpc7_hpc7r :results raw drawer :session $2 :ipyfile image/$1.png :exports both :async t :results raw drawer
+$0
+#+END_SRC

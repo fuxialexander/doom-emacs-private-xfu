@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: skim highlight
+# key: skh_
+# --
+
+**** ${1:$$(org-mac-skim-get-page)} :highlight:
+$0

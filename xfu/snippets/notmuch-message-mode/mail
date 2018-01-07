@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: mail
+# key: ml_
+# --
+Dear $1,
+
+$0
+
+Sincerely,
+Alex
