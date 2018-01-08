@@ -110,7 +110,8 @@ This function is shameless steal from pos-tip."
          (contents (mapconcat #'identity lines "\n"))
          ;; (contents (car lines))
          )
-    (company-childframe--update-1 contents (- (point) (length company-prefix)))))
+    (company-childframe--update-1 contents (- (point) (length company-prefix) company-tooltip-margin))))
+
 
 (defun company-childframe-show ()
   "Show company tooltip at point."

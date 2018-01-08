@@ -85,24 +85,24 @@ If run interactively, get ENTRY from context."
   :after org-agenda
   :config
   (setq org-super-agenda-groups
-        '((:name "Log "
+        '((:name "Log\n"
                  :log t)  ; Automatically named "Log"
-          (:name "Schedule "
+          (:name "Schedule\n"
                  :time-grid t)
-          (:name "Today "
+          (:name "Today\n"
                  :scheduled today)
-          (:name "Habits "
+          (:name "Habits\n"
                  :habit t)
-          (:name "Due today "
+          (:name "Due today\n"
                  :deadline today)
-          (:name "Overdue "
+          (:name "Overdue\n"
                  :deadline past)
-          (:name "Due soon "
+          (:name "Due soon\n"
                  :deadline future)
-          (:name "Waiting "
+          (:name "Waiting\n"
                  :todo "WAIT"
                  :order 98)
-          (:name "Scheduled earlier "
+          (:name "Scheduled earlier\n"
                  :scheduled past)))
   (org-super-agenda-mode))
 
@@ -269,6 +269,6 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
 
 (after! org
   (set! :popup "^CAPTURE.*\\.org$" '((side . bottom) (size . 0.4)) '((select . t)))
-  (set! :popup "^\\*Org Agenda" '((slot . 0) (side . bottom)) '((select . t)))
+  (set! :popup "^\\*Org Agenda" '((slot . 0) (size . 120) (side . right)) '((select . t)))
   (set! :popup "^\\*Org Src" '((size . 0.4) (side . right)) '((quit) (select . t)))
   )

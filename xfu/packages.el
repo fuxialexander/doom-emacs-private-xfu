@@ -27,7 +27,7 @@
 (package! electric-operator)
 
 
-
+(package! yapfify)
 (package! lsp-mode)
 (package! company-lsp)
 (package! lsp-ui)

@@ -54,7 +54,6 @@
   (add-hook 'notmuch-tree-mode-hook 'my-buffer-face-mode-notmuch)
   (add-hook 'notmuch-search-mode-hook 'my-buffer-face-mode-notmuch)
   (add-hook 'notmuch-message-mode-hook 'my-buffer-face-mode-notmuch)
-
   (add-hook 'notmuch-message-mode-hook (lambda () (set (make-local-variable 'company-backends) '(notmuch-company (company-ispell :with company-yasnippet)))))
   (add-hook 'notmuch-tree-mode-hook (lambda () (setq-local line-spacing nil)))
   :config
@@ -80,7 +79,11 @@
         notmuch-search-oldest-first nil
         send-mail-function 'sendmail-send-it
         sendmail-program "/usr/local/bin/msmtp"
-
+        notmuch-search-result-format '(("date" . "%12s ")
+                                       ("count" . "%-7s ")
+                                       ("authors" . "%-30s ")
+                                       ("subject" . "%-100s ")
+                                       ("tags" . "(%s)"))
         notmuch-tag-formats '(("unread"
                                (propertize tag 'face 'notmuch-tag-unread)))
         notmuch-hello-sections '(notmuch-hello-insert-saved-searches

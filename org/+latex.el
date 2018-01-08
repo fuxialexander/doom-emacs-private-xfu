@@ -7,6 +7,7 @@
     (setq buffer-face-mode-face '(:family "charter" :height 1.2)
           line-spacing 0.4)
     (buffer-face-mode)
+    (org-indent-mode -1)
     (org-ref-mode)
     (visual-line-mode)
     (visual-fill-column-mode))
