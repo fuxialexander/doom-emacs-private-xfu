@@ -21,7 +21,7 @@
  counsel-org-goto-face-style 'org
  counsel-org-headline-display-style 'headline
  +ivy-buffer-icons nil
- ivy-use-virtual-buffers nil
+ ivy-use-virtual-buffers t
  ;; ivy-re-builders-alist '((t . ivy--regex-plus))
  ;; tramp
  tramp-default-method "ssh"
@@ -51,6 +51,7 @@ the workspace and move to the next."
                (+workspace/delete current-persp-name)))))))
 
 (add-hook 'minibuffer-setup-hook #'smartparens-mode)
+(add-hook 'minibuffer-setup-hook #'doom|no-fringes-in-minibuffer)
 (set-window-fringes (minibuffer-window) 0 0 nil)
 (after! yasnippet
   (setq yas-snippet-dirs '(+xfu-snippets-dir +file-templates-dir)))
@@ -888,3 +889,4 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
 ;; * Theme
 ;; (require 'modern-common "~/Source/modern-light-theme/modern-common.el")
 ;; (setq doom-theme 'modern-spacegray)
+(setq twittering-connection-type-order '(wget urllib-http native urllib-https))

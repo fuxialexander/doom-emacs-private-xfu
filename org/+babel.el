@@ -1,5 +1,5 @@
 ;;; private/org/+babel.el -*- lexical-binding: t; -*-
-
+(add-hook 'org-load-hook #'+org|init-babel)
 (defvar +org-babel-languages
   '(
     ;; calc
@@ -29,7 +29,7 @@
 
 (def-package! ob-ipython
   :after ob-core)
-(after! org
+(defun +org|init-babel ()
   (setq org-src-fontify-natively t      ; make code pretty
         org-src-preserve-indentation t  ; use native major-mode indentation
         org-src-tab-acts-natively t

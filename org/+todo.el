@@ -1,5 +1,6 @@
 ;;; private/org/+todo.el -*- lexical-binding: t; -*-
-(after! org
+(add-hook 'org-load-hook #'+org|init-todo)
+(defun +org|init-todo ()
   (defface org-todo-keyword-todo '((t ())) "org-todo" :group 'org)
   (defface org-todo-keyword-kill '((t ())) "org-kill" :group 'org)
   (defface org-todo-keyword-outd '((t ())) "org-outd" :group 'org)

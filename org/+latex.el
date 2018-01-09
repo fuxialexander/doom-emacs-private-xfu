@@ -1,6 +1,6 @@
 ;;; private/org/+latex.el -*- lexical-binding: t; -*-
-
-(after! org
+(add-hook 'org-load-hook #'+org|init-latex)
+(defun +org|init-latex ()
   (defun my-buffer-face-mode-orgwrite ()
     "Sets a fixed width (monospace) font in current buffer"
     (interactive)

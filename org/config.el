@@ -109,14 +109,7 @@ If run interactively, get ENTRY from context."
 ;;
 ;; Bootstrap
 ;;
-
-(after! org
-  ;; Occasionally, Emacs encounters an error loading the built-in org, aborting
-  ;; the load. This results in a broken, partially loaded state. This require
-  ;; tries to set it straight.
-  (require 'org)
-
-  (defvaralias 'org-directory '+org-dir)
+(add-hook! 'org-load-hook
 
   (+org-init-ui)
   (+org-hacks)
@@ -127,7 +120,7 @@ If run interactively, get ENTRY from context."
   (add-hook 'org-agenda-mode-hook #'(lambda () (evil-vimish-fold-mode -1)))
   (set! :evil-state 'org-agenda-mode 'motion))
 
-(add-hook! org-mode
+(add-hook! 'org-mode-hook
   #'(doom|disable-line-numbers  ; no line numbers
      org-bullets-mode           ; "prettier" bullets
      org-indent-mode            ; margin-based indentation
@@ -141,15 +134,15 @@ If run interactively, get ENTRY from context."
      +org|show-paren-mode-compatibility
      ))
 
-  (def-hydra! +org@org-agenda-filter (:color pink :hint nil)
-    "
+(def-hydra! +org@org-agenda-filter (:color pink :hint nil)
+  "
 _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
-    (";" org-agenda-filter-by-tag)
-    ("h" org-agenda-filter-by-top-headline)
-    ("c" org-agenda-filter-by-category)
-    ("r" org-agenda-filter-by-regexp)
-    ("d" org-agenda-filter-remove-all)
-    ("q" nil "cancel" :color blue))
+  (";" org-agenda-filter-by-tag)
+  ("h" org-agenda-filter-by-top-headline)
+  ("c" org-agenda-filter-by-category)
+  ("r" org-agenda-filter-by-regexp)
+  ("d" org-agenda-filter-remove-all)
+  ("q" nil "cancel" :color blue))
 
 (map!
  (:mode org-mode
@@ -268,6 +261,9 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
  )
 
 (after! org
+  (defvaralias 'org-directory '+org-dir)
+  (when (featurep 'org)
+    (run-hooks 'org-load-hook))
   (set! :popup "^CAPTURE.*\\.org$" '((side . bottom) (size . 0.4)) '((select . t)))
   (set! :popup "^\\*Org Agenda" '((slot . 0) (size . 120) (side . right)) '((select . t)))
   (set! :popup "^\\*Org Src" '((size . 0.4) (side . right)) '((quit) (select . t)))

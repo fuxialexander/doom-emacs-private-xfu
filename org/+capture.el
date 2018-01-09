@@ -1,5 +1,5 @@
 ;;; private/org/+capture.el -*- lexical-binding: t; -*-
-
+(add-hook 'org-load-hook #'+org|init-capture)
 ;; Sets up two `org-capture' workflows that I like:
 ;;
 ;; 1. The traditional way: invoking `org-capture' directly (or through a
@@ -142,8 +142,7 @@ Brief description:
 %i
 %?")))
 
-
-(after! org
+(defun +org|init-capture ()
   (defvaralias 'org-default-notes-file '+org-default-notes-file)
 
   (setq org-default-notes-file (expand-file-name +org-default-notes-file +org-dir))

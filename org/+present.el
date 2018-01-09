@@ -1,5 +1,5 @@
 ;;; private/org/+present.el -*- lexical-binding: t; -*-
-
+(add-hook 'org-load-hook #'+org|init-present)
 (defvar +org-present-text-scale 7
   "The `text-scale-amount' for `org-tree-slide-mode'.")
 
@@ -42,8 +42,7 @@
 ;;
 ;; Bootstrap
 ;;
-
-(after! org
+(defun +org|init-present ()
   (require 'ox-reveal)
   (map! :map org-mode-map "<f8>" #'+org-present/start))
 
