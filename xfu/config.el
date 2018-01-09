@@ -52,7 +52,7 @@ the workspace and move to the next."
 
 (add-hook 'minibuffer-setup-hook #'smartparens-mode)
 (add-hook 'minibuffer-setup-hook #'doom|no-fringes-in-minibuffer)
-(set-window-fringes (minibuffer-window) 0 0 nil)
+;; (set-window-fringes (minibuffer-window) 0 0 nil)
 (after! yasnippet
   (setq yas-snippet-dirs '(+xfu-snippets-dir +file-templates-dir)))
 ;; ** persp

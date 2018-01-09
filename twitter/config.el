@@ -6,7 +6,7 @@
   :config
 
   (defface twitter-divider
-    `((t (:underline (:color ,(doom-darken 'vertical-bar 0.2)))))
+    `((t (:underline (:color ,(doom-blend 'vertical-bar 'bg 0.8)))))
     "test"
     :group 'twittering-mode)
   (defun twittering-make-fontified-tweet-text (str-expr regexp-hash regexp-atmark)
