@@ -4,7 +4,11 @@
   :commands twit
   :init
   :config
-  (defface twitter-divider `((t)) "test" :group 'twittering-mode)
+
+  (defface twitter-divider
+    `((t (:underline (:color ,(doom-darken 'vertical-bar 0.2)))))
+    "test"
+    :group 'twittering-mode)
   (defun twittering-make-fontified-tweet-text (str-expr regexp-hash regexp-atmark)
     (let ((regexp-str
            (mapconcat
