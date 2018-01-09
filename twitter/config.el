@@ -124,7 +124,7 @@
 }}}
 
 
-%FACE[twitter-divider]{                                                                    }
+%FACE[twitter-divider]{                                                                                                                                                                                  }
 "
         twittering-timeline-spec-alias
         ;; '(("research" . "anshulkundaje+ChromatinHaiku+loops_enhancers+MarkGerstein+Gene_Regulation+Nucleosome_Bot+cohesin_papers+CTCF_Papers+TF_binding_bot+broadinstitute+eric_lander+manoliskellis"))
@@ -133,12 +133,54 @@
         '(
           ":home"
           "(#orgmode+#emacs)"
-          "$research"
-          ))
+          "$research"))
+
+  (def-hydra! +twitter@panel (:color pink :hint nil)
+    "
+ Tweets^^^^^^                                   User^^^^                Other^^
+ ──────^^^^^^────────────────────────────────── ────^^^^─────────────── ─────^^───────────────────
+ _j_/_k_ down/up        _r_ retweet         _d_^^ direct message  _a_ toggle auto-refresh
+ _RET_^^ open or reply  _R_ retweet & edit  _f_^^ follow          _q_ quit
+ _b_^^   heart          _n_ post new tweet  _F_^^ unfollow        _Q_ quit twitter
+ _B_^^   unheart        _t_ show thread     _i_^^ profile         _u_ update
+ _e_^^   edit mode      _X_ delete tweet    _J_/_K_ down/up       _/_ search
+ _g_^^   first          _y_ yank url        ^^^^                  _I_ toggle images
+ _G_^^   last           _Y_ yank tweet
+ _o_^^   open url"
+    ("?"          nil :exit t)
+    ("RET"        twittering-enter :exit t)
+    ("/"          twittering-search :exit t)
+    ("a"          twittering-toggle-activate-buffer)
+    ("b"          twittering-favorite)
+    ("B"          twittering-unfavorite)
+    ("d"          twittering-direct-message :exit t)
+    ("e"          twittering-edit-mode :exit t)
+    ("f"          twittering-follow)
+    ("F"          twittering-unfollow)
+    ("g"          beginning-of-buffer)
+    ("G"          end-of-buffer)
+    ("i"          twittering-view-user-page)
+    ("q"          nil :exit t)
+    ("Q"          twittering-kill-buffer :exit t)
+    ("I"          twittering-icon-mode)
+    ("j"          twittering-goto-next-status)
+    ("J"          twittering-goto-next-status-of-user)
+    ("k"          twittering-goto-previous-status)
+    ("K"          twittering-goto-previous-status-of-user)
+    ("n"          twittering-update-status-interactive :exit t)
+    ("o"          twittering-click :exit t)
+    ("r"          twittering-native-retweet :exit t)
+    ("R"          twittering-organic-retweet :exit t)
+    ("t"          twittering-toggle-or-retrieve-replied-statuses :exit t)
+    ("u"          twittering-current-timeline)
+    ("X"          twittering-delete-status)
+    ("y"          twittering-push-uri-onto-kill-ring)
+    ("Y"          twittering-push-tweet-onto-kill-ring))
 
   (add-hook! twittering-mode
     (setq header-line-format (or (doom-modeline 'twitter) mode-line-format)
           mode-line-format nil))
+  (add-hook! twittering-mode #'turn-on-solaire-mode)
 
   (set! :evil-state 'twittering-mode 'normal)
   (map! :map twittering-mode-map
@@ -147,6 +189,7 @@
         :n "f" #'twittering-visit-timeline
         :n "e" #'+twitter/rerender-all
         :n "o" #'ace-link-org
+        :n "." #'+twitter@panel/body
         :n "h" #'evil-window-left
         :n "l" #'evil-window-right
         :n "j" #'twittering-goto-next-status
