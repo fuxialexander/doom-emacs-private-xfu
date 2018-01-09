@@ -184,7 +184,7 @@
   (add-hook! twittering-mode
     (setq header-line-format (or (doom-modeline 'twitter) mode-line-format)
           mode-line-format nil))
-  (add-hook! twittering-mode #'turn-on-solaire-mode)
+  (add-hook! twittering-mode (solaire-mode +1))
 
   (set! :evil-state 'twittering-mode 'normal)
   (map! :map twittering-mode-map
