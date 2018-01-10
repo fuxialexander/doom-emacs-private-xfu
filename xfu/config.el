@@ -154,6 +154,7 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
 (after! magit
   (set! :popup "^\\*Magit" '((slot . -1) (side . right) (size . 80)) '((modeline . nil) (select . t)))
   (set! :popup "^\\*magit.*popup\\*" '((slot . 0) (side . right)) '((modeline . nil) (select . t)))
+  (set! :popup "^\\*magit-revision:.*" '((slot . 0) (side . right) (window-height . 0.6)) '((modeline . nil) (select . t)))
   (add-hook! 'magit-popup-mode-hook #'doom-hide-modeline-mode)
   )
 
