@@ -43,14 +43,33 @@
    ;; LaTeX previews are too small and usually render to light backgrounds, so
    ;; this enlargens them and ensures their background (and foreground) match the
    ;; current theme.
+   org-preview-latex-process-alist '((imagemagick :programs
+              ("latex" "convert")
+              :description
+              "pdf > png"
+              :message
+              "you need to install the programs: latex and imagemagick."
+              :use-xcolor
+              t
+              :image-input-type
+              "pdf"
+              :image-output-type
+              "png"
+              :image-size-adjust
+              (1.0 . 1.0)
+              :latex-compiler
+              ("pdflatex -interaction nonstopmode -output-directory %o %f")
+              :image-converter
+              ("convert -density 200 -trim -antialias %f -quality 100 %O")))
+   org-preview-latex-default-process 'imagemagick
    org-preview-latex-image-directory (concat doom-cache-dir "org-latex/")
-   org-format-latex-options '(:foreground default
-                                          :background "Transparent"
-                                          :scale 1.5
-                                          :html-foreground "Black"
-                                          :html-background "Transparent"
-                                          :html-scale 1.0
-                                          :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
+   org-format-latex-options `(:background ,(doom-color 'bg)
+                              :foreground ,(doom-color 'fg)
+                              :scale 0.5
+                              :html-foreground ,(doom-color 'fg)
+                              ;; :html-background "Transparent"
+                              ;; :html-scale 1.0
+                              :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
 ;;;;custom links
   ;;  Custom links
   (org-link-set-parameters

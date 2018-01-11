@@ -3,8 +3,6 @@
 (defun +org|init-latex ()
   (setq-default
    org-latex-logfiles-extensions (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl"))
-   org-preview-latex-default-process 'dvipng
-   org-latex-create-formula-image-program 'dvipng
    org-highlight-latex-and-related '(latex)
    org-latex-packages-alist (quote (("" "color" t)
                                     ("" "minted" t)

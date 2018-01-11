@@ -248,13 +248,12 @@ This function makes sure that dates are aligned for easy reading."
     :config
     (defun my-open-calendar ()
       (interactive)
-      (let ((cfw:calendar-mode-map nil))
-        (cfw:open-calendar-buffer
-         ;; :custom-map cfw:my-cal-map
-         :contents-sources
-         (list
-          (cfw:org-create-source (doom-color 'fg))  ; orgmode source
-          ))))
+      (cfw:open-calendar-buffer
+       ;; :custom-map cfw:my-cal-map
+       :contents-sources
+       (list
+        (cfw:org-create-source (doom-color 'fg))  ; orgmode source
+        )))
     (defun cfw:open-org-calendar-withkevin ()
       (interactive)
       (let ((org-agenda-files '("~/Dropbox/org/" "~/Dropbox/org/cal/")))
