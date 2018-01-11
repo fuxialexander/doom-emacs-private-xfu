@@ -9,7 +9,6 @@
 
 (defvar company-childframe-child-frame nil)
 (defvar company-childframe-current-frame nil)
-
 (defun company-childframe-compute-pixel-position (pos tooltip-width tooltip-height)
   "Return bottom-left-corner pixel position of POS in WINDOW.
 its returned value is like (X . Y)

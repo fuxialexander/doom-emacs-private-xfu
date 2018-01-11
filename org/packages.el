@@ -34,5 +34,11 @@
   (package! org-tree-slide)
   (package! ox-reveal))
 
+(when (featurep! +export)
+  (package! calfw)
+  (package! calfw-org)
+  (package! org-gcal)
+  (package! alert)
+  )
 ;; (when (featurep! +publish))
 

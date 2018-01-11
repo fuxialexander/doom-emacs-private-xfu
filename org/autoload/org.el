@@ -24,6 +24,10 @@
   "Update counts in headlines (aka \"cookies\")."
   (when (and buffer-file-name (file-exists-p buffer-file-name))
     (org-update-statistics-cookies t)))
+;;;###autoload
+(defun export-diary-from-cal ()
+  (interactive)
+  (start-process-shell-command "export diary" nil "/Users/xfu/.emacs.d-backup/private/local/calendardiary 30 > /Users/xfu/Dropbox/org/cal.diary"))
 
 ;;;###autoload
 (defun +org/dwim-at-point ()

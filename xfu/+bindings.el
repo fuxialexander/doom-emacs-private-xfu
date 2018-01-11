@@ -237,6 +237,8 @@
 ;; *** applications
           :desc "Twitter"             :n "2" #'=twitter
           :desc "RSS"                 :n "e" #'=rss
+          ;; :desc "Calendar"            :n "c" #'=calendar
+          :desc "Calendar"            :n "c" #'=calendar
           :desc "Mail"                :n "m" #'=mail
           )
 ;; *** project

@@ -83,7 +83,7 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
   (add-to-list 'tramp-remote-path "/research/kevinyip10/xfu/miniconda3/bin")
   (add-to-list 'tramp-remote-path "/uac/gds/xfu/bin"))
 ;; ** ESS
-(def-package! ess-site :load-path ".local/packages/elpa/ess-20171204.1404/lisp/"
+(def-package! ess-site :load-path "~/.emacs.d/.local/packages/elpa/ess-20180109.1719/lisp/"
   :mode (("\\.sp\\'"           . S-mode)
          ("/R/.*\\.q\\'"       . R-mode)
          ("\\.[qsS]\\'"        . S-mode)
@@ -267,7 +267,8 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
 (def-package! org-ref-ivy :load-path "modules/private/xfu/local/org-ref-ivy"
 ;; (def-package! org-ref
   :after org
-  :commands (org-ref-bibtex-next-entry
+  :commands (org-ref-mode
+             org-ref-bibtex-next-entry
              org-ref-bibtex-previous-entry
              org-ref-doi-utils-get-bibtex-entry-pdf
              org-ref-ivy-insert-cite-link
@@ -725,168 +726,170 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
       "\"::split::\" & theContent\n"
       "end tell\n"
       "return theLink as string\n"))))
+
 ;; ** Outshine
-(def-package! outline
-  :preface
-  (setq outline-minor-mode-prefix "\M-#")
-  :defer t
-  :init
-  (defvar +outline-minor-mode-hooks '(python-mode-hook
-                                      emacs-lisp-mode-hook
-                                      conf-space-mode-hook) ;For .tmux.conf
-    "List of hooks of major modes in which `outline-minor-mode' should be enabled.")
-  (defun +turn-on-outline-minor-mode ()
-    "Turn on `outline-minor-mode' only for specific modes."
-    (interactive)
-    (dolist (hook +outline-minor-mode-hooks)
-      (add-hook hook #'outline-minor-mode)))
-  (defun +turn-off-outline-minor-mode ()
-    "Turn off `outline-minor-mode' only for specific modes."
-    (interactive)
-    (dolist (hook +outline-minor-mode-hooks)
-      (remove-hook hook #'outline-minor-mode)))
-  (+turn-on-outline-minor-mode)
-  :config
-  (add-hook 'outline-minor-mode-hook #'outshine-hook-function))
+;; (def-package! outline
+;;   :preface
+;;   (setq outline-minor-mode-prefix "\M-#")
+;;   :defer t
+;;   :init
+;;   (defvar +outline-minor-mode-hooks '(python-mode-hook
+;;                                       emacs-lisp-mode-hook
+;;                                       conf-space-mode-hook) ;For .tmux.conf
+;;     "List of hooks of major modes in which `outline-minor-mode' should be enabled.")
+;;   (defun +turn-on-outline-minor-mode ()
+;;     "Turn on `outline-minor-mode' only for specific modes."
+;;     (interactive)
+;;     (dolist (hook +outline-minor-mode-hooks)
+;;       (add-hook hook #'outline-minor-mode)))
+;;   (defun +turn-off-outline-minor-mode ()
+;;     "Turn off `outline-minor-mode' only for specific modes."
+;;     (interactive)
+;;     (dolist (hook +outline-minor-mode-hooks)
+;;       (remove-hook hook #'outline-minor-mode)))
+;;   (+turn-on-outline-minor-mode)
+;;   :config
+;;   (add-hook 'outline-minor-mode-hook #'outshine-hook-function))
 ;; *** def outshine
-(def-package! outshine
-  :init
-  :config
-  (add-hook 'outline-minor-mode-hook #'outshine-hook-function)
-  (setq outshine-use-speed-commands t)
-  (setq outshine-org-style-global-cycling-at-bob-p t)
-  (require 'outline-ivy)
-  (advice-add 'outshine-narrow-to-subtree :before
-              (lambda (&rest args) (unless (outline-on-heading-p t)
-                                (outline-previous-visible-heading 1))))
-  (defun outline-cycle (&optional arg)
-  "Visibility cycling for outline(-minor)-mode.
-- When point is at the beginning of the buffer, or when called with a
-  C-u prefix argument, rotate the entire buffer through 3 states:
-  1. OVERVIEW: Show only top-level headlines.
-  2. CONTENTS: Show all headlines of all levels, but no body text.
-  3. SHOW ALL: Show everything.
-- When point is at the beginning of a headline, rotate the subtree started
-  by this line through 3 different states:
-  1. FOLDED:   Only the main headline is shown.
-  2. CHILDREN: The main headline and the direct children are shown.  From
-               this state, you can move to one of the children and
-               zoom in further.
-  3. SUBTREE:  Show the entire subtree, including body text.
-- When point is not at the beginning of a headline, execute
-  `indent-relative', like TAB normally does."
-  (interactive "P")
-  (setq deactivate-mark t)
-  (cond
-   ((equal arg '(4))
-    ;; Run `outline-cycle' as if at the top of the buffer.
-    (let ((outshine-org-style-global-cycling-at-bob-p nil)
-          (current-prefix-arg nil))
-    (save-excursion
-      (goto-char (point-min))
-      (outline-cycle nil))))
-   (t
-    (cond
-     ;; Beginning of buffer: Global cycling
-     ((or
-       ;; outline-magic style behaviour
-       (and
-        (bobp)
-        (not outshine-org-style-global-cycling-at-bob-p))
-       ;; org-mode style behaviour
-       (and
-        (bobp)
-        (not (outline-on-heading-p))
-        outshine-org-style-global-cycling-at-bob-p))
-      (cond
-       ((eq last-command 'outline-cycle-overview)
-        ;; We just created the overview - now do table of contents
-        ;; This can be slow in very large buffers, so indicate action
-        (unless outshine-cycle-silently
-          (message "CONTENTS..."))
-        (save-excursion
-          ;; Visit all headings and show their offspring
-          (goto-char (point-max))
-          (catch 'exit
-            (while (and (progn (condition-case nil
-                                   (outline-previous-visible-heading 1)
-                                 (error (goto-char (point-min))))
-                               t)
-                        (looking-at outline-regexp))
-              (show-branches)
-              (if (bobp) (throw 'exit nil))))
-          (unless outshine-cycle-silently
-            (message "CONTENTS...done")))
-        (setq
-         this-command 'outline-cycle-toc
-         outshine-current-buffer-visibility-state 'contents))
-       ((eq last-command 'outline-cycle-toc)
-        ;; We just showed the table of contents - now show everything
-        (show-all)
-        (unless outshine-cycle-silently
-          (message "SHOW ALL"))
-        (setq
-         this-command 'outline-cycle-showall
-         outshine-current-buffer-visibility-state 'all))
-       (t
-        ;; Default action: go to overview
-        ;; (hide-sublevels 1)
-        (let ((toplevel
-               (cond
-                (current-prefix-arg
-                 (prefix-numeric-value current-prefix-arg))
-                ((save-excursion
-                   (beginning-of-line)
-                   (looking-at outline-regexp))
-                 (max 1 (funcall outline-level)))
-                (t 1))))
-          (hide-sublevels toplevel))
-        (unless outshine-cycle-silently
-          (message "OVERVIEW"))
-        (setq
-         this-command 'outline-cycle-overview
-         outshine-current-buffer-visibility-state 'overview))))
-     ((save-excursion (beginning-of-line 1) (looking-at outline-regexp))
-      ;; At a heading: rotate between three different views
-      (outline-back-to-heading)
-      (let ((goal-column 0) beg eoh eol eos)
-        ;; First, some boundaries
-        (save-excursion
-          (outline-back-to-heading)           (setq beg (point))
-          (save-excursion (outline-next-line) (setq eol (point)))
-          (outline-end-of-heading)            (setq eoh (point))
-          (outline-end-of-subtree)            (setq eos (point)))
-        ;; Find out what to do next and set `this-command'
-        (cond
-         ((= eos eoh)
-          ;; Nothing is hidden behind this heading
-          (unless outshine-cycle-silently
-            (message "EMPTY ENTRY")))
-         ((>= eol eos)
-          ;; Entire subtree is hidden in one line: open it
-          (show-entry)
-          (show-children)
-          (unless outshine-cycle-silently
-            (message "CHILDREN"))
-          (setq
-           this-command 'outline-cycle-children))
-           ;; outshine-current-buffer-visibility-state 'children))
-         ((eq last-command 'outline-cycle-children)
-          ;; We just showed the children, now show everything.
-          (show-subtree)
-          (unless outshine-cycle-silently
-            (message "SUBTREE")))
-         (t
-          ;; Default action: hide the subtree.
-          (hide-subtree)
-          (unless outshine-cycle-silently
-            (message "FOLDED"))))))
-     ;; TAB emulation
-     ((outline-cycle-emulate-tab)
-      (call-interactively #'+evil/matchit-or-toggle-fold))
-     (t (outline-back-to-heading))
-     ))))
-  )
+;; (def-package! outshine
+;;   :init
+;;   :config
+;;   (add-hook 'outline-minor-mode-hook #'outshine-hook-function)
+;;   (setq outshine-use-speed-commands t)
+;;   (setq outshine-org-style-global-cycling-at-bob-p t)
+;;   (require 'outline-ivy)
+;;   (advice-add 'outshine-narrow-to-subtree :before
+;;               (lambda (&rest args) (unless (outline-on-heading-p t)
+;;                                 (outline-previous-visible-heading 1))))
+;;   (defun outline-cycle (&optional arg)
+;;   "Visibility cycling for outline(-minor)-mode.
+;; - When point is at the beginning of the buffer, or when called with a
+;;   C-u prefix argument, rotate the entire buffer through 3 states:
+;;   1. OVERVIEW: Show only top-level headlines.
+;;   2. CONTENTS: Show all headlines of all levels, but no body text.
+;;   3. SHOW ALL: Show everything.
+;; - When point is at the beginning of a headline, rotate the subtree started
+;;   by this line through 3 different states:
+;;   1. FOLDED:   Only the main headline is shown.
+;;   2. CHILDREN: The main headline and the direct children are shown.  From
+;;                this state, you can move to one of the children and
+;;                zoom in further.
+;;   3. SUBTREE:  Show the entire subtree, including body text.
+;; - When point is not at the beginning of a headline, execute
+;;   `indent-relative', like TAB normally does."
+;;   (interactive "P")
+;;   (setq deactivate-mark t)
+;;   (cond
+;;    ((equal arg '(4))
+;;     ;; Run `outline-cycle' as if at the top of the buffer.
+;;     (let ((outshine-org-style-global-cycling-at-bob-p nil)
+;;           (current-prefix-arg nil))
+;;     (save-excursion
+;;       (goto-char (point-min))
+;;       (outline-cycle nil))))
+;;    (t
+;;     (cond
+;;      ;; Beginning of buffer: Global cycling
+;;      ((or
+;;        ;; outline-magic style behaviour
+;;        (and
+;;         (bobp)
+;;         (not outshine-org-style-global-cycling-at-bob-p))
+;;        ;; org-mode style behaviour
+;;        (and
+;;         (bobp)
+;;         (not (outline-on-heading-p))
+;;         outshine-org-style-global-cycling-at-bob-p))
+;;       (cond
+;;        ((eq last-command 'outline-cycle-overview)
+;;         ;; We just created the overview - now do table of contents
+;;         ;; This can be slow in very large buffers, so indicate action
+;;         (unless outshine-cycle-silently
+;;           (message "CONTENTS..."))
+;;         (save-excursion
+;;           ;; Visit all headings and show their offspring
+;;           (goto-char (point-max))
+;;           (catch 'exit
+;;             (while (and (progn (condition-case nil
+;;                                    (outline-previous-visible-heading 1)
+;;                                  (error (goto-char (point-min))))
+;;                                t)
+;;                         (looking-at outline-regexp))
+;;               (show-branches)
+;;               (if (bobp) (throw 'exit nil))))
+;;           (unless outshine-cycle-silently
+;;             (message "CONTENTS...done")))
+;;         (setq
+;;          this-command 'outline-cycle-toc
+;;          outshine-current-buffer-visibility-state 'contents))
+;;        ((eq last-command 'outline-cycle-toc)
+;;         ;; We just showed the table of contents - now show everything
+;;         (show-all)
+;;         (unless outshine-cycle-silently
+;;           (message "SHOW ALL"))
+;;         (setq
+;;          this-command 'outline-cycle-showall
+;;          outshine-current-buffer-visibility-state 'all))
+;;        (t
+;;         ;; Default action: go to overview
+;;         ;; (hide-sublevels 1)
+;;         (let ((toplevel
+;;                (cond
+;;                 (current-prefix-arg
+;;                  (prefix-numeric-value current-prefix-arg))
+;;                 ((save-excursion
+;;                    (beginning-of-line)
+;;                    (looking-at outline-regexp))
+;;                  (max 1 (funcall outline-level)))
+;;                 (t 1))))
+;;           (hide-sublevels toplevel))
+;;         (unless outshine-cycle-silently
+;;           (message "OVERVIEW"))
+;;         (setq
+;;          this-command 'outline-cycle-overview
+;;          outshine-current-buffer-visibility-state 'overview))))
+;;      ((save-excursion (beginning-of-line 1) (looking-at outline-regexp))
+;;       ;; At a heading: rotate between three different views
+;;       (outline-back-to-heading)
+;;       (let ((goal-column 0) beg eoh eol eos)
+;;         ;; First, some boundaries
+;;         (save-excursion
+;;           (outline-back-to-heading)           (setq beg (point))
+;;           (save-excursion (outline-next-line) (setq eol (point)))
+;;           (outline-end-of-heading)            (setq eoh (point))
+;;           (outline-end-of-subtree)            (setq eos (point)))
+;;         ;; Find out what to do next and set `this-command'
+;;         (cond
+;;          ((= eos eoh)
+;;           ;; Nothing is hidden behind this heading
+;;           (unless outshine-cycle-silently
+;;             (message "EMPTY ENTRY")))
+;;          ((>= eol eos)
+;;           ;; Entire subtree is hidden in one line: open it
+;;           (show-entry)
+;;           (show-children)
+;;           (unless outshine-cycle-silently
+;;             (message "CHILDREN"))
+;;           (setq
+;;            this-command 'outline-cycle-children))
+;;            ;; outshine-current-buffer-visibility-state 'children))
+;;          ((eq last-command 'outline-cycle-children)
+;;           ;; We just showed the children, now show everything.
+;;           (show-subtree)
+;;           (unless outshine-cycle-silently
+;;             (message "SUBTREE")))
+;;          (t
+;;           ;; Default action: hide the subtree.
+;;           (hide-subtree)
+;;           (unless outshine-cycle-silently
+;;             (message "FOLDED"))))))
+;;      ;; TAB emulation
+;;      ((outline-cycle-emulate-tab)
+;;       (call-interactively #'+evil/matchit-or-toggle-fold))
+;;      (t (outline-back-to-heading))
+;;      ))))
+;;   )
+
 ;; ** Ivy
 ;; * Theme
 ;; (require 'modern-common "~/Source/modern-light-theme/modern-common.el")

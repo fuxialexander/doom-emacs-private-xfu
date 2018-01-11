@@ -14,9 +14,9 @@
 (package! ivy-bibtex)
 ;; (package! org-ref)
 
-(package! outorg)
-(package! outshine)
-(package! navi-mode)
+;; (package! outorg)
+;; (package! outshine)
+;; (package! navi-mode)
 (package! ess)
 (package! shr-tag-pre-highlight)
 (package! orgit)

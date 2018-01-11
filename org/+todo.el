@@ -13,6 +13,7 @@
    org-clock-persist-file (concat doom-cache-dir "org-clock-save.el")
    org-id-locations-file (concat doom-cache-dir ".org-id-locations")
    org-publish-timestamp-directory (concat doom-cache-dir ".org-timestamps/")
+   org-agenda-follow-indirect t
    diary-file "/Users/xfu/Dropbox/org/cal.diary"
    ;; org-default-notes-file "/Users/xfu/Dropbox/org/inbox.org"
    org-log-done 'time
@@ -78,49 +79,6 @@
                               ("saudan")
                               (:endgrouptag)
 
-                              (:startgrouptag)
-                              ("Field")
-                              (:grouptags)
-                              ("bioinfo")
-                              ("biomed")
-                              ("statistics")
-                              ("cs")
-                              ("math")
-                              (:endgrouptag)
-
-                              (:startgrouptag)
-                              ("bioinfo")
-                              (:grouptags)
-                              ("genomics")
-                              ("tools")
-                              ("dataviz")
-                              ("epigenomics")
-                              ("genome_arch")
-                              ("gene_regulation")
-                              ("enhancer")
-                              ("promoter")
-                              ("alignment")
-                              ("assembly")
-                              ("sequencing")
-                              ("mrpa")
-                              (:endgrouptag)
-
-                              (:startgrouptag)
-                              ("cs")
-                              (:grouptags)
-                              ("network")
-                              ("deep_learning")
-                              ("machine_learning")
-                              ("algorithm")
-                              (:endgrouptag)
-
-                              (:startgrouptag)
-                              ("biomed")
-                              (:grouptags)
-                              ("development")
-                              ("cellbio")
-                              ("crispr")
-                              ("disease")
                               (:endgrouptag)
 
                               (:startgrouptag)
@@ -240,3 +198,94 @@ This function makes sure that dates are aligned for easy reading."
   (setq org-agenda-format-date 'myorg-agenda-format-date-aligned)
   ;; (add-hook 'org-agenda-finalize-hook 'place-agenda-tags)
   )
+
+(def-package! calfw
+  :commands (cfw:open-calendar-buffer)
+  :config
+
+  ;; Unicode characters
+  (setq
+   cfw:face-item-separator-color nil
+   cfw:fchar-junction ?╋
+   cfw:fchar-vertical-line ?┃
+   cfw:fchar-horizontal-line ?━
+   cfw:fchar-left-junction ?┣
+   cfw:fchar-right-junction ?┫
+   cfw:fchar-top-junction ?┯
+   cfw:fchar-top-left-corner ?┏
+   cfw:fchar-top-right-corner ?┓)
+
+
+  (defun cfw:render-button (title command &optional state)
+    "render-button
+ TITLE
+ COMMAND
+ STATE"
+    (let ((text (concat " " title " "))
+          (keymap (make-sparse-keymap)))
+      (cfw:rt text (if state 'cfw:face-toolbar-button-on
+                     'cfw:face-toolbar-button-off))
+      (define-key keymap [mouse-1] command)
+      (cfw:tp text 'keymap keymap)
+      (cfw:tp text 'mouse-face 'highlight)
+      text))
+
+
+  ;; (push '(;; …
+  ;;         ("k" "calfw, non-kevin"
+  ;;    cfw:open-org-calendar-nonwork))
+  ;;       org-agenda-custom-commands
+  ;;       )
+  (add-hook! 'cfw:calendar-mode-hook (solaire-mode +1)
+    (doom-hide-modeline-mode))
+  )
+
+(def-package! calfw-org
+    :commands (cfw:open-org-calendar
+               cfw:org-create-source
+               cfw:open-org-calendar-withkevin
+               my-open-calendar)
+    :config
+    (defvar cfw:my-cal-map
+      (cfw:define-keymap
+       '(("g"   . cfw:refresh-calendar-buffer)
+         ("j"   . cfw:org-goto-date)
+         ("r"   . org-capture)
+         ("q"   . bury-buffer)
+         ("d"   . cfw:change-view-day)
+         ("v d" . cfw:change-view-day)
+         ("v w" . cfw:change-view-week)
+         ("v m" . cfw:change-view-month)
+         ("SPC-SPC"   . counsel-M-x)
+         ))
+      "Key map for the calendar buffer.")
+
+    (defun my-open-calendar ()
+      (interactive)
+      (let ((cfw:calendar-mode-map nil))
+        (cfw:open-calendar-buffer
+         :custom-map cfw:my-cal-map
+         :contents-sources
+         (list
+          (cfw:org-create-source (doom-color 'fg))  ; orgmode source
+          ))))
+    (defun cfw:open-org-calendar-withkevin ()
+      (interactive)
+      (let ((org-agenda-files '("~/Dropbox/org/" "~/Dropbox/org/cal/")))
+        (my-open-calendar))))
+
+(def-package! org-gcal
+    :commands (org-gcal-sync
+               org-gcal-fetch
+               org-gcal-post-at-point
+               org-gcal-delete-at-point)
+    :config
+    (setq org-gcal-client-id "936079704910-v8seueasg2n0ckhr47uq1cf1brij0r24.apps.googleusercontent.com"
+      org-gcal-client-secret "515IpJjEtpYb8lhYKth75a1x"
+      org-gcal-file-alist '(("fuxialexander@gmail.com" .  "~/Dropbox/org/cal/cal.org")
+                            ("kylyip@gmail.com" .  "~/Dropbox/org/cal/cal_kevin.org")
+                            ))
+    (defun org-gcal--notify (title mes)
+      (message "org-gcal::%s - %s" title mes)))
+
+(def-package! alert)

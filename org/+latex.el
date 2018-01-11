@@ -1,17 +1,6 @@
 ;;; private/org/+latex.el -*- lexical-binding: t; -*-
 (add-hook 'org-load-hook #'+org|init-latex)
 (defun +org|init-latex ()
-  (defun my-buffer-face-mode-orgwrite ()
-    "Sets a fixed width (monospace) font in current buffer"
-    (interactive)
-    (setq buffer-face-mode-face '(:family "charter" :height 1.2)
-          line-spacing 0.4)
-    (buffer-face-mode)
-    (org-indent-mode -1)
-    (org-ref-mode)
-    (visual-line-mode)
-    (visual-fill-column-mode))
-
   (setq-default
    org-latex-logfiles-extensions (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl"))
    org-preview-latex-default-process 'dvipng

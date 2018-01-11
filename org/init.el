@@ -62,27 +62,6 @@
                    'org-link
                  'error))))
 
-;;;; Init-keybindings
-;;;;; Evil-org
-;; (def-package! evil-org
-;;   :ensure t
-;;   :after org
-;;   :config
-;;   (setq evil-org-key-theme `(textobjects
-;;                              ;; insert
-;;                              ;; navigation
-;;                              ;; additional
-;;                              ;; shift
-;;                              ;; todo
-;;                              ;; heading
-;;                              ))
-;;   (require 'evil-org-agenda)
-;;   (add-hook 'org-agenda-mode-hook 'evil-org-agenda-set-keys)
-;;   (add-hook 'org-mode-hook 'evil-org-mode)
-;;   (add-hook 'evil-org-mode-hook (lambda () (evil-org-set-key-theme))))
-
-
-;;
 
 ;;;; Org-hacks
 
@@ -387,6 +366,7 @@ Returns the new TODO keyword, or nil if no state change should occur."
 ;; Config hooks
 ;;
 
+(add-hook 'after-init-hook 'export-diary-from-cal)
 (defun +org|unfold-to-2nd-level-or-point ()
   "My version of the 'overview' #+STARTUP option: expand first-level headings.
 Expands the first level, but no further. If point was left somewhere deeper,

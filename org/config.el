@@ -40,15 +40,15 @@
   (set! :evil-state 'org-brain-visualize-mode 'normal)
   :config
   (defun org-brain-set-tags (entry)
-        "Use `org-set-tags' on headline ENTRY.
+    "Use `org-set-tags' on headline ENTRY.
 If run interactively, get ENTRY from context."
-        (interactive (list (org-brain-entry-at-pt)))
-        (when (org-brain-filep entry)
-          (error "Can only set tags on headline entries"))
-        (org-with-point-at (org-brain-entry-marker entry)
-          (counsel-org-tag)
-          (save-buffer))
-        (org-brain--revert-if-visualizing))
+    (interactive (list (org-brain-entry-at-pt)))
+    (when (org-brain-filep entry)
+      (error "Can only set tags on headline entries"))
+    (org-with-point-at (org-brain-entry-marker entry)
+      (counsel-org-tag)
+      (save-buffer))
+    (org-brain--revert-if-visualizing))
   (setq org-brain-visualize-default-choices 'all
         org-brain-title-max-length 12)
   (map!
@@ -145,7 +145,7 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
   ("q" nil "cancel" :color blue))
 
 (map!
- (:mode org-mode
+ (:after org
    :map org-mode-map
    "RET" #'org-return-indent
    "M-o" #'org-open-at-point
@@ -209,6 +209,7 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
      :m "C-h"      #'evil-window-left
      :m "C-l"      #'evil-window-right
      :m "<escape>" #'org-agenda-Quit
+     :m [tab]      #'+my-org-agenda-tree-to-indirect-buffer
      :m "\\"       #'ace-window
      :m "t"        #'org-agenda-todo
      :m "p"        #'org-set-property
@@ -265,6 +266,46 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
   (when (featurep 'org)
     (run-hooks 'org-load-hook))
   (set! :popup "^CAPTURE.*\\.org$" '((side . bottom) (size . 0.4)) '((select . t)))
-  (set! :popup "^\\*Org Agenda" '((slot . 0) (size . 120) (side . right)) '((select . t)))
+  (set! :popup "^\\*Org Agenda\\*$" '((slot . -1) (size . 120) (side . right)) '((select . t)))
   (set! :popup "^\\*Org Src" '((size . 0.4) (side . right)) '((quit) (select . t)))
+
+  (defun +my-org-tree-to-indirect-buffer (&optional args)
+    "create indirect buffer and narrow it to current subtree."
+    (interactive "P")
+    (let ((cbuf (current-buffer))
+          (cwin (selected-window))
+          (pos (point))
+          beg end level heading ibuf)
+      (save-excursion
+        (org-back-to-heading t)
+        (setq beg (point)
+              heading (org-get-heading 'no-tags))
+        (org-end-of-subtree t t)
+        (when (org-at-heading-p) (backward-char 1))
+        (setq end (point)))
+      (setq ibuf (org-get-indirect-buffer cbuf heading)
+            org-last-indirect-buffer ibuf)
+      (+popup-buffer ibuf '((side . right) (slot . 0) (transient . t) (window-height . 0.6)))
+      (select-window (get-buffer-window ibuf))
+      (narrow-to-region beg end)
+      (visual-line-mode)
+      (outline-show-all)
+      (goto-char pos)
+      (run-hook-with-args 'org-cycle-hook 'all)
+      ))
+
+  (defun +my-org-agenda-tree-to-indirect-buffer (arg)
+    "Same as `org-agenda-tree-to-indirect-buffer' without saving window."
+    (interactive "P")
+    (org-agenda-check-no-diary)
+    (let* ((agenda-window (selected-window))
+           (marker (or (org-get-at-bol 'org-marker)
+                       (org-agenda-error)))
+           (buffer (marker-buffer marker))
+           (pos (marker-position marker)))
+      (with-current-buffer buffer
+        (save-excursion
+          (goto-char pos)
+          (funcall '+my-org-tree-to-indirect-buffer arg)))
+        (select-window agenda-window)))
   )
