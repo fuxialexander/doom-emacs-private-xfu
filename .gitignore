@@ -6,3 +6,4 @@
 *.elc
 /default/+evil-commands.el
 /default/+bindings.el
+/org/secret.el

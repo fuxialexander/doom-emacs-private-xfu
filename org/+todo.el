@@ -246,25 +246,11 @@ This function makes sure that dates are aligned for easy reading."
                cfw:open-org-calendar-withkevin
                my-open-calendar)
     :config
-    (defvar cfw:my-cal-map
-      (cfw:define-keymap
-       '(("g"   . cfw:refresh-calendar-buffer)
-         ("j"   . cfw:org-goto-date)
-         ("r"   . org-capture)
-         ("q"   . bury-buffer)
-         ("d"   . cfw:change-view-day)
-         ("v d" . cfw:change-view-day)
-         ("v w" . cfw:change-view-week)
-         ("v m" . cfw:change-view-month)
-         ("SPC-SPC"   . counsel-M-x)
-         ))
-      "Key map for the calendar buffer.")
-
     (defun my-open-calendar ()
       (interactive)
       (let ((cfw:calendar-mode-map nil))
         (cfw:open-calendar-buffer
-         :custom-map cfw:my-cal-map
+         ;; :custom-map cfw:my-cal-map
          :contents-sources
          (list
           (cfw:org-create-source (doom-color 'fg))  ; orgmode source
@@ -280,11 +266,7 @@ This function makes sure that dates are aligned for easy reading."
                org-gcal-post-at-point
                org-gcal-delete-at-point)
     :config
-    (setq org-gcal-client-id "936079704910-v8seueasg2n0ckhr47uq1cf1brij0r24.apps.googleusercontent.com"
-      org-gcal-client-secret "515IpJjEtpYb8lhYKth75a1x"
-      org-gcal-file-alist '(("fuxialexander@gmail.com" .  "~/Dropbox/org/cal/cal.org")
-                            ("kylyip@gmail.com" .  "~/Dropbox/org/cal/cal_kevin.org")
-                            ))
+
     (defun org-gcal--notify (title mes)
       (message "org-gcal::%s - %s" title mes)))
 

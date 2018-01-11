@@ -83,16 +83,20 @@
                org-occur-highlights)
       (org-remove-occur-highlights)))
   (add-hook '+evil-esc-hook #'+org|remove-occur-highlights)
-
   (after! recentf
     ;; Don't clobber recentf with agenda files
     (defun +org-is-agenda-file (filename)
-      (cl-find (file-truename filename) org-agenda-files
+      (cl-find (file-truename filename)
+               (apply 'append
+                      (mapcar (lambda (f)
+                                (if (file-directory-p f)
+                                    (directory-files
+                                     f t org-agenda-file-regexp)
+                                  (list f)))
+                              org-agenda-files))
                :key #'file-truename
                :test #'equal))
-    (add-to-list 'recentf-exclude #'+org-is-agenda-file))
-
-
+    (push #'+org-is-agenda-file recentf-exclude))
   (add-hook 'org-agenda-finalize-hook #'doom-hide-modeline-mode)
   (map! :map* org-agenda-mode-map
         :m [escape] 'org-agenda-Quit

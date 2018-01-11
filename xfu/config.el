@@ -30,6 +30,11 @@
  org-bullets-bullet-list '("#" "#" "#" "#" "#" "#" "#" "#")
  )
 
+(after! recentf
+  (add-to-list 'recentf-exclude ".*\\.gz")
+  (add-to-list 'recentf-exclude ".*\\.gif")
+  (add-to-list 'recentf-exclude ".*\\.svg"))
+
 (defun +my-doom-visible-windows (&optional window-list)
   "Return a list of the visible, non-popup windows."
   (cl-loop for window in (or window-list (window-list))
