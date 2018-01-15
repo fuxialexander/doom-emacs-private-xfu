@@ -69,7 +69,7 @@
   (push 'notmuch-show-mode evil-snipe-disabled-modes)
   (defun notmuch-update ()
     (interactive)
-    (start-process-shell-command "notmuch update" nil "cd ~/.mail/gmail && /usr/local/bin/gmi sync && /usr/local/bin/notmuch new && /usr/local/bin/afew -a -t")
+    (start-process-shell-command "notmuch update" nil "cd ~/.mail/gmail && /usr/local/bin/gmi push && /usr/local/bin/gmi pull && /usr/local/bin/notmuch new && /usr/local/bin/afew -a -t")
     (notmuch-hello-update))
   (setq notmuch-fcc-dirs nil
         notmuch-show-logo nil

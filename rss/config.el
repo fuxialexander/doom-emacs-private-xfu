@@ -4,9 +4,6 @@
 ;; by apps Reeder and Readkit. It can be invoked via `=rss'. Otherwise, if you
 ;; don't care for the UI you can invoke elfeed directly with `elfeed'.
 
-(defvar +rss-elfeed-files (list "rss/elfeed.org")
-  "The files that configure `elfeed's rss feeds.")
-
 (defvar +rss-split-direction 'below
   "What direction to pop up the entry buffer in elfeed.")
 
@@ -137,11 +134,9 @@
             (when (plist-get (text-properties-at (point)) 'shr-url)
               (push (point) candidates)))
           (nreverse candidates)))))
-
   (defun ace-link--elfeed-action  (pt)
     (goto-char pt)
     (shr-browse-url))
-
   (defun ace-link-elfeed ()
     "Open a visible link in `elfeed' buffer."
     (interactive)
@@ -200,14 +195,13 @@
            :action 'org-ref-doi-utils-add-bibtex-entry-from-doi)
               (bibtex-beginning-of-entry)
               (delete-char -2)))))))
-    (defun org-ref-add-biorxiv-entry-from-elfeed-entry ()
+    (defun org-ref-add-bibtex-entry-from-elfeed-entry ()
       "Add elfeed entry to bibtex."
       (interactive)
       (let ((url (elfeed-entry-link elfeed-show-entry)))
-        (org-ref-add-bibtex-entry-from-biorxiv url)
-        ;; (bibtex-beginning-of-entry)
-        ;; (delete-char -2)
-        )))
+        (if (string-match ".*biorxiv" url)
+            (org-ref-add-bibtex-entry-from-biorxiv url)
+          (org-ref-doi-utils-add-entry-from-elfeed-entry)))))
 
 ;;;; Key-binding
   (map!
@@ -227,7 +221,6 @@
        :n "-"   #'elfeed-search-untag-all
        :n "S"   #'elfeed-search-set-filter
        :n "o"   #'elfeed-search-browse-url
-       :n "b"   #'elfeed-search-send-to-bookend
        :n "y"   #'elfeed-search-yank))
    (:mode elfeed-show-mode
      (:map elfeed-show-mode-map
@@ -235,7 +228,8 @@
        [remap kill-buffer]           "q"
        :nm "q" #'+rss/delete-pane
        :nm "o" #'ace-link-elfeed
-       :nm "b" #'elfeed-show-send-to-bookend
+       ;; :nm "b" #'elfeed-show-send-to-bookend
+       :nm "b" #'org-ref-add-bibtex-entry-from-elfeed-entry
        :nm "n" #'elfeed-show-next
        :nm "p" #'elfeed-show-prev
        :nm "+" #'elfeed-show-tag
@@ -247,7 +241,5 @@
 (def-package! elfeed-org
   :after (:all org elfeed)
   :config
-  (setq rmh-elfeed-org-files
-        (let ((default-directory +org-dir))
-          (mapcar #'expand-file-name +rss-elfeed-files)))
+  (setq rmh-elfeed-org-files '("~/.emacs.d/modules/private/rss/elfeed.org"))
   (elfeed-org))

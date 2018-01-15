@@ -1,0 +1,114 @@
+* Blogs :elfeed:
+  :PROPERTIES:
+  :ID:       FDB20BAB-9C5D-4A12-A7B1-8EF067B3969E
+  :END:
+** Emacs :emacs:
+   :PROPERTIES:
+   :ID:       6C9A20BA-735A-4B02-AF9C-6C6E60893EDD
+   :END:
+*** entry-title: \(emacs\|org-mode\)
+    :PROPERTIES:
+    :ID:       39BDF909-8BE9-44A4-A115-E474845A3F98
+    :END:
+*** [[http://planet.emacsen.org/atom.xml][Planet Emacsen]]
+    :PROPERTIES:
+    :ID:       7A18DBE9-F56A-459E-9110-4AA1C054CAB9
+    :END:
+*** [[http://irreal.org/blog/?feed=rss2][Irreal]]
+    :PROPERTIES:
+    :ID:       9930C3CB-D52C-495E-977D-F7D6784DD2FB
+    :END:
+*** [[https://www.reddit.com/r/emacs/.rss][r/M-x Emacs]]
+    :PROPERTIES:
+    :ID:       29C05341-9540-4D83-9EED-5127C4FD10FC
+    :END:
+*** [[https://www.reddit.com/r/orgmode/.rss][r/orgmode]]
+    :PROPERTIES:
+    :ID:       25178EB0-4C68-49AF-A1BD-4FE8AE1DDEBB
+    :END:
+*** [[http://oremacs.com/atom.xml][(or emacs irrelevant)]]
+    :PROPERTIES:
+    :ID:       6DAC16E7-B570-4EF2-B033-A290887DF3D8
+    :END:
+** Literature :literature:
+   :PROPERTIES:
+   :ID:       6F8AE594-DF73-4A71-BDB9-073D12253A89
+   :END:
+*** entry-title: \(enhancer\|FANTOM\|ROADMAP\|regulatory\|promoter\|histone\|H3K\) :regulatory:
+    :PROPERTIES:
+    :ID:       6C008BF6-EB3F-48EE-AF0C-B88ED6FEE831
+    :END:
+*** entry-title: \(non-coding\|variants\|fine-mapping\) :variants:
+    :PROPERTIES:
+    :ID:       10B3FB34-845B-4D51-BF98-64A71BDE1F01
+    :END:
+*** entry-title: \(hirschsprung\) :hscr:
+    :PROPERTIES:
+    :ID:       533A9879-8470-4DE6-A12A-7824335B0197
+    :END:
+*** entry-title: \(neural crest\) :hscr:
+    :PROPERTIES:
+    :ID:       61E9CCEB-87A9-4E7F-811A-102CE8A9E092
+    :END:
+*** [[http://connect.biorxiv.org/biorxiv_xml.php?subject=genomics+bioinformatics+developmental_biology][BioRxiv]] :preprint:
+    :PROPERTIES:
+    :ID:       D9832314-8E19-448A-B006-ACD654E572F9
+    :END:
+*** [[http://bioinformatics.oxfordjournals.org/rss/current.xml][Bioinformatics]] :bioinfo:
+    :PROPERTIES:
+    :ID:       A4D62E50-FF61-4E4E-9F50-292667C2E24C
+    :END:
+*** [[http://www.cell.com/cell/inpress.rss][Cell]] :cell:
+    :PROPERTIES:
+    :ID:       6177F0F1-E3D4-4E85-8AB6-154D8EA4FF35
+    :END:
+*** [[http://genome.cshlp.org/rss/ahead.xml][Genome Research AOP]] :genome:
+    :PROPERTIES:
+    :ID:       149A0ABB-0857-41E7-9286-E5178D9C9262
+    :END:
+*** [[http://genomebiology.biomedcentral.com/articles/most-recent/rss.xml][Genome Biology]] :genome:
+    :PROPERTIES:
+    :ID:       20460DF5-732F-4B40-9012-A06F26AA187A
+    :END:
+*** [[http://www.nature.com/nbt/current_issue/rss/][Nature Biotechnology]] :nature:
+    :PROPERTIES:
+    :ID:       628F0375-9AA5-4BC4-9F88-1DFB5CB42B76
+    :END:
+*** [[http://www.nature.com/nbt/journal/vaop/ncurrent/rss.rdf][Nature Biotechnology AOP]] :nature:
+    :PROPERTIES:
+    :ID:       87181BA1-B3A9-43F6-9904-2F120B2373D2
+    :END:
+*** [[http://feeds.nature.com/nature/rss/aop?format=usm][Nature AOP]] :nature:
+    :PROPERTIES:
+    :ID:       0FC96659-5B63-47E2-8484-A67F9A5C4006
+    :END:
+*** [[http://feeds.nature.com/nmeth/rss/current][Nature Methods]] :nature:
+    :PROPERTIES:
+    :ID:       0DA54E84-EAD5-4C80-9DB9-D5C91CFE4D36
+    :END:
+*** [[http://www.nature.com/nmeth/journal/vaop/ncurrent/rss.rdf][Nature Methods AOP]] :nature:
+    :PROPERTIES:
+    :ID:       3BF920AE-39AA-4C07-B001-853F31640476
+    :END:
+*** [[http://www.nature.com/ng/current_issue/rss/][Nature Genetics]] :nature:
+    :PROPERTIES:
+    :ID:       8B32B1F6-84B1-4FD0-BF03-DA93DC9E5D7B
+    :END:
+*** [[http://www.nature.com/ng/journal/vaop/ncurrent/rss.rdf][Nature Genetics AOP]] :nature:
+    :PROPERTIES:
+    :ID:       DA77F975-A150-447E-BE06-A760232069CF
+    :END:
+** Bioinfo :bioinfo:
+   :PROPERTIES:
+   :ID:       12968406-5EC2-4220-938F-670FD2352FF4
+   :END:
+*** TODO [[http://jef.works/feed.xml][Jean Fan's blog]]
+    :PROPERTIES:
+    :ID:       82C9B16B-143B-4BDF-AB8B-ED55F86B3D56
+    :END:
+    :LOGBOOK:
+    - State "TODO"       from              [2018-01-11 Thu 14:50]
+    :END:
+
+    
+    

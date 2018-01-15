@@ -9,6 +9,7 @@
 
 (package! org-bullets :recipe (:fetcher github :repo "hlissner/org-bullets"))
 (package! toc-org)
+;; (package! deft)
 ;; (package! evil-org)
 (package! org-brain)
 (package! org-super-agenda)
@@ -34,11 +35,5 @@
   (package! org-tree-slide)
   (package! ox-reveal))
 
-(when (featurep! +export)
-  (package! calfw)
-  (package! calfw-org)
-  (package! org-gcal)
-  (package! alert)
-  )
 ;; (when (featurep! +publish))
 

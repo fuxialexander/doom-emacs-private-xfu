@@ -129,15 +129,17 @@
   (defun my-org-add-ids-to-headlines-in-file ()
     "Add CUSTOM_ID properties to all headlines in the current file"
     (interactive)
-    (save-excursion
-      (widen)
-      (goto-char (point-min))
-      (org-map-entries 'org-id-get-create)))
+    (unless
+        (or
+         (string-equal (buffer-name) "cal.org")
+         (string-equal (buffer-name) "cal_kevin.org"))
+      (save-excursion
+        (widen)
+        (goto-char (point-min))
+        (org-map-entries 'org-id-get-create))))
 
   (add-hook 'org-capture-prepare-finalize-hook 'org-id-get-create)
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (add-hook 'before-save-hook 'my-org-add-ids-to-headlines-in-file nil 'local)))
+  (add-hook 'org-mode-hook (lambda () (add-hook 'before-save-hook 'my-org-add-ids-to-headlines-in-file nil 'local)))
 ;;;;; org-modify-and-clock-current-heading
   (defun org-modify-and-clock-current-heading ()
     (interactive)
@@ -389,7 +391,7 @@ Returns the new TODO keyword, or nil if no state change should occur."
 ;; Config hooks
 ;;
 
-(add-hook 'after-init-hook 'export-diary-from-cal)
+;; (add-hook 'after-init-hook 'export-diary-from-cal)
 (defun +org|unfold-to-2nd-level-or-point ()
   "My version of the 'overview' #+STARTUP option: expand first-level headings.
 Expands the first level, but no further. If point was left somewhere deeper,

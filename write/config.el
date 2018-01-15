@@ -24,6 +24,12 @@
   (setq synosaurus-choose-method 'default))
 (def-package! mixed-pitch
   :config
+  (push 'org-todo-keyword-todo mixed-pitch-fixed-pitch-faces)
+  (push 'org-todo-keyword-habt mixed-pitch-fixed-pitch-faces)
+  (push 'org-todo-keyword-done mixed-pitch-fixed-pitch-faces)
+  (push 'org-todo-keyword-wait mixed-pitch-fixed-pitch-faces)
+  (push 'org-todo-keyword-kill mixed-pitch-fixed-pitch-faces)
+  (push 'org-todo-keyword-outd mixed-pitch-fixed-pitch-faces)
   (push 'org-special-keyword mixed-pitch-fixed-pitch-faces)
   (push 'org-property-value mixed-pitch-fixed-pitch-faces)
   (push 'font-lock-comment-face mixed-pitch-fixed-pitch-faces)

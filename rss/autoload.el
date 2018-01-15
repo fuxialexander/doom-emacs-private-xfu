@@ -16,7 +16,7 @@
 (defun +rss/quit ()
   (interactive)
   ;; (doom-kill-matching-buffers "^\\*elfeed")
-  (dolist (file +rss-elfeed-files) (when-let* ((buf (get-file-buffer (expand-file-name file +org-dir)))) (kill-buffer buf)))
+  (dolist (file rmh-elfeed-org-files) (when-let* ((buf (get-file-buffer files))) (kill-buffer buf)))
   (+workspace/delete "rss"))
 
 

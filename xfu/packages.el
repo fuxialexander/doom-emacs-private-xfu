@@ -14,9 +14,9 @@
 (package! ivy-bibtex)
 ;; (package! org-ref)
 
-;; (package! outorg)
-;; (package! outshine)
-;; (package! navi-mode)
+(package! outorg)
+(package! outshine)
+(package! navi-mode)
 (package! ess)
 (package! shr-tag-pre-highlight)
 (package! orgit)
@@ -25,6 +25,7 @@
 
 (package! evil-string-inflection)
 (package! electric-operator)
+(package! ialign)
 
 
 (package! yapfify)
@@ -32,3 +33,5 @@
 (package! company-lsp)
 (package! lsp-ui)
 (package! lsp-python)
+(package! lsp-javascript-typescript)
+(package! conda)

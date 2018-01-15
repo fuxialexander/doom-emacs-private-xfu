@@ -21,7 +21,7 @@
  counsel-org-goto-face-style 'org
  counsel-org-headline-display-style 'headline
  +ivy-buffer-icons nil
- ivy-use-virtual-buffers t
+ ivy-use-virtual-buffers nil
  ;; ivy-re-builders-alist '((t . ivy--regex-plus))
  ;; tramp
  tramp-default-method "ssh"
@@ -33,7 +33,8 @@
 (after! recentf
   (add-to-list 'recentf-exclude ".*\\.gz")
   (add-to-list 'recentf-exclude ".*\\.gif")
-  (add-to-list 'recentf-exclude ".*\\.svg"))
+  (add-to-list 'recentf-exclude ".*\\.svg")
+  (add-to-list 'recentf-exclude ".*Cellar.*"))
 
 (defun +my-doom-visible-windows (&optional window-list)
   "Return a list of the visible, non-popup windows."
@@ -69,12 +70,13 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
       (let ((cwd default-directory))
         (+workspace-switch (projectile-project-name) t)
         ;; (switch-to-buffer (doom-fallback-buffer))
-        (setq default-directory cwd)
+        (setq default-directory cwd
+              org-brain-path cwd)
         (counsel-projectile-find-file)
         (+workspace-message (format "Switched to '%s' in new workspace" (+workspace-current-name)) 'success)
         )))
   (setq projectile-switch-project-action #'+myworkspaces|per-project)
-)
+  )
 ;; ** EWW
 (after! shr
   (require 'shr-tag-pre-highlight)
@@ -88,7 +90,8 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
   (add-to-list 'tramp-remote-path "/research/kevinyip10/xfu/miniconda3/bin")
   (add-to-list 'tramp-remote-path "/uac/gds/xfu/bin"))
 ;; ** ESS
-(def-package! ess-site :load-path "~/.emacs.d/.local/packages/elpa/ess-20180109.1719/lisp/"
+(setq ess-path (car (file-expand-wildcards "~/.emacs.d/.local/packages/elpa/ess*/lisp")))
+(def-package! ess-site :load-path ess-path
   :mode (("\\.sp\\'"           . S-mode)
          ("/R/.*\\.q\\'"       . R-mode)
          ("\\.[qsS]\\'"        . S-mode)
@@ -122,7 +125,7 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
   )
 ;; ** Python
 (def-package! yapfify
-  :after anaconda-mode
+  :after python
   :config
   (add-hook 'python-mode-hook 'yapf-mode))
 (after! anaconda-mode
@@ -135,7 +138,7 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
 ;; ** Org
 ;; *** Org-general
 (after! org
-;; **** Misc setting
+  ;; **** Misc setting
   (setq +org-dir "~/Dropbox/org/"
         +rss-org-dir "~/Dropbox/org/"
         org-clock-persist-file (concat doom-cache-dir "org-clock-save.el")
@@ -158,15 +161,14 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
   (setq evil-magit-state 'normal))
 (after! magit
   (set! :popup "^\\*Magit" '((slot . -1) (side . right) (size . 80)) '((modeline . nil) (select . t)))
-  (set! :popup "^\\*magit.*popup\\*" '((slot . 0) (side . right)) '((modeline . nil) (select . t)))
+  (set! :popup "^\\*magit.*popup\\*" '((slot . 1) (side . right)) '((modeline . nil) (select . t)))
   (set! :popup "^\\*magit-revision:.*" '((slot . 0) (side . right) (window-height . 0.6)) '((modeline . nil) (select . t)))
   (set! :popup "^\\*magit-diff:.*" '((slot . 0) (side . right) (window-height . 0.6)) '((modeline . nil) (select . nil)))
-  (add-hook! 'magit-popup-mode-hook #'doom-hide-modeline-mode)
-  )
+  (add-hook! 'magit-popup-mode-hook #'doom-hide-modeline-mode))
 
 ;; ** company
 (require 'company)
-(require 'test-company-childframe "~/.emacs.d/modules/private/xfu/local/test-company-childframe.el")
+(require 'company-childframe "~/.emacs.d/modules/private/xfu/local/company-childframe.el")
 (require 'counsel-company)
 (setq-default company-idle-delay 0.2
               company-minimum-prefix-length 2
@@ -185,8 +187,8 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
               company-transformers '(company-sort-by-occurrence))
 
 (set! :company-backend '(emacs-lisp-mode) '(company-elisp company-files company-yasnippet company-dabbrev-code))
-(set! :company-backend '(python-mode) '(company-anaconda company-files company-yasnippet company-dabbrev-code))
-(set! :company-backend '(org-mode) '(company-files company-yasnippet company-dabbrev company-ispell))
+(set! :company-backend '(python-mode) '(company-lsp company-files company-yasnippet company-dabbrev-code))
+(set! :company-backend '(org-mode) '(company-files company-yasnippet company-dabbrev))
 (set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point)
 
 
@@ -195,15 +197,15 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
 (def-package! emacs-snippets)
 (def-package! electric-operator
   :config
- (add-hook 'python-mode-hook #'electric-operator-mode)
- (add-hook 'ess-mode-hook #'electric-operator-mode))
+  (add-hook 'python-mode-hook #'electric-operator-mode)
+  (add-hook 'ess-mode-hook #'electric-operator-mode))
 (def-package! evil-string-inflection)
+(def-package! ialign)
 ;; ** Display
 ;; (def-package! modern-light-theme)
 (def-package! prettify-utils)
 ;; ** Helpful
 (def-package! helpful
-  :after elisp-mode
   :commands (helpful-callable
              helpful-function
              helpful-variable
@@ -218,59 +220,155 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
     '((transient . nil) (select . t) (quit . t)))
   (setq counsel-describe-function-function 'helpful-callable
         counsel-describe-variable-function 'helpful-variable))
+;; ** python
+(def-package! conda
+  :after (python)
+  :config
+  (setq conda-anaconda-home "/usr/local/anaconda3")
+  (conda-env-initialize-interactive-shells)
+  (conda-env-initialize-eshell)
+  (conda-env-autoactivate-mode t))
 ;; ** Lsp
-;; (def-package! lsp-mode)
-;; (def-package! lsp-ui
-;;   :config
-;;   (setq-default lsp-ui-doc-background "#363C4A")
-;;   (setq-default lsp-ui-doc-frame-parameters '((left . -1)
-;;                                       (top . -1)
-;;                                       (no-accept-focus . t)
-;;                                       (min-width . 0)
-;;                                       (width . 0)
-;;                                       (min-height . 0)
-;;                                       (height . 0)
-;;                                       (internal-border-width . 0)
-;;                                       (vertical-scroll-bars)
-;;                                       (horizontal-scroll-bars)
-;;                                       (left-fringe . 0)
-;;                                       (right-fringe . 0)
-;;                                       (menu-bar-lines . 0)
-;;                                       (tool-bar-lines . 0)
-;;                                       (line-spacing . 0)
-;;                                       (unsplittable . t)
-;;                                       (undecorated . t)
-;;                                       (visibility . t)
-;;                                       (mouse-wheel-frame)
-;;                                       (no-other-frame . t)
-;;                                       (cursor-type)
-;;                                       (no-special-glyphs . t)))
-;;   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
-;; (def-package! company-lsp
-;;   :after lsp-mode
-;;   :config
-;;   (push 'company-lsp company-backends))
-;; (def-package! lsp-python
-;;   :config
-;;   (add-hook 'python-mode-hook #'lsp-python-enable)
-;;   (defun lsp-ui-doc--render-buffer (string symbol)
-;;   "Set the BUFFER with STRING.
-;; SYMBOL."
-;;   (lsp-ui-doc--with-buffer
-;;    (erase-buffer)
-;;    (insert string)
-;;    (lsp-ui-doc--make-clickable-link)
-;;    (rst-mode)
-;;    (setq-local face-remapping-alist `((header-line lsp-ui-doc-header)))
-;;    (setq-local window-min-height 1)
-;;    (setq header-line-format (when lsp-ui-doc-header (concat " " symbol))
-;;          mode-line-format nil
-;;          cursor-type nil)))
-;;   )
+(def-package! lsp-mode
+  :commands (lsp-mode))
+(def-package! lsp-javascript-typescript
+  :after (lsp-mode)
+  :commands (lsp-javascript-typescript-enable
+             lsp-javascript-typescript-enable
+             lsp-javascript-typescript-enable
+             lsp-javascript-typescript-enable)
+  :config
+  (add-hook 'js-mode-hook #'lsp-javascript-typescript-enable)
+  (add-hook 'typescript-mode-hook #'lsp-javascript-typescript-enable) ;; for typescript support
+  (add-hook 'js3-mode-hook #'lsp-javascript-typescript-enable) ;; for js3-mode support
+  (add-hook 'rjsx-mode #'lsp-javascript-typescript-enable) ;; for rjsx-mode support
+)
+(def-package! lsp-ui
+  :after (lsp-mode)
+  :commands (lsp-ui-mode
+             lsp-ui-flycheck-mode
+             lsp-ui-doc-mode
+             lsp-ui-sideline-mode
+             lsp-ui-doc-mode
+             lsp-ui-peek-mode)
+  :config
+  (setq
+   lsp-ui-sideline-enable nil
+   lsp-enable-completion-at-point t
+   lsp-ui-doc-position 'at-point
+   lsp-ui-doc-header nil
+   lsp-ui-doc-include-signature t
+   lsp-ui-doc-background (doom-color 'base4)
+   lsp-ui-doc-border (doom-color 'fg))
+  (setq-default lsp-ui-doc-frame-parameters '((left . -1)
+                                              (top . -1)
+                                              (no-accept-focus . t)
+                                              (min-width . 0)
+                                              (width . 0)
+                                              (min-height . 0)
+                                              (height . 0)
+                                              (internal-border-width . 5)
+                                              (vertical-scroll-bars)
+                                              (horizontal-scroll-bars)
+                                              (left-fringe . 0)
+                                              (right-fringe . 0)
+                                              (menu-bar-lines . 0)
+                                              (tool-bar-lines . 0)
+                                              (line-spacing . 0.1)
+                                              (unsplittable . t)
+                                              (undecorated . t)
+                                              (visibility . nil)
+                                              (mouse-wheel-frame . nil)
+                                              (no-other-frame . t)
+                                              (cursor-type)
+                                              (no-special-glyphs . t)))
+  (defun lsp-ui-doc--make-frame ()
+    "Create the child frame and return it."
+    (lsp-ui-doc--delete-frame)
+    (let* ((after-make-frame-functions nil)
+           (before-make-frame-hook nil)
+           (name-buffer (lsp-ui-doc--make-buffer-name))
+           (buffer (get-buffer name-buffer))
+           (params (append lsp-ui-doc-frame-parameters
+                           `((default-minibuffer-frame . ,(selected-frame))
+                             (minibuffer . ,(minibuffer-window))
+                             (background-color . ,(doom-blend 'blue 'bg 0.1)))))
+           (window (display-buffer-in-child-frame
+                    buffer
+                    `((child-frame-parameters . ,params))))
+           (frame (window-frame window)))
+      (set-frame-parameter nil 'lsp-ui-doc-buffer buffer)
+      (set-window-dedicated-p window t)
+      ;; (redirect-frame-focus frame (frame-parent frame))
+      (set-face-background 'internal-border lsp-ui-doc-border frame)
+      (run-hook-with-args 'lsp-ui-doc-frame-hook frame window)
+      frame))
+  (defun lsp-ui-doc--move-frame (frame)
+    "Place our FRAME on screen."
+    (lsp-ui-doc--resize-buffer)
+    (-let* (((_left top right _bottom) (window-edges nil nil nil t))
+            (window (frame-root-window frame))
+            ((width . height) (window-text-pixel-size window nil nil 10000 10000))
+            (width (+ width (* (frame-char-width frame) 2))) ;; margins
+            (frame-resize-pixelwise t)
+            (x-and-y (company-childframe-compute-pixel-position
+                      (- (point) 1)
+                      (frame-pixel-width frame)
+                      (frame-pixel-height frame))))
+      (set-window-margins window 1 1)
+      (set-frame-size frame width (min 300 height) t)
+      (set-frame-position frame (car x-and-y) (+ (cdr x-and-y) 1))))
+  (defun my-fontify-mode (text mode)
+    (with-temp-buffer
+      (erase-buffer)
+      (insert text)
+      (delay-mode-hooks (funcall mode))
+      (font-lock-default-function mode)
+      (goto-char (point-min))
+      (font-lock-default-fontify-region (point-at-bol) (point-at-eol) nil)
+      (forward-line 1)
+      (while (not (eq (line-number-at-pos) (line-number-at-pos (point-max))))
+        (if (re-search-forward "[][@#$%^&*|+=\\<>{}]" (point-at-eol) t)
+            (font-lock-default-fontify-region (point-at-bol) (point-at-eol) nil))
+        (forward-line 1))
+      (buffer-string)))
+  (defun my-fontify-using-faces (text)
+    (let ((pos 0))
+      (while (setq next (next-single-property-change pos 'face text))
+        (put-text-property pos next 'font-lock-face (get-text-property pos 'face text) text)
+        (setq pos next))
+      (add-text-properties 0  (length text) '(fontified t) text)
+      text))
+  (defun lsp-ui-doc--render-buffer (string symbol)
+    "Set the BUFFER with STRING.
+SYMBOL."
+    (let ((pmode major-mode))
+      (lsp-ui-doc--with-buffer
+       (erase-buffer)
+       (insert (my-fontify-using-faces (my-fontify-mode string pmode)))
+       (lsp-ui-doc--make-clickable-link)
+       (hl-line-mode -1)
+       (setq-local face-remapping-alist `((header-line lsp-ui-doc-header)))
+       (setq-local window-min-height 1)
+       ;; (variable-pitch-mode 1)
+       (setq header-line-format (when lsp-ui-doc-header (concat " " symbol))
+             mode-line-format nil
+             cursor-type nil))))
+
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+(def-package! company-lsp
+  :config
+  ;; (push 'company-lsp company-backends)
+  )
+(def-package! lsp-python
+  :config
+  ;; (add-hook 'python-mode-hook #'lsp-python-enable)
+  (setq python-indent-guess-indent-offset-verbose nil)
+  )
 ;; ** Reference
 ;; *** Org-ref-ivy
 (def-package! org-ref-ivy :load-path "modules/private/xfu/local/org-ref-ivy"
-;; (def-package! org-ref
+  ;; (def-package! org-ref
   :after org
   :commands (org-ref-mode
              org-ref-bibtex-next-entry
@@ -307,10 +405,10 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
                                        org-ref-clean-pages
                                        org-ref-check-journal
                                        org-ref-sort-bibtex-entry)
-     org-ref-default-bibliography '("~/Dropbox/org/Bibliography.bib")
-     org-ref-bibliography-notes "~/Dropbox/org/ref.org"
-          org-ref-pdf-directory "~/Dropbox/org/RefPDF/"
-          org-ref-note-title-format "* %t
+     org-ref-default-bibliography '("~/Dropbox/org/reference/Bibliography.bib")
+     org-ref-bibliography-notes "~/Dropbox/org/reference/ref.org"
+     org-ref-pdf-directory "~/Dropbox/org/reference/pdf/"
+     org-ref-note-title-format "* %t
  :PROPERTIES:
   :CUSTOM_ID: %k
  :END:
@@ -336,7 +434,7 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
       (org-ref-clean-bibtex-entry))
     (defun org-ref-add-bibtex-entry-from-biorxiv (url &optional bibfile)
       (interactive (list
-                    (or (bibtex-autokey-get-field "url")
+                    (or (ignore-errors (bibtex-autokey-get-field "url"))
                         (read-string "URL: "))))
       ;; nil
       (unless bibfile
@@ -397,6 +495,7 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
     ;; (org-ref-doi-utils-get-redirect doi)
     (defun org-ref-get-bibtex-string-from-biorxiv (biorxivurl)
       ;; <a href="/highwire/citation/73994/bibtext"
+      (require 'url-handlers)
       (setq *org-ref-doi-utils-waiting* t)
       (url-retrieve
        biorxivurl
@@ -415,20 +514,20 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
         (if
             (and
              (not (string-equal "bioRxiv"
-                      (bibtex-completion-get-value "journal"
-                                                   (bibtex-completion-get-entry (bibtex-completion-key-at-point)))))
+                                (bibtex-completion-get-value "journal"
+                                                             (bibtex-completion-get-entry (bibtex-completion-key-at-point)))))
              (not (string-equal "bioRxiv"
-                      (bibtex-completion-get-value "location"
-                                                   (bibtex-completion-get-entry (bibtex-completion-key-at-point)))))
+                                (bibtex-completion-get-value "location"
+                                                             (bibtex-completion-get-entry (bibtex-completion-key-at-point)))))
              (not (string-equal "arXiv.org"
-                      (bibtex-completion-get-value "journal"
-                                                   (bibtex-completion-get-entry (bibtex-completion-key-at-point)))))
+                                (bibtex-completion-get-value "journal"
+                                                             (bibtex-completion-get-entry (bibtex-completion-key-at-point)))))
              (not (string-equal ""
-                      (bibtex-completion-get-value "journal"
-                                                   (bibtex-completion-get-entry (bibtex-completion-key-at-point)))))
+                                (bibtex-completion-get-value "journal"
+                                                             (bibtex-completion-get-entry (bibtex-completion-key-at-point)))))
              (not (string-equal ""
-                      (bibtex-completion-get-value "doi"
-                                                   (bibtex-completion-get-entry (bibtex-completion-key-at-point))))))
+                                (bibtex-completion-get-value "doi"
+                                                             (bibtex-completion-get-entry (bibtex-completion-key-at-point))))))
             (progn
               (condition-case nil
                   (call-interactively 'org-ref-doi-utils-update-bibtex-entry-from-doi)
@@ -531,9 +630,9 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
   (setq bibtex-completion-format-citation-functions
         '((org-mode      . bibtex-completion-format-citation-pandoc-citeproc)
           (default       . bibtex-completion-format-citation-default))
-        bibtex-completion-bibliography "~/Dropbox/org/Bibliography.bib"
-        bibtex-completion-library-path "~/Dropbox/org/RefPDF/"
-        bibtex-completion-notes-path "~/Dropbox/org/ref.org"
+        bibtex-completion-bibliography "~/Dropbox/org/reference/Bibliography.bib"
+        bibtex-completion-library-path "~/Dropbox/org/reference/pdf/"
+        bibtex-completion-notes-path "~/Dropbox/org/reference/ref.org"
         bibtex-completion-pdf-field "file"
         bibtex-completion-pdf-open-function (lambda (fpath) (start-process "open" "*open*" "open" fpath))))
 ;; *** Org-Skim
@@ -733,170 +832,185 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
       "return theLink as string\n"))))
 
 ;; ** Outshine
-;; (def-package! outline
-;;   :preface
-;;   (setq outline-minor-mode-prefix "\M-#")
-;;   :defer t
-;;   :init
-;;   (defvar +outline-minor-mode-hooks '(python-mode-hook
-;;                                       emacs-lisp-mode-hook
-;;                                       conf-space-mode-hook) ;For .tmux.conf
-;;     "List of hooks of major modes in which `outline-minor-mode' should be enabled.")
-;;   (defun +turn-on-outline-minor-mode ()
-;;     "Turn on `outline-minor-mode' only for specific modes."
-;;     (interactive)
-;;     (dolist (hook +outline-minor-mode-hooks)
-;;       (add-hook hook #'outline-minor-mode)))
-;;   (defun +turn-off-outline-minor-mode ()
-;;     "Turn off `outline-minor-mode' only for specific modes."
-;;     (interactive)
-;;     (dolist (hook +outline-minor-mode-hooks)
-;;       (remove-hook hook #'outline-minor-mode)))
-;;   (+turn-on-outline-minor-mode)
-;;   :config
-;;   (add-hook 'outline-minor-mode-hook #'outshine-hook-function))
-;; *** def outshine
-;; (def-package! outshine
-;;   :init
-;;   :config
-;;   (add-hook 'outline-minor-mode-hook #'outshine-hook-function)
-;;   (setq outshine-use-speed-commands t)
-;;   (setq outshine-org-style-global-cycling-at-bob-p t)
-;;   (require 'outline-ivy)
-;;   (advice-add 'outshine-narrow-to-subtree :before
-;;               (lambda (&rest args) (unless (outline-on-heading-p t)
-;;                                 (outline-previous-visible-heading 1))))
-;;   (defun outline-cycle (&optional arg)
-;;   "Visibility cycling for outline(-minor)-mode.
-;; - When point is at the beginning of the buffer, or when called with a
-;;   C-u prefix argument, rotate the entire buffer through 3 states:
-;;   1. OVERVIEW: Show only top-level headlines.
-;;   2. CONTENTS: Show all headlines of all levels, but no body text.
-;;   3. SHOW ALL: Show everything.
-;; - When point is at the beginning of a headline, rotate the subtree started
-;;   by this line through 3 different states:
-;;   1. FOLDED:   Only the main headline is shown.
-;;   2. CHILDREN: The main headline and the direct children are shown.  From
-;;                this state, you can move to one of the children and
-;;                zoom in further.
-;;   3. SUBTREE:  Show the entire subtree, including body text.
-;; - When point is not at the beginning of a headline, execute
-;;   `indent-relative', like TAB normally does."
-;;   (interactive "P")
-;;   (setq deactivate-mark t)
-;;   (cond
-;;    ((equal arg '(4))
-;;     ;; Run `outline-cycle' as if at the top of the buffer.
-;;     (let ((outshine-org-style-global-cycling-at-bob-p nil)
-;;           (current-prefix-arg nil))
-;;     (save-excursion
-;;       (goto-char (point-min))
-;;       (outline-cycle nil))))
-;;    (t
-;;     (cond
-;;      ;; Beginning of buffer: Global cycling
-;;      ((or
-;;        ;; outline-magic style behaviour
-;;        (and
-;;         (bobp)
-;;         (not outshine-org-style-global-cycling-at-bob-p))
-;;        ;; org-mode style behaviour
-;;        (and
-;;         (bobp)
-;;         (not (outline-on-heading-p))
-;;         outshine-org-style-global-cycling-at-bob-p))
-;;       (cond
-;;        ((eq last-command 'outline-cycle-overview)
-;;         ;; We just created the overview - now do table of contents
-;;         ;; This can be slow in very large buffers, so indicate action
-;;         (unless outshine-cycle-silently
-;;           (message "CONTENTS..."))
-;;         (save-excursion
-;;           ;; Visit all headings and show their offspring
-;;           (goto-char (point-max))
-;;           (catch 'exit
-;;             (while (and (progn (condition-case nil
-;;                                    (outline-previous-visible-heading 1)
-;;                                  (error (goto-char (point-min))))
-;;                                t)
-;;                         (looking-at outline-regexp))
-;;               (show-branches)
-;;               (if (bobp) (throw 'exit nil))))
-;;           (unless outshine-cycle-silently
-;;             (message "CONTENTS...done")))
-;;         (setq
-;;          this-command 'outline-cycle-toc
-;;          outshine-current-buffer-visibility-state 'contents))
-;;        ((eq last-command 'outline-cycle-toc)
-;;         ;; We just showed the table of contents - now show everything
-;;         (show-all)
-;;         (unless outshine-cycle-silently
-;;           (message "SHOW ALL"))
-;;         (setq
-;;          this-command 'outline-cycle-showall
-;;          outshine-current-buffer-visibility-state 'all))
-;;        (t
-;;         ;; Default action: go to overview
-;;         ;; (hide-sublevels 1)
-;;         (let ((toplevel
-;;                (cond
-;;                 (current-prefix-arg
-;;                  (prefix-numeric-value current-prefix-arg))
-;;                 ((save-excursion
-;;                    (beginning-of-line)
-;;                    (looking-at outline-regexp))
-;;                  (max 1 (funcall outline-level)))
-;;                 (t 1))))
-;;           (hide-sublevels toplevel))
-;;         (unless outshine-cycle-silently
-;;           (message "OVERVIEW"))
-;;         (setq
-;;          this-command 'outline-cycle-overview
-;;          outshine-current-buffer-visibility-state 'overview))))
-;;      ((save-excursion (beginning-of-line 1) (looking-at outline-regexp))
-;;       ;; At a heading: rotate between three different views
-;;       (outline-back-to-heading)
-;;       (let ((goal-column 0) beg eoh eol eos)
-;;         ;; First, some boundaries
-;;         (save-excursion
-;;           (outline-back-to-heading)           (setq beg (point))
-;;           (save-excursion (outline-next-line) (setq eol (point)))
-;;           (outline-end-of-heading)            (setq eoh (point))
-;;           (outline-end-of-subtree)            (setq eos (point)))
-;;         ;; Find out what to do next and set `this-command'
-;;         (cond
-;;          ((= eos eoh)
-;;           ;; Nothing is hidden behind this heading
-;;           (unless outshine-cycle-silently
-;;             (message "EMPTY ENTRY")))
-;;          ((>= eol eos)
-;;           ;; Entire subtree is hidden in one line: open it
-;;           (show-entry)
-;;           (show-children)
-;;           (unless outshine-cycle-silently
-;;             (message "CHILDREN"))
-;;           (setq
-;;            this-command 'outline-cycle-children))
-;;            ;; outshine-current-buffer-visibility-state 'children))
-;;          ((eq last-command 'outline-cycle-children)
-;;           ;; We just showed the children, now show everything.
-;;           (show-subtree)
-;;           (unless outshine-cycle-silently
-;;             (message "SUBTREE")))
-;;          (t
-;;           ;; Default action: hide the subtree.
-;;           (hide-subtree)
-;;           (unless outshine-cycle-silently
-;;             (message "FOLDED"))))))
-;;      ;; TAB emulation
-;;      ((outline-cycle-emulate-tab)
-;;       (call-interactively #'+evil/matchit-or-toggle-fold))
-;;      (t (outline-back-to-heading))
-;;      ))))
-;;   )
+(def-package! outline
+  :preface
+  (setq outline-minor-mode-prefix "\M-#")
+  :defer t
+  :init
+  (defvar +outline-minor-mode-hooks '(python-mode-hook
+                                      emacs-lisp-mode-hook
+                                      conf-space-mode-hook) ;For .tmux.conf
+    "List of hooks of major modes in which `outline-minor-mode' should be enabled.")
+  (defun +turn-on-outline-minor-mode ()
+    "Turn on `outline-minor-mode' only for specific modes."
+    (interactive)
+    (dolist (hook +outline-minor-mode-hooks)
+      (add-hook hook #'outline-minor-mode)))
+  (defun +turn-off-outline-minor-mode ()
+    "Turn off `outline-minor-mode' only for specific modes."
+    (interactive)
+    (dolist (hook +outline-minor-mode-hooks)
+      (remove-hook hook #'outline-minor-mode)))
+  (+turn-on-outline-minor-mode)
+  :config
+  (add-hook 'outline-minor-mode-hook #'outshine-hook-function))
+;; ** Outshine
+(def-package! outshine
+  :init
+  :config
+  (add-hook 'outline-minor-mode-hook #'outshine-hook-function)
+  (setq outshine-use-speed-commands t)
+  (setq outshine-org-style-global-cycling-at-bob-p t)
+  (require 'outline-ivy)
+  (advice-add 'outshine-narrow-to-subtree :before
+              (lambda (&rest args) (unless (outline-on-heading-p t)
+                                (outline-previous-visible-heading 1))))
+  (defun outline-cycle (&optional arg)
+    "Visibility cycling for outline(-minor)-mode.
+- When point is at the beginning of the buffer, or when called with a
+  C-u prefix argument, rotate the entire buffer through 3 states:
+  1. OVERVIEW: Show only top-level headlines.
+  2. CONTENTS: Show all headlines of all levels, but no body text.
+  3. SHOW ALL: Show everything.
+- When point is at the beginning of a headline, rotate the subtree started
+  by this line through 3 different states:
+  1. FOLDED:   Only the main headline is shown.
+  2. CHILDREN: The main headline and the direct children are shown.  From
+               this state, you can move to one of the children and
+               zoom in further.
+  3. SUBTREE:  Show the entire subtree, including body text.
+- When point is not at the beginning of a headline, execute
+  `indent-relative', like TAB normally does."
+    (interactive "P")
+    (setq deactivate-mark t)
+    (cond
+     ((equal arg '(4))
+      ;; Run `outline-cycle' as if at the top of the buffer.
+      (let ((outshine-org-style-global-cycling-at-bob-p nil)
+            (current-prefix-arg nil))
+        (save-excursion
+          (goto-char (point-min))
+          (outline-cycle nil))))
+     (t
+      (cond
+       ;; Beginning of buffer: Global cycling
+       ((or
+         ;; outline-magic style behaviour
+         (and
+          (bobp)
+          (not outshine-org-style-global-cycling-at-bob-p))
+         ;; org-mode style behaviour
+         (and
+          (bobp)
+          (not (outline-on-heading-p))
+          outshine-org-style-global-cycling-at-bob-p))
+        (cond
+         ((eq last-command 'outline-cycle-overview)
+          ;; We just created the overview - now do table of contents
+          ;; This can be slow in very large buffers, so indicate action
+          (unless outshine-cycle-silently
+            (message "CONTENTS..."))
+          (save-excursion
+            ;; Visit all headings and show their offspring
+            (goto-char (point-max))
+            (catch 'exit
+              (while (and (progn (condition-case nil
+                                     (outline-previous-visible-heading 1)
+                                   (error (goto-char (point-min))))
+                                 t)
+                          (looking-at outline-regexp))
+                (show-branches)
+                (if (bobp) (throw 'exit nil))))
+            (unless outshine-cycle-silently
+              (message "CONTENTS...done")))
+          (setq
+           this-command 'outline-cycle-toc
+           outshine-current-buffer-visibility-state 'contents))
+         ((eq last-command 'outline-cycle-toc)
+          ;; We just showed the table of contents - now show everything
+          (show-all)
+          (unless outshine-cycle-silently
+            (message "SHOW ALL"))
+          (setq
+           this-command 'outline-cycle-showall
+           outshine-current-buffer-visibility-state 'all))
+         (t
+          ;; Default action: go to overview
+          ;; (hide-sublevels 1)
+          (let ((toplevel
+                 (cond
+                  (current-prefix-arg
+                   (prefix-numeric-value current-prefix-arg))
+                  ((save-excursion
+                     (beginning-of-line)
+                     (looking-at outline-regexp))
+                   (max 1 (funcall outline-level)))
+                  (t 1))))
+            (hide-sublevels toplevel))
+          (unless outshine-cycle-silently
+            (message "OVERVIEW"))
+          (setq
+           this-command 'outline-cycle-overview
+           outshine-current-buffer-visibility-state 'overview))))
+       ((save-excursion (beginning-of-line 1) (looking-at outline-regexp))
+        ;; At a heading: rotate between three different views
+        (outline-back-to-heading)
+        (let ((goal-column 0) beg eoh eol eos)
+          ;; First, some boundaries
+          (save-excursion
+            (outline-back-to-heading)           (setq beg (point))
+            (save-excursion (outline-next-line) (setq eol (point)))
+            (outline-end-of-heading)            (setq eoh (point))
+            (outline-end-of-subtree)            (setq eos (point)))
+          ;; Find out what to do next and set `this-command'
+          (cond
+           ((= eos eoh)
+            ;; Nothing is hidden behind this heading
+            (unless outshine-cycle-silently
+              (message "EMPTY ENTRY")))
+           ((>= eol eos)
+            ;; Entire subtree is hidden in one line: open it
+            (show-entry)
+            (show-children)
+            (unless outshine-cycle-silently
+              (message "CHILDREN"))
+            (setq
+             this-command 'outline-cycle-children))
+           ;; outshine-current-buffer-visibility-state 'children))
+           ((eq last-command 'outline-cycle-children)
+            ;; We just showed the children, now show everything.
+            (show-subtree)
+            (unless outshine-cycle-silently
+              (message "SUBTREE")))
+           (t
+            ;; Default action: hide the subtree.
+            (hide-subtree)
+            (unless outshine-cycle-silently
+              (message "FOLDED"))))))
+       ;; TAB emulation
+       ((outline-cycle-emulate-tab)
+        (call-interactively #'+evil/matchit-or-toggle-fold))
+       (t (outline-back-to-heading))
+       ))))
+  )
 
-;; ** Ivy
 ;; * Theme
 ;; (require 'modern-common "~/Source/modern-light-theme/modern-common.el")
-;; (setq doom-theme 'modern-spacegray)
+;; (setq doom-theme 'doom-solarizedlight)
 (setq twittering-connection-type-order '(wget urllib-http native urllib-https))
+
+;; Hydra
+
+(setq +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin)
+
+(run-with-idle-timer
+ 5 nil
+ (lambda ()
+   (setq gc-cons-threshold 1000000)
+   (message "gc-cons-threshold restored to %S"
+            gc-cons-threshold)))
+
+(after! neotree
+  (set! :popup "^ ?\\*NeoTree"
+    `((side . ,neo-window-position) (window-width . ,neo-window-width))
+    '((quit . current) (select . t))))

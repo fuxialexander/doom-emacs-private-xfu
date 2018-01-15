@@ -53,10 +53,14 @@
 ;; *** Other sensible, textmate-esque global bindings
       :ne "s-e"                 #'+eval/buffer
       :ne "s-E"                 #'+eval/region-and-replace
-      :ne "s-b"                 #'+eval/build
+      :ne "s-b"                 #'+org/open-brain-here
       :ne "s-a"                 #'mark-whole-buffer
       :ne "s-q"   (if (daemonp) #'delete-frame #'save-buffers-kill-emacs)
       :ne "s-f"                 #'swiper
+      :ne "s-F"               #'(lambda () "swiper" (interactive) (swiper
+                                                                (if (symbol-at-point)
+                                                                    (format "\\_<%s\\_> " (symbol-at-point))
+                                                                  nil)))
       :ne "s-/"                 #'evil-commentary-line
       ;; :ne "C-M-f"            #'doom/toggle-fullscreen
       :n  "s-s"                 #'save-buffer
@@ -190,6 +194,7 @@
 ;; *** git
         (:desc "git" :prefix "g"
           :desc "Git status"            :n  "g" #'magit-status
+          :desc "Git Hydra"             :n  "." #'+version-control@git-gutter/body
           :desc "Git blame"             :n  "b" #'magit-blame
           :desc "Git time machine"      :n  "t" #'git-timemachine-toggle
           :desc "Git stage hunk"        :n  "s" #'git-gutter:stage-hunk
@@ -202,7 +207,7 @@
         (:desc "help" :prefix "h"
           :n "h" help-map
           :desc "Apropos"               :n  "a" #'apropos
-          :desc "Reload theme"          :n  "R" #'doom//reload-theme
+          :desc "Reload theme"          :n  "r" #'doom//reload-theme
           :desc "Find library"          :n  "l" #'find-library
           :desc "Command log"           :n  "L" #'global-command-log-mode
           :desc "Describe function"     :n  "f" #'counsel-describe-function
@@ -522,6 +527,9 @@
         "C-u" #'ivy-kill-line
         "C-b" #'backward-word
         "C-f" #'forward-word)
+      (:after swiper
+        :map swiper-map
+        "s-l" #'swiper-avy)
 ;; *** realgud
       (:after realgud
         :map realgud:shortkey-mode-map

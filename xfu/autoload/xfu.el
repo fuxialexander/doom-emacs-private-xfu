@@ -7,7 +7,7 @@
   (cond ((eq 'org-mode (buffer-local-value 'major-mode (current-buffer)))
             (counsel-org-goto))
         ((bound-and-true-p outline-minor-mode)
-         (counsel-imenu))
+         (counsel-oi))
         (t (counsel-imenu))))
 
 ;;;; Mac
@@ -148,3 +148,14 @@
 (+xfu--def-find-in! snippets +xfu-snippets-dir)
 ;; NOTE No need for a browse-snippets variant, use `yas-visit-snippet-file'
 
+;;;###autoload
+(defun cfw:open-org-calendar-withoutkevin ()
+  (interactive)
+  (let ((org-agenda-files '("~/Dropbox/org/" "~/Dropbox/org/cal/cal.org")))
+    (call-interactively '+calendar/open-calendar)))
+
+;;;###autoload
+(defun cfw:open-org-calendar-withkevin ()
+  (interactive)
+  (let ((org-agenda-files '("~/Dropbox/org/" "~/Dropbox/org/cal/")))
+    (call-interactively '+calendar/open-calendar)))

@@ -5,14 +5,16 @@
 (add-to-list 'load-path "~/Source/org-mode/lisp/")
 (add-to-list 'load-path "~/Source/org-mode/contrib/lisp/")
 ;; Prevents the unstyled mode-line flash at startup
-(setq-default mode-line-format nil
-              fringe-indicator-alist (delq
-                                      (assq 'truncation fringe-indicator-alist)
-                                      (delq (assq 'continuation fringe-indicator-alist)
-                                            fringe-indicator-alist)))
+(setq-default
+ gc-cons-threshold 100000000
+ mode-line-format nil
+ fringe-indicator-alist (delq
+                         (assq 'truncation fringe-indicator-alist)
+                         (delq (assq 'continuation fringe-indicator-alist)
+                               fringe-indicator-alist)))
 
 (or standard-display-table
-      (setq standard-display-table (make-display-table)))
+    (setq standard-display-table (make-display-table)))
 (set-display-table-slot standard-display-table 0 ?\ )
 
 
@@ -92,3 +94,4 @@
 ;;         :nv "f" #'anaconda-mode-find-file
 ;;         :nv "u" #'anaconda-mode-find-references)
 ;;   nil)
+
