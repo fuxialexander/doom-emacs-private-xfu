@@ -14,6 +14,8 @@
 (package! ivy-bibtex)
 ;; (package! org-ref)
 
+(package! ov)
+(package! alert)
 (package! outorg)
 (package! outshine)
 (package! navi-mode)
@@ -28,10 +30,6 @@
 (package! ialign)
 
 
-(package! yapfify)
 (package! lsp-mode)
 (package! company-lsp)
 (package! lsp-ui)
-(package! lsp-python)
-(package! lsp-javascript-typescript)
-(package! conda)

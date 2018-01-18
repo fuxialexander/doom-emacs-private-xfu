@@ -235,11 +235,12 @@
        :nm "+" #'elfeed-show-tag
        :nm "-" #'elfeed-show-untag
        :nm "s" #'elfeed-show-new-live-search
-       :nm "y" #'elfeed-show-yank))))
+       :nm "y" #'elfeed-show-yank)))
+    (elfeed-org))
 
 ;;;; Elfeed-org
 (def-package! elfeed-org
-  :after (:all org elfeed)
+  :commands (elfeed-org)
   :config
   (setq rmh-elfeed-org-files '("~/.emacs.d/modules/private/rss/elfeed.org"))
   (elfeed-org))

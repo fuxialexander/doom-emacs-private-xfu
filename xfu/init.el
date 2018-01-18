@@ -1,9 +1,8 @@
 ;;; private/xfu/init.el -*- lexical-binding: t; -*-
 
 (add-to-list 'load-path "~/.emacs.d/modules/private/xfu/local/")
-(add-to-list 'load-path "~/Source/modern-light-theme/")
-(add-to-list 'load-path "~/Source/org-mode/lisp/")
-(add-to-list 'load-path "~/Source/org-mode/contrib/lisp/")
+(add-to-list 'load-path "~/Source/tools/org-mode/lisp/")
+(add-to-list 'load-path "~/Source/tools/org-mode/contrib/lisp/")
 ;; Prevents the unstyled mode-line flash at startup
 (setq-default
  gc-cons-threshold 100000000
@@ -31,7 +30,7 @@
  evil-respect-visual-line-mode t
  doom-font (font-spec :family "SF mono" :size 12)
  doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 14)
- doom-unicode-font (font-spec :family "SF Mono" :size 12)
+ doom-unicode-font (font-spec :family "Symbola" :size 12)
  doom-big-font (font-spec :family "SF Mono" :size 16)
  doom-line-numbers-style nil
  +doom-modeline-buffer-file-name-style 'relative-to-project
@@ -41,18 +40,22 @@
  doom-neotree-folder-size 1.0
  doom-neotree-chevron-size 0.6
 
+ max-specpdl-size 10000
  indicate-buffer-boundaries nil
  indicate-empty-lines nil
  frame-alpha-lower-limit 0
  which-key-idle-delay 0.3
  +xfu-snippets-dir "~/.emacs.d/modules/private/xfu/snippets"
-
  org-ellipsis " + ")
-
-(defvar outline-minor-mode-prefix "\M-#")
 
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(ns-appearance . 'dark))
+(run-with-idle-timer
+ 5 nil
+ (lambda ()
+   (setq gc-cons-threshold 1000000)
+   (message "gc-cons-threshold restored to %S"
+            gc-cons-threshold)))
 
 (add-hook! doom-big-font-mode
   (setq +doom-modeline-height (if doom-big-font-mode 37 29)))
@@ -77,21 +80,3 @@
   (pretty-magit "master"  ? (:box nil :height 1.0 :family "github-octicons") t)
   (pretty-magit "origin"  ? (:box nil :height 1.0 :family "github-octicons") t)
   t)
-
-
-;; (def-package-hook! company-anaconda
-;;   :pre-config
-;;   (set! :company-backend 'python-mode '(company-anaconda company-yasnippet))
-;;   (set! :jump 'python-mode
-;;     :definition #'anaconda-mode-find-definitions
-;;     :references #'anaconda-mode-find-referenences
-;;     :documentation #'anaconda-mode-show-doc)
-;;   (map! :map anaconda-mode-map
-;;         :leader
-;;         :nv "d" #'anaconda-mode-find-definitions
-;;         :nv "h" #'anaconda-mode-show-doc
-;;         :nv "a" #'anaconda-mode-find-assignments
-;;         :nv "f" #'anaconda-mode-find-file
-;;         :nv "u" #'anaconda-mode-find-references)
-;;   nil)
-

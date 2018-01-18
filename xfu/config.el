@@ -8,6 +8,9 @@
  ;; outshine-use-speed-commands t
  ivy-use-selectable-prompt t
  ivy-auto-select-single-candidate t
+ ivy-re-builders-alist '((t . ivy--regex-ignore-order)
+                         (t . ivy--regex-plus)
+                         (t . ivy--regex-fuzzy))
  visual-fill-column-center-text t
  line-spacing nil
  frame-resize-pixelwise t
@@ -58,7 +61,7 @@ the workspace and move to the next."
 
 (add-hook 'minibuffer-setup-hook #'smartparens-mode)
 (add-hook 'minibuffer-setup-hook #'doom|no-fringes-in-minibuffer)
-;; (set-window-fringes (minibuffer-window) 0 0 nil)
+(set-window-fringes (minibuffer-window) 0 0 nil)
 (after! yasnippet
   (setq yas-snippet-dirs '(+xfu-snippets-dir +file-templates-dir)))
 ;; ** persp
@@ -120,27 +123,15 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
          ("\\.[Jj][Aa][Gg]\\'" . ess-jags-mode)
          ("\\.[Jj][Oo][Gg]\\'" . ess-jags-mode)
          ("\\.[Jj][Mm][Dd]\\'" . ess-jags-mode))
-  :commands (R stata julia SAS)
-  :init
-  )
-;; ** Python
-(def-package! yapfify
-  :after python
+  :commands (R stata julia SAS))
+(def-package! alert
   :config
-  (add-hook 'python-mode-hook 'yapf-mode))
-(after! anaconda-mode
-  (set! :popup "^\\*anaconda-mode"
-    '((size . +popup-shrink-to-fit))
-    '((select . nil) (quit . t)))
-  (set! :popup "^\\*Anaconda\\*$"
-    '((size . +popup-shrink-to-fit))
-    '((select . nil) (quit . t))))
+  (setq alert-default-style 'notifier))
 ;; ** Org
 ;; *** Org-general
 (after! org
   ;; **** Misc setting
   (setq +org-dir "~/Dropbox/org/"
-        +rss-org-dir "~/Dropbox/org/"
         org-clock-persist-file (concat doom-cache-dir "org-clock-save.el")
         org-id-locations-file (concat doom-cache-dir ".org-id-locations")
         org-publish-timestamp-directory (concat doom-cache-dir ".org-timestamps/")
@@ -154,27 +145,29 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
 (def-package! magithub
   :after magit
   :ensure t
-  :config (magithub-feature-autoinject t))
+  :config
+  (magithub-feature-autoinject t)
+  (setq magithub-preferred-remote-method 'clone_url))
 (def-package! evil-magit :after magit
   :init
   ;; optional: this is the evil state that evil-magit will use
   (setq evil-magit-state 'normal))
 (after! magit
   (set! :popup "^\\*Magit" '((slot . -1) (side . right) (size . 80)) '((modeline . nil) (select . t)))
-  (set! :popup "^\\*magit.*popup\\*" '((slot . 1) (side . right)) '((modeline . nil) (select . t)))
-  (set! :popup "^\\*magit-revision:.*" '((slot . 0) (side . right) (window-height . 0.6)) '((modeline . nil) (select . t)))
-  (set! :popup "^\\*magit-diff:.*" '((slot . 0) (side . right) (window-height . 0.6)) '((modeline . nil) (select . nil)))
+  (set! :popup "^\\*magit.*popup\\*" '((slot . 0) (side . right)) '((modeline . nil) (select . t)))
+  (set! :popup "^\\*magit-revision:.*" '((vslot . -1) (side . right) (window-height . 0.6)) '((modeline . nil) (select . t)))
+  (set! :popup "^\\*magit-diff:.*" '((vslot . -1) (side . right) (window-height . 0.6)) '((modeline . nil) (select . nil)))
   (add-hook! 'magit-popup-mode-hook #'doom-hide-modeline-mode))
 
 ;; ** company
 (require 'company)
 (require 'company-childframe "~/.emacs.d/modules/private/xfu/local/company-childframe.el")
-(require 'counsel-company)
 (setq-default company-idle-delay 0.2
               company-minimum-prefix-length 2
               company-tooltip-limit 10
               company-tooltip-minimum-width 60
               company-tooltip-margin 0
+              company-tooltip-offset-display nil
               company-dabbrev-downcase nil
               company-dabbrev-ignore-case nil
               company-dabbrev-code-other-buffers t
@@ -187,8 +180,7 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
               company-transformers '(company-sort-by-occurrence))
 
 (set! :company-backend '(emacs-lisp-mode) '(company-elisp company-files company-yasnippet company-dabbrev-code))
-(set! :company-backend '(python-mode) '(company-lsp company-files company-yasnippet company-dabbrev-code))
-(set! :company-backend '(org-mode) '(company-files company-yasnippet company-dabbrev))
+(set! :company-backend '(org-mode) '(company-math-symbols-unicode company-files company-yasnippet company-dabbrev))
 (set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point)
 
 
@@ -196,11 +188,13 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
 ;; ** Misc
 (def-package! emacs-snippets)
 (def-package! electric-operator
-  :config
+  :commands (electric-operator-mode)
+  :init
   (add-hook 'python-mode-hook #'electric-operator-mode)
   (add-hook 'ess-mode-hook #'electric-operator-mode))
-(def-package! evil-string-inflection)
-(def-package! ialign)
+;; (def-package! evil-string-inflection
+;;   :commands ())
+;; (def-package! ialign)
 ;; ** Display
 ;; (def-package! modern-light-theme)
 (def-package! prettify-utils)
@@ -220,37 +214,12 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
     '((transient . nil) (select . t) (quit . t)))
   (setq counsel-describe-function-function 'helpful-callable
         counsel-describe-variable-function 'helpful-variable))
-;; ** python
-(def-package! conda
-  :after (python)
-  :config
-  (setq conda-anaconda-home "/usr/local/anaconda3")
-  (conda-env-initialize-interactive-shells)
-  (conda-env-initialize-eshell)
-  (conda-env-autoactivate-mode t))
 ;; ** Lsp
 (def-package! lsp-mode
   :commands (lsp-mode))
-(def-package! lsp-javascript-typescript
-  :after (lsp-mode)
-  :commands (lsp-javascript-typescript-enable
-             lsp-javascript-typescript-enable
-             lsp-javascript-typescript-enable
-             lsp-javascript-typescript-enable)
-  :config
-  (add-hook 'js-mode-hook #'lsp-javascript-typescript-enable)
-  (add-hook 'typescript-mode-hook #'lsp-javascript-typescript-enable) ;; for typescript support
-  (add-hook 'js3-mode-hook #'lsp-javascript-typescript-enable) ;; for js3-mode support
-  (add-hook 'rjsx-mode #'lsp-javascript-typescript-enable) ;; for rjsx-mode support
-)
+
 (def-package! lsp-ui
-  :after (lsp-mode)
-  :commands (lsp-ui-mode
-             lsp-ui-flycheck-mode
-             lsp-ui-doc-mode
-             lsp-ui-sideline-mode
-             lsp-ui-doc-mode
-             lsp-ui-peek-mode)
+  :hook (lsp-mode . lsp-ui-mode)
   :config
   (setq
    lsp-ui-sideline-enable nil
@@ -353,20 +322,14 @@ SYMBOL."
        ;; (variable-pitch-mode 1)
        (setq header-line-format (when lsp-ui-doc-header (concat " " symbol))
              mode-line-format nil
-             cursor-type nil))))
+             cursor-type nil)))))
 
-  (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 (def-package! company-lsp
-  :config
-  ;; (push 'company-lsp company-backends)
-  )
-(def-package! lsp-python
-  :config
-  ;; (add-hook 'python-mode-hook #'lsp-python-enable)
-  (setq python-indent-guess-indent-offset-verbose nil)
-  )
+  :after lsp-mode)
+
 ;; ** Reference
 ;; *** Org-ref-ivy
+(add-hook 'org-mode-hook #'org-ref-mode)
 (def-package! org-ref-ivy :load-path "modules/private/xfu/local/org-ref-ivy"
   ;; (def-package! org-ref
   :after org
@@ -657,12 +620,16 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
         "    set active note of document 1 to item theNote of notes of page thePage of document 1\n"
         "end if\n"
         "end tell"))))
-  ;; (defadvice org-capture-finalize
-  ;;     (after org-capture-finalize-after activate)
-  ;;   "Advise capture-finalize to close the frame"
-  ;;   (if (equal "SA" (org-capture-get :key))
-  ;;       (do-applescript "tell application \"Skim\"\n    activate\nend tell")))
-  (add-hook 'org-capture-prepare-finalize-hook #'(lambda () (my-as-set-skim-org-link (org-id-get-create))))
+  (defadvice org-capture-finalize
+      (after org-capture-finalize-after activate)
+    "Advise capture-finalize to close the frame"
+    (if (or (equal "SA" (org-capture-get :key))
+            (equal "GSA" (org-capture-get :key)))
+        (do-applescript "tell application \"Skim\"\n    activate\nend tell")))
+  (add-hook 'org-capture-prepare-finalize-hook
+            #'(lambda () (if (or (equal "SA" (org-capture-get :key))
+                            (equal "GSA" (org-capture-get :key)))
+                        (my-as-set-skim-org-link (org-id-get-create)))))
   (defun my-as-set-skim-org-link (id)
     (do-applescript (concat
                      "tell application \"Skim\"\n"
@@ -835,7 +802,7 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
 (def-package! outline
   :preface
   (setq outline-minor-mode-prefix "\M-#")
-  :defer t
+  :defer 5
   :init
   (defvar +outline-minor-mode-hooks '(python-mode-hook
                                       emacs-lisp-mode-hook
@@ -851,14 +818,15 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
     (interactive)
     (dolist (hook +outline-minor-mode-hooks)
       (remove-hook hook #'outline-minor-mode)))
-  (+turn-on-outline-minor-mode)
-  :config
-  (add-hook 'outline-minor-mode-hook #'outshine-hook-function))
-;; ** Outshine
+  (+turn-on-outline-minor-mode))
+
+(add-hook 'outline-minor-mode-hook #'outshine-hook-function)
+
 (def-package! outshine
-  :init
+  :commands (outshine-hook-function
+             outline-cycle)
+  :defer 5
   :config
-  (add-hook 'outline-minor-mode-hook #'outshine-hook-function)
   (setq outshine-use-speed-commands t)
   (setq outshine-org-style-global-cycling-at-bob-p t)
   (require 'outline-ivy)
@@ -994,8 +962,7 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
        ))))
   )
 
-;; * Theme
-;; (require 'modern-common "~/Source/modern-light-theme/modern-common.el")
+;; * Misc
 ;; (setq doom-theme 'doom-solarizedlight)
 (setq twittering-connection-type-order '(wget urllib-http native urllib-https))
 
@@ -1003,14 +970,57 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
 
 (setq +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin)
 
-(run-with-idle-timer
- 5 nil
- (lambda ()
-   (setq gc-cons-threshold 1000000)
-   (message "gc-cons-threshold restored to %S"
-            gc-cons-threshold)))
 
+;; ** neotree
 (after! neotree
   (set! :popup "^ ?\\*NeoTree"
     `((side . ,neo-window-position) (window-width . ,neo-window-width))
     '((quit . current) (select . t))))
+
+;; ** smartparens
+(after! smartparens
+  ;; Auto-close more conservatively and expand braces on RET
+  (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
+  (sp-local-pair 'org-mode "\\[" "\\]")
+
+  (let ((unless-list '(sp-point-before-word-p
+                       sp-point-after-word-p
+                       sp-point-before-same-p)))
+    (sp-pair "'"  nil :unless unless-list)
+    (sp-pair "\"" nil :unless unless-list))
+  (sp-pair "{" nil :post-handlers '(("||\n[i]" "RET") ("| " " "))
+           :unless '(sp-point-before-word-p sp-point-before-same-p))
+  (sp-pair "(" nil :post-handlers '(("||\n[i]" "RET") ("| " " "))
+           :unless '(sp-point-before-word-p sp-point-before-same-p))
+  (sp-pair "[" nil :post-handlers '(("| " " "))
+           :unless '(sp-point-before-word-p sp-point-before-same-p)))
+
+(after! counsel
+  (defun +ivy-recentf-transformer (str)
+    "Dim recentf entries that are not in the current project of the buffer you
+started `counsel-recentf' from. Also uses `abbreviate-file-name'."
+   (abbreviate-file-name str))
+  (defun +ivy/reloading (cmd)
+    (lambda (x)
+      (funcall cmd x)
+      (ivy--reset-state ivy-last)))
+  (defun +ivy/given-file (cmd prompt) ; needs lexical-binding
+    (lambda (source)
+      (let ((target
+             (let ((enable-recursive-minibuffers t))
+               (read-file-name
+                (format "%s %s to:" prompt source)))))
+        (funcall cmd source target 1))))
+  (defun +ivy/confirm-delete-file (x)
+    (dired-delete-file x 'confirm-each-subdirectory))
+  (ivy-add-actions
+   'counsel-find-file
+   `(("c" ,(+ivy/given-file #'copy-file "Copy file") "copy file")
+     ("d" ,(+ivy/reloading #'+ivy/confirm-delete-file) "delete")
+     ("m" ,(+ivy/reloading (+ivy/given-file #'rename-file "Move")) "move")
+     ("f" find-file-other-window "other window"))))
+
+
+(defun doom/goto-main-window (pname window_or_frame)
+  (ignore-errors (select-window (car (+my-doom-visible-windows)))))
+(setq persp-before-switch-functions 'doom/goto-main-window)

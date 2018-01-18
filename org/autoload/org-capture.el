@@ -90,3 +90,8 @@ you're done. This can be called from an external shell script."
 (defun +org-capture-available-keys ()
   "TODO"
   (string-join (mapcar #'car org-capture-templates) ""))
+
+;;;###autoload
+(defun +org-move-point-to-heading ()
+        (cond ((org-at-heading-p) (org-beginning-of-line))
+              (t (org-previous-visible-heading 1))))

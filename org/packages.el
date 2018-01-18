@@ -13,6 +13,7 @@
 ;; (package! evil-org)
 (package! org-brain)
 (package! org-super-agenda)
+;; (package! org-clock-convenience)
 
 (when (featurep! +attach)
   (package! org-download))
@@ -26,6 +27,12 @@
   (package! ob-ipython)
   (package! ob-sql-mode)
   (package! ob-translate))
+
+(when (featurep! +latex)
+  (package! company-math)
+  ;; (package! cdlatex)
+  ;; (package! org-edit-latex)
+)
 
 (when (featurep! +export)
   (package! ox-pandoc))

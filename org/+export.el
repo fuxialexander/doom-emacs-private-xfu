@@ -10,29 +10,43 @@
   :config
   (when (executable-find "pandoc")
     (push 'pandoc org-export-backends))
-  (setq org-pandoc-options
+  (setq
+   org-pandoc-options-for-html5 '(
+                                  (email-obfuscation . nil)
+                                  (standalone . t)
+                                  (section-divs . t)
+                                  (table-of-contents . t)
+                                  (toc-depth . 3)
+                                  (variable . "toc_float=1")
+                                  (variable . "toc_collapsed=1")
+                                  (variable . "toc_smooth_scroll=1")
+                                  (variable . "toc_print=1")
+                                  (variable . "toc_selectors=h1,h2,h3")
+                                  (template . "~/Dropbox/org/template.html")
+                                  (highlight-style . tango)
+                                  (variable . "theme:bootstrap")
+                                  )
+   org-pandoc-options
         '((standalone . t)
           (mathjax . t)
-          (self-contained . t)
-          (parse-raw . t))))
+          (self-contained . t))))
 
 ;;
 (defun +org|init-export ()
   (add-transient-hook! #'org-export-dispatch (require 'ox-pandoc))
   (add-transient-hook! #'org-export-dispatch (require 'ox-alex))
 
-  (setq org-export-directory (expand-file-name ".export" +org-dir)
-        org-export-backends '(alex latex md)
+  (setq org-export-backends '(alex latex md)
         org-export-with-toc t
         org-export-with-author t)
-
   ;; Always export to a central location
-  (unless (file-directory-p org-export-directory)
-    (make-directory org-export-directory t))
   (defun +org*export-output-file-name (args)
     "Return a centralized export location."
-    (unless (nth 2 args)
-      (setq args (append args (list org-export-directory))))
+    (let ((org-export-directory (expand-file-name ".export" default-directory)))
+      (unless (file-directory-p org-export-directory)
+        (make-directory org-export-directory t))
+      (unless (nth 2 args)
+      (setq args (append args (list org-export-directory)))))
     args)
   (advice-add #'org-export-output-file-name
               :filter-args #'+org*export-output-file-name))

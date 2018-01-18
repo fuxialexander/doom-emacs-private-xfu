@@ -25,7 +25,6 @@
 
 (def-package! toc-org
   :commands toc-org-enable)
-
 ;; (def-package! deft
 ;;   :commands (deft)
 ;;   :init
@@ -117,8 +116,14 @@ If run interactively, get ENTRY from context."
           (:name "Scheduled earlier\n"
                  :scheduled past)))
   (org-super-agenda-mode))
-
-;;
+;; (def-package! org-clock-convenience
+;;   :after org-agenda
+;;   :bind (:map org-agenda-mode-map
+;;    	   ("<C-up>" . org-clock-convenience-timestamp-up)
+;;    	   ("<C-down>" . org-clock-convenience-timestamp-down)
+;;    	   ("s-o" . org-clock-convenience-fill-gap)
+;;    	   ("s-e" . org-clock-convenience-fill-gap-both)))
+;; ;;
 ;; Bootstrap
 ;;
 (add-hook! 'org-load-hook

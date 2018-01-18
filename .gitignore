@@ -7,3 +7,6 @@
 /default/+evil-commands.el
 /default/+bindings.el
 /org/secret.el
+/.DS_Store
+/xfu/local/org-ref-ivy/.DS_Store
+/xfu/snippets/org-mode/.DS_Store

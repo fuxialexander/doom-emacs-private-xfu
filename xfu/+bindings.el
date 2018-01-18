@@ -237,13 +237,14 @@
           :desc "REPL"                :n  "r" #'+eval/open-repl
           :v  "r" #'+eval:repl
           :desc "Neotree"             :n  "n" #'+neotree/toggle
-          ;; :desc "Terminal"            :n  "t" #'+term/open-popup
-          ;; :desc "Terminal in project" :n  "T" #'+term/open-popup-in-project
+          :desc "Terminal"            :n  "t" #'+term/open-popup
+          :desc "Terminal in project" :n  "T" #'+term/open-popup-in-project
 ;; *** applications
           :desc "Twitter"             :n "2" #'=twitter
           :desc "RSS"                 :n "e" #'=rss
           ;; :desc "Calendar"            :n "c" #'=calendar
           :desc "Calendar"            :n "c" #'=calendar
+          :desc "Eshell"              :n "s" #'+eshell/open-popup
           :desc "Mail"                :n "m" #'=mail
           )
 ;; *** project

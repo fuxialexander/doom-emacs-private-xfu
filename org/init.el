@@ -5,6 +5,8 @@
 (defun +org-init-ui ()
   "Configures the UI for `org-mode'."
   (setq-default
+   org-clock-persist-file (expand-file-name ".org-clock-persist-data.el" +org-dir)
+   org-clock-persist t
    org-agenda-compact-blocks t
    org-id-link-to-org-use-id t
    org-adapt-indentation nil
@@ -38,38 +40,7 @@
    org-startup-with-inline-images nil
    org-tags-column 0
    org-use-sub-superscripts '{}
-   outline-blank-line t
-
-   ;; LaTeX previews are too small and usually render to light backgrounds, so
-   ;; this enlargens them and ensures their background (and foreground) match the
-   ;; current theme.
-   org-preview-latex-process-alist '((imagemagick :programs
-              ("latex" "convert")
-              :description
-              "pdf > png"
-              :message
-              "you need to install the programs: latex and imagemagick."
-              :use-xcolor
-              t
-              :image-input-type
-              "pdf"
-              :image-output-type
-              "png"
-              :image-size-adjust
-              (1.0 . 1.0)
-              :latex-compiler
-              ("pdflatex -interaction nonstopmode -output-directory %o %f")
-              :image-converter
-              ("convert -density 200 -trim -antialias %f -quality 100 %O")))
-   org-preview-latex-default-process 'imagemagick
-   org-preview-latex-image-directory (concat doom-cache-dir "org-latex/")
-   org-format-latex-options `(:background ,(doom-color 'bg)
-                              :foreground ,(doom-color 'fg)
-                              :scale 0.5
-                              :html-foreground ,(doom-color 'fg)
-                              ;; :html-background "Transparent"
-                              ;; :html-scale 1.0
-                              :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
+   outline-blank-line t)
 ;;;;custom links
   ;;  Custom links
   (org-link-set-parameters

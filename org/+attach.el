@@ -62,7 +62,7 @@
 
 ;;
 (defun +org|init-attach ()
-  (setq org-attach-directory (expand-file-name +org-attach-dir +org-dir))
+  (setq org-attach-directory +org-attach-dir)
 
   (push (car (last (split-string +org-attach-dir "/" t)))
         projectile-globally-ignored-directories)

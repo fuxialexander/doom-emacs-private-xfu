@@ -16,8 +16,19 @@
 (defvar +org-default-notes-file "inbox.org"
   "TODO")
 
+
 (defvar org-capture-templates
-  '(("SA" "Skim Annotation" entry
+  `(("GSA" "General Skim Annotation" entry
+     (file+function (lambda () (buffer-file-name)) +org-move-point-to-heading)
+     "* %^{Logging for...} :skim_annotation:read:literature:
+:PROPERTIES:
+:Created: %U
+:SKIM_NOTE: %(my-org-mac-skim-get-page)
+:SKIM_PAGE: %(int-to-string (my-as-get-skim-page))
+:END:
+%i
+%?")
+    ("SA" "Skim Annotation" entry
      (file+function org-ref-bibliography-notes my-org-move-point-to-capture-skim-annotation)
      "* %^{Logging for...} :skim_annotation:read:literature:
 :PROPERTIES:
@@ -55,7 +66,7 @@
 %i
 %?" )
     ("j" "Journal" entry
-     (function my-org-move-point-to-capture)
+     (function +org-move-point-to-heading)
      "* %^{Logging for...} :logs:
 :PROPERTIES:
 :Created: %U
@@ -74,7 +85,7 @@
 %i
 %?"  :clock-in t  )
     ("m" "Meeting Minutes" entry
-     (function my-org-move-point-to-capture)
+     (function +org-move-point-to-heading)
      "* %^{Logging for...} :logs:
 :PROPERTIES:
 :Created: %U
@@ -83,7 +94,7 @@
 %i
 %?"  :clock-in t  )
     ("u" "Write-up" entry
-     (function my-org-move-point-to-capture)
+     (function +org-move-point-to-heading)
      "* %^{Logging for...} :writeup:
 :PROPERTIES:
 :Created: %U
@@ -148,6 +159,9 @@ Brief description:
   (setq org-default-notes-file (expand-file-name +org-default-notes-file +org-dir))
 
   (add-hook 'org-capture-after-finalize-hook #'+org-capture|cleanup-frame)
+  (defun +org-move-point-to-heading ()
+    (cond ((org-at-heading-p) (org-beginning-of-line))
+          (t (org-previous-visible-heading 1))))
 
   (when (featurep! :feature evil)
     (add-hook 'org-capture-mode-hook #'evil-insert-state))
