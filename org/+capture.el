@@ -20,7 +20,7 @@
 (defvar org-capture-templates
   `(("GSA" "General Skim Annotation" entry
      (file+function (lambda () (buffer-file-name)) +org-move-point-to-heading)
-     "* %^{Logging for...} :skim_annotation:read:literature:
+     "* %^{Logging for...} :skim_annotation:read:
 :PROPERTIES:
 :Created: %U
 :SKIM_NOTE: %(my-org-mac-skim-get-page)

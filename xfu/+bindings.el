@@ -216,7 +216,7 @@
           :desc "Describe char"         :n  "c" #'describe-char
           :desc "Describe mode"         :n  "M" #'describe-mode
           :desc "Describe variable"     :n  "v" #'counsel-describe-variable
-          :desc "Describe face"         :n  "F" #'describe-face
+          :desc "Describe face"         :n  "t" #'describe-face
           :desc "Describe DOOM setting" :n  "s" #'doom/describe-setting
           :desc "Describe DOOM module"  :n  "d" #'doom/describe-module
           :desc "Find definition"       :n  "." #'+lookup/definition

@@ -11,6 +11,7 @@
  ivy-re-builders-alist '((t . ivy--regex-ignore-order)
                          (t . ivy--regex-plus)
                          (t . ivy--regex-fuzzy))
+ ivy-rich-parse-remote-buffer nil
  visual-fill-column-center-text t
  line-spacing nil
  frame-resize-pixelwise t
@@ -24,12 +25,12 @@
  counsel-org-goto-face-style 'org
  counsel-org-headline-display-style 'headline
  +ivy-buffer-icons nil
- ivy-use-virtual-buffers nil
+ ivy-use-virtual-buffers t
  ;; ivy-re-builders-alist '((t . ivy--regex-plus))
  ;; tramp
  tramp-default-method "ssh"
- tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no"
- tramp-remote-process-environment (quote ("TMOUT=0" "LC_CTYPE=''" "TERM=dumb" "INSIDE_EMACS='27.0.50,tramp:2.2.13.25.2'" "CDPATH=" "HISTORY=" "MAIL=" "MAILCHECK=" "MAILPATH=" "PAGER=cat" "autocorrect=" "correct=" "http_proxy=http://proxy.cse.cuhk.edu.hk:8000" "https_proxy=http://proxy.cse.cuhk.edu.hk:8000" "ftp_proxy=http://proxy.cse.cuhk.edu.hk:8000"))
+ tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=600"
+ tramp-remote-process-environment (quote ("TMOUT=0" "LC_CTYPE=''" "TRAMP='yes'" "CDPATH=" "HISTORY=" "MAIL=" "MAILCHECK=" "MAILPATH=" "PAGER=cat" "autocorrect=" "correct=" "http_proxy=http://proxy.cse.cuhk.edu.hk:8000" "https_proxy=http://proxy.cse.cuhk.edu.hk:8000" "ftp_proxy=http://proxy.cse.cuhk.edu.hk:8000"))
  org-bullets-bullet-list '("#" "#" "#" "#" "#" "#" "#" "#")
  )
 
@@ -63,7 +64,7 @@ the workspace and move to the next."
 (add-hook 'minibuffer-setup-hook #'doom|no-fringes-in-minibuffer)
 (set-window-fringes (minibuffer-window) 0 0 nil)
 (after! yasnippet
-  (setq yas-snippet-dirs '(+xfu-snippets-dir +file-templates-dir)))
+  (setq yas-snippet-dirs '(+xfu-snippets-dir)))
 ;; ** persp
 (after! persp-mode
   (defun +myworkspaces|per-project (&optional root)
@@ -130,7 +131,7 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
 ;; ** Org
 ;; *** Org-general
 (after! org
-  ;; **** Misc setting
+;; **** Misc setting
   (setq +org-dir "~/Dropbox/org/"
         org-clock-persist-file (concat doom-cache-dir "org-clock-save.el")
         org-id-locations-file (concat doom-cache-dir ".org-id-locations")
@@ -184,6 +185,14 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
 (set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point)
 
 
+(def-package! counsel-tramp
+  :config
+  (setq make-backup-files nil)
+  ;; (setq create-lockfiles nil)
+  (add-hook 'counsel-tramp-pre-command-hook '(lambda () (projectile-mode 0)
+                                               (editorconfig-mode 0)))
+  (add-hook 'counsel-tramp-quit-hook '(lambda () (projectile-mode 1)
+			                            (editorconfig-mode 1))))
 ;; * Def-Packages
 ;; ** Misc
 (def-package! emacs-snippets)
@@ -194,7 +203,6 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
   (add-hook 'ess-mode-hook #'electric-operator-mode))
 ;; (def-package! evil-string-inflection
 ;;   :commands ())
-;; (def-package! ialign)
 ;; ** Display
 ;; (def-package! modern-light-theme)
 (def-package! prettify-utils)
@@ -259,8 +267,9 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
            (name-buffer (lsp-ui-doc--make-buffer-name))
            (buffer (get-buffer name-buffer))
            (params (append lsp-ui-doc-frame-parameters
-                           `((default-minibuffer-frame . ,(selected-frame))
-                             (minibuffer . ,(minibuffer-window))
+                           `(
+                             ;; (default-minibuffer-frame . ,(selected-frame))
+                             ;; (minibuffer . ,(minibuffer-window))
                              (background-color . ,(doom-blend 'blue 'bg 0.1)))))
            (window (display-buffer-in-child-frame
                     buffer
@@ -326,7 +335,6 @@ SYMBOL."
 
 (def-package! company-lsp
   :after lsp-mode)
-
 ;; ** Reference
 ;; *** Org-ref-ivy
 (add-hook 'org-mode-hook #'org-ref-mode)
@@ -580,7 +588,7 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
              )
         (start-process "Live Preview" nil "/usr/bin/qlmanage" "-p" pdf)
         )))
-  ;; **** Ivy-bibtex customize function
+;; **** Ivy-bibtex customize function
   ;; (ivy-bibtex-ivify-action bibtex-completion-open-uri ivy-bibtex-open-papers)
   (ivy-bibtex-ivify-action bibtex-completion-quicklook ivy-bibtex-quicklook)
   (setq
@@ -628,8 +636,8 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
         (do-applescript "tell application \"Skim\"\n    activate\nend tell")))
   (add-hook 'org-capture-prepare-finalize-hook
             #'(lambda () (if (or (equal "SA" (org-capture-get :key))
-                            (equal "GSA" (org-capture-get :key)))
-                        (my-as-set-skim-org-link (org-id-get-create)))))
+                                 (equal "GSA" (org-capture-get :key)))
+                             (my-as-set-skim-org-link (org-id-get-create)))))
   (defun my-as-set-skim-org-link (id)
     (do-applescript (concat
                      "tell application \"Skim\"\n"
@@ -797,7 +805,6 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
       "\"::split::\" & theContent\n"
       "end tell\n"
       "return theLink as string\n"))))
-
 ;; ** Outshine
 (def-package! outline
   :preface
@@ -819,20 +826,18 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
     (dolist (hook +outline-minor-mode-hooks)
       (remove-hook hook #'outline-minor-mode)))
   (+turn-on-outline-minor-mode))
-
 (add-hook 'outline-minor-mode-hook #'outshine-hook-function)
-
 (def-package! outshine
   :commands (outshine-hook-function
              outline-cycle)
   :defer 5
   :config
-  (setq outshine-use-speed-commands t)
-  (setq outshine-org-style-global-cycling-at-bob-p t)
+  (setq outshine-use-speed-commands t
+        outshine-org-style-global-cycling-at-bob-p t)
   (require 'outline-ivy)
   (advice-add 'outshine-narrow-to-subtree :before
               (lambda (&rest args) (unless (outline-on-heading-p t)
-                                (outline-previous-visible-heading 1))))
+                                     (outline-previous-visible-heading 1))))
   (defun outline-cycle (&optional arg)
     "Visibility cycling for outline(-minor)-mode.
 - When point is at the beginning of the buffer, or when called with a
@@ -959,9 +964,81 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
        ((outline-cycle-emulate-tab)
         (call-interactively #'+evil/matchit-or-toggle-fold))
        (t (outline-back-to-heading))
-       ))))
-  )
+       )))))
+(after! outorg
+  (set! :popup "^\\*outorg-edit-buffer\\*" '((side . right) (size . 0.3)) '((quit) (transient) (modeline . t)))
+  (defun outorg-copy-and-convert ()
+    "Copy code buffer content to temp buffer and convert it to Org syntax.
+If `outorg-edit-whole-buffer' is non-nil, copy the whole buffer,
+otherwise the current subtree."
+    (when (buffer-live-p (get-buffer outorg-edit-buffer-name))
+      (if (y-or-n-p (format "%s exists - save and overwrite contents " outorg-edit-buffer-name))
+          (with-current-buffer outorg-edit-buffer-name
+            (outorg-save-edits-to-tmp-file))
+        (user-error "Edit as Org cancelled.")))
+    (let* ((edit-buffer (get-buffer-create outorg-edit-buffer-name)))
+      (save-restriction
+        ;; Erase edit-buffer
+        (with-current-buffer edit-buffer
+          (erase-buffer))
+        ;; Copy code buffer content
+        (copy-to-buffer edit-buffer
+                        (if outorg-edit-whole-buffer-p
+                            (point-min)
+                          (save-excursion
+                            (outline-back-to-heading 'INVISIBLE-OK)
+                            (point)))
+                        (if outorg-edit-whole-buffer-p
+                            (point-max)
+                          (save-excursion
+                            (outline-end-of-subtree)
+                            (point)))))
+      ;; Switch to edit buffer
+      (let ((window (display-buffer edit-buffer)))
+        (with-selected-window window
+          (outorg-reinstall-markers-in-region (point-min))
+          ;; Set point
+          (goto-char outorg-edit-buffer-point-marker)
+          ;; Activate programming language major mode and convert to org
+          (let ((mode (outorg-get-buffer-mode (marker-buffer outorg-code-buffer-point-marker))))
+            ;; Special case R-mode
+            (delay-mode-hooks
+              (if (eq mode 'ess-mode)
+                (funcall 'R-mode)
+              (funcall mode))))
+          ;; Convert oldschool elisp headers to outshine headers
+          (when outorg-oldschool-elisp-headers-p
+            (outorg-convert-oldschool-elisp-buffer-to-outshine)
+            ;; Reset var to original state after conversion
+            (setq outorg-oldschool-elisp-headers-p t))
+          ;; Call conversion function
+          (outorg-convert-to-org)
+          ;; Change major mode to org-mode
+          (org-mode)
 
+          ;; Activate minor mode outorg-edit-minor-mode
+          (outorg-edit-minor-mode)
+
+          ;; Set outline visibility
+          (if (not outorg-edit-whole-buffer-p)
+              (show-all)
+            (hide-sublevels 3)
+            (ignore-errors (show-subtree))
+            ;; Insert export template
+            (cond (outorg-ask-user-for-export-template-file-p
+                   (call-interactively 'outorg-insert-export-template-file))
+                  (outorg-insert-default-export-template-p
+                   (outorg-insert-default-export-template))))
+          )
+        (select-window window)
+        ;; Reinstall outorg-markers
+        ;; Update md5 for watchdoc
+        (when (and outorg-propagate-changes-p
+                   (require 'org-watchdoc nil t))
+          (org-watchdoc-set-md5))
+        ;; Reset buffer-undo-list
+        (setq buffer-undo-list nil)))
+    ))
 ;; * Misc
 ;; (setq doom-theme 'doom-solarizedlight)
 (setq twittering-connection-type-order '(wget urllib-http native urllib-https))
@@ -969,14 +1046,11 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
 ;; Hydra
 
 (setq +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin)
-
-
 ;; ** neotree
 (after! neotree
   (set! :popup "^ ?\\*NeoTree"
     `((side . ,neo-window-position) (window-width . ,neo-window-width))
     '((quit . current) (select . t))))
-
 ;; ** smartparens
 (after! smartparens
   ;; Auto-close more conservatively and expand braces on RET
@@ -995,11 +1069,13 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
   (sp-pair "[" nil :post-handlers '(("| " " "))
            :unless '(sp-point-before-word-p sp-point-before-same-p)))
 
-(after! counsel
-  (defun +ivy-recentf-transformer (str)
+(defun +ivy-recentf-transformer (str)
     "Dim recentf entries that are not in the current project of the buffer you
 started `counsel-recentf' from. Also uses `abbreviate-file-name'."
    (abbreviate-file-name str))
+;; * Ivy Actions
+(after! counsel
+;; ** counsel-find-file
   (defun +ivy/reloading (cmd)
     (lambda (x)
       (funcall cmd x)
@@ -1018,9 +1094,18 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
    `(("c" ,(+ivy/given-file #'copy-file "Copy file") "copy file")
      ("d" ,(+ivy/reloading #'+ivy/confirm-delete-file) "delete")
      ("m" ,(+ivy/reloading (+ivy/given-file #'rename-file "Move")) "move")
-     ("f" find-file-other-window "other window"))))
+     ("f" find-file-other-window "other window")))
+;; ** counsel-M-x
+  (defun +ivy/helpful-function (prompt)
+    (helpful-function (intern prompt)))
+  (ivy-add-actions
+   'counsel-M-x
+   `(("h" +ivy/helpful-function "Helpful")))
+
+  )
 
 
 (defun doom/goto-main-window (pname window_or_frame)
   (ignore-errors (select-window (car (+my-doom-visible-windows)))))
 (setq persp-before-switch-functions 'doom/goto-main-window)
+

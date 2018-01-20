@@ -7,6 +7,8 @@
 
 (package! helpful)
 
+(package! counsel-tramp)
+
 (package! company)
 (package! company-statistics)
 (package! company-dict)
@@ -27,7 +29,6 @@
 
 (package! evil-string-inflection)
 (package! electric-operator)
-(package! ialign)
 
 
 (package! lsp-mode)

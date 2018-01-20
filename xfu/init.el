@@ -28,10 +28,10 @@
 
 ;;; UI
  evil-respect-visual-line-mode t
- doom-font (font-spec :family "SF mono" :size 12)
- doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 14)
+ doom-font (font-spec :family "operator mono" :size 13)
+ doom-variable-pitch-font (font-spec :family "operator ssm" :size 14)
  doom-unicode-font (font-spec :family "Symbola" :size 12)
- doom-big-font (font-spec :family "SF Mono" :size 16)
+ doom-big-font (font-spec :family "operator Mono" :size 16)
  doom-line-numbers-style nil
  +doom-modeline-buffer-file-name-style 'relative-to-project
  doom-neotree-enable-variable-pitch nil
@@ -79,4 +79,10 @@
   (pretty-magit "Docs"    ? (:foreground "#3F681C" :height 1.0 :family "FontAwesome"))
   (pretty-magit "master"  ? (:box nil :height 1.0 :family "github-octicons") t)
   (pretty-magit "origin"  ? (:box nil :height 1.0 :family "github-octicons") t)
+  t)
+
+(def-package-hook! ssh-deploy
+  :pre-init
+  (def-package! ediff-diff
+    :commands (ediff-same-file-contents))
   t)

@@ -22,8 +22,7 @@ is loaded.")
         python-indent-guess-indent-offset-verbose nil
         python-shell-interpreter "python")
   :config
-  (add-hook! 'python-mode-hook #'(flycheck-mode highlight-numbers-mode conda-env-autoactivate-mode))
-
+  (add-hook! 'python-mode-hook #'(highlight-numbers-mode))
   (set! :repl 'python-mode #'+python/repl)
   (set! :electric 'python-mode :chars '(?:))
 
@@ -47,7 +46,8 @@ is loaded.")
           (if conda-env-current-name
               (format "Py:conda:%s" conda-env-current-name)
             "Python")))
-  (add-hook 'python-mode-hook #'+python|add-version-to-modeline)
+  (add-hook 'conda-postactivate-hook #'+python|add-version-to-modeline)
+  (add-hook 'conda-postdeactivate-hook #'+python|add-version-to-modeline)
 
   (define-key python-mode-map (kbd "DEL") nil) ; interferes with smartparens
   (sp-with-modes 'python-mode
@@ -57,11 +57,13 @@ is loaded.")
   :after python
   :config
   (setq conda-anaconda-home "/usr/local/anaconda3")
+  (conda-env-autoactivate-mode -1)
+  (add-hook 'python-mode-hook #'conda-env-activate-for-buffer)
   (conda-env-initialize-interactive-shells)
   (conda-env-initialize-eshell))
 
 (def-package! lsp-python
-  :hook (python-mode . lsp-python-enable)
+  :commands (lsp-python-enable)
   :config
   (setq python-indent-guess-indent-offset-verbose nil)
   (set! :company-backend '(python-mode) '(company-lsp company-files company-yasnippet))
