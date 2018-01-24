@@ -119,11 +119,14 @@
       (nil . "${author}, /${title}/ (${year})."))))
   "Format strings for formatted bibtex entries for different citation backends.
 Used in `org-ref-format-entry'."
+  :type 'alist
   :group 'org-ref-bibtex)
 
 (defcustom org-ref-formatted-citation-backend "text"
   "The backend format for formatted citations.
-Should be one of the cars of `org-ref-formatted-citation-formats'.")
+Should be one of the cars of `org-ref-formatted-citation-formats'."
+  :type 'string
+  :group 'org-ref-bibtex)
 
 (defcustom org-ref-bibtex-assoc-pdf-with-entry-move-function 'rename-file
   "Function to use when associating pdf files with bibtex entries.

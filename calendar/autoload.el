@@ -20,7 +20,6 @@
 ;;;###autoload
 (defun +calendar/open-calendar ()
   (interactive)
-  (let ((org-agenda-)))
   (cfw:open-calendar-buffer
    :contents-sources
    (list

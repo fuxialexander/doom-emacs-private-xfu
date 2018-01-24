@@ -47,7 +47,7 @@ See the variable `mixed-pitch-fixed-pitch-faces' for a list of
 which faces remain fixed pitch. The height and pitch of faces is
 inherited from `variable-pitch' and `default'."
     :lighter " MPM"
-    (let ((var-pitch (face-attribute 'variable-pitch :family))
+    (let (;;(var-pitch (face-attribute 'variable-pitch :family))
           (var-height (face-attribute 'variable-pitch :height))
           (fix-pitch (face-attribute 'default :family))
           (fix-height (face-attribute 'default :height)))

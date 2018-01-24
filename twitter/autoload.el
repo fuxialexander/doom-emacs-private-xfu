@@ -41,5 +41,5 @@
     (with-current-buffer buf
       (twittering-rerender-timeline-all buf t)
       (setq-local line-spacing 0.2)
-      (goto-line 0 buf)
+      (goto-char (point-min))
       )))

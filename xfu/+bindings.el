@@ -91,7 +91,6 @@
         :desc "Find project files"      :n "/"   #'counsel-projectile-find-file
         :desc "Toggle last popup"       :n "~"   #'+popup/toggle
         :desc "Eval expression"         :n "`"   #'eval-expression
-        :desc "Blink cursor line"       :n "DEL" #'+doom/blink-cursor
         :desc "Jump to bookmark"        :n "RET" #'bookmark-jump
 ;; *** C-u is used by evil
         :desc "Universal argument"      :n "u"  #'universal-argument
@@ -368,20 +367,7 @@
         :n "s"         #'neotree-enter-horizontal-split
         :n "q"         #'neotree-hide
         :n "R"         #'neotree-refresh)
-;; *** outline & outshine
-      (:after outline
-        (:map outline-minor-mode-map
-          :n [tab] #'outline-cycle
-          :n [backtab] #'outshine-cycle-buffer
-          :localleader
-          (:desc "outline" :prefix "o"
-            :desc "Edit as Org"     :n "e" #'outorg-edit-as-org
-            :desc "Agenda"          :n "a" #'outshine-agenda
-            :desc "Clock-in"        :n "i" #'outshine-clock-in
-            :desc "Insert"          :n "h" #'outshine-insert-heading
-            :desc "Clock-out"       :n "o" #'outshine-clock-out
-            :desc "Promote"         :n "p" #'outline-promote
-            :desc "Jump to Heading" :n "j" #'counsel-oi)))
+
 ;; *** company-mode
       (:after company
         (:map company-active-map

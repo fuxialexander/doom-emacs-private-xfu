@@ -25,7 +25,11 @@ is loaded.")
   (add-hook! 'python-mode-hook #'(highlight-numbers-mode))
   (set! :repl 'python-mode #'+python/repl)
   (set! :electric 'python-mode :chars '(?:))
-
+  (map! (:map python-mode-map
+          (:localleader
+            :desc "Conda Enable" :n "c" #'conda-env-activate-for-buffer
+            :desc "LSP Enable"   :n "l" #'lsp-python-enable
+            )))
   (when (executable-find "ipython")
     (setq python-shell-interpreter "ipython"
           ;; python-shell-interpreter-args "-i"
@@ -39,15 +43,6 @@ is loaded.")
           "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
     )
 
-  ;; Version management with pyenv
-  (defun +python|add-version-to-modeline ()
-    "Add version string to the major mode in the modeline."
-    (setq mode-name
-          (if conda-env-current-name
-              (format "Py:conda:%s" conda-env-current-name)
-            "Python")))
-  (add-hook 'conda-postactivate-hook #'+python|add-version-to-modeline)
-  (add-hook 'conda-postdeactivate-hook #'+python|add-version-to-modeline)
 
   (define-key python-mode-map (kbd "DEL") nil) ; interferes with smartparens
   (sp-with-modes 'python-mode
@@ -58,9 +53,18 @@ is loaded.")
   :config
   (setq conda-anaconda-home "/usr/local/anaconda3")
   (conda-env-autoactivate-mode -1)
-  (add-hook 'python-mode-hook #'conda-env-activate-for-buffer)
+  ;; (add-hook 'python-mode-hook #'conda-env-activate-for-buffer)
   (conda-env-initialize-interactive-shells)
-  (conda-env-initialize-eshell))
+  (conda-env-initialize-eshell)
+    ;; Version management with pyenv
+  (defun +python|add-version-to-modeline ()
+    "Add version string to the major mode in the modeline."
+    (setq mode-name
+          (if conda-env-current-name
+              (format "Py:conda:%s" conda-env-current-name)
+            "Python")))
+  (add-hook 'conda-postactivate-hook #'+python|add-version-to-modeline)
+  (add-hook 'conda-postdeactivate-hook #'+python|add-version-to-modeline))
 
 (def-package! lsp-python
   :commands (lsp-python-enable)

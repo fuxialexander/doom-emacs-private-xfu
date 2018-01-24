@@ -1,17 +1,31 @@
 ;;; private/xfu/init.el -*- lexical-binding: t; -*-
 
 (add-to-list 'load-path "~/.emacs.d/modules/private/xfu/local/")
+(add-to-list 'load-path "~/Source/playground/redditor-mode")
 (add-to-list 'load-path "~/Source/tools/org-mode/lisp/")
 (add-to-list 'load-path "~/Source/tools/org-mode/contrib/lisp/")
 ;; Prevents the unstyled mode-line flash at startup
 (setq-default
- gc-cons-threshold 100000000
  mode-line-format nil
+ frame-title-format "DOOM Emacs %b"
+ exec-path '("/usr/local/opt/texinfo/bin/" "/usr/local/opt/openssl/bin/"
+             "/Library/Internet\\ Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin/"
+             "/usr/local/bin/"
+             "/usr/local/anaconda3/bin/"
+             "/usr/local/texlive/2017/bin/x86_64-darwin/"
+             "/usr/local/opt/imagemagick@6/bin/"
+             "/usr/local/opt/curl/bin/"
+             "/usr/local/sbin/"
+             "/usr/local/opt/texinfo/bin/"
+             "/usr/texbin/"
+             "/usr/bin/"
+             "/bin/"
+             "/usr/local/Cellar/emacs-plus/HEAD-ffeb116/libexec/emacs/27.0.50/x86_64-apple-darwin17.3.0/")
  fringe-indicator-alist (delq
                          (assq 'truncation fringe-indicator-alist)
                          (delq (assq 'continuation fringe-indicator-alist)
                                fringe-indicator-alist)))
-
+(setenv "PATH" "/usr/local/opt/texinfo/bin:/usr/local/opt/openssl/bin:/Library/Internet\\ Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin:/usr/local/bin:/usr/local/anaconda3/bin:/usr/local/texlive/2017/bin/x86_64-darwin:/usr/local/opt/imagemagick@6/bin:/usr/local/opt/curl/bin:/usr/local/sbin:/usr/local/opt/texinfo/bin:/usr/texbin:/usr/bin:/bin")
 (or standard-display-table
     (setq standard-display-table (make-display-table)))
 (set-display-table-slot standard-display-table 0 ?\ )
@@ -29,7 +43,7 @@
 ;;; UI
  evil-respect-visual-line-mode t
  doom-font (font-spec :family "operator mono" :size 13)
- doom-variable-pitch-font (font-spec :family "operator ssm" :size 14)
+ doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 14)
  doom-unicode-font (font-spec :family "Symbola" :size 12)
  doom-big-font (font-spec :family "operator Mono" :size 16)
  doom-line-numbers-style nil
@@ -50,12 +64,7 @@
 
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(ns-appearance . 'dark))
-(run-with-idle-timer
- 5 nil
- (lambda ()
-   (setq gc-cons-threshold 1000000)
-   (message "gc-cons-threshold restored to %S"
-            gc-cons-threshold)))
+
 
 (add-hook! doom-big-font-mode
   (setq +doom-modeline-height (if doom-big-font-mode 37 29)))
@@ -86,3 +95,6 @@
   (def-package! ediff-diff
     :commands (ediff-same-file-contents))
   t)
+
+(def-package-hook! company-ghc
+  :disable t)

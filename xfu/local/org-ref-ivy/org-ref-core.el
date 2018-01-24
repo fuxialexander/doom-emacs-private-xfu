@@ -133,7 +133,9 @@ insert the ref link."
   :group 'org-ref)
 
 (defcustom org-ref-prefer-bracket-links nil
-  "If non-nil use bracketed links when inserting them.")
+  "If non-nil use bracketed links when inserting them."
+  :type 'boolean
+  :group 'org-ref)
 
 (defcustom org-ref-cite-onclick-function
   nil
@@ -153,7 +155,7 @@ function in `org-ref-completion-library'."
   "String to format an entry.
 Just the reference, no numbering at the beginning, etc... see the
 `org-ref-reftex-format-citation' docstring for the escape codes."
-  :type 'string
+  :type 'alist
   :group 'org-ref)
 
 (defcustom org-ref-note-title-format
@@ -214,7 +216,9 @@ moves the headline to the top of the buffer."
       (insert (format "cite:%s\n" (org-entry-get (point) "CUSTOM_ID")))))
   "List of hook functions to run in the note entry after it is created.
 The function takes no arguments. It could be used to insert links
-to the citation, or pdf, etc...")
+to the citation, or pdf, etc..."
+  :type 'function
+  :group 'org-ref)
 
 (defcustom org-ref-open-pdf-function
   'org-ref-open-pdf-at-point
@@ -349,6 +353,7 @@ have fields sorted alphabetically."
 
 (defcustom org-ref-show-broken-links t
   "If non-nil show bad org-ref links in a warning face."
+  :type 'boolean
   :group 'org-ref)
 
 ;;* font lock for org-ref

@@ -25,15 +25,20 @@
 
 (def-package! toc-org
   :commands toc-org-enable)
-;; (def-package! deft
-;;   :commands (deft)
-;;   :init
-;;   (progn
-;;     (setq deft-extensions '("org" "md" "txt")
-;;           deft-text-mode 'org-mode
-;;           deft-directory "~/Dropbox/org"
-;;           deft-use-filename-as-title t
-;;           deft-use-filter-string-for-filename t)))
+(def-package! org-wild-notifier
+  :commands (org-wild-notifier-mode
+             org-wild-notifier-check)
+  :config
+  (defun org-wild-notifier--retrieve-events ()
+    "Get events from agenda view."
+    (->> (org-split-string (buffer-string) "\n")
+         (--map (plist-get
+                 (org-fix-agenda-info (text-properties-at 0 it))
+                 'org-marker))
+         (--filter (let ((todo (org-entry-get it "TODO")))
+                     (or (equal "TODO" todo)
+                         (equal "HABT" todo))))
+         (-map 'org-wild-notifier--gather-info))))
 
 (def-package! org-bullets
   :commands org-bullets-mode

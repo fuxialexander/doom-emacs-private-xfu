@@ -54,12 +54,7 @@
            (tags-str (concat (mapconcat 'identity tags ",")))
            (title-width (- (window-width) elfeed-goodies/feed-source-column-width
                            elfeed-goodies/tag-column-width 4))
-           (title-column (elfeed-format-column
-                          title (elfeed-clamp
-                                 elfeed-search-title-min-width
-                                 title-width
-                               title-width)
-                        :left))
+
          (tag-column (elfeed-format-column
                       tags-str (elfeed-clamp (length tags-str)
                                              elfeed-goodies/tag-column-width
@@ -150,16 +145,10 @@
     (defun org-ref-doi-utils-add-entry-from-elfeed-entry ()
       "Add elfeed entry to bibtex."
       (interactive)
-      (let* ((title (elfeed-entry-title elfeed-show-entry))
+      (let* (;;(title (elfeed-entry-title elfeed-show-entry))
              (url (elfeed-entry-link elfeed-show-entry))
              (content (elfeed-deref (elfeed-entry-content elfeed-show-entry)))
-             (entry-id (elfeed-entry-id elfeed-show-entry))
-             (entry-link (elfeed-entry-link elfeed-show-entry))
-             (entry-id-str (concat (car entry-id)
-                                   "|"
-                                   (cdr entry-id)
-                                   "|"
-                                   url)))
+             (entry-id (elfeed-entry-id elfeed-show-entry)))
         (if (string-match "DOI: \\(.*\\)$" content)
             (org-ref-doi-utils-add-bibtex-entry-from-doi (match-string 1 content))
           (let ((dois (org-ref-url-scrape-dois url)))

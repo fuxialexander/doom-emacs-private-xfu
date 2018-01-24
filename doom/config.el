@@ -1,7 +1,7 @@
 ;;; ui/doom/config.el -*- lexical-binding: t; -*-
 
 ;; <https://github.com/hlissner/emacs-doom-theme>
-(def-package! doom-themes :load-path "~/.emacs.d/modules/private/doom/local/emacs-doom-themes"
+(def-package! doom-themes :load-path "~/.emacs.d/modules/private/doom/local/emacs-doom-themes/"
   :config
   (unless doom-theme
     (setq doom-theme 'doom-one)

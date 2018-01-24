@@ -4,14 +4,11 @@
 ;; * Settings
 ;; ** Misc
 (setq
- ;; outline & outshine
- ;; outshine-use-speed-commands t
+ dired-dwim-target t
  ivy-use-selectable-prompt t
  ivy-auto-select-single-candidate t
- ivy-re-builders-alist '((t . ivy--regex-ignore-order)
-                         (t . ivy--regex-plus)
-                         (t . ivy--regex-fuzzy))
  ivy-rich-parse-remote-buffer nil
+ ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-cd-selected
  visual-fill-column-center-text t
  line-spacing nil
  frame-resize-pixelwise t
@@ -19,6 +16,8 @@
  electric-pair-inhibit-predicate 'ignore
  ;; workspace
  persp-interactive-init-frame-behaviour-override -1
+ projectile-ignored-project-function 'file-remote-p
+ ;; projectile-ignored-projects
  ;; rss
  +rss-elfeed-files '("elfeed.org")
  ;; ivy
@@ -67,7 +66,7 @@ the workspace and move to the next."
   (setq yas-snippet-dirs '(+xfu-snippets-dir)))
 ;; ** persp
 (after! persp-mode
-  (defun +myworkspaces|per-project (&optional root)
+  (defun +myworkspaces|per-project ()
     "Open a new workspace when switching to another project.
 Ensures the scratch (or dashboard) buffers are CDed into the project's root."
     (when persp-mode
@@ -79,8 +78,7 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
         (counsel-projectile-find-file)
         (+workspace-message (format "Switched to '%s' in new workspace" (+workspace-current-name)) 'success)
         )))
-  (setq projectile-switch-project-action #'+myworkspaces|per-project)
-  )
+  (setq projectile-switch-project-action #'+myworkspaces|per-project))
 ;; ** EWW
 (after! shr
   (require 'shr-tag-pre-highlight)
@@ -145,7 +143,7 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
 (def-package! orgit :after magit)
 (def-package! magithub
   :after magit
-  :ensure t
+  ;; :ensure t
   :config
   (magithub-feature-autoinject t)
   (setq magithub-preferred-remote-method 'clone_url))
@@ -185,14 +183,6 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
 (set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point)
 
 
-(def-package! counsel-tramp
-  :config
-  (setq make-backup-files nil)
-  ;; (setq create-lockfiles nil)
-  (add-hook 'counsel-tramp-pre-command-hook '(lambda () (projectile-mode 0)
-                                               (editorconfig-mode 0)))
-  (add-hook 'counsel-tramp-quit-hook '(lambda () (projectile-mode 1)
-			                            (editorconfig-mode 1))))
 ;; * Def-Packages
 ;; ** Misc
 (def-package! emacs-snippets)
@@ -222,6 +212,12 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
     '((transient . nil) (select . t) (quit . t)))
   (setq counsel-describe-function-function 'helpful-callable
         counsel-describe-variable-function 'helpful-variable))
+(def-package! tldr
+  :commands (tldr)
+  :config
+  (set! :popup "^\\*tldr\\*"
+    '((size . 80) (side . right))
+    '((transient . nil) (select . t) (quit . t))))
 ;; ** Lsp
 (def-package! lsp-mode
   :commands (lsp-mode))
@@ -284,7 +280,7 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
   (defun lsp-ui-doc--move-frame (frame)
     "Place our FRAME on screen."
     (lsp-ui-doc--resize-buffer)
-    (-let* (((_left top right _bottom) (window-edges nil nil nil t))
+    (-let* (((left top right _bottom) (window-edges nil nil nil t))
             (window (frame-root-window frame))
             ((width . height) (window-text-pixel-size window nil nil 10000 10000))
             (width (+ width (* (frame-char-width frame) 2))) ;; margins
@@ -307,7 +303,8 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
       (forward-line 1)
       (while (not (eq (line-number-at-pos) (line-number-at-pos (point-max))))
         (if (re-search-forward "[][@#$%^&*|+=\\<>{}]" (point-at-eol) t)
-            (font-lock-default-fontify-region (point-at-bol) (point-at-eol) nil))
+            (font-lock-default-fontify-region (point-at-bol) (point-at-eol) nil)
+          )
         (forward-line 1))
       (buffer-string)))
   (defun my-fontify-using-faces (text)
@@ -392,7 +389,7 @@ SYMBOL."
       (bibtex-narrow-to-entry)
       (bibtex-beginning-of-entry)
       (let ((oldkey (bibtex-completion-key-at-point)))
-        (mark-whole-buffer)
+        (call-interactively 'mark-whole-buffer)
         (call-interactively 'delete-region)
         (org-ref-get-bibtex-string-from-biorxiv url)
         (bibtex-beginning-of-entry)
@@ -470,7 +467,7 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
       (setq *org-ref-doi-utils-waiting* t)
       (url-retrieve
        biorxivurl
-       (lambda (status)
+       (lambda (cbargs)
          (goto-char (point-min))
          (re-search-forward "<a href=\"\\(/highwire/citation/.*/bibtext\\)\"" nil t)
          (setq *org-ref-doi-utils-biorxiv-bibtex-url* (concat "https://www.biorxiv.org" (match-string 1))
@@ -805,240 +802,7 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
       "\"::split::\" & theContent\n"
       "end tell\n"
       "return theLink as string\n"))))
-;; ** Outshine
-(def-package! outline
-  :preface
-  (setq outline-minor-mode-prefix "\M-#")
-  :defer 5
-  :init
-  (defvar +outline-minor-mode-hooks '(python-mode-hook
-                                      emacs-lisp-mode-hook
-                                      conf-space-mode-hook) ;For .tmux.conf
-    "List of hooks of major modes in which `outline-minor-mode' should be enabled.")
-  (defun +turn-on-outline-minor-mode ()
-    "Turn on `outline-minor-mode' only for specific modes."
-    (interactive)
-    (dolist (hook +outline-minor-mode-hooks)
-      (add-hook hook #'outline-minor-mode)))
-  (defun +turn-off-outline-minor-mode ()
-    "Turn off `outline-minor-mode' only for specific modes."
-    (interactive)
-    (dolist (hook +outline-minor-mode-hooks)
-      (remove-hook hook #'outline-minor-mode)))
-  (+turn-on-outline-minor-mode))
-(add-hook 'outline-minor-mode-hook #'outshine-hook-function)
-(def-package! outshine
-  :commands (outshine-hook-function
-             outline-cycle)
-  :defer 5
-  :config
-  (setq outshine-use-speed-commands t
-        outshine-org-style-global-cycling-at-bob-p t)
-  (require 'outline-ivy)
-  (advice-add 'outshine-narrow-to-subtree :before
-              (lambda (&rest args) (unless (outline-on-heading-p t)
-                                     (outline-previous-visible-heading 1))))
-  (defun outline-cycle (&optional arg)
-    "Visibility cycling for outline(-minor)-mode.
-- When point is at the beginning of the buffer, or when called with a
-  C-u prefix argument, rotate the entire buffer through 3 states:
-  1. OVERVIEW: Show only top-level headlines.
-  2. CONTENTS: Show all headlines of all levels, but no body text.
-  3. SHOW ALL: Show everything.
-- When point is at the beginning of a headline, rotate the subtree started
-  by this line through 3 different states:
-  1. FOLDED:   Only the main headline is shown.
-  2. CHILDREN: The main headline and the direct children are shown.  From
-               this state, you can move to one of the children and
-               zoom in further.
-  3. SUBTREE:  Show the entire subtree, including body text.
-- When point is not at the beginning of a headline, execute
-  `indent-relative', like TAB normally does."
-    (interactive "P")
-    (setq deactivate-mark t)
-    (cond
-     ((equal arg '(4))
-      ;; Run `outline-cycle' as if at the top of the buffer.
-      (let ((outshine-org-style-global-cycling-at-bob-p nil)
-            (current-prefix-arg nil))
-        (save-excursion
-          (goto-char (point-min))
-          (outline-cycle nil))))
-     (t
-      (cond
-       ;; Beginning of buffer: Global cycling
-       ((or
-         ;; outline-magic style behaviour
-         (and
-          (bobp)
-          (not outshine-org-style-global-cycling-at-bob-p))
-         ;; org-mode style behaviour
-         (and
-          (bobp)
-          (not (outline-on-heading-p))
-          outshine-org-style-global-cycling-at-bob-p))
-        (cond
-         ((eq last-command 'outline-cycle-overview)
-          ;; We just created the overview - now do table of contents
-          ;; This can be slow in very large buffers, so indicate action
-          (unless outshine-cycle-silently
-            (message "CONTENTS..."))
-          (save-excursion
-            ;; Visit all headings and show their offspring
-            (goto-char (point-max))
-            (catch 'exit
-              (while (and (progn (condition-case nil
-                                     (outline-previous-visible-heading 1)
-                                   (error (goto-char (point-min))))
-                                 t)
-                          (looking-at outline-regexp))
-                (show-branches)
-                (if (bobp) (throw 'exit nil))))
-            (unless outshine-cycle-silently
-              (message "CONTENTS...done")))
-          (setq
-           this-command 'outline-cycle-toc
-           outshine-current-buffer-visibility-state 'contents))
-         ((eq last-command 'outline-cycle-toc)
-          ;; We just showed the table of contents - now show everything
-          (show-all)
-          (unless outshine-cycle-silently
-            (message "SHOW ALL"))
-          (setq
-           this-command 'outline-cycle-showall
-           outshine-current-buffer-visibility-state 'all))
-         (t
-          ;; Default action: go to overview
-          ;; (hide-sublevels 1)
-          (let ((toplevel
-                 (cond
-                  (current-prefix-arg
-                   (prefix-numeric-value current-prefix-arg))
-                  ((save-excursion
-                     (beginning-of-line)
-                     (looking-at outline-regexp))
-                   (max 1 (funcall outline-level)))
-                  (t 1))))
-            (hide-sublevels toplevel))
-          (unless outshine-cycle-silently
-            (message "OVERVIEW"))
-          (setq
-           this-command 'outline-cycle-overview
-           outshine-current-buffer-visibility-state 'overview))))
-       ((save-excursion (beginning-of-line 1) (looking-at outline-regexp))
-        ;; At a heading: rotate between three different views
-        (outline-back-to-heading)
-        (let ((goal-column 0) beg eoh eol eos)
-          ;; First, some boundaries
-          (save-excursion
-            (outline-back-to-heading)           (setq beg (point))
-            (save-excursion (outline-next-line) (setq eol (point)))
-            (outline-end-of-heading)            (setq eoh (point))
-            (outline-end-of-subtree)            (setq eos (point)))
-          ;; Find out what to do next and set `this-command'
-          (cond
-           ((= eos eoh)
-            ;; Nothing is hidden behind this heading
-            (unless outshine-cycle-silently
-              (message "EMPTY ENTRY")))
-           ((>= eol eos)
-            ;; Entire subtree is hidden in one line: open it
-            (show-entry)
-            (show-children)
-            (unless outshine-cycle-silently
-              (message "CHILDREN"))
-            (setq
-             this-command 'outline-cycle-children))
-           ;; outshine-current-buffer-visibility-state 'children))
-           ((eq last-command 'outline-cycle-children)
-            ;; We just showed the children, now show everything.
-            (show-subtree)
-            (unless outshine-cycle-silently
-              (message "SUBTREE")))
-           (t
-            ;; Default action: hide the subtree.
-            (hide-subtree)
-            (unless outshine-cycle-silently
-              (message "FOLDED"))))))
-       ;; TAB emulation
-       ((outline-cycle-emulate-tab)
-        (call-interactively #'+evil/matchit-or-toggle-fold))
-       (t (outline-back-to-heading))
-       )))))
-(after! outorg
-  (set! :popup "^\\*outorg-edit-buffer\\*" '((side . right) (size . 0.3)) '((quit) (transient) (modeline . t)))
-  (defun outorg-copy-and-convert ()
-    "Copy code buffer content to temp buffer and convert it to Org syntax.
-If `outorg-edit-whole-buffer' is non-nil, copy the whole buffer,
-otherwise the current subtree."
-    (when (buffer-live-p (get-buffer outorg-edit-buffer-name))
-      (if (y-or-n-p (format "%s exists - save and overwrite contents " outorg-edit-buffer-name))
-          (with-current-buffer outorg-edit-buffer-name
-            (outorg-save-edits-to-tmp-file))
-        (user-error "Edit as Org cancelled.")))
-    (let* ((edit-buffer (get-buffer-create outorg-edit-buffer-name)))
-      (save-restriction
-        ;; Erase edit-buffer
-        (with-current-buffer edit-buffer
-          (erase-buffer))
-        ;; Copy code buffer content
-        (copy-to-buffer edit-buffer
-                        (if outorg-edit-whole-buffer-p
-                            (point-min)
-                          (save-excursion
-                            (outline-back-to-heading 'INVISIBLE-OK)
-                            (point)))
-                        (if outorg-edit-whole-buffer-p
-                            (point-max)
-                          (save-excursion
-                            (outline-end-of-subtree)
-                            (point)))))
-      ;; Switch to edit buffer
-      (let ((window (display-buffer edit-buffer)))
-        (with-selected-window window
-          (outorg-reinstall-markers-in-region (point-min))
-          ;; Set point
-          (goto-char outorg-edit-buffer-point-marker)
-          ;; Activate programming language major mode and convert to org
-          (let ((mode (outorg-get-buffer-mode (marker-buffer outorg-code-buffer-point-marker))))
-            ;; Special case R-mode
-            (delay-mode-hooks
-              (if (eq mode 'ess-mode)
-                (funcall 'R-mode)
-              (funcall mode))))
-          ;; Convert oldschool elisp headers to outshine headers
-          (when outorg-oldschool-elisp-headers-p
-            (outorg-convert-oldschool-elisp-buffer-to-outshine)
-            ;; Reset var to original state after conversion
-            (setq outorg-oldschool-elisp-headers-p t))
-          ;; Call conversion function
-          (outorg-convert-to-org)
-          ;; Change major mode to org-mode
-          (org-mode)
 
-          ;; Activate minor mode outorg-edit-minor-mode
-          (outorg-edit-minor-mode)
-
-          ;; Set outline visibility
-          (if (not outorg-edit-whole-buffer-p)
-              (show-all)
-            (hide-sublevels 3)
-            (ignore-errors (show-subtree))
-            ;; Insert export template
-            (cond (outorg-ask-user-for-export-template-file-p
-                   (call-interactively 'outorg-insert-export-template-file))
-                  (outorg-insert-default-export-template-p
-                   (outorg-insert-default-export-template))))
-          )
-        (select-window window)
-        ;; Reinstall outorg-markers
-        ;; Update md5 for watchdoc
-        (when (and outorg-propagate-changes-p
-                   (require 'org-watchdoc nil t))
-          (org-watchdoc-set-md5))
-        ;; Reset buffer-undo-list
-        (setq buffer-undo-list nil)))
-    ))
 ;; * Misc
 ;; (setq doom-theme 'doom-solarizedlight)
 (setq twittering-connection-type-order '(wget urllib-http native urllib-https))
@@ -1105,7 +869,11 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
   )
 
 
-(defun doom/goto-main-window (pname window_or_frame)
-  (ignore-errors (select-window (car (+my-doom-visible-windows)))))
-(setq persp-before-switch-functions 'doom/goto-main-window)
+(defun doom/goto-main-window (pname frame)
+  (let ((window (car (+my-doom-visible-windows))))
+        (if (window-live-p window)
+            (select-window window))))
+(add-hook 'persp-before-switch-functions 'doom/goto-main-window)
+
+
 

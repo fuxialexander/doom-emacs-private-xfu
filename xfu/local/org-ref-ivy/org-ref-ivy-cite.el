@@ -152,7 +152,7 @@ ENTRY is selected from `org-ref-bibtex-candidates'."
   (with-temp-buffer
     (save-window-excursion
       (org-ref-ivy-bibtex-open-entry entry)
-      (org-ref-doi-utils-update-bibtex-entry-from-doi))))
+      (call-interactively #'org-ref-doi-utils-update-bibtex-entry-from-doi))))
 
 
 (defun org-ref-ivy-bibtex-email-entry (entry)

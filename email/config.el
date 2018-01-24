@@ -2,7 +2,7 @@
 
 ;; ** Prodigy
 (def-package! prodigy
-  :ensure t
+  ;; :ensure t
   :init
   ;; After initialization, start these services
   :config
@@ -140,7 +140,7 @@
         (set-process-query-on-exit-flag (get-buffer-process err-buffer) nil)
         (kill-buffer err-buffer))
       (when err-file (ignore-errors (delete-file err-file)))))
-  (defun notmuch-show-reuse-buffer (thread-id &optional elide-toggle parent-buffer query-context buffer-name)
+  (defun notmuch-show-reuse-buffer (thread-id &optional elide-toggle parent-buffer query-context)
     "Run \"notmuch show\" with the given thread ID and display results.
 
 ELIDE-TOGGLE, if non-nil, inverts the default elide behavior.

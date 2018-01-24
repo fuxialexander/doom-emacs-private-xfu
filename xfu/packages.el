@@ -5,9 +5,9 @@
 ;; (package! modern-light-theme :recipe (:fetcher github :repo "fuxialexander/modern-light-theme" :files ("*")))
 (package! prettify-utils :recipe (:fetcher github :repo "Ilazki/prettify-utils.el" :files ("*")))
 
-(package! helpful)
 
-(package! counsel-tramp)
+(package! helpful)
+(package! tldr)
 
 (package! company)
 (package! company-statistics)
@@ -18,9 +18,6 @@
 
 (package! ov)
 (package! alert)
-(package! outorg)
-(package! outshine)
-(package! navi-mode)
 (package! ess)
 (package! shr-tag-pre-highlight)
 (package! orgit)
