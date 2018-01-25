@@ -4,6 +4,7 @@
 ;; * Settings
 ;; ** Misc
 (setq
+ request-storage-directory (concat doom-etc-dir "request/")
  dired-dwim-target t
  ivy-use-selectable-prompt t
  ivy-auto-select-single-candidate t
@@ -146,7 +147,10 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
   ;; :ensure t
   :config
   (magithub-feature-autoinject t)
-  (setq magithub-preferred-remote-method 'clone_url))
+  (setq
+   magithub-clone-default-directory "/Users/xfu/Source/playground/"
+   magithub-dir (concat doom-etc-dir "magithub/")
+   magithub-preferred-remote-method 'clone_url))
 (def-package! evil-magit :after magit
   :init
   ;; optional: this is the evil state that evil-magit will use
@@ -197,27 +201,19 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
 ;; (def-package! modern-light-theme)
 (def-package! prettify-utils)
 ;; ** Helpful
-(def-package! helpful
-  :commands (helpful-callable
-             helpful-function
-             helpful-variable
-             helpful-macro
-             helpful-symbol
-             helpful-command
-             helpful-key
-             helpful-at-point)
-  :init
+(after! helpful
   (set! :popup "^\\*helpful.*"
     '((size . 80) (side . right))
-    '((transient . nil) (select . t) (quit . t)))
-  (setq counsel-describe-function-function 'helpful-callable
-        counsel-describe-variable-function 'helpful-variable))
+    '((transient . nil) (select . t) (quit . t))))
 (def-package! tldr
   :commands (tldr)
   :config
+  (setq tldr-directory-path (concat doom-etc-dir "tldr/"))
   (set! :popup "^\\*tldr\\*"
     '((size . 80) (side . right))
     '((transient . nil) (select . t) (quit . t))))
+(def-package! sed-mode
+  :commands (sed-mode))
 ;; ** Lsp
 (def-package! lsp-mode
   :commands (lsp-mode))
@@ -874,6 +870,4 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         (if (window-live-p window)
             (select-window window))))
 (add-hook 'persp-before-switch-functions 'doom/goto-main-window)
-
-
 
