@@ -142,6 +142,7 @@ If run interactively, get ENTRY from context."
   (add-hook 'org-agenda-mode-hook #'(lambda () (evil-vimish-fold-mode -1)))
   (set! :evil-state 'org-agenda-mode 'motion))
 
+;; (add-hook! 'org-tab-first-hook #'(+org/indent-or-next-field-or-yas-expand))
 (add-hook! 'org-mode-hook
   #'(doom|disable-line-numbers  ; no line numbers
      org-bullets-mode           ; "prettier" bullets
@@ -175,11 +176,11 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
    "M-I" #'org-insert-link
    "s-p" #'org-ref-ivy-insert-cite-link
    :n  "RET" #'+org/dwim-at-point
-   :n  [tab]     #'org-cycle
+   :n  [tab]     #'+org/toggle-fold
    :n  "t"       #'org-todo
    :n  "T"       #'org-insert-todo-heading-respect-content
    :i  [tab]     #'+org/indent-or-next-field-or-yas-expand
-   :i  "<S-tab>" #'+org/dedent-or-prev-field
+   :i  [S-tab]   #'+org/dedent-or-prev-field
 
    ;; "C-c C-S-l" #'+org/remove-link
    ;;                          :n "C-c C-i" #'org-toggle-inline-images

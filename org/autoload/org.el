@@ -139,6 +139,7 @@ If on a:
         ((org-in-src-block-p t)
          (doom/dumb-indent))
         (t
+         (call-interactively #'org-babel-insert-header-arg)
          (call-interactively #'self-insert-command))))
 
 ;;;###autoload
@@ -287,7 +288,8 @@ with `org-cycle'). Also:
   (interactive)
   (save-excursion
     (org-beginning-of-line)
-    (cond ((org-at-table-p)
+    (cond ((org-hide-block-toggle-maybe))
+          ((org-at-table-p)
            (org-table-align))
           ((org-in-src-block-p)
            (org-babel-remove-result))
