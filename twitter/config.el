@@ -110,6 +110,8 @@
          (add-face-text-property 0 (length str) 'variable-pitch t str)
          str)))
   (setq twittering-use-master-password t
+        twittering-private-info-file (expand-file-name "twittering-mode.gpg" doom-etc-dir)
+        twittering-request-confirmation-on-posting t
         ;; twittering-icon-mode t
         ;; twittering-use-icon-storage t
         ;; twittering-icon-storage-file (concat doom-cache-dir "twittering-mode-icons.gz")
@@ -184,8 +186,15 @@
   (add-hook! twittering-mode
     (setq header-line-format (or (doom-modeline 'twitter) mode-line-format)
           mode-line-format nil))
-  (add-hook! twittering-mode (solaire-mode +1))
 
+  (add-hook 'doom-real-buffer-functions #'+twitter-buffer-p)
+  (when (featurep! :feature popup)
+    (setq twittering-pop-to-buffer-function #'+twitter-display-buffer))
+
+  (after! solaire-mode
+    (add-hook 'twittering-mode-hook #'solaire-mode))
+
+  (set! :popup "^\\*twittering-edit" nil '((transient) (quit) (select . t) (modeline . minimal)))
   (set! :evil-state 'twittering-mode 'normal)
   (map! :map twittering-mode-map
         [remap twittering-kill-buffer] #'+twitter/quit

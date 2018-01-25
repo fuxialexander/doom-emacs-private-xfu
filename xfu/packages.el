@@ -9,6 +9,8 @@
 (package! helpful)
 (package! tldr)
 
+(package! keyfreq)
+(package! sed-mode)
 (package! company)
 (package! company-statistics)
 (package! company-dict)

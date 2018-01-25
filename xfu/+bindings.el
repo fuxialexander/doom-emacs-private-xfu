@@ -18,6 +18,12 @@
       :gnvime "M-s" #'org-store-link
       :gnvime "M-o" #'org-open-at-point-global
       :gnvime "M-i" #'org-insert-last-stored-link
+      :gnvime "s-j" #'dwim-jump
+      :gnvime "<C-escape>" #'universal-argument
+      :m "C-u" #'evil-scroll-up
+      (:map universal-argument-map
+        "C-u" nil
+        "<C-escape>" #'universal-argument-more)
 ;; *** Misc
       :n    "\\"    #'ace-window
       :v    "<escape>"    #'evil-escape
@@ -341,6 +347,10 @@
 ;; *** auto-yasnippet
       :i  [C-tab] #'aya-expand
       :nv [C-tab] #'aya-create
+;; *** bibtex
+      (:after bibtex
+        :map bibtex-mode-map
+        "s-." #'org-ref-bibtex-hydra/body)
 ;; *** neotree
       (:after neotree
         :map neotree-mode-map

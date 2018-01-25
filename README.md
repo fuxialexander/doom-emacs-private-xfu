@@ -5,32 +5,50 @@
        popup             ; tame sudden yet inevitable temporary windows
        eval              ; run code, run (also, repls)
        evil              ; come to the dark side, we have cookies
-       file-templates    ; auto-snippets for empty files
-       lookup           ; helps you navigate your code and documentation
+       (lookup           ; helps you navigate your code and documentation
+        +devdocs         ; ...on devdocs.io online
+        +docsets)        ; ...or in Dash docsets locally
        snippets          ; my elves. They type so I don't have to
        spellcheck        ; tasing you for misspelling mispelling
        version-control   ; remember, remember that commit in November
        workspaces        ; tab emulation, persistence & separate workspaces
+
        :completion
        company           ; the ultimate code completion backend
        ivy               ; a search engine for love and life
+
        :ui
+       doom-dashboard    ; a nifty splash screen for Emacs
        doom-modeline     ; a snazzy Atom-inspired mode-line
-       hl-todo           ; highlight TODO/FIXME/NOTE tags
        window-select  ; visually switch windows
+
        :tools
        dired             ; making dired pretty [functional]
        electric-indent   ; smarter, keyword-based electric-indent
        eshell            ; a consistent, cross-platform shell (WIP)
        gist              ; interacting with github gists
        imenu             ; an imenu sidebar and searchable code index
+       macos             ; MacOS-specific commands
+       make              ; run make tasks from Emacs
        neotree           ; a project drawer, like NERDTree for vim
        rgb
+       term              ; terminals in Emacs
        upload            ; map local to remote projects via ssh/ftp
+
        :lang
+       cc                ; C/C++/Obj-C madness
+       data              ; config/data formats
        emacs-lisp        ; drown in parentheses
+       haskell ; a language that's lazier than I am
+       javascript        ; all(hope(abandon(ye(who(enter(here))))))
+       latex             ; writing papers in Emacs has never been so fun
+       ledger            ; an accounting system in Emacs
+       markdown          ; writing docs for people to ignore
        sh                ; she sells (ba|z)sh shells on the C xor
+       web               ; the tubes
+
        :app
+
        :private xfu
        doom
        rss
@@ -39,13 +57,14 @@
        email
        write
        calendar
+       python
        (org
-       +attach
-       +todo
-       +babel
-       +latex
-       +capture
-       +export
-       +present
-       ))
+        +attach
+        +todo
+        +babel
+        +latex
+        +capture
+        +export
+        +present
+        ))
 ```

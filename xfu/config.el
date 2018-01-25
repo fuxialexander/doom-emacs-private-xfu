@@ -127,6 +127,10 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
 (def-package! alert
   :config
   (setq alert-default-style 'notifier))
+(def-package! keyfreq
+  :config
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1))
 ;; ** Org
 ;; *** Org-general
 (after! org

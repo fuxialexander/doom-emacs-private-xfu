@@ -7,8 +7,10 @@
 ;; Prevents the unstyled mode-line flash at startup
 (setq-default
  mode-line-format nil
- frame-title-format "DOOM Emacs %b"
- exec-path '("/usr/local/opt/texinfo/bin/" "/usr/local/opt/openssl/bin/"
+ evil-want-C-u-scroll t
+ exec-path '("/Users/xfu/Library/Haskell/bin"
+             "/usr/local/opt/texinfo/bin/"
+             "/usr/local/opt/openssl/bin/"
              "/Library/Internet\\ Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin/"
              "/usr/local/bin/"
              "/usr/local/anaconda3/bin/"
@@ -25,11 +27,14 @@
                          (assq 'truncation fringe-indicator-alist)
                          (delq (assq 'continuation fringe-indicator-alist)
                                fringe-indicator-alist)))
-(setenv "PATH" "/usr/local/opt/texinfo/bin:/usr/local/opt/openssl/bin:/Library/Internet\\ Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin:/usr/local/bin:/usr/local/anaconda3/bin:/usr/local/texlive/2017/bin/x86_64-darwin:/usr/local/opt/imagemagick@6/bin:/usr/local/opt/curl/bin:/usr/local/sbin:/usr/local/opt/texinfo/bin:/usr/texbin:/usr/bin:/bin")
+(setenv "PATH" "/Users/xfu/Library/Haskell/bin:/usr/local/opt/texinfo/bin:/usr/local/opt/openssl/bin:/Library/Internet\\ Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin:/usr/local/texlive/2017/bin/x86_64-darwin:/usr/local/bin:/usr/local/anaconda3/bin:/usr/local/texlive/2017/bin/x86_64-darwin:/usr/local/opt/imagemagick@6/bin:/usr/local/opt/curl/bin:/usr/local/sbin:/usr/local/opt/texinfo/bin:/usr/texbin:/usr/bin:/bin")
 (or standard-display-table
     (setq standard-display-table (make-display-table)))
 (set-display-table-slot standard-display-table 0 ?\ )
-
+(setq-default frame-title-format
+  '("emacs%@" (:eval (system-name)) ": " (:eval (if (buffer-file-name)
+                (abbreviate-file-name (buffer-file-name))
+                  "%b"))))
 
 ;; I've swapped these keys on my keyboard
 (setq
@@ -47,7 +52,7 @@
  doom-unicode-font (font-spec :family "Symbola" :size 12)
  doom-big-font (font-spec :family "operator Mono" :size 16)
  doom-line-numbers-style nil
- +doom-modeline-buffer-file-name-style 'relative-to-project
+ +doom-modeline-buffer-file-name-style 'truncate-upto-project
  doom-neotree-enable-variable-pitch nil
  doom-neotree-project-size 1.2
  doom-neotree-line-spacing 0

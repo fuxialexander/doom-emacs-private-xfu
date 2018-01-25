@@ -29,16 +29,7 @@
   :commands (org-wild-notifier-mode
              org-wild-notifier-check)
   :config
-  (defun org-wild-notifier--retrieve-events ()
-    "Get events from agenda view."
-    (->> (org-split-string (buffer-string) "\n")
-         (--map (plist-get
-                 (org-fix-agenda-info (text-properties-at 0 it))
-                 'org-marker))
-         (--filter (let ((todo (org-entry-get it "TODO")))
-                     (or (equal "TODO" todo)
-                         (equal "HABT" todo))))
-         (-map 'org-wild-notifier--gather-info))))
+  (setq org-wild-notifier-keyword-whitelist '("TODO" "HABT")))
 
 (def-package! org-bullets
   :commands org-bullets-mode
@@ -332,3 +323,6 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
   ;;         (funcall '+my-org-tree-to-indirect-buffer arg)))
   ;;       (select-window agenda-window)))
   )
+
+(after! org-agenda
+  (org-wild-notifier-mode 1))
