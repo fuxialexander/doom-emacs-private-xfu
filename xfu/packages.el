@@ -15,7 +15,6 @@
 (package! company-statistics)
 (package! company-dict)
 
-(package! ivy-bibtex)
 ;; (package! org-ref)
 
 (package! ov)

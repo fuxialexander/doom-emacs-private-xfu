@@ -1,19 +1,14 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; private/org/packages.el
 
-;; NOTE This is an insecure source, but unavoidable if we want org 9.0+ (which
-;; this module requires). orgmode.org offers no secure access to this repo. If
-;; this bothers you, comment out this `package!' block and download
-;; org-plus-contrib from orgmode.org.
-;; (package! org-plus-contrib :recipe (:fetcher github :repo "emacsmirror/org" :files (:defaults "contrib/lisp/*.el")))
-
+(package! org-plus-contrib)
 (package! org-bullets :recipe (:fetcher github :repo "hlissner/org-bullets"))
 (package! toc-org)
 (package! org-wild-notifier)
 ;; (package! evil-org)
 (package! org-brain)
 (package! org-super-agenda)
-;; (package! org-clock-convenience)
+(package! org-clock-convenience)
 
 (when (featurep! +attach)
   (package! org-download))
@@ -29,8 +24,7 @@
   (package! ob-translate))
 
 (when (featurep! +latex)
-  (package! company-math)
-  ;; (package! cdlatex)
+  (package! cdlatex)
   ;; (package! org-edit-latex)
 )
 

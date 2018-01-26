@@ -159,3 +159,33 @@
   (interactive)
   (let ((org-agenda-files '("~/Dropbox/org/" "~/Dropbox/org/cal/")))
     (call-interactively '+calendar/open-calendar)))
+
+;;;###autoload
+(defun sort-setq-next-record ()
+    (condition-case nil
+            (progn
+                (forward-sexp 1)
+                (backward-sexp))
+        ('scan-error (end-of-buffer))))
+
+;;;###autoload
+(defun sort-setq ()
+  (interactive)
+  (save-excursion
+    (save-restriction
+      (let ((sort-end (progn (end-of-defun)
+                             (backward-char)
+                             (point-marker)))
+            (sort-beg (progn (beginning-of-defun)
+                             (re-search-forward "[ \\t]*(" (point-at-eol))
+                             (forward-sexp)
+                             (re-search-forward "\\<" (point-at-eol))
+                             (point-marker))))
+        (narrow-to-region (1- sort-beg) (1+ sort-end))
+        (sort-subr nil #'sort-setq-next-record #'sort-setq-end-record)))))
+
+;;;###autoload
+(defun sort-setq-end-record ()
+  (condition-case nil
+      (forward-sexp 2)
+    ('scan-error (end-of-buffer))))

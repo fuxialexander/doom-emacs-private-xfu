@@ -1,9 +1,6 @@
 ;;; private/xfu/init.el -*- lexical-binding: t; -*-
 
 (add-to-list 'load-path "~/.emacs.d/modules/private/xfu/local/")
-(add-to-list 'load-path "~/Source/playground/redditor-mode")
-(add-to-list 'load-path "~/Source/tools/org-mode/lisp/")
-(add-to-list 'load-path "~/Source/tools/org-mode/contrib/lisp/")
 ;; Prevents the unstyled mode-line flash at startup
 (setq-default
  mode-line-format nil

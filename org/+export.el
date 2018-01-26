@@ -10,23 +10,7 @@
   :config
   (when (executable-find "pandoc")
     (push 'pandoc org-export-backends))
-  (setq
-   org-pandoc-options-for-html5 '(
-                                  (email-obfuscation . nil)
-                                  (standalone . t)
-                                  (section-divs . t)
-                                  (table-of-contents . t)
-                                  (toc-depth . 3)
-                                  (variable . "toc_float=1")
-                                  (variable . "toc_collapsed=1")
-                                  (variable . "toc_smooth_scroll=1")
-                                  (variable . "toc_print=1")
-                                  (variable . "toc_selectors=h1,h2,h3")
-                                  (template . "~/Dropbox/org/template.html")
-                                  (highlight-style . tango)
-                                  (variable . "theme:bootstrap")
-                                  )
-   org-pandoc-options
+  (setq org-pandoc-options
         '((standalone . t)
           (mathjax . t)
           (self-contained . t))))

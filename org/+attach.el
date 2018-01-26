@@ -1,6 +1,7 @@
 ;;; private/org/+attach.el -*- lexical-binding: t; -*-
 
 (add-hook 'org-load-hook #'+org|init-attach)
+
 ;; I believe Org's native attachment system is over-complicated and litters
 ;; files with metadata I don't want. So I wrote my own, which:
 ;;

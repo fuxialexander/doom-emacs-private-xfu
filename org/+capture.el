@@ -1,14 +1,6 @@
 ;;; private/org/+capture.el -*- lexical-binding: t; -*-
+
 (add-hook 'org-load-hook #'+org|init-capture)
-;; Sets up two `org-capture' workflows that I like:
-;;
-;; 1. The traditional way: invoking `org-capture' directly (or through a
-;;    command, like :org).
-;;
-;; 2. Through a org-capture popup frame that is invoked from outside Emacs (the
-;;    script is in ~/.emacs.d/bin). This lets me open an org-capture box
-;;    anywhere I can call org-capture (whether or not Emacs is open/running),
-;;    like, say, from qutebrowser, vimperator, dmenu or a global keybinding.
 
 (defvar +org-default-todo-file "inbox.org"
   "TODO")
@@ -23,19 +15,19 @@
      "* %^{Logging for...} :skim_annotation:read:
 :PROPERTIES:
 :Created: %U
-:SKIM_NOTE: %(my-org-mac-skim-get-page)
-:SKIM_PAGE: %(int-to-string (my-as-get-skim-page))
+:SKIM_NOTE: %(+reference/skim-get-annotation)
+:SKIM_PAGE: %(int-to-string (+reference/get-skim-page-number))
 :END:
 %i
 %?")
     ("SA" "Skim Annotation" entry
-     (file+function org-ref-bibliography-notes my-org-move-point-to-capture-skim-annotation)
+     (file+function org-ref-bibliography-notes +reference/org-move-point-to-capture-skim-annotation)
      "* %^{Logging for...} :skim_annotation:read:literature:
 :PROPERTIES:
 :Created: %U
-:CITE: cite:%(my-as-get-skim-bibtex-key)
-:SKIM_NOTE: %(my-org-mac-skim-get-page)
-:SKIM_PAGE: %(int-to-string (my-as-get-skim-page))
+:CITE: cite:%(+reference/skim-get-bibtex-key)
+:SKIM_NOTE: %(+reference/skim-get-annotation)
+:SKIM_PAGE: %(int-to-string (+reference/get-skim-page-number))
 :END:
 %i
 %?")
@@ -158,7 +150,10 @@ Brief description:
 
   (setq org-default-notes-file (expand-file-name +org-default-notes-file +org-dir))
 
+  (add-hook 'org-capture-prepare-finalize-hook 'org-id-get-create)
+  (add-hook 'org-capture-before-finalize-hook #'counsel-org-tag)
   (add-hook 'org-capture-after-finalize-hook #'+org-capture|cleanup-frame)
+
   (defun +org-move-point-to-heading ()
     (cond ((org-at-heading-p) (org-beginning-of-line))
           (t (org-previous-visible-heading 1))))
