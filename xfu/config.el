@@ -23,7 +23,9 @@
  +rss-elfeed-files '("elfeed.org")
  ;; ivy
  counsel-org-goto-face-style 'org
- counsel-org-headline-display-style 'headline
+ counsel-org-headline-display-style 'title
+ counsel-org-headline-display-tags t
+ counsel-org-headline-display-todo t
  +ivy-buffer-icons nil
  ivy-use-virtual-buffers t
  ;; ivy-re-builders-alist '((t . ivy--regex-plus))
@@ -32,6 +34,8 @@
  tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=600"
  tramp-remote-process-environment (quote ("TMOUT=0" "LC_CTYPE=''" "TRAMP='yes'" "CDPATH=" "HISTORY=" "MAIL=" "MAILCHECK=" "MAILPATH=" "PAGER=cat" "autocorrect=" "correct=" "http_proxy=http://proxy.cse.cuhk.edu.hk:8000" "https_proxy=http://proxy.cse.cuhk.edu.hk:8000" "ftp_proxy=http://proxy.cse.cuhk.edu.hk:8000"))
  org-bullets-bullet-list '("#" "#" "#" "#" "#" "#" "#" "#")
+ twittering-connection-type-order '(wget urllib-http native urllib-https)
+ +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin
  )
 
 (after! recentf
@@ -126,6 +130,7 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
          ("\\.[Jj][Mm][Dd]\\'" . ess-jags-mode))
   :commands (R stata julia SAS))
 (def-package! alert
+  :commands (alert)
   :config
   (setq alert-default-style 'notifier))
 (def-package! keyfreq
@@ -143,8 +148,7 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
         org-blank-before-new-entry nil
         org-ellipsis " + "
         org-modules (quote (org-bibtex org-docview org-habit org-info org-protocol org-mac-iCal org-mac-link org-notmuch))
-        org-imenu-depth 8
-        ))
+        org-imenu-depth 8))
 ;; ** Magit
 (def-package! orgit :after magit)
 (def-package! magithub
@@ -191,7 +195,6 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
 (set! :company-backend '(org-mode) '(company-files company-yasnippet company-dabbrev))
 (set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point)
 
-
 ;; * Def-Packages
 ;; ** Misc
 (def-package! emacs-snippets)
@@ -200,10 +203,6 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
   :init
   (add-hook 'python-mode-hook #'electric-operator-mode)
   (add-hook 'ess-mode-hook #'electric-operator-mode))
-;; (def-package! evil-string-inflection
-;;   :commands ())
-;; ** Display
-;; (def-package! modern-light-theme)
 (def-package! prettify-utils)
 ;; ** Helpful
 (after! helpful
@@ -333,15 +332,9 @@ SYMBOL."
 
 (def-package! company-lsp
   :after lsp-mode)
-;; ** Reference
 
-;; * Misc
-;; (setq doom-theme 'doom-solarizedlight)
-(setq twittering-connection-type-order '(wget urllib-http native urllib-https))
 
-;; Hydra
 
-(setq +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin)
 ;; ** neotree
 (after! neotree
   (set! :popup "^ ?\\*NeoTree"

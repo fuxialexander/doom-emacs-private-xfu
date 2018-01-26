@@ -49,7 +49,7 @@ is loaded.")
     (sp-local-pair "'" nil :unless '(sp-point-before-word-p sp-point-after-word-p sp-point-before-same-p))))
 
 (def-package! conda
-  :after python
+  :commands (conda-env-activate-for-buffer)
   :config
   (setq conda-anaconda-home "/usr/local/anaconda3")
   (conda-env-autoactivate-mode -1)

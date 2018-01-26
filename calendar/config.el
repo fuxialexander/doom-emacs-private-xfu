@@ -48,12 +48,11 @@
              org-gcal-fetch
              org-gcal-post-at-point
              org-gcal-delete-at-point)
+  :init
+  (setq-default org-gcal-dir (concat doom-etc-dir "org-gcal/"))
   :config
   (load-file org-gcal-secret-file)
-  (setq org-gcal-dir (concat doom-etc-dir "org-gcal/"))
   ;; hack to avoid the deferred.el error
   (defun org-gcal--notify (title mes)
     (message "org-gcal::%s - %s" title mes)))
-
-;; (def-package! alert)
 

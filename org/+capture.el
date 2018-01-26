@@ -32,7 +32,7 @@
 %i
 %?")
     ("t" "Todo" entry
-     (file "~/Dropbox/org/inbox.org")
+     (id "3C95FA6D-9D4E-41F0-A0BA-705CDBE95C34")
      "* %^{Logging for...}
 :PROPERTIES:
 :Created: %U
@@ -40,7 +40,7 @@
 %i
 %?" )
     ("tl" "Todo with link" entry
-     (file "~/Dropbox/org/inbox.org")
+     (id "3C95FA6D-9D4E-41F0-A0BA-705CDBE95C34")
      "* %^{Logging for...}
 :PROPERTIES:
 :Created: %U
@@ -49,7 +49,7 @@
 %i
 %?" )
     ("ic" "Idea from Chrome" entry
-     (file "~/Dropbox/org/idea.org")
+     (id "2BB868B0-F4B2-4ADC-850A-D41654D7C527")
      "* %^{Logging for...} :idea:
 :PROPERTIES:
 :Created: %U
@@ -67,7 +67,7 @@
 %i
 %?"  :clock-in t  )
     ("M" "Meeting" entry
-     (file+olp+datetree "~/Dropbox/org/meeting.org")
+     (file+olp+datetree "~/Dropbox/org/index.org" "Meeting")
      "* %^{Logging for...} :logs:communication:
 %^{Effort}p
 %^T
@@ -94,18 +94,8 @@
 :END:
 %i
 %?"  :clock-in t  )
-    ("a" "Article" entry
-     (file "~/Dropbox/org/ref.org")
-     "* %^{Title}  :article:
-:PROPERTIES:
-:Created: %U
-:Linked: %a
-:END:
-%i
-Brief description:
-%?" )
     ("i" "Idea" entry
-     (file "~/Dropbox/org/idea.org")
+     (id "2BB868B0-F4B2-4ADC-850A-D41654D7C527")
      "* %A :idea:
 :PROPERTIES:
 :Created: %U
@@ -114,7 +104,7 @@ Brief description:
 %i
 %?")
     ("dr" "Daily Review" entry
-     (file+olp+datetree "~/Dropbox/org/review.org")
+     (file+olp+datetree "~/Dropbox/org/index.org" "Review")
      "* %^{Review} :review:daily:
 :PROPERTIES:
 :Created: %U
@@ -122,28 +112,20 @@ Brief description:
 :END:
 %?"  )
     ("wr" "Week Review" entry
-     (file+olp+datetree "~/Dropbox/org/review.org")
+     (file+olp+datetree "~/Dropbox/org/index.org" "Review")
      "* %^{Review for...|Mood|Research|Learn|Entertainment|Life} :review:week:%\\1:
 :PROPERTIES:
 :Created: %U
 :END:
 %?"  )
     ("mr" "Month Review" entry
-     (file+olp+datetree "~/Dropbox/org/review.org")
+     (file+olp+datetree "~/Dropbox/org/index.org" "Review")
      "* %^{Review for...|Mood|Research|Learn|Entertainment|Life} :review:month:%\\1:
 :PROPERTIES:
 :Created: %U
 :END:
 %?"  )
-    ("W" "Web site" entry
-     (file "~/Dropbox/org/inbox.org")
-     "* %A :website:
-:PROPERTIES:
-:Created: %U
-:Linked: %a
-:END:
-%i
-%?")))
+    ))
 
 (defun +org|init-capture ()
   (defvaralias 'org-default-notes-file '+org-default-notes-file)

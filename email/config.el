@@ -2,17 +2,10 @@
 
 ;; ** Prodigy
 (def-package! prodigy
-  ;; :ensure t
-  :init
-  ;; After initialization, start these services
   :config
-  ;; Tag
-  ;; Define a new tag with ARGS.
   (prodigy-define-tag
     :name 'email
     :ready-message "Checking Email using IMAP IDLE. Ctrl-C to shutdown.")
-  ;; Service
-  ;; Define a new service with ARGS.
   (prodigy-define-service
     :name "imapnotify-gmail"
     :command "imapnotify"

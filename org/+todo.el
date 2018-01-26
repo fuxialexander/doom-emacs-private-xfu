@@ -58,7 +58,8 @@
 
         org-agenda-dim-blocked-tasks (quote invisible)
         org-agenda-dim-blocked-tasks nil
-        org-agenda-files (ignore-errors (directory-files +org-dir t "\\.org$" t))
+        ;; org-agenda-files (ignore-errors (directory-files +org-dir t "\\.org$" t))
+        org-agenda-files (ignore-errors (directory-files +org-dir t "index.org" t))
         org-agenda-follow-indirect t
         ;; org-default-notes-file "/Users/xfu/Dropbox/org/inbox.org"
         org-agenda-inhibit-startup t
