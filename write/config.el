@@ -31,6 +31,7 @@
   (push 'org-todo-keyword-kill mixed-pitch-fixed-pitch-faces)
   (push 'org-todo-keyword-outd mixed-pitch-fixed-pitch-faces)
   (push 'org-special-keyword mixed-pitch-fixed-pitch-faces)
+  (push 'org-date mixed-pitch-fixed-pitch-faces)
   (push 'org-property-value mixed-pitch-fixed-pitch-faces)
   (push 'font-lock-comment-face mixed-pitch-fixed-pitch-faces)
   (setf mixed-pitch-fixed-pitch-faces

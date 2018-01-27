@@ -55,13 +55,11 @@
 
   (setq org-agenda-block-separator ""
         org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 3 :fileskip0 t :stepskip0 t :tags "-COMMENT"))
-
-        org-agenda-dim-blocked-tasks (quote invisible)
+        org-agenda-compact-blocks t
         org-agenda-dim-blocked-tasks nil
-        ;; org-agenda-files (ignore-errors (directory-files +org-dir t "\\.org$" t))
         org-agenda-files (ignore-errors (directory-files +org-dir t "index.org" t))
         org-agenda-follow-indirect t
-        ;; org-default-notes-file "/Users/xfu/Dropbox/org/inbox.org"
+        org-agenda-ignore-properties '(effort appt category)
         org-agenda-inhibit-startup t
         org-agenda-log-mode-items '(closed clock)
         org-agenda-overriding-header ""
@@ -70,27 +68,27 @@
         org-agenda-skip-deadline-prewarning-if-scheduled t
         org-agenda-skip-scheduled-if-done t
         org-agenda-skip-unavailable-files t
-        org-agenda-sorting-strategy '((agenda time-up priority-down category-keep)
-                                      (todo   priority-down category-keep)
-                                      (tags   priority-down category-keep)
-                                      (search category-keep))
+        ;; org-agenda-sorting-strategy '((agenda time-up priority-down category-keep)
+        ;;                               (todo   priority-down category-keep)
+        ;;                               (tags   priority-down category-keep)
+        ;;                               (search category-keep))
         org-agenda-span 'day
         org-agenda-start-with-log-mode t
-        org-agenda-sticky nil
+        org-agenda-sticky t
         org-agenda-tags-column 'auto
+        org-agenda-use-tag-inheritance nil
         org-clock-clocktable-default-properties (quote (:maxlevel 3 :scope agenda :tags "-COMMENT"))
-        org-clock-persist-file (concat doom-cache-dir "org-clock-save.el")
+        org-clock-persist t
+        org-clock-persist-file (expand-file-name ".org-clock-persist-data.el" +org-dir)
         org-clocktable-defaults (quote (:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 t :fileskip0 t :tags "-COMMENT" :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil))
         org-columns-default-format "%50ITEM(Task) %8CLOCKSUM %16TIMESTAMP_IA"
         org-enforce-todo-dependencies t
         org-global-properties (quote (("Effort_ALL" . "0 0:10 0:30 1:00 2:00 3:00 4:00 5:00 6:00 7:00")))
-
         org-habit-following-days 0
         org-habit-graph-column 1
         org-habit-preceding-days 8
         org-habit-show-habits t
         org-hide-block-startup t
-        org-id-locations-file (concat doom-cache-dir ".org-id-locations")
         org-log-done 'time
         org-log-into-drawer t
         org-log-note-clock-out t
@@ -98,7 +96,7 @@
         org-log-reschedule 'note
         org-log-state-notes-into-drawer t
         org-outline-path-complete-in-steps nil
-        org-publish-timestamp-directory (concat doom-cache-dir ".org-timestamps/")
+        org-publish-timestamp-directory (concat +org-dir ".org-timestamps/")
         org-refile-targets '((nil :maxlevel . 9)
                              (org-agenda-files :maxlevel . 9))
         org-refile-use-outline-path 'file

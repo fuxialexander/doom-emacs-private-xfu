@@ -151,13 +151,13 @@
 ;;;###autoload
 (defun cfw:open-org-calendar-withoutkevin ()
   (interactive)
-  (let ((org-agenda-files '("~/Dropbox/org/index.org" "~/Dropbox/org/cal/cal.org")))
+  (let ((org-agenda-files '("~/Dropbox/org/" "~/Dropbox/org/cal/cal.org")))
     (call-interactively '+calendar/open-calendar)))
 
 ;;;###autoload
 (defun cfw:open-org-calendar-withkevin ()
   (interactive)
-  (let ((org-agenda-files '("~/Dropbox/org/index.org" "~/Dropbox/org/cal/")))
+  (let ((org-agenda-files '("~/Dropbox/org/" "~/Dropbox/org/cal/")))
     (call-interactively '+calendar/open-calendar)))
 
 ;;;###autoload

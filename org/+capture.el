@@ -32,7 +32,7 @@
 %i
 %?")
     ("t" "Todo" entry
-     (id "3C95FA6D-9D4E-41F0-A0BA-705CDBE95C34")
+     (file "~/Dropbox/org/inbox.org")
      "* %^{Logging for...}
 :PROPERTIES:
 :Created: %U
@@ -40,7 +40,7 @@
 %i
 %?" )
     ("tl" "Todo with link" entry
-     (id "3C95FA6D-9D4E-41F0-A0BA-705CDBE95C34")
+     (file "~/Dropbox/org/inbox.org")
      "* %^{Logging for...}
 :PROPERTIES:
 :Created: %U
@@ -49,7 +49,7 @@
 %i
 %?" )
     ("ic" "Idea from Chrome" entry
-     (id "2BB868B0-F4B2-4ADC-850A-D41654D7C527")
+     (file "~/Dropbox/org/idea.org")
      "* %^{Logging for...} :idea:
 :PROPERTIES:
 :Created: %U
@@ -67,7 +67,7 @@
 %i
 %?"  :clock-in t  )
     ("M" "Meeting" entry
-     (file+olp+datetree "~/Dropbox/org/index.org" "Meeting")
+     (file+olp+datetree "~/Dropbox/org/meeting.org")
      "* %^{Logging for...} :logs:communication:
 %^{Effort}p
 %^T
@@ -95,7 +95,7 @@
 %i
 %?"  :clock-in t  )
     ("i" "Idea" entry
-     (id "2BB868B0-F4B2-4ADC-850A-D41654D7C527")
+     (file "~/Dropbox/org/idea.org")
      "* %A :idea:
 :PROPERTIES:
 :Created: %U
@@ -104,7 +104,7 @@
 %i
 %?")
     ("dr" "Daily Review" entry
-     (file+olp+datetree "~/Dropbox/org/index.org" "Review")
+     (file+olp+datetree "~/Dropbox/org/review.org")
      "* %^{Review} :review:daily:
 :PROPERTIES:
 :Created: %U
@@ -112,14 +112,14 @@
 :END:
 %?"  )
     ("wr" "Week Review" entry
-     (file+olp+datetree "~/Dropbox/org/index.org" "Review")
+     (file+olp+datetree "~/Dropbox/org/review.org")
      "* %^{Review for...|Mood|Research|Learn|Entertainment|Life} :review:week:%\\1:
 :PROPERTIES:
 :Created: %U
 :END:
 %?"  )
     ("mr" "Month Review" entry
-     (file+olp+datetree "~/Dropbox/org/index.org" "Review")
+     (file+olp+datetree "~/Dropbox/org/review.org")
      "* %^{Review for...|Mood|Research|Learn|Entertainment|Life} :review:month:%\\1:
 :PROPERTIES:
 :Created: %U

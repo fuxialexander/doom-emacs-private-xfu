@@ -115,7 +115,7 @@ If run interactively, get ENTRY from context."
 (after! org
   (set! :popup "^CAPTURE.*\\.org$" '((side . bottom) (size . 0.4)) '((select . t)))
   (set! :popup "^\\*Org Src" '((size . 0.4) (side . right)) '((quit) (select . t)))
-  (set! :popup "^\\*Org Agenda\\*$" '((slot . -1) (size . 120) (side . right)) '((select . t)))
+  (set! :popup "^\\*Org Agenda.*\\*$" '((slot . -1) (size . 120) (side . right)) '((select . t)))
   (defvaralias 'org-directory '+org-dir))
 
 (when (featurep 'org)
@@ -177,44 +177,37 @@ unfold to point on startup."
 
 (defun +org|setup-ui ()
   "Configures the UI for `org-mode'."
-  (setq-default
-   org-clock-persist-file (expand-file-name ".org-clock-persist-data.el" +org-dir)
-   org-clock-persist t
-   org-agenda-compact-blocks t
-   org-id-link-to-org-use-id t
-   org-adapt-indentation nil
-   org-agenda-dim-blocked-tasks nil
-   org-agenda-files (directory-files +org-dir t "\\.org$" t)
-   org-agenda-inhibit-startup t
-   org-agenda-skip-unavailable-files nil
-   org-blank-before-new-entry nil
-   org-cycle-include-plain-lists t
-   org-cycle-separator-lines 1
-   org-entities-user '(("flat"  "\\flat" nil "" "" "266D" "♭") ("sharp" "\\sharp" nil "" "" "266F" "♯"))
-   org-fontify-done-headline t
-   org-fontify-quote-and-verse-blocks t
-   org-fontify-whole-heading-line t
-   org-footnote-auto-label 'plain
-   org-hidden-keywords nil
-   org-hide-emphasis-markers nil
-   org-hide-leading-stars t
-   org-hide-leading-stars-before-indent-mode t
-   org-image-actual-width nil
-   org-indent-indentation-per-level 2
-   org-indent-mode-turns-on-hiding-stars t
-   org-pretty-entities nil
-   org-pretty-entities-include-sub-superscripts t
-   org-priority-faces
-   `((?a . ,(face-foreground 'error))
-     (?b . ,(face-foreground 'warning))
-     (?c . ,(face-foreground 'success)))
-   org-startup-folded t
-   org-startup-indented t
-   org-startup-with-inline-images nil
-   org-tags-column 0
-   org-use-sub-superscripts '{}
-   outline-blank-line t)
-
+  (setq-default org-adapt-indentation nil
+                org-blank-before-new-entry nil
+                org-cycle-include-plain-lists t
+                org-cycle-separator-lines 1
+                org-entities-user '(("flat"  "\\flat" nil "" "" "266D" "♭") ("sharp" "\\sharp" nil "" "" "266F" "♯"))
+                org-fontify-done-headline t
+                org-fontify-quote-and-verse-blocks t
+                org-fontify-whole-heading-line t
+                org-footnote-auto-label 'plain
+                org-hidden-keywords nil
+                org-hide-emphasis-markers nil
+                org-hide-leading-stars nil
+                org-hide-leading-stars-before-indent-mode nil
+                org-id-link-to-org-use-id t
+                org-id-locations-file (concat +org-dir ".org-id-locations")
+                org-id-track-globally t
+                org-image-actual-width nil
+                org-indent-indentation-per-level 2
+                org-indent-mode-turns-on-hiding-stars t
+                org-pretty-entities nil
+                org-pretty-entities-include-sub-superscripts t
+                org-priority-faces
+                `((?a . ,(face-foreground 'error))
+                  (?b . ,(face-foreground 'warning))
+                  (?c . ,(face-foreground 'success)))
+                org-startup-folded t
+                org-startup-indented t
+                org-startup-with-inline-images nil
+                org-tags-column 0
+                org-use-sub-superscripts '{}
+                outline-blank-line t)
 
   (org-link-set-parameters
    "org"

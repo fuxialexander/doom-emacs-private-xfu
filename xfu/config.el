@@ -1,4 +1,7 @@
 ;; * private/default/config.el -*- lexical-binding: t; -*-
+(setq gc-cons-threshold 402653184
+      gc-cons-percentage 0.6)
+
 (load! +bindings)
 (load! +evil-commands)
 ;; * Settings
@@ -70,6 +73,7 @@ the workspace and move to the next."
 (after! yasnippet
   (setq yas-snippet-dirs '(+xfu-snippets-dir)))
 ;; ** persp
+(remove-hook 'projectile-after-switch-project-hook #'+workspaces|switch-to-project)
 (after! persp-mode
   (defun +myworkspaces|per-project ()
     "Open a new workspace when switching to another project.
@@ -83,8 +87,10 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
         (counsel-projectile-find-file)
         (+workspace-message (format "Switched to '%s' in new workspace" (+workspace-current-name)) 'success)
         ))
-    (setq +workspaces--project-dir default-directory))
-  (setq projectile-switch-project-action #'+myworkspaces|per-project))
+    ;; (setq +workspaces--project-dir default-directory)
+    )
+  (setq projectile-switch-project-action #'+myworkspaces|per-project)
+  )
 ;; ** EWW
 (after! shr
   (require 'shr-tag-pre-highlight)
@@ -142,9 +148,6 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
 (after! org
 ;; **** Misc setting
   (setq +org-dir "~/Dropbox/org/"
-        org-clock-persist-file (concat doom-cache-dir "org-clock-save.el")
-        org-id-locations-file (concat doom-cache-dir ".org-id-locations")
-        org-publish-timestamp-directory (concat doom-cache-dir ".org-timestamps/")
         org-blank-before-new-entry nil
         org-ellipsis " + "
         org-modules (quote (org-bibtex org-docview org-habit org-info org-protocol org-mac-iCal org-mac-link org-notmuch))
@@ -400,3 +403,10 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
             (select-window window))))
 (add-hook 'persp-before-switch-functions 'doom/goto-main-window)
 
+
+(run-with-idle-timer
+ 5 nil
+ (lambda ()
+   (setq gc-cons-threshold 16777216)
+   (message "gc-cons-threshold restored to %S"
+            gc-cons-threshold)))
