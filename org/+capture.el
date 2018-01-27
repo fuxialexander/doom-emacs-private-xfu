@@ -8,7 +8,6 @@
 (defvar +org-default-notes-file "inbox.org"
   "TODO")
 
-
 (defvar org-capture-templates
   `(("GSA" "General Skim Annotation" entry
      (file+function (lambda () (buffer-file-name)) +org-move-point-to-heading)

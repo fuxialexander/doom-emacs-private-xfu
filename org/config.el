@@ -28,10 +28,10 @@
 (def-package! toc-org
   :commands toc-org-enable)
 
-(def-package! org-bullets
-  :commands org-bullets-mode
-  :config
-  (setq org-bullets-bullet-list '("#" "#" "#" "#" "#" "#" "#" "#")))
+;; (def-package! org-bullets
+;;   :commands org-bullets-mode
+;;   :config
+;;   (setq org-bullets-bullet-list '("#" "#" "#" "#" "#" "#" "#" "#")))
 
 (def-package! org-brain
   :after org
@@ -98,7 +98,7 @@ If run interactively, get ENTRY from context."
 
 (add-hook! 'org-mode-hook
   #'(doom|disable-line-numbers  ; no line numbers
-     org-bullets-mode           ; "prettier" bullets
+     ;; org-bullets-mode           ; "prettier" bullets
      org-indent-mode            ; margin-based indentation
      toc-org-enable             ; auto-table of contents
      visual-line-mode           ; line wrapping

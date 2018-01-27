@@ -2,7 +2,7 @@
 ;;; private/org/packages.el
 
 (package! org-plus-contrib)
-(package! org-bullets :recipe (:fetcher github :repo "hlissner/org-bullets"))
+;; (package! org-bullets :recipe (:fetcher github :repo "hlissner/org-bullets"))
 (package! toc-org)
 (package! org-wild-notifier)
 ;; (package! evil-org)
@@ -32,7 +32,7 @@
   (package! ox-pandoc))
 
 (when (featurep! +present)
-  (package! centered-window-mode)
+;;  (package! centered-window-mode)
   (package! org-tree-slide)
   (package! ox-reveal))
 

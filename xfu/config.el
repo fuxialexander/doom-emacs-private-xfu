@@ -1,7 +1,4 @@
 ;; * private/default/config.el -*- lexical-binding: t; -*-
-(setq gc-cons-threshold 402653184
-      gc-cons-percentage 0.6)
-
 (load! +bindings)
 (load! +evil-commands)
 ;; * Settings
@@ -71,7 +68,7 @@ the workspace and move to the next."
 (add-hook 'minibuffer-setup-hook #'doom|no-fringes-in-minibuffer)
 (set-window-fringes (minibuffer-window) 0 0 nil)
 (after! yasnippet
-  (setq yas-snippet-dirs '(+xfu-snippets-dir)))
+    (push '+xfu-snippets-dir yas-snippet-dirs))
 ;; ** persp
 (remove-hook 'projectile-after-switch-project-hook #'+workspaces|switch-to-project)
 (after! persp-mode
@@ -404,9 +401,3 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
 (add-hook 'persp-before-switch-functions 'doom/goto-main-window)
 
 
-(run-with-idle-timer
- 5 nil
- (lambda ()
-   (setq gc-cons-threshold 16777216)
-   (message "gc-cons-threshold restored to %S"
-            gc-cons-threshold)))

@@ -36,7 +36,7 @@
               :around #'+org-present*narrow-to-subtree))
 
 
-(def-package! centered-window-mode :commands centered-window-mode)
+;; (def-package! centered-window-mode :commands centered-window-mode)
 
 
 ;;
