@@ -20,14 +20,12 @@
 
 
 (setq tex-path (car (file-expand-wildcards "~/.emacs.d/.local/packages/elpa/auctex*")))
-(def-package! tex-site :load-path tex-path
-  :mode ("\\.tex\\'" . TeX-latex-mode)
+(def-package! tex-site
   :init
   ;; Manually load the AUCTEX autoloads. This is normally done by package-initialize,
   ;; ... which we do not use.
-  (setq reftex-plug-into-AUCTeX t)
-  (load-file (concat tex-path "/auctex.el"))
-  (load-file (concat tex-path "/auctex-autoloads.el"))
+  (load "auctex.el" nil t t)
+  (load "auctex-autoloads.el" nil t t)
   :config
   ;; Set some varibles to fontify common LaTeX commands.
   (load! +fontification)

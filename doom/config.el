@@ -82,3 +82,39 @@
     "XX......"
     "XXX....."
     "XXXX...."))
+
+(after! colir
+  (defun colir--blend-background (start next prevn face object)
+  (let ((background-prev (face-background prevn)))
+    (progn
+      (put-text-property
+       start next
+       (if background-prev
+           (cons `(background-color
+                   . ,(colir-blend
+                       (colir-color-parse background-prev)
+                       (colir-color-parse (face-background face nil t))))
+                 prevn)
+         (list face prevn))
+       object))))
+(defun colir-blend-face-background (start end face &optional object)
+  "Append to the face property of the text from START to END the face FACE.
+When the text already has a face with a non-plain background,
+blend it with the background of FACE.
+Optional argument OBJECT is the string or buffer containing the text.
+See also `font-lock-append-text-property'."
+  (let (next prev prevn)
+    (while (/= start end)
+      (setq next (next-single-property-change start 'face object end))
+      (setq prev (get-text-property start 'face object))
+      (setq prevn (if (listp prev)
+                      (cl-find-if #'atom prev)
+                    prev))
+      (cond
+        ((or (keywordp (car-safe prev)) (consp (car-safe prev)))
+         (add-face-text-property start next (cons face prev) nil object))
+        ((facep prevn)
+         (colir--blend-background start next prevn face object))
+        (t
+         (add-face-text-property start next face nil object)))
+      (setq start next)))))

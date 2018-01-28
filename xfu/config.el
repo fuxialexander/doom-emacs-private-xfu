@@ -400,4 +400,3 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
             (select-window window))))
 (add-hook 'persp-before-switch-functions 'doom/goto-main-window)
 
-

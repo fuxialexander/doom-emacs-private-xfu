@@ -233,25 +233,32 @@
           :desc "Toggle profiler"       :n  "p" #'doom/toggle-profiler)
 ;; *** insert
         (:desc "insert" :prefix "i"
-          :desc "From kill-ring"        :nv "y" #'counsel-yank-pop
+          :desc "From kill-ring"        :nv "y" #'yank-pop
           :desc "From snippet"          :nv "s" #'yas-insert-snippet)
 ;; *** open
         (:desc "open" :prefix "o"
-          :desc "Default browser"     :n  "b" #'browse-url-of-file
-          ;; :desc "Debugger"            :n  "d" #'+debug/open
-          :desc "REPL"                :n  "r" #'+eval/open-repl
+          :desc "Default browser"             :n "b" #'browse-url-of-file
+          ;; :desc "Debugger"                 :n "d" #'+debug/open
+          :desc "REPL"                        :n "r" #'+eval/open-repl
           :v  "r" #'+eval:repl
-          :desc "Neotree"             :n  "n" #'+neotree/toggle
-          :desc "Terminal"            :n  "t" #'+term/open-popup
-          :desc "Terminal in project" :n  "T" #'+term/open-popup-in-project
+          :desc "Neotree"                     :n "n" #'+neotree/toggle
+          :desc "Terminal"                    :n "t" #'+term/open-popup
+          :desc "Terminal in project"         :n "T" #'+term/open-popup-in-project
 ;; *** applications
-          :desc "Twitter"             :n "2" #'=twitter
-          :desc "RSS"                 :n "e" #'=rss
-          ;; :desc "Calendar"            :n "c" #'=calendar
-          :desc "Calendar"            :n "c" #'=calendar
-          :desc "Eshell"              :n "s" #'+eshell/open-popup
-          :desc "Mail"                :n "m" #'=mail
+          :desc "Twitter"                     :n "2" #'=twitter
+          :desc "RSS"                         :n "e" #'=rss
+          :desc "Calendar"                    :n "c" #'=calendar
+          :desc "Eshell"                      :n "s" #'+eshell/open-popup
+          :desc "Mail"                        :n "m" #'=mail
+        ;; macos
+          (:when IS-MAC
+            :desc "Reveal in Finder"          :n "f" #'+macos/reveal-in-finder
+            :desc "Reveal project in Finder"  :n "F" #'+macos/reveal-project-in-finder
+            :desc "Send to Launchbar"         :n "l" #'+macos/send-to-launchbar
+            :desc "Send project to Launchbar" :n "L" #'+macos/send-project-to-launchbar)
           )
+
+
 ;; *** project
         (:desc "project" :prefix "p"
           :desc "Browse project"          :n  "." #'+xfu/browse-project
@@ -645,29 +652,37 @@
               evil-ex-search-next evil-ex-search-previous)
   (do-repeat! evil-visualstar/begin-search-backward
               evil-ex-search-previous evil-ex-search-next))
-(after! evil-easymotion
-  (let ((prefix (concat doom-leader-key " /")))
-    ;; NOTE `evilem-default-keybinds' unsets all other keys on the prefix (in
-    ;; motion state)
+
+
+  ;; lazy-load `evil-easymotion'
+(map! :m "gs" #'+default/easymotion)
+(defun +default/easymotion ()
+  (interactive)
+  (let ((prefix (this-command-keys)))
     (evilem-default-keybindings prefix)
-    (evilem-define (kbd (concat prefix " n")) #'evil-ex-search-next)
-    (evilem-define (kbd (concat prefix " N")) #'evil-ex-search-previous)
-    (evilem-define (kbd (concat prefix " s")) #'evil-snipe-repeat
-                   :pre-hook (save-excursion (call-interactively #'evil-snipe-s))
-                   :bind ((evil-snipe-scope 'buffer)
-                          (evil-snipe-enable-highlight)
-                          (evil-snipe-enable-incremental-highlight)))
-    (evilem-define (kbd (concat prefix " S")) #'evil-snipe-repeat-reverse
-                   :pre-hook (save-excursion (call-interactively #'evil-snipe-s))
-                   :bind ((evil-snipe-scope 'buffer)
-                          (evil-snipe-enable-highlight)
-                          (evil-snipe-enable-incremental-highlight)))))
+    (map! :map evilem-map
+          "n" (evilem-create #'evil-ex-search-next)
+          "N" (evilem-create #'evil-ex-search-previous)
+          "s" (evilem-create #'evil-snipe-repeat
+                             :pre-hook (save-excursion (call-interactively #'evil-snipe-s))
+                             :bind ((evil-snipe-scope 'buffer)
+                                    (evil-snipe-enable-highlight)
+                                    (evil-snipe-enable-incremental-highlight)))
+          "S" (evilem-create #'evil-snipe-repeat-reverse
+                             :pre-hook (save-excursion (call-interactively #'evil-snipe-s))
+                             :bind ((evil-snipe-scope 'buffer)
+                                    (evil-snipe-enable-highlight)
+                                    (evil-snipe-enable-incremental-highlight))))
+    (set-transient-map evilem-map)
+    (which-key-reload-key-sequence prefix)))
+
 ;; ** Keybinding fixes
 ;; This section is dedicated to "fixing" certain keys so that they behave
 ;; properly, more like vim, or how I like it.
 (map! (:map input-decode-map
         [S-iso-lefttab] [backtab]
         (:unless window-system "TAB" [tab])) ; Fix TAB in terminal
+
       ;; I want C-a and C-e to be a little smarter. C-a will jump to
       ;; indentation. Pressing it again will send you to the true bol. Same goes
       ;; for C-e, except it will ignore comments and trailing whitespace before
@@ -675,6 +690,7 @@
       :i "C-a" #'doom/backward-to-bol-or-indent
       :i "C-e" #'doom/forward-to-last-non-comment-or-eol
       :i "C-u" #'doom/backward-kill-to-bol-and-indent
+
       ;; textmate-esque newline insertion
       :i [M-return]     #'evil-open-below
       :i [S-M-return]   #'evil-open-above
@@ -685,6 +701,7 @@
       ;; Emacsien motions for insert mode
       :i "C-b" #'backward-word
       :i "C-f" #'forward-word
+
       ;; Highjacks space/backspace to:
       ;;   a) balance spaces inside brackets/parentheses ( | ) -> (|)
       ;;   b) delete space-indented blocks intelligently
@@ -692,19 +709,19 @@
       :i "SPC"                          #'doom/inflate-space-maybe
       :i [remap delete-backward-char]   #'doom/deflate-space-maybe
       :i [remap newline]                #'doom/newline-and-indent
+
       (:after org
         (:map org-mode-map
           :i [remap doom/inflate-space-maybe] #'org-self-insert-command
           :i "C-e" #'org-end-of-line
           :i "C-a" #'org-beginning-of-line))
+
       ;; Restore common editing keys (and ESC) in minibuffer
       (:map (minibuffer-local-map
              minibuffer-local-ns-map
              minibuffer-local-completion-map
              minibuffer-local-must-match-map
              minibuffer-local-isearch-map
-             evil-ex-completion-map
-             evil-ex-search-keymap
              read-expression-map)
         [escape] #'abort-recursive-edit
         "C-r" #'evil-paste-from-register
@@ -714,11 +731,14 @@
         "C-b" #'backward-word
         "C-f" #'forward-word
         "M-z" #'doom/minibuffer-undo)
+
       (:map messages-buffer-mode-map
         "M-;" #'eval-expression
         "A-;" #'eval-expression)
+
+      (:after tabulated-list
       (:map tabulated-list-mode-map
-        [remap evil-record-macro] #'+popup/close)
+          [remap evil-record-macro] #'quit-window))
+
       (:after view
         (:map view-mode-map "<escape>" #'View-quit-all)))
-
