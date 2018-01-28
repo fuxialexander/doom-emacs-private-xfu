@@ -81,13 +81,13 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
         (switch-to-buffer (doom-fallback-buffer))
         (setq default-directory cwd
               org-brain-path cwd)
-        (counsel-projectile-find-file)
+        (projectile-find-file)
         (+workspace-message (format "Switched to '%s' in new workspace" (+workspace-current-name)) 'success)
-        ))
-    ;; (setq +workspaces--project-dir default-directory)
-    )
-  (setq projectile-switch-project-action #'+myworkspaces|per-project)
-  )
+        )))
+  (setq projectile-switch-project-action #'+myworkspaces|per-project))
+(after! counsel-projectile
+  (map! [remap projectile-switch-project] nil))
+
 ;; ** EWW
 (after! shr
   (require 'shr-tag-pre-highlight)
@@ -399,4 +399,5 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         (if (window-live-p window)
             (select-window window))))
 (add-hook 'persp-before-switch-functions 'doom/goto-main-window)
+
 
