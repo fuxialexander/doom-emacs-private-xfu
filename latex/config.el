@@ -20,12 +20,14 @@
 
 
 (setq tex-path (car (file-expand-wildcards "~/.emacs.d/.local/packages/elpa/auctex*")))
-(def-package! tex-site
+(def-package! tex-site :load-path tex-path
+  :mode ("\\.tex\\'" . TeX-latex-mode)
+  :commands (latex-mode LaTeX-mode plain-tex-mode)
   :init
   ;; Manually load the AUCTEX autoloads. This is normally done by package-initialize,
   ;; ... which we do not use.
-  (load "auctex.el" nil t t)
-  (load "auctex-autoloads.el" nil t t)
+  ;; (load "auctex.el" nil t t)
+  ;; (load "auctex-autoloads.el" nil t t)
   :config
   ;; Set some varibles to fontify common LaTeX commands.
   (load! +fontification)
@@ -87,11 +89,12 @@
     ;; Use chktex to search for errors in a latex file.
     (setcar (cdr (assoc "Check" TeX-command-list)) "chktex -v6 %s")
     ;; Set a custom item indentation
-    (setq LaTeX-indent-environment-list
-          (nconc '(("itemize" +latex/LaTeX-indent-item)
-                   ("enumerate" +latex/LaTeX-indent-item)
-                   ("description" +latex/LaTeX-indent-item))
-                 LaTeX-indent-environment-list))))
+    ;; (setq LaTeX-indent-environment-list
+    ;;       (nconc '(("itemize" +latex/LaTeX-indent-item)
+    ;;                ("enumerate" +latex/LaTeX-indent-item)
+    ;;                ("description" +latex/LaTeX-indent-item))
+    ;;              LaTeX-indent-environment-list))
+    ))
 
 (after! latex
   ;; Use Okular is the user says so.
