@@ -6,6 +6,7 @@
 (setq
  request-storage-directory (concat doom-etc-dir "request/")
  dired-dwim-target t
+ recentf-auto-cleanup 60
  ivy-use-selectable-prompt t
  ivy-auto-select-single-candidate t
  ivy-rich-parse-remote-buffer nil
@@ -173,7 +174,8 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
 
 ;; ** company
 (require 'company)
-(require 'company-childframe "~/.emacs.d/modules/private/xfu/local/company-childframe.el")
+(def-package! company-childframe
+  :after company)
 (setq-default company-idle-delay 0.2
               company-minimum-prefix-length 2
               company-tooltip-limit 10
@@ -185,13 +187,14 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
               company-dabbrev-code-other-buffers t
               company-tooltip-align-annotations t
               company-require-match 'never
-              company-global-modes '(not eshell-mode comint-mode erc-mode message-mode help-mode gud-mode)
+              company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode)
               company-frontends '(company-childframe-frontend company-echo-metadata-frontend)
               company-childframe-child-frame nil
               ;; company-backends '(company-files company-dabbrev)
               company-transformers '(company-sort-by-occurrence))
 
 (set! :company-backend '(emacs-lisp-mode) '(company-elisp company-files company-yasnippet company-dabbrev-code))
+(set! :company-backend '(python-mode) '(company-anaconda company-files company-yasnippet company-dabbrev-code))
 (set! :company-backend '(org-mode) '(company-files company-yasnippet company-dabbrev))
 (set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point)
 

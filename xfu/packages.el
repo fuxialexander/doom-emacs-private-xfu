@@ -9,6 +9,7 @@
 (package! helpful)
 (package! tldr)
 
+(package! company-childframe)
 (package! keyfreq)
 (package! sed-mode)
 (package! company)

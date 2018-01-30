@@ -1,9 +1,8 @@
 ;;; private/xfu/init.el -*- lexical-binding: t; -*-
 
-(add-to-list 'load-path "~/.emacs.d/modules/private/xfu/local/")
+;; (add-to-list 'load-path "~/.emacs.d/modules/private/xfu/local/")
 ;; Prevents the unstyled mode-line flash at startup
 (setq-default
- mode-line-format nil
  evil-want-C-u-scroll t
  exec-path '("/Users/xfu/Library/Haskell/bin"
              "/usr/local/opt/texinfo/bin/"
@@ -20,14 +19,15 @@
              "/usr/bin/"
              "/bin/"
              "/usr/local/Cellar/emacs-plus/HEAD-ffeb116/libexec/emacs/27.0.50/x86_64-apple-darwin17.3.0/")
- fringe-indicator-alist (delq
-                         (assq 'truncation fringe-indicator-alist)
-                         (delq (assq 'continuation fringe-indicator-alist)
-                               fringe-indicator-alist)))
+ ;; fringe-indicator-alist (delq
+ ;;                         (assq 'truncation fringe-indicator-alist)
+ ;;                         (delq (assq 'continuation fringe-indicator-alist)
+ ;;                               fringe-indicator-alist))
+ )
 (setenv "PATH" "/Users/xfu/Library/Haskell/bin:/usr/local/opt/texinfo/bin:/usr/local/opt/openssl/bin:/Library/Internet\\ Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin:/usr/local/texlive/2017/bin/x86_64-darwin:/usr/local/bin:/usr/local/anaconda3/bin:/usr/local/texlive/2017/bin/x86_64-darwin:/usr/local/opt/imagemagick@6/bin:/usr/local/opt/curl/bin:/usr/local/sbin:/usr/local/opt/texinfo/bin:/usr/texbin:/usr/bin:/bin")
-(or standard-display-table
-    (setq standard-display-table (make-display-table)))
-(set-display-table-slot standard-display-table 0 ?\ )
+;; (or standard-display-table
+    ;; (setq standard-display-table (make-display-table)))
+;; (set-display-table-slot standard-display-table 0 ?\ )
 (setq-default frame-title-format
   '("emacs%@" (:eval (system-name)) ": " (:eval (if (buffer-file-name)
                 (abbreviate-file-name (buffer-file-name))
@@ -99,4 +99,7 @@
   t)
 
 (def-package-hook! company-ghc
+  :disable t)
+
+(def-package-hook! dired-k
   :disable t)

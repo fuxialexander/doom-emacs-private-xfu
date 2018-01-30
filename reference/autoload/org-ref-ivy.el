@@ -212,7 +212,7 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
 (defun +reference/org-mac-skim-insert-page ()
   (interactive)
   (insert (+reference/skim-get-annotation)))
-(after! org-link
+(after! org
   (org-link-set-parameters "skim" :follow #'+reference/org-mac-skim-open))
 ;;;###autoload
 (defun +reference/org-ref-find-entry-in-notes (key)
