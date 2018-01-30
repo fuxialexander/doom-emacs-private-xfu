@@ -75,10 +75,52 @@ is loaded.")
     :definition #'lsp-ui-peek-find-definitions
     :references #'lsp-ui-peek-find-references))
 
+(def-package! anaconda-mode
+  :after python
+  :hook python-mode
+  :init
+  (setq anaconda-mode-installation-directory (concat doom-etc-dir "anaconda/")
+        anaconda-mode-eldoc-as-single-line t)
+  :config
+  (add-hook 'anaconda-mode-hook #'anaconda-eldoc-mode)
+  (set! :popup "^\\*anaconda-mode" nil '((select)))
+  (set! :lookup 'python-mode
+    :definition #'anaconda-mode-find-definitions
+    :references #'anaconda-mode-find-references
+    :documentation #'anaconda-mode-show-doc)
+  (advice-add #'anaconda-mode-doc-buffer :after #'doom*anaconda-mode-doc-buffer))
+
+(def-package! company-anaconda
+  :after anaconda-mode
+  :config
+  (set! :company-backend 'python-mode '(company-anaconda))
+  (map! :map python-mode-map
+        :localleader
+        :prefix "f"
+        :nv "d" #'anaconda-mode-find-definitions
+        :nv "h" #'anaconda-mode-show-doc
+        :nv "a" #'anaconda-mode-find-assignments
+        :nv "f" #'anaconda-mode-find-file
+        :nv "u" #'anaconda-mode-find-references))
 
 (def-package! pip-requirements
   :mode ("/requirements.txt$" . pip-requirements-mode))
 
+(def-package! py-isort
+  :after python
+  :config
+  (map! :map python-mode-map
+        :localleader
+        :n "s" #'py-isort-buffer
+        :v "s" #'py-isort-region))
+
+(def-package! yapfify
+  :after python
+  :hook (python-mode . yapf-mode)
+  :config
+  (map! :map python-mode-map
+        :localleader
+        :nv "=" #'yapfify-buffer))
 
 (def-package! nose
   :commands nose-mode
