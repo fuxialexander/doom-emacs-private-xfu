@@ -40,13 +40,7 @@ is loaded.")
           python-shell-completion-setup-code
           "from IPython.core.completerlib import module_completion"
           python-shell-completion-string-code
-          "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
-    )
-
-
-  (define-key python-mode-map (kbd "DEL") nil) ; interferes with smartparens
-  (sp-with-modes 'python-mode
-    (sp-local-pair "'" nil :unless '(sp-point-before-word-p sp-point-after-word-p sp-point-before-same-p))))
+          "';'.join(get_ipython().Completer.all_completions('''%s'''))\n"))
 
 (def-package! conda
   :commands (conda-env-activate-for-buffer)
@@ -65,6 +59,10 @@ is loaded.")
             "Python")))
   (add-hook 'conda-postactivate-hook #'+python|add-version-to-modeline)
   (add-hook 'conda-postdeactivate-hook #'+python|add-version-to-modeline))
+
+  (define-key python-mode-map (kbd "DEL") nil) ; interferes with smartparens
+  (sp-with-modes 'python-mode
+    (sp-local-pair "'" nil :unless '(sp-point-before-word-p sp-point-after-word-p sp-point-before-same-p))))
 
 (def-package! lsp-python
   :commands (lsp-python-enable)
@@ -88,12 +86,22 @@ is loaded.")
     :definition #'anaconda-mode-find-definitions
     :references #'anaconda-mode-find-references
     :documentation #'anaconda-mode-show-doc)
-  (advice-add #'anaconda-mode-doc-buffer :after #'doom*anaconda-mode-doc-buffer))
+  (advice-add #'anaconda-mode-doc-buffer :after #'doom*anaconda-mode-doc-buffer)
+
+  (defun +python|auto-kill-anaconda-processes ()
+    "Kill anaconda processes if this buffer is the last python buffer."
+    (when (and (eq major-mode 'python-mode)
+               (not (delq (current-buffer)
+                          (doom-buffers-in-mode 'python-mode (buffer-list)))))
+      (anaconda-mode-stop)))
+  (add-hook! 'python-mode-hook
+    (add-hook 'kill-buffer-hook #'+python|auto-kill-anaconda-processes nil t)))
+
 
 (def-package! company-anaconda
   :after anaconda-mode
   :config
-  (set! :company-backend 'python-mode '(company-anaconda))
+  (set! :company-backend 'python-mode '(company-anaconda company-files company-yasnippet company-dabbrev-code))
   (map! :map python-mode-map
         :localleader
         :prefix "f"
@@ -102,6 +110,7 @@ is loaded.")
         :nv "a" #'anaconda-mode-find-assignments
         :nv "f" #'anaconda-mode-find-file
         :nv "u" #'anaconda-mode-find-references))
+
 
 (def-package! pip-requirements
   :mode ("/requirements.txt$" . pip-requirements-mode))
