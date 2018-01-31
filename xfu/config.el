@@ -4,6 +4,7 @@
 ;; * Settings
 ;; ** Misc
 (setq
+ doom-theme 'doom-solarizedlight
  request-storage-directory (concat doom-etc-dir "request/")
  dired-dwim-target t
  recentf-auto-cleanup 60
@@ -22,13 +23,16 @@
  ;; projectile-ignored-projects
  ;; rss
  +rss-elfeed-files '("elfeed.org")
+ browse-url-browser-function 'xwidget-webkit-browse-url
  ;; ivy
+
  counsel-org-goto-face-style 'org
  counsel-org-headline-display-style 'title
  counsel-org-headline-display-tags t
  counsel-org-headline-display-todo t
  +ivy-buffer-icons nil
  ivy-use-virtual-buffers t
+
  ;; ivy-re-builders-alist '((t . ivy--regex-plus))
  ;; tramp
  tramp-default-method "ssh"
@@ -38,7 +42,28 @@
  twittering-connection-type-order '(wget urllib-http native urllib-https)
  +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin
  )
-
+(after! xwidget
+  (set! :popup "\\*xwidget" '((side . right) (size . 100)) '((select . t) (transient) (quit)))
+  (defun xwidget-webkit-new-session (url)
+    "Create a new webkit session buffer with URL."
+    (let*
+        ((bufname (generate-new-buffer-name "*xwidget-webkit*"))
+         xw)
+      (setq xwidget-webkit-last-session-buffer (get-buffer-create bufname))
+      (setq xwidget-webkit-created-window (display-buffer xwidget-webkit-last-session-buffer))
+      ;; The xwidget id is stored in a text property, so we need to have
+      ;; at least character in this buffer.
+      ;; Insert invisible url, good default for next `g' to browse url.
+      (with-selected-window xwidget-webkit-created-window
+        (insert url)
+        (put-text-property 1 (+ 1 (length url)) 'invisible t)
+        (setq xw (xwidget-insert 1 'webkit bufname
+                                 (xwidget-window-inside-pixel-width (selected-window))
+                                 (xwidget-window-inside-pixel-height (selected-window))))
+        (xwidget-put xw 'callback 'xwidget-webkit-callback)
+        (xwidget-webkit-mode)
+        (xwidget-webkit-goto-uri (xwidget-webkit-last-session) url))))
+  (setq xwidget-webkit-enable-plugins t))
 (after! recentf
   (add-to-list 'recentf-exclude ".*\\.gz")
   (add-to-list 'recentf-exclude ".*\\.gif")

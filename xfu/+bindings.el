@@ -28,6 +28,7 @@
       :n    "\\"    #'ace-window
       :v    "<escape>"    #'evil-escape
       :gnvime "<f2>" #'+lookup/documentation
+      :gnvime "<f5>" #'redraw-display
 ;; *** A little sandbox to run code in
       :gnvime "s-;" #'eval-expression
       :gnvime "s-:" #'doom/open-scratch-buffer
@@ -384,7 +385,23 @@
         :n "s"         #'neotree-enter-horizontal-split
         :n "q"         #'neotree-hide
         :n "R"         #'neotree-refresh)
-
+      (:after xwidget
+        :map xwidget-webkit-mode-map
+        :n "r"         #'xwidget-webkit-reload
+        :n "y"         #'xwidget-webkit-copy-selection-as-kill
+        :n "s-c"       #'xwidget-webkit-copy-selection-as-kill
+        :n "t"         #'xwidget-webkit-browse-url
+        :n "n"         #'xwidget-webkit-forward
+        :n "p"         #'xwidget-webkit-back
+        :n "G"         #'xwidget-webkit-scroll-bottom
+        :n "gg"        #'xwidget-webkit-scroll-top
+        :n "C-d"       #'xwidget-webkit-scroll-down
+        :n "C-u"       #'xwidget-webkit-scroll-up
+        :n "s-="       #'xwidget-webkit-zoom-in
+        :n "s--"       #'xwidget-webkit-zoom-out
+        :n "j"         #'xwidget-webkit-scroll-up-line
+        :n "k"         #'xwidget-webkit-scroll-down-line
+        )
 ;; *** company-mode
       (:after company
         (:map company-active-map
@@ -533,7 +550,9 @@
         "C-f" #'forward-word)
       (:after swiper
         :map swiper-map
+        [backtab]  #'+ivy/wgrep-occur
         "s-l" #'swiper-avy)
+
 ;; *** realgud
       (:after realgud
         :map realgud:shortkey-mode-map
