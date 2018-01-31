@@ -1,7 +1,7 @@
 ;;; private/org/+babel.el -*- lexical-binding: t; -*-
 (add-hook 'org-load-hook #'+org|init-babel)
 (defvar +org-babel-mode-alist
-  '(("jupyter-R" . ipython)
+  '(("jupyter-r" . ipython)
     ("zsh" . shell)
     ("bash" . shell)
     ("sh" . shell))

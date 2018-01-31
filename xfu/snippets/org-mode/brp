@@ -3,7 +3,7 @@
 # key: brp_
 # --
 #+NAME: $1
-#+BEGIN_SRC ipython :session $2 :kernel rik_ssh_$3_$3python :ipyfile image/$1.png :dir /ssh:xfu@${3:$$(yas-choose-value '("hpc7" "hpc11" "hpc9" "gpu8"))}:/research/kevinyip10/xfu/$4 :exports both :async t :results raw drawer :tangle /ssh:xfu@$3/$4/$1
+#+BEGIN_SRC ipython :session $2 :kernel rik_ssh_$3_$3python :ipyfile /Users/xfu/Dropbox/org/image/$1.png :dir /ssh:xfu@${3:$$(yas-choose-value '("hpc7" "hpc11" "hpc9" "gpu8"))}:/research/kevinyip10/xfu/$4 :exports both :async t :results raw drawer :tangle /ssh:xfu@$3/$4/$1
 # (setq anaconda-ob-ipython-interpreter "`(setq anaconda-ob-ipython-interpreter "/ssh:xfu@hpc11.cse.cuhk.edu.hk:/research/kevinyip10/xfu/miniconda3/bin/python3")`")
 %cd /research/kevinyip10/xfu/$4
 %matplotlib inline

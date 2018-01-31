@@ -3,6 +3,6 @@
 # key: brr_
 # --
 #+NAME: $1
-#+BEGIN_SRC jupyter-R :kernel rik_ssh_hpc7_hpc7r :results raw drawer :session $2 :ipyfile image/$1.png :exports both :async t :results raw drawer
+#+BEGIN_SRC jupyter-R :session $2 :kernel rik_ssh_$3_$3r :ipyfile /Users/xfu/Dropbox/org/image/$1.png :dir /ssh:xfu@${3:$$(yas-choose-value '("hpc7" "hpc11" "hpc9" "gpu8"))}:/research/kevinyip10/xfu/$4 :exports both :async t :results raw drawer :tangle /ssh:xfu@$3/$4/$1
 $0
 #+END_SRC

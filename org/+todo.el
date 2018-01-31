@@ -74,7 +74,7 @@
                                       (search category-keep))
         org-agenda-span 'day
         org-agenda-start-with-log-mode t
-        org-agenda-sticky t
+        org-agenda-sticky nil
         org-agenda-tags-column 'auto
         org-agenda-use-tag-inheritance nil
 
@@ -133,7 +133,6 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
 
 
 (after! org-agenda
-    ;; (org-wild-notifier-mode 1)
     (org-super-agenda-mode)
     (defun org-agenda-align-tags (&optional line)
     "Align all tags in agenda items to `org-agenda-tags-column'."
@@ -166,4 +165,10 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
 			                     'face nil))))
         (goto-char (point-min))
         (org-font-lock-add-tag-faces (point-max)))))
-        )
+    (defun start-org-wild-notifier ()
+      (if (bound-and-true-p org-wild-notifier-mode)
+          (message "You already have notifier with you!")
+      (run-with-timer 60 nil 'org-wild-notifier-mode 1)
+      (message "Org wild notifier, naughty naughty fire!")))
+    (start-org-wild-notifier)
+    )
