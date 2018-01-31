@@ -4,6 +4,7 @@
 (package! org-plus-contrib)
 ;; (package! org-bullets :recipe (:fetcher github :repo "hlissner/org-bullets"))
 (package! toc-org)
+(package! org-web-tools)
 (package! org-wild-notifier)
 ;; (package! evil-org)
 (package! org-brain)

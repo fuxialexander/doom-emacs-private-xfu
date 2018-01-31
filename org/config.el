@@ -84,7 +84,8 @@ If run interactively, get ENTRY from context."
      :n [tab] 'org-brain-goto-current
      )))
 
-
+(def-package! org-web-tools
+  :after org)
 
 ;;
 ;; Bootstrap
