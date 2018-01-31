@@ -139,7 +139,7 @@ If on a:
         ((org-in-src-block-p t)
          (doom/dumb-indent))
         (t
-         (call-interactively #'org-babel-insert-header-arg)
+         ;; (call-interactively #'org-babel-insert-header-arg)
          (call-interactively #'self-insert-command))))
 
 ;;;###autoload

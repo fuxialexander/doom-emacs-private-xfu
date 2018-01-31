@@ -1,7 +1,5 @@
 ;;; private/xfu/init.el -*- lexical-binding: t; -*-
 
-;; (add-to-list 'load-path "~/.emacs.d/modules/private/xfu/local/")
-;; Prevents the unstyled mode-line flash at startup
 (setq-default
  evil-want-C-u-scroll t
  exec-path '("/Users/xfu/Library/Haskell/bin"
@@ -19,15 +17,15 @@
              "/usr/bin/"
              "/bin/"
              "/usr/local/Cellar/emacs-plus/HEAD-ffeb116/libexec/emacs/27.0.50/x86_64-apple-darwin17.3.0/")
- ;; fringe-indicator-alist (delq
- ;;                         (assq 'truncation fringe-indicator-alist)
- ;;                         (delq (assq 'continuation fringe-indicator-alist)
- ;;                               fringe-indicator-alist))
+ fringe-indicator-alist (delq
+                         (assq 'truncation fringe-indicator-alist)
+                         (delq (assq 'continuation fringe-indicator-alist)
+                               fringe-indicator-alist))
  )
 (setenv "PATH" "/Users/xfu/Library/Haskell/bin:/usr/local/opt/texinfo/bin:/usr/local/opt/openssl/bin:/Library/Internet\\ Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin:/usr/local/texlive/2017/bin/x86_64-darwin:/usr/local/bin:/usr/local/anaconda3/bin:/usr/local/texlive/2017/bin/x86_64-darwin:/usr/local/opt/imagemagick@6/bin:/usr/local/opt/curl/bin:/usr/local/sbin:/usr/local/opt/texinfo/bin:/usr/texbin:/usr/bin:/bin")
-;; (or standard-display-table
-    ;; (setq standard-display-table (make-display-table)))
-;; (set-display-table-slot standard-display-table 0 ?\ )
+(or standard-display-table
+    (setq standard-display-table (make-display-table)))
+(set-display-table-slot standard-display-table 0 ?\ )
 (setq-default frame-title-format
   '("emacs%@" (:eval (system-name)) ": " (:eval (if (buffer-file-name)
                 (abbreviate-file-name (buffer-file-name))
@@ -44,10 +42,10 @@
 
 ;;; UI
  evil-respect-visual-line-mode t
- doom-font (font-spec :family "operator mono" :size 13)
+ doom-font (font-spec :family "SF mono" :size 12)
  doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 14)
  doom-unicode-font (font-spec :family "Symbola" :size 12)
- doom-big-font (font-spec :family "operator Mono" :size 16)
+ doom-big-font (font-spec :family "SF Mono" :size 16)
  doom-line-numbers-style nil
  +doom-modeline-buffer-file-name-style 'truncate-upto-project
  doom-neotree-enable-variable-pitch nil
