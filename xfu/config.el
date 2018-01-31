@@ -189,8 +189,13 @@ the workspace and move to the next."
   ;; optional: this is the evil state that evil-magit will use
   (setq evil-magit-state 'normal))
 (after! magit
-  (setq magit-repository-directories "/Users/xfu/Source"
-        magit-repository-directories-depth 2)
+  (setq magit-repository-directories '("/Users/xfu/Source/"))
+  (set! :evil-state 'magit-repolist-mode 'normal)
+  (push 'magit-repolist-mode evil-snipe-disabled-modes)
+  (map! :map magit-repolist-mode-map
+        :n "j" #'next-line
+        :n "k" #'previous-line
+        :n "s" #'magit-repolist-status)
   (set! :popup "^\\*Magit" '((slot . -1) (side . right) (size . 80)) '((modeline . nil) (select . t)))
   (set! :popup "^\\*magit.*popup\\*" '((slot . 0) (side . right)) '((modeline . nil) (select . t)))
   (set! :popup "^\\*magit-revision:.*" '((vslot . -1) (side . right) (window-height . 0.6)) '((modeline . nil) (select . t)))

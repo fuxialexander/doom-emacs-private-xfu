@@ -79,7 +79,7 @@
 
 ;;;; magit
 (def-package-hook! magit
-  :post-config
+  :post-init
   (require 'pretty-magit "~/.emacs.d/modules/private/xfu/local/pretty-magit.el")
   (pretty-magit "Feature" ? (:foreground "slate gray" :height 1.0 :family "FontAwesome"))
   (pretty-magit "Add"     ? (:foreground "#375E97" :height 1.0 :family "FontAwesome"))
