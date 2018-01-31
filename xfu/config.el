@@ -4,7 +4,7 @@
 ;; * Settings
 ;; ** Misc
 (setq
- doom-theme 'doom-solarizedlight
+ doom-theme 'doom-one
  request-storage-directory (concat doom-etc-dir "request/")
  dired-dwim-target t
  recentf-auto-cleanup 60
@@ -93,24 +93,6 @@ the workspace and move to the next."
 (set-window-fringes (minibuffer-window) 0 0 nil)
 (after! yasnippet
     (push '+xfu-snippets-dir yas-snippet-dirs))
-;; ** persp
-;; (remove-hook 'projectile-after-switch-project-hook #'+workspaces|switch-to-project)
-;; (after! persp-mode
-;;   (defun +myworkspaces|per-project ()
-;;     "Open a new workspace when switching to another project.
-;; Ensures the scratch (or dashboard) buffers are CDed into the project's root."
-;;     (when persp-mode
-;;       (let ((cwd default-directory))
-;;         (+workspace-switch (projectile-project-name) t)
-;;         (switch-to-buffer (doom-fallback-buffer))
-;;         (setq default-directory cwd
-;;               org-brain-path cwd)
-;;         (projectile-find-file)
-;;         (+workspace-message (format "Switched to '%s' in new workspace" (+workspace-current-name)) 'success)
-;;         )))
-;;   (setq projectile-switch-project-action #'+myworkspaces|per-project))
-;; (after! counsel-projectile
-;;   (map! [remap projectile-switch-project] nil))
 
 ;; ** EWW
 (after! shr
@@ -170,7 +152,6 @@ the workspace and move to the next."
 ;; **** Misc setting
   (setq +org-dir "~/Dropbox/org/"
         org-blank-before-new-entry nil
-        org-ellipsis " + "
         org-modules (quote (org-bibtex org-docview org-habit org-info org-protocol org-mac-iCal org-mac-link org-notmuch))
         org-imenu-depth 8))
 ;; ** Magit

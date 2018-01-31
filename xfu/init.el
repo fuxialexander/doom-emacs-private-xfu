@@ -42,9 +42,9 @@
 
 ;;; UI
  evil-respect-visual-line-mode t
- doom-font (font-spec :family "SF mono" :size 12)
+ doom-font (font-spec :family "SF Mono" :size 12)
  doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 14)
- doom-unicode-font (font-spec :family "Symbola" :size 12)
+ doom-unicode-font (font-spec :family "Input Mono Narrow" :size 12)
  doom-big-font (font-spec :family "SF Mono" :size 16)
  doom-line-numbers-style nil
  +doom-modeline-buffer-file-name-style 'truncate-upto-project
