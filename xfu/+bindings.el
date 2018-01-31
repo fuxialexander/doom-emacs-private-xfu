@@ -47,15 +47,15 @@
       "s-W" #'+workspace/close-workspace-or-frame
       "s-n" #'evil-buffer-new
       "s-N" #'make-frame-command
-      "s-1"       (λ! (+workspace/switch-to 0))
-      "s-2"       (λ! (+workspace/switch-to 1))
-      "s-3"       (λ! (+workspace/switch-to 2))
-      "s-4"       (λ! (+workspace/switch-to 3))
-      "s-5"       (λ! (+workspace/switch-to 4))
-      "s-6"       (λ! (+workspace/switch-to 5))
-      "s-7"       (λ! (+workspace/switch-to 6))
-      "s-8"       (λ! (+workspace/switch-to 7))
-      "s-9"       (λ! (+workspace/switch-to 8))
+      "s-1" (λ! (+workspace/switch-to 0))
+      "s-2" (λ! (+workspace/switch-to 1))
+      "s-3" (λ! (+workspace/switch-to 2))
+      "s-4" (λ! (+workspace/switch-to 3))
+      "s-5" (λ! (+workspace/switch-to 4))
+      "s-6" (λ! (+workspace/switch-to 5))
+      "s-7" (λ! (+workspace/switch-to 6))
+      "s-8" (λ! (+workspace/switch-to 7))
+      "s-9" (λ! (+workspace/switch-to 8))
       "s-~" #'+workspace/switch-to-last
 ;; *** Other sensible, textmate-esque global bindings
       :ne "s-e"                 #'+eval/buffer
@@ -96,8 +96,7 @@
         :desc "Switch buffer"           :n "<"   #'switch-to-buffer
         :desc "Browse files"            :n "."   #'find-file
         :desc "Find project files"      :n "/"   #'counsel-projectile-find-file
-        :desc "Toggle last popup"       :n "~"   #'+popup/toggle
-        :desc "Eval expression"         :n "`"   #'eval-expression
+        :desc "Toggle last popup"       :n "`"   #'+popup/toggle
         :desc "Jump to bookmark"        :n "RET" #'bookmark-jump
 ;; *** C-u is used by evil
         :desc "Universal argument"      :n "u"  #'universal-argument

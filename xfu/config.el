@@ -32,8 +32,6 @@
  counsel-org-headline-display-todo t
  +ivy-buffer-icons nil
  ivy-use-virtual-buffers t
-
- ;; ivy-re-builders-alist '((t . ivy--regex-plus))
  ;; tramp
  tramp-default-method "ssh"
  tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=600"
@@ -96,23 +94,23 @@ the workspace and move to the next."
 (after! yasnippet
     (push '+xfu-snippets-dir yas-snippet-dirs))
 ;; ** persp
-(remove-hook 'projectile-after-switch-project-hook #'+workspaces|switch-to-project)
-(after! persp-mode
-  (defun +myworkspaces|per-project ()
-    "Open a new workspace when switching to another project.
-Ensures the scratch (or dashboard) buffers are CDed into the project's root."
-    (when persp-mode
-      (let ((cwd default-directory))
-        (+workspace-switch (projectile-project-name) t)
-        (switch-to-buffer (doom-fallback-buffer))
-        (setq default-directory cwd
-              org-brain-path cwd)
-        (projectile-find-file)
-        (+workspace-message (format "Switched to '%s' in new workspace" (+workspace-current-name)) 'success)
-        )))
-  (setq projectile-switch-project-action #'+myworkspaces|per-project))
-(after! counsel-projectile
-  (map! [remap projectile-switch-project] nil))
+;; (remove-hook 'projectile-after-switch-project-hook #'+workspaces|switch-to-project)
+;; (after! persp-mode
+;;   (defun +myworkspaces|per-project ()
+;;     "Open a new workspace when switching to another project.
+;; Ensures the scratch (or dashboard) buffers are CDed into the project's root."
+;;     (when persp-mode
+;;       (let ((cwd default-directory))
+;;         (+workspace-switch (projectile-project-name) t)
+;;         (switch-to-buffer (doom-fallback-buffer))
+;;         (setq default-directory cwd
+;;               org-brain-path cwd)
+;;         (projectile-find-file)
+;;         (+workspace-message (format "Switched to '%s' in new workspace" (+workspace-current-name)) 'success)
+;;         )))
+;;   (setq projectile-switch-project-action #'+myworkspaces|per-project))
+;; (after! counsel-projectile
+;;   (map! [remap projectile-switch-project] nil))
 
 ;; ** EWW
 (after! shr
@@ -191,6 +189,8 @@ Ensures the scratch (or dashboard) buffers are CDed into the project's root."
   ;; optional: this is the evil state that evil-magit will use
   (setq evil-magit-state 'normal))
 (after! magit
+  (setq magit-repository-directories "/Users/xfu/Source"
+        magit-repository-directories-depth 2)
   (set! :popup "^\\*Magit" '((slot . -1) (side . right) (size . 80)) '((modeline . nil) (select . t)))
   (set! :popup "^\\*magit.*popup\\*" '((slot . 0) (side . right)) '((modeline . nil) (select . t)))
   (set! :popup "^\\*magit-revision:.*" '((vslot . -1) (side . right) (window-height . 0.6)) '((modeline . nil) (select . t)))
