@@ -96,8 +96,3 @@
     :commands (ediff-same-file-contents))
   t)
 
-(def-package-hook! company-ghc
-  :disable t)
-
-(def-package-hook! dired-k
-  :disable t)
