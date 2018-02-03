@@ -54,5 +54,45 @@
   (load-file org-gcal-secret-file)
   ;; hack to avoid the deferred.el error
   (defun org-gcal--notify (title mes)
-    (message "org-gcal::%s - %s" title mes)))
+    (message "org-gcal::%s - %s" title mes))
+  (defun org-gcal-post-at-point (&optional skip-import)
+    (interactive)
+    (org-gcal--ensure-token)
+    (save-excursion
+      (end-of-line)
+      (org-back-to-heading)
+      (let* ((skip-import skip-import)
+             (elem (org-element-headline-parser (point-max) t))
+             (tobj (progn (re-search-forward "<[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]"
+                                             (save-excursion (outline-next-heading) (point)))
+                          (goto-char (match-beginning 0))
+                          (org-element-timestamp-parser)))
+             (smry (org-element-property :title elem))
+             (loc  (org-element-property :LOCATION elem))
+             (id  (org-element-property :ID elem))
+             (start (org-gcal--format-org2iso
+                     (plist-get (cadr tobj) :year-start)
+                     (plist-get (cadr tobj) :month-start)
+                     (plist-get (cadr tobj) :day-start)
+                     (plist-get (cadr tobj) :hour-start)
+                     (plist-get (cadr tobj) :minute-start)
+                     (when (plist-get (cadr tobj) :hour-start)
+                       t)))
+             (end (org-gcal--format-org2iso
+                   (plist-get (cadr tobj) :year-end)
+                   (plist-get (cadr tobj) :month-end)
+                   (plist-get (cadr tobj) :day-end)
+                   (plist-get (cadr tobj) :hour-end)
+                   (plist-get (cadr tobj) :minute-end)
+                   (when (plist-get (cadr tobj) :hour-start)
+                     t)))
+             (desc  (if (plist-get (cadr elem) :contents-begin)
+                        (replace-regexp-in-string
+                         "\\(?: *<[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].*?>\\)\n?\n?" "" (replace-regexp-in-string
+                          " *:PROPERTIES:\n ?\\(.*\\(?:\n.*\\)*?\\) ?:END:\n?\n?" ""
+                          (buffer-substring-no-properties
+                           (plist-get (cadr elem) :contents-begin)
+                           (plist-get (cadr elem) :contents-end)))) "")))
+        (org-gcal--post-event start end smry loc desc id nil skip-import))))
+  )
 
