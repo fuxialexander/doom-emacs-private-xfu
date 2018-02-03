@@ -16,7 +16,8 @@
              "/usr/texbin/"
              "/usr/bin/"
              "/bin/"
-             "/usr/local/Cellar/emacs-plus/HEAD-ffeb116/libexec/emacs/27.0.50/x86_64-apple-darwin17.3.0/")
+             ;; "/usr/local/Cellar/emacs-plus/HEAD-ffeb116/libexec/emacs/27.0.50/x86_64-apple-darwin17.3.0/"
+             )
  fringe-indicator-alist (delq
                          (assq 'truncation fringe-indicator-alist)
                          (delq (assq 'continuation fringe-indicator-alist)
@@ -53,7 +54,6 @@
  doom-neotree-line-spacing 0
  doom-neotree-folder-size 1.0
  doom-neotree-chevron-size 0.6
-
  max-specpdl-size 10000
  indicate-buffer-boundaries nil
  indicate-empty-lines nil
