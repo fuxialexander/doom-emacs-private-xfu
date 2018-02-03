@@ -1,10 +1,14 @@
 ;; * private/default/config.el -*- lexical-binding: t; -*-
-(load! +bindings)
-(load! +evil-commands)
+(if (featurep! +bindings) (load! +bindings))
+
+(when (featurep 'evil)
+  (when (featurep! +evil-commands)
+    (load! +evil-commands)))
+
 ;; * Settings
 ;; ** Misc
 (setq
- doom-theme 'doom-one
+ doom-theme 'doom-solarizedlight
  request-storage-directory (concat doom-etc-dir "request/")
  dired-dwim-target t
  recentf-auto-cleanup 60
@@ -17,13 +21,14 @@
  frame-resize-pixelwise t
  ;; outline-cycle-emulate-tab t
  electric-pair-inhibit-predicate 'ignore
+
  ;; workspace
  persp-interactive-init-frame-behaviour-override -1
  projectile-ignored-project-function 'file-remote-p
  ;; projectile-ignored-projects
  ;; rss
  +rss-elfeed-files '("elfeed.org")
- browse-url-browser-function 'xwidget-webkit-browse-url
+ ;; browse-url-browser-function 'xwidget-webkit-browse-url
  ;; ivy
 
  counsel-org-goto-face-style 'org
@@ -39,7 +44,20 @@
  org-bullets-bullet-list '("#" "#" "#" "#" "#" "#" "#" "#")
  twittering-connection-type-order '(wget urllib-http native urllib-https)
  +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin
+
  )
+
+;; (after! solaire-mode
+;;       (add-hook 'doom-init-theme-hook #'solaire-mode-swap-bg t))
+(after! anzu
+  (require 'loop)
+  (defun anzu--where-is-here (positions here)
+    (let ((anzucount 0))
+      (loop-for-each x positions
+                     (setq anzucount (1+ anzucount))
+                     (if (and (>= here (car x)) (<= here (cdr x)))
+                         (loop-break)))
+      anzucount)))
 (after! xwidget
   (set! :popup "\\*xwidget" '((side . right) (size . 100)) '((select . t) (transient) (quit)))
   (defun xwidget-webkit-new-session (url)
@@ -414,4 +432,9 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
             (select-window window))))
 (add-hook 'persp-before-switch-functions 'doom/goto-main-window)
 
-
+ (defun +evil*init-cursors (&rest _)
+    (setq evil-default-cursor (face-background 'cursor nil t)
+          evil-normal-state-cursor 'hbar
+          evil-emacs-state-cursor  `(,(face-foreground 'warning) box)
+          evil-insert-state-cursor 'bar
+          evil-visual-state-cursor 'bar))

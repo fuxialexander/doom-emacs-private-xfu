@@ -134,15 +134,20 @@
 ;;;###autoload (autoload '+xfu/browse-templates "private/xfu/autoload/xfu" nil t)
 (+xfu--def-browse-in! templates +file-templates-dir)
 
-;;;###autoload (autoload '+xfu/find-in-emacsd "private/xfu/autoload/xfu" nil t)
-(+xfu--def-find-in!   emacsd doom-emacs-dir)
-;;;###autoload (autoload '+xfu/browse-emacsd "private/xfu/autoload/xfu" nil t)
-(+xfu--def-browse-in! emacsd doom-emacs-dir)
+;;;###autoload (autoload '+xfu/find-in-doom "private/xfu/autoload/xfu" nil t)
+(+xfu--def-find-in!   doom doom-emacs-dir)
+;;;###autoload (autoload '+xfu/browse-doom "private/xfu/autoload/xfu" nil t)
+(+xfu--def-browse-in! doom doom-emacs-dir)
 
-;;;###autoload (autoload '+xfu/find-in-notes "private/xfu/autoload/xfu" nil t)
-(+xfu--def-find-in!   notes +org-dir)
-;;;###autoload (autoload '+xfu/browse-notes "private/xfu/autoload/xfu" nil t)
-(+xfu--def-browse-in! notes +org-dir)
+;;;###autoload (autoload '+xfu/find-in-org "private/xfu/autoload/xfu" nil t)
+(+xfu--def-find-in!   org +org-dir)
+;;;###autoload (autoload '+xfu/browse-org "private/xfu/autoload/xfu" nil t)
+(+xfu--def-browse-in! org +org-dir)
+
+;;;###autoload (autoload '+xfu/find-in-private "private/xfu/autoload/xfu" nil t)
+(+xfu--def-find-in! private (concat doom-modules-dir "private"))
+;;;###autoload (autoload '+xfu/browse-private "private/xfu/autoload/xfu" nil t)
+(+xfu--def-browse-in! private (concat doom-modules-dir "private"))
 
 ;;;###autoload (autoload '+xfu/find-in-snippets "private/xfu/autoload/xfu" nil t)
 (+xfu--def-find-in! snippets +xfu-snippets-dir)

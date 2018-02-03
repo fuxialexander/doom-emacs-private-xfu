@@ -94,8 +94,9 @@
         :desc "Find file in project"    :n "SPC" #'execute-extended-command
         :desc "Switch workspace buffer" :n ","   #'persp-switch-to-buffer
         :desc "Switch buffer"           :n "<"   #'switch-to-buffer
-        :desc "Browse files"            :n "."   #'find-file
-        :desc "Find project files"      :n "/"   #'counsel-projectile-find-file
+        :desc "Browse files"            :n "/"   #'find-file
+        :desc "Find project files"      :n "."   #'counsel-projectile-find-file
+        :desc "Blink cursor line"       :n "DEL" #'+doom/blink-cursor
         :desc "Toggle last popup"       :n "`"   #'+popup/toggle
         :desc "Jump to bookmark"        :n "RET" #'bookmark-jump
 ;; *** C-u is used by evil
@@ -181,18 +182,18 @@
           :v  "r" #'+eval:repl)
 ;; *** file
         (:desc "file" :prefix "f"
-          :desc "Find file"                 :n "." #'find-file
-          :desc "Sudo find file"            :n ">" #'doom/sudo-find-file
-          :desc "Find file in project"      :n "/" #'projectile-find-file
+          :desc "Find file"                 :n "f" #'find-file
+          :desc "Sudo find file"            :n "s" #'doom/sudo-find-file
+          :desc "Find file in project"      :n "p" #'projectile-find-file
           :desc "Find file from here"       :n "?" #'counsel-file-jump
           :desc "Find other file"           :n "a" #'projectile-find-other-file
           :desc "Open project editorconfig" :n "c" #'editorconfig-find-current-editorconfig
-          :desc "Find file in dotfiles"     :n "d" #'+xfu/find-in-dotfiles
-          :desc "Browse dotfiles"           :n "D" #'+xfu/browse-dotfiles
-          :desc "Find file in emacs.d"      :n "e" #'+xfu/find-in-emacsd
-          :desc "Find file in org"      :n "o" #'+xfu/find-in-notes
-          :desc "Browse emacs.d"            :n "E" #'+xfu/browse-emacsd
-          :desc "Browse Org"                :n "O" #'+xfu/browse-notes
+          :desc "Find file in doom"         :n "d" #'+xfu/find-in-doom
+          :desc "Find file in private"      :n "e" #'+xfu/find-in-private
+          :desc "Find file in org"          :n "o" #'+xfu/find-in-org
+          :desc "Browse doom"               :n "D" #'+xfu/browse-doom
+          :desc "Browse private"            :n "E" #'+xfu/browse-private
+          :desc "Browse org"                :n "O" #'+xfu/browse-org
           :desc "Recent files"              :n "r" #'recentf-open-files
           :desc "Recent project files"      :n "R" #'projectile-recentf
           :desc "Yank filename"             :n "y" #'+xfu/yank-buffer-filename)

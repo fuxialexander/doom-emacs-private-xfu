@@ -56,6 +56,12 @@
 :END:
 %i
 %?" )
+    ("c" "Calendar" entry
+     (file "~/Dropbox/org/cal/cal.org")
+     "* %^{Logging for...}
+%^{LOCATION}p
+%^T
+" )
     ("j" "Journal" entry
      (function +org-move-point-to-heading)
      "* %^{Logging for...} :logs:
@@ -131,8 +137,8 @@
 
   (setq org-default-notes-file (expand-file-name +org-default-notes-file +org-dir))
 
-  (add-hook 'org-capture-prepare-finalize-hook 'org-id-get-create)
-  (add-hook 'org-capture-before-finalize-hook #'counsel-org-tag)
+  (add-hook 'org-capture-prepare-finalize-hook #'counsel-org-tag)
+  (add-hook 'org-capture-after-finalize-hook #'org-gcal-sync)
   (add-hook 'org-capture-after-finalize-hook #'+org-capture|cleanup-frame)
 
   (defun +org-move-point-to-heading ()
