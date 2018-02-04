@@ -7,45 +7,42 @@
 
 ;; * Settings
 ;; ** Misc
-(setq
- doom-theme 'doom-solarizedlight
- request-storage-directory (concat doom-etc-dir "request/")
- dired-dwim-target t
- recentf-auto-cleanup 60
- ivy-use-selectable-prompt t
- ivy-auto-select-single-candidate t
- ivy-rich-parse-remote-buffer nil
- ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-cd-selected
- visual-fill-column-center-text t
- line-spacing nil
- frame-resize-pixelwise t
- ;; outline-cycle-emulate-tab t
- electric-pair-inhibit-predicate 'ignore
+(setq doom-theme 'doom-solarizedlight
+      request-storage-directory (concat doom-etc-dir "request/")
+      dired-dwim-target t
+      recentf-auto-cleanup 60
+      ivy-use-selectable-prompt t
+      ivy-auto-select-single-candidate t
+      ivy-rich-parse-remote-buffer nil
+      ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-cd-selected
+      visual-fill-column-center-text t
+      line-spacing nil
+      frame-resize-pixelwise t
+      ;; outline-cycle-emulate-tab t
+      electric-pair-inhibit-predicate 'ignore
 
- ;; workspace
- persp-interactive-init-frame-behaviour-override -1
- projectile-ignored-project-function 'file-remote-p
- ;; projectile-ignored-projects
- ;; rss
- +rss-elfeed-files '("elfeed.org")
- ;; browse-url-browser-function 'xwidget-webkit-browse-url
- ;; ivy
+      ;; workspace
+      persp-interactive-init-frame-behaviour-override -1
+      projectile-ignored-project-function 'file-remote-p
+      ;; projectile-ignored-projects
+      ;; rss
+      +rss-elfeed-files '("elfeed.org")
+      ;; browse-url-browser-function 'xwidget-webkit-browse-url
+      ;; ivy
 
- counsel-org-goto-face-style 'org
- counsel-org-headline-display-style 'title
- counsel-org-headline-display-tags t
- counsel-org-headline-display-todo t
- +ivy-buffer-icons nil
- ivy-use-virtual-buffers t
- ;; tramp
- tramp-default-method "ssh"
- tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=600"
- tramp-remote-process-environment (quote ("TMOUT=0" "LC_CTYPE=''" "TRAMP='yes'" "CDPATH=" "HISTORY=" "MAIL=" "MAILCHECK=" "MAILPATH=" "PAGER=cat" "autocorrect=" "correct=" "http_proxy=http://proxy.cse.cuhk.edu.hk:8000" "https_proxy=http://proxy.cse.cuhk.edu.hk:8000" "ftp_proxy=http://proxy.cse.cuhk.edu.hk:8000"))
- org-bullets-bullet-list '("#" "#" "#" "#" "#" "#" "#" "#")
- twittering-connection-type-order '(wget urllib-http native urllib-https)
- +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin
-
- )
+      counsel-org-goto-face-style 'org
+      counsel-org-headline-display-style 'title
+      counsel-org-headline-display-tags t
+      counsel-org-headline-display-todo t
+      +ivy-buffer-icons nil
+      ivy-use-virtual-buffers t
+      ;; tramp
+      tramp-default-method "ssh"
+      tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=600"
+      tramp-remote-process-environment (quote ("TMOUT=0" "LC_CTYPE=''" "TRAMP='yes'" "CDPATH=" "HISTORY=" "MAIL=" "MAILCHECK=" "MAILPATH=" "PAGER=cat" "autocorrect=" "correct=" "http_proxy=http://proxy.cse.cuhk.edu.hk:8000" "https_proxy=http://proxy.cse.cuhk.edu.hk:8000" "ftp_proxy=http://proxy.cse.cuhk.edu.hk:8000"))
+      org-bullets-bullet-list '("#" "#" "#" "#" "#" "#" "#" "#")
+      twittering-connection-type-order '(wget urllib-http native urllib-https)
+      +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin)
 
 ;; (after! solaire-mode
 ;;       (add-hook 'doom-init-theme-hook #'solaire-mode-swap-bg t))
@@ -54,9 +51,9 @@
   (defun anzu--where-is-here (positions here)
     (let ((anzucount 0))
       (loop-for-each x positions
-                     (setq anzucount (1+ anzucount))
-                     (if (and (>= here (car x)) (<= here (cdr x)))
-                         (loop-break)))
+        (setq anzucount (1+ anzucount))
+        (if (and (>= here (car x)) (<= here (cdr x)))
+            (loop-break)))
       anzucount)))
 (after! xwidget
   (set! :popup "\\*xwidget" '((side . right) (size . 100)) '((select . t) (transient) (quit)))
@@ -110,7 +107,7 @@ the workspace and move to the next."
 (add-hook 'minibuffer-setup-hook #'doom|no-fringes-in-minibuffer)
 (set-window-fringes (minibuffer-window) 0 0 nil)
 (after! yasnippet
-    (push '+xfu-snippets-dir yas-snippet-dirs))
+  (push '+xfu-snippets-dir yas-snippet-dirs))
 
 ;; ** EWW
 (after! shr
@@ -167,7 +164,7 @@ the workspace and move to the next."
 ;; ** Org
 ;; *** Org-general
 (after! org
-;; **** Misc setting
+  ;; **** Misc setting
   (setq +org-dir "~/Dropbox/org/"
         org-blank-before-new-entry nil
         org-modules (quote (org-bibtex org-docview org-habit org-info org-protocol org-mac-iCal org-mac-link org-notmuch))
@@ -347,8 +344,8 @@ the workspace and move to the next."
       (add-text-properties 0  (length text) '(fontified t) text)
       text))
   (defun lsp-ui-doc--render-buffer (string symbol)
-    "Set the BUFFER with STRING.
-SYMBOL."
+    "set the buffer with string.
+symbol."
     (let ((pmode major-mode))
       (lsp-ui-doc--with-buffer
        (erase-buffer)
@@ -364,8 +361,14 @@ SYMBOL."
 
 (def-package! company-lsp
   :after lsp-mode)
-
-
+(def-package! lispy
+  :hook (emacs-lisp-mode . lispy-mode))
+(def-package! lispyville
+  :hook (lispy-mode . lispyville-mode))
+(def-package! parinfer
+  :commands (parinfer-toggle-mode)
+  :init
+  (setq parinfer-extensions '(defaults pretty-parens evil smart-yank)))
 
 ;; ** neotree
 (after! neotree
@@ -391,12 +394,12 @@ SYMBOL."
            :unless '(sp-point-before-word-p sp-point-before-same-p)))
 
 (defun +ivy-recentf-transformer (str)
-    "Dim recentf entries that are not in the current project of the buffer you
+  "Dim recentf entries that are not in the current project of the buffer you
 started `counsel-recentf' from. Also uses `abbreviate-file-name'."
-   (abbreviate-file-name str))
+  (abbreviate-file-name str))
 ;; * Ivy Actions
 (after! counsel
-;; ** counsel-find-file
+  ;; ** counsel-find-file
   (defun +ivy/reloading (cmd)
     (lambda (x)
       (funcall cmd x)
@@ -416,25 +419,21 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
      ("d" ,(+ivy/reloading #'+ivy/confirm-delete-file) "delete")
      ("m" ,(+ivy/reloading (+ivy/given-file #'rename-file "Move")) "move")
      ("f" find-file-other-window "other window")))
-;; ** counsel-M-x
+  ;; ** counsel-M-x
   (defun +ivy/helpful-function (prompt)
     (helpful-function (intern prompt)))
   (ivy-add-actions
    'counsel-M-x
-   `(("h" +ivy/helpful-function "Helpful")))
-
-  )
-
+   `(("h" +ivy/helpful-function "Helpful"))))
 
 (defun doom/goto-main-window (pname frame)
   (let ((window (car (+my-doom-visible-windows))))
-        (if (window-live-p window)
-            (select-window window))))
+    (if (window-live-p window)
+        (select-window window))))
 (add-hook 'persp-before-switch-functions 'doom/goto-main-window)
-
- (defun +evil*init-cursors (&rest _)
-    (setq evil-default-cursor (face-background 'cursor nil t)
-          evil-normal-state-cursor 'hbar
-          evil-emacs-state-cursor  `(,(face-foreground 'warning) box)
-          evil-insert-state-cursor 'bar
-          evil-visual-state-cursor 'bar))
+(advice-remove #'load-theme #'+evil*init-cursors)
+(setq evil-default-cursor "#268bd2"
+      evil-emacs-state-cursor  '("#b58900" box)
+      evil-insert-state-cursor 'bar
+      evil-normal-state-cursor 'hbar
+      evil-visual-state-cursor 'hbar)
