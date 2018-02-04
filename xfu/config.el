@@ -332,8 +332,8 @@ the workspace and move to the next."
       (forward-line 1)
       (while (not (eq (line-number-at-pos) (line-number-at-pos (point-max))))
         (if (re-search-forward "[][@#$%^&*|+=\\<>{}]" (point-at-eol) t)
-            (font-lock-default-fontify-region (point-at-bol) (point-at-eol) nil)
-          )
+            (font-lock-default-fontify-region (point-at-bol) (point-at-eol) nil))
+
         (forward-line 1))
       (buffer-string)))
   (defun my-fontify-using-faces (text)
@@ -362,13 +362,20 @@ symbol."
 (def-package! company-lsp
   :after lsp-mode)
 (def-package! lispy
-  :hook (emacs-lisp-mode . lispy-mode))
+  :hook (emacs-lisp-mode . lispy-mode)
+  :config
+  (after! evil-escape
+    (setq evil-escape-key-sequence nil))
+  (map! :map lispy-mode-map
+        :i [remap delete-backward-char] #'lispy-delete-backward))
 (def-package! lispyville
   :hook (lispy-mode . lispyville-mode))
+
 (def-package! parinfer
-  :commands (parinfer-toggle-mode)
+  ;; :hook (emacs-lisp-mode . parinfer-mode)
+  :commands (parinfer-toggle-mode parinfer-mode)
   :init
-  (setq parinfer-extensions '(defaults pretty-parens evil smart-yank)))
+  (setq parinfer-extensions '(defaults pretty-parens evil lispy smart-yank)))
 
 ;; ** neotree
 (after! neotree

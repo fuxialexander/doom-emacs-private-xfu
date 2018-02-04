@@ -9,6 +9,9 @@
 (package! helpful)
 (package! tldr)
 
+(package! parinfer)
+(package! lispy)
+(package! lispyville)
 (package! company-childframe)
 (package! keyfreq)
 (package! sed-mode)
