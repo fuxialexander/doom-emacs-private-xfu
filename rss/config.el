@@ -150,7 +150,6 @@
   (map!
    (:mode elfeed-search-mode
      (:map elfeed-search-mode-map
-       [remap doom/kill-this-buffer] "q"
        [remap kill-this-buffer]      "q"
        [remap kill-buffer]           "q"
 

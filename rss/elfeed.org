@@ -30,6 +30,10 @@
     :PROPERTIES:
     :ID:       6DAC16E7-B570-4EF2-B033-A290887DF3D8
     :END:
+*** [[https://bitbucket.org/mituharu/emacs-mac/rss][Emacs-mac]]
+:PROPERTIES:
+:ID:       4005637C-2C8E-4991-8F28-52F7E34E8CE4
+:END:
 ** Literature :literature:
    :PROPERTIES:
    :ID:       6F8AE594-DF73-4A71-BDB9-073D12253A89

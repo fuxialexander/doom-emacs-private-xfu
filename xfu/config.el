@@ -159,6 +159,45 @@ the workspace and move to the next."
   (setq alert-default-style 'notifier))
 (def-package! keyfreq
   :config
+  (setq keyfreq-excluded-commands '(evil-next-line
+                                    evil-previous-line
+                                    evil-next-visual-line
+                                    self-insert-command
+                                    evil-previous-visual-line
+                                    evil-forward-char
+                                    org-self-insert-command
+                                    ivy-next-line
+                                    evil-forward-word-end
+                                    doom/deflate-space-maybe
+                                    evil-backward-word-begin
+                                    ivy-previous-line
+                                    evil-backward-char
+                                    ivy-backward-delete-char
+                                    mwheel-scroll
+                                    company-ignore
+                                    evil-ex-search-next
+                                    evil-normal-state
+                                    evil-scroll-down
+                                    evil-scroll-up
+                                    ivy-done
+                                    right-char
+                                    keyboard-escape-quit
+                                    left-char
+                                    doom/inflate-space-maybe
+                                    evil-visual-char
+                                    term-send-raw
+                                    save-buffer
+                                    company-select-next-or-abort
+                                    term-send-left
+                                    +org/toggle-fold
+                                    evil-delete
+                                    neotree-next-line
+                                    neotree-previous-line
+                                    term-send-backspace
+                                    undo-tree-undo
+                                    xwidget-webkit-scroll-down-line
+                                    evil-force-normal-state
+                                    xwidget-webkit-scroll-up-line))
   (keyfreq-mode 1)
   (keyfreq-autosave-mode 1))
 ;; ** Org
@@ -237,7 +276,7 @@ the workspace and move to the next."
 (after! helpful
   (set! :popup "^\\*helpful.*"
     '((size . 80) (side . right))
-    '((transient . nil) (select . t) (quit . t))))
+    '((transient . t) (select . t) (quit . t))))
 (def-package! tldr
   :commands (tldr)
   :config
