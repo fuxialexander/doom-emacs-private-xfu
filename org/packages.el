@@ -26,7 +26,7 @@
 
 (when (featurep! +latex)
   (package! cdlatex)
-  ;; (package! org-edit-latex)
+  (package! org-edit-latex)
 )
 
 (when (featurep! +export)

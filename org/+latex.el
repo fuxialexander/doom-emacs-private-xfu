@@ -2,10 +2,18 @@
 (add-hook 'org-load-hook #'+org|init-latex)
 
 (def-package! cdlatex
-  :commands (turn-on-org-cdlatex))
+  :hook (org-mode . turn-on-org-cdlatex))
+(def-package! org-edit-latex
+  :hook (org-mode . org-edit-latex-mode)
+  :config
+  (setq TeX-region ".region_"
+        org-edit-latex-frag-master ".frag-master.tex")
+  (add-to-list 'recentf-exclude ".*.region_.*")
+  (add-to-list 'recentf-exclude ".*frag-master.*")
+  (add-hook 'doom-real-buffer-functions (lambda (buf) (string-match-p ".*frag-master.*" (buffer-name buf)))))
 
 (defun +org|init-latex ()
-  (setq-default org-format-latex-options `(:background ,(doom-color 'bg)
+  (setq-default org-format-latex-options `(:background ,(doom-color 'bg-alt)
                                                        :foreground ,(doom-color 'fg)
                                                        :scale 1
                                                        :html-foreground ,(doom-color 'fg)
