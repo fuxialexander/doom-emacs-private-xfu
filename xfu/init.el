@@ -15,9 +15,8 @@
              "/usr/local/opt/texinfo/bin/"
              "/usr/texbin/"
              "/usr/bin/"
-             "/bin/"
-             ;; "/usr/local/Cellar/emacs-plus/HEAD-ffeb116/libexec/emacs/27.0.50/x86_64-apple-darwin17.3.0/"
-             )
+             "/usr/sbin/"
+             "/bin/")
  fringe-indicator-alist (delq
                          (assq 'truncation fringe-indicator-alist)
                          (delq (assq 'continuation fringe-indicator-alist)

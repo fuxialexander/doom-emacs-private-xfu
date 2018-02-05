@@ -4,6 +4,8 @@
 (when (featurep 'evil)
   (when (featurep! +evil-commands)
     (load! +evil-commands)))
+(def-package! pinentry
+  :config (pinentry-start))
 (after! epa
   (setq epa-file-encrypt-to (or epa-file-encrypt-to user-mail-address)
         ;; With GPG 2.1, this forces gpg-agent to use the Emacs minibuffer to
@@ -210,7 +212,7 @@ the workspace and move to the next."
   ;; **** Misc setting
   (setq +org-dir "~/Dropbox/org/"
         org-blank-before-new-entry nil
-        org-modules (quote (org-bibtex org-docview org-habit org-info org-protocol org-mac-iCal org-mac-link org-notmuch))
+        org-modules (quote (org-bibtex org-habit org-info org-protocol org-mac-link org-notmuch))
         org-imenu-depth 8))
 ;; ** Magit
 (def-package! orgit :after magit)

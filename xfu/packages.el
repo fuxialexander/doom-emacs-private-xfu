@@ -6,6 +6,7 @@
 (package! prettify-utils :recipe (:fetcher github :repo "Ilazki/prettify-utils.el" :files ("*")))
 
 
+(package! pinentry)
 (package! helpful)
 (package! tldr)
 
