@@ -127,38 +127,7 @@ the workspace and move to the next."
 (after! tramp-sh
   (add-to-list 'tramp-remote-path "/research/kevinyip10/xfu/miniconda3/bin")
   (add-to-list 'tramp-remote-path "/uac/gds/xfu/bin"))
-;; ** ESS
-(setq ess-path (car (file-expand-wildcards "~/.emacs.d/.local/packages/elpa/ess*/lisp")))
-(def-package! ess-site :load-path ess-path
-  :mode (("\\.sp\\'"           . S-mode)
-         ("/R/.*\\.q\\'"       . R-mode)
-         ("\\.[qsS]\\'"        . S-mode)
-         ("\\.ssc\\'"          . S-mode)
-         ("\\.SSC\\'"          . S-mode)
-         ("\\.[rR]\\'"         . R-mode)
-         ("\\.[rR]nw\\'"       . Rnw-mode)
-         ("\\.[sS]nw\\'"       . Snw-mode)
-         ("\\.[rR]profile\\'"  . R-mode)
-         ("NAMESPACE\\'"       . R-mode)
-         ("CITATION\\'"        . R-mode)
-         ("\\.omg\\'"          . omegahat-mode)
-         ("\\.hat\\'"          . omegahat-mode)
-         ("\\.lsp\\'"          . XLS-mode)
-         ("\\.do\\'"           . STA-mode)
-         ("\\.ado\\'"          . STA-mode)
-         ("\\.[Ss][Aa][Ss]\\'" . SAS-mode)
-         ("\\.jl\\'"           . ess-julia-mode)
-         ("\\.[Ss]t\\'"        . S-transcript-mode)
-         ("\\.Sout"            . S-transcript-mode)
-         ("\\.[Rr]out"         . R-transcript-mode)
-         ("\\.Rd\\'"           . Rd-mode)
-         ("\\.[Bb][Uu][Gg]\\'" . ess-bugs-mode)
-         ("\\.[Bb][Oo][Gg]\\'" . ess-bugs-mode)
-         ("\\.[Bb][Mm][Dd]\\'" . ess-bugs-mode)
-         ("\\.[Jj][Aa][Gg]\\'" . ess-jags-mode)
-         ("\\.[Jj][Oo][Gg]\\'" . ess-jags-mode)
-         ("\\.[Jj][Mm][Dd]\\'" . ess-jags-mode))
-  :commands (R stata julia SAS))
+
 (def-package! alert
   :commands (alert)
   :config
@@ -283,8 +252,17 @@ Enable completion of info from magithub in the current buffer.
 (def-package! electric-operator
   :commands (electric-operator-mode)
   :init
+  (add-hook 'sh-mode-hook #'electric-operator-mode)
   (add-hook 'python-mode-hook #'electric-operator-mode)
-  (add-hook 'ess-mode-hook #'electric-operator-mode))
+  (add-hook 'ess-mode-hook #'electric-operator-mode)
+  :config
+  (electric-operator-add-rules-for-mode 'sh-mode
+                                        (cons "=" " = ")
+                                        (cons "<=" " <= ")
+                                        (cons ">=" " >= ")
+                                        (cons ">" " > ")
+                                        (cons "," ", ")
+                                        (cons "|" " | ")))
 (def-package! prettify-utils)
 ;; ** Helpful
 (after! helpful
