@@ -18,7 +18,14 @@
    cfw:fchar-top-left-corner ?┏
    cfw:fchar-top-right-corner ?┓)
 
+  ;; (defun my-buffer-face-mode-calendar ()
+  ;;   "Sets a fixed width (monospace) font in current buffer"
+  ;;   (interactive)
+  ;;   (setq buffer-face-mode-face '(:family "Sarasa Mono SC" :height 1.0))
+  ;;   (buffer-face-mode)
+  ;;   (setq-local line-spacing 0.2))
 
+  ;; (add-hook 'cfw:calendar-mode-hook 'my-buffer-face-mode-calendar)
   (defun cfw:render-button (title command &optional state)
     "render-button
  TITLE
