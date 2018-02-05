@@ -15,7 +15,7 @@
 :PROPERTIES:
 :Created: %U
 :SKIM_NOTE: %(+reference/skim-get-annotation)
-:SKIM_PAGE: %(int-to-string (+reference/get-skim-page-number))
+:SKIM_PAGE: %(+reference/get-skim-page-number)
 :END:
 %i
 %?")
@@ -26,7 +26,7 @@
 :Created: %U
 :CITE: cite:%(+reference/skim-get-bibtex-key)
 :SKIM_NOTE: %(+reference/skim-get-annotation)
-:SKIM_PAGE: %(int-to-string (+reference/get-skim-page-number))
+:SKIM_PAGE: %(+reference/get-skim-page-number)
 :END:
 %i
 %?")

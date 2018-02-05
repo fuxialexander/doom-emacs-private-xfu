@@ -35,7 +35,7 @@
       +rss-elfeed-files '("elfeed.org")
       ;; browse-url-browser-function 'xwidget-webkit-browse-url
       ;; ivy
-
+      mac-frame-tabbing nil
       counsel-org-goto-face-style 'org
       counsel-org-headline-display-style 'title
       counsel-org-headline-display-tags t
@@ -249,8 +249,14 @@ Enable completion of info from magithub in the current buffer.
 
 ;; ** company
 (require 'company)
-(def-package! company-childframe
-  :after company)
+
+(if (not (boundp 'mac-frame-tabbing))
+    (def-package! company-childframe
+      :after company
+      :config
+      (setq company-frontends '(company-childframe-frontend company-echo-metadata-frontend))))
+
+
 (setq-default company-idle-delay 0.2
               company-minimum-prefix-length 2
               company-tooltip-limit 10
@@ -263,9 +269,7 @@ Enable completion of info from magithub in the current buffer.
               company-tooltip-align-annotations t
               company-require-match 'never
               company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode)
-              company-frontends '(company-childframe-frontend company-echo-metadata-frontend)
               company-childframe-child-frame nil
-              ;; company-backends '(company-files company-dabbrev)
               company-transformers '(company-sort-by-occurrence))
 
 (set! :company-backend '(emacs-lisp-mode) '(company-elisp company-files company-yasnippet company-dabbrev-code))
