@@ -360,9 +360,9 @@ with `notmuch-hello-query-counts'."
     "Open a visible link in *notmuch-hello*."
     (interactive)
     (let ((pt (avy-with ace-link-notmuch-hello
-                        (avy--process
-                         (ace-link--notmuch-hello-collect)
-                         #'avy--overlay-pre))))
+                (avy--process
+                 (ace-link--notmuch-hello-collect)
+                 #'avy--overlay-pre))))
       (ace-link--notmuch-hello-action pt)))
   (defun ace-link--notmuch-show-collect ()
     "Collect the positions of visible links in `notmuch-show' buffer."
@@ -384,9 +384,9 @@ with `notmuch-hello-query-counts'."
     "Open a visible link in `notmuch-show' buffer."
     (interactive)
     (let ((pt (avy-with ace-link-notmuch-show
-                        (avy--process
-                         (ace-link--notmuch-show-collect)
-                         #'avy--overlay-pre))))
+                (avy--process
+                 (ace-link--notmuch-show-collect)
+                 #'avy--overlay-pre))))
       (ace-link--notmuch-show-action pt)))
   )
 ;;;; counsel-notmuch
@@ -400,57 +400,57 @@ with `notmuch-hello-query-counts'."
 
 ;;;; Key-binding
 (map!
-      (:after notmuch
-        (:map notmuch-show-mode-map
-          :nmv "o"   #'ace-link-notmuch-show
-          :nmv "i"   #'open-message-with-mail-app-notmuch-show
-          :nmv "I"   #'notmuch-show-view-all-mime-parts
-          :nmv "q"   #'notmuch-bury-or-kill-this-buffer
-          :nmv "s"   #'counsel-notmuch
-          :nmv "t"   #'notmuch-tree-from-show-current-query
-          :nmv "n"   #'notmuch-show-next-thread-show
-          :nmv "p"   #'notmuch-show-previous-thread-show
-          )
-        (:map notmuch-hello-mode-map
-          :nmv "o"   #'ace-link-notmuch-hello
-          :nmv "t"   #'notmuch-tree
-          :nmv "k"   #'widget-backward
-          :nmv "j"   #'widget-forward
-          :nmv "s"   #'counsel-notmuch
-          :nmv "q"   #'+mail/quit
-          :nmv "e"   #'notmuch-update
-          :nmv "r"   #'notmuch-hello-update)
-        (:map notmuch-search-mode-map
-          :nmv "j"   #'notmuch-search-next-thread
-          :nmv "k"   #'notmuch-search-previous-thread
-          :nmv "t"   #'notmuch-tree-from-search-thread
-          :nmv "RET" #'notmuch-search-show-thread
-          :nmv "T"   #'notmuch-tree-from-search-current-query
-          :nmv ";"   #'notmuch-search-tag
-          :nmv "d"   #'notmuch-search-delete
-          :nmv "a"   #'notmuch-search-archive-thread
-          :nmv "q"   #'notmuch
-          :nmv "s"   #'counsel-notmuch
-          :nmv "x"   #'notmuch-search-spam)
-        (:map notmuch-tree-mode-map
-          :nmv "j"   #'notmuch-tree-next-message
-          :nmv "k"   #'notmuch-tree-prev-message
-          :nmv "S"   #'notmuch-search-from-tree-current-query
-          :nmv "s"   #'counsel-notmuch
-          :nmv "t"   #'notmuch-tree
-          :nmv ";"   #'notmuch-tree-tag
-          :nmv "RET" #'notmuch-tree-show-message
-          :nmv "q"   #'notmuch-tree-quit
-          :nmv "r"   #'notmuch-search-reply-to-thread-sender
-          :nmv "a"   #'notmuch-tree-archive-message-then-next
-          :nmv "A"   #'notmuch-tree-archive-thread
-          :nmv "i"   #'open-message-with-mail-app-notmuch-tree
-          :nmv "d"   #'notmuch-tree-delete
-          :nmv "x"   #'notmuch-tree-spam)
-        (:map notmuch-message-mode-map
-          :localleader
-          :desc "Send and Exit"       :n doom-localleader-key #'notmuch-mua-send-and-exit
-          :desc "Kill Message Buffer" :n "k" #'notmuch-mua-kill-buffer
-          :desc "Save as Draft"       :n "s" #'message-dont-send
-          :desc "Kill Message Buffer" :n "f" #'mml-attach-file))
-)
+ (:after notmuch
+   (:map notmuch-show-mode-map
+     :nmv "o"   #'ace-link-notmuch-show
+     :nmv "i"   #'open-message-with-mail-app-notmuch-show
+     :nmv "I"   #'notmuch-show-view-all-mime-parts
+     :nmv "q"   #'notmuch-bury-or-kill-this-buffer
+     :nmv "s"   #'counsel-notmuch
+     :nmv "t"   #'notmuch-tree-from-show-current-query
+     :nmv "n"   #'notmuch-show-next-thread-show
+     :nmv "p"   #'notmuch-show-previous-thread-show
+     )
+   (:map notmuch-hello-mode-map
+     :nmv "o"   #'ace-link-notmuch-hello
+     :nmv "t"   #'notmuch-tree
+     :nmv "k"   #'widget-backward
+     :nmv "j"   #'widget-forward
+     :nmv "s"   #'counsel-notmuch
+     :nmv "q"   #'+mail/quit
+     :nmv "e"   #'notmuch-update
+     :nmv "r"   #'notmuch-hello-update)
+   (:map notmuch-search-mode-map
+     :nmv "j"   #'notmuch-search-next-thread
+     :nmv "k"   #'notmuch-search-previous-thread
+     :nmv "t"   #'notmuch-tree-from-search-thread
+     :nmv "RET" #'notmuch-search-show-thread
+     :nmv "T"   #'notmuch-tree-from-search-current-query
+     :nmv ";"   #'notmuch-search-tag
+     :nmv "d"   #'notmuch-search-delete
+     :nmv "a"   #'notmuch-search-archive-thread
+     :nmv "q"   #'notmuch
+     :nmv "s"   #'counsel-notmuch
+     :nmv "x"   #'notmuch-search-spam)
+   (:map notmuch-tree-mode-map
+     :nmv "j"   #'notmuch-tree-next-message
+     :nmv "k"   #'notmuch-tree-prev-message
+     :nmv "S"   #'notmuch-search-from-tree-current-query
+     :nmv "s"   #'counsel-notmuch
+     :nmv "t"   #'notmuch-tree
+     :nmv ";"   #'notmuch-tree-tag
+     :nmv "RET" #'notmuch-tree-show-message
+     :nmv "q"   #'notmuch-tree-quit
+     :nmv "r"   #'notmuch-search-reply-to-thread-sender
+     :nmv "a"   #'notmuch-tree-archive-message-then-next
+     :nmv "A"   #'notmuch-tree-archive-thread
+     :nmv "i"   #'open-message-with-mail-app-notmuch-tree
+     :nmv "d"   #'notmuch-tree-delete
+     :nmv "x"   #'notmuch-tree-spam)
+   (:map notmuch-message-mode-map
+     :localleader
+     :desc "Send and Exit"       :n doom-localleader-key #'notmuch-mua-send-and-exit
+     :desc "Kill Message Buffer" :n "k" #'notmuch-mua-kill-buffer
+     :desc "Save as Draft"       :n "s" #'message-dont-send
+     :desc "Kill Message Buffer" :n "f" #'mml-attach-file))
+ )

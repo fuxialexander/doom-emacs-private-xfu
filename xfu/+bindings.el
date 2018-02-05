@@ -271,9 +271,7 @@
           :desc "Pop term in project"     :n  "o" #'+term/open-popup-in-project
           :desc "Invalidate cache"        :n  "x" #'projectile-invalidate-cache)
         ;; *** quit
-        (:desc "quit" :prefix "q"
-          :desc "Quit"                   :n "q" #'evil-save-and-quit
-          :desc "Quit (forget session)"  :n "Q" #'+workspace/kill-session-and-quit)
+        :desc "Quit"                   :n "q" #'evil-save-and-quit
         ;; *** remote
         (:desc "remote" :prefix "r"
           :desc "Upload local"           :n "u" #'+upload/local
