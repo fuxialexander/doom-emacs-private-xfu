@@ -52,15 +52,15 @@
 
 ;; (after! solaire-mode
 ;;       (add-hook 'doom-init-theme-hook #'solaire-mode-swap-bg t))
-(after! anzu
-  (require 'loop)
-  (defun anzu--where-is-here (positions here)
-    (let ((anzucount 0))
-      (loop-for-each x positions
-        (setq anzucount (1+ anzucount))
-        (if (and (>= here (car x)) (<= here (cdr x)))
-            (loop-break)))
-      anzucount)))
+;; (after! anzu
+;;   (require 'loop)
+;;   (defun anzu--where-is-here (positions here)
+;;     (let ((anzucount 0))
+;;       (loop-for-each x positions
+;;         (setq anzucount (1+ anzucount))
+;;         (if (and (>= here (car x)) (<= here (cdr x)))
+;;             (loop-break)))
+;;       anzucount)))
 (after! xwidget
   (set! :popup "\\*xwidget" '((side . right) (size . 100)) '((select . t) (transient) (quit)))
   (defun xwidget-webkit-new-session (url)

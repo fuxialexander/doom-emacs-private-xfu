@@ -103,7 +103,11 @@
                  "set thePage to (get index for current page of theDoc)\n"
                  "end tell\n"
                  "return thePage as integer\n"))))
-    page))
+    (cond ((integerp page)
+           (int-to-string page))
+          ((numberp page)
+           (number-to-string page))
+          ((stringp page) page))))
 ;;;###autoload
 (defun +reference/clean-skim-page-link (link)
   (let* ((link (replace-regexp-in-string "\n" " " link))
