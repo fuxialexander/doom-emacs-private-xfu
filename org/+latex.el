@@ -4,7 +4,7 @@
 (def-package! cdlatex
   :hook (org-mode . turn-on-org-cdlatex))
 (def-package! org-edit-latex
-  :hook (org-mode . org-edit-latex-mode)
+  :commands (org-edit-latex-mode)
   :config
   (setq TeX-region ".region_"
         org-edit-latex-frag-master ".frag-master.tex")

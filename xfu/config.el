@@ -4,7 +4,11 @@
 (when (featurep 'evil)
   (when (featurep! +evil-commands)
     (load! +evil-commands)))
-
+(after! epa
+  (setq epa-file-encrypt-to (or epa-file-encrypt-to user-mail-address)
+        ;; With GPG 2.1, this forces gpg-agent to use the Emacs minibuffer to
+        ;; prompt for the key passphrase.
+        epa-pinentry-mode 'loopback))
 ;; * Settings
 ;; ** Misc
 (setq doom-theme 'doom-solarizedlight
@@ -212,6 +216,8 @@ the workspace and move to the next."
 (def-package! orgit :after magit)
 (def-package! magithub
   :after magit
+  :commands (magithub-clone
+             magithub-completion-enable)
   ;; :ensure t
   :config
   (magithub-feature-autoinject t)
@@ -221,7 +227,6 @@ the workspace and move to the next."
    magithub-preferred-remote-method 'clone_url))
 (def-package! evil-magit :after magit
   :init
-  ;; optional: this is the evil state that evil-magit will use
   (setq evil-magit-state 'normal))
 (after! magit
   (setq magit-repository-directories '("/Users/xfu/Source/"))
