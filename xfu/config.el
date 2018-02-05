@@ -217,12 +217,14 @@ the workspace and move to the next."
 ;; ** Magit
 (def-package! orgit :after magit)
 (def-package! magithub
-  :after magit
   :commands (magithub-clone
-             magithub-completion-enable)
+             magithub-feature-autoinject)
   ;; :ensure t
   :config
-  (magithub-feature-autoinject t)
+  (autoload 'magithub-completion-enable "magithub-completion" "\
+Enable completion of info from magithub in the current buffer.
+
+\(fn)" nil nil)
   (setq
    magithub-clone-default-directory "/Users/xfu/Source/playground/"
    magithub-dir (concat doom-etc-dir "magithub/")
@@ -231,6 +233,7 @@ the workspace and move to the next."
   :init
   (setq evil-magit-state 'normal))
 (after! magit
+  (magithub-feature-autoinject t)
   (setq magit-repository-directories '("/Users/xfu/Source/"))
   (set! :evil-state 'magit-repolist-mode 'normal)
   (push 'magit-repolist-mode evil-snipe-disabled-modes)
