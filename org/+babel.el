@@ -8,7 +8,8 @@
   "An alist that maps languages to babel libraries. This is necessary for babel
 libraries (ob-*.el) that don't match the name of the language.")
 (def-package! ob-ipython
-  :after (org ob))
+  :after (org ob)
+  :config (setq ob-ipython-resources-dir ".ob-ipython-resrc/"))
 
 (defun +org|init-babel ()
   (setq org-src-fontify-natively t      ; make code pretty
