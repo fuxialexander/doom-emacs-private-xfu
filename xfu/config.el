@@ -456,6 +456,22 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
 ;; * Ivy Actions
 (after! counsel
   ;; ** counsel-find-file
+  (defcustom ivy-top-command
+    "top -stats pid,command,user,cpu,mem,pstate,time -l 1"
+    "Top command for `+ivy-top'."
+    :group '+ivy)
+
+  (defun +ivy-top ()
+    (interactive)
+    (let* ((output (shell-command-to-string ivy-top-command))
+           (lines (progn
+                    (string-match "TIME" output)
+                    (split-string (substring output (+ 1 (match-end 0))) "\n")))
+           (candidates (mapcar (lambda (line)
+                                 (list line (split-string line " " t)))
+                               lines)))
+      (ivy-read "process: " candidates)))
+
   (defun +ivy/reloading (cmd)
     (lambda (x)
       (funcall cmd x)
@@ -473,8 +489,15 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
    'counsel-find-file
    `(("c" ,(+ivy/given-file #'copy-file "Copy file") "copy file")
      ("d" ,(+ivy/reloading #'+ivy/confirm-delete-file) "delete")
+     ("r" (lambda (path) (rename-file path (read-string "New name: "))) "Rename")
      ("m" ,(+ivy/reloading (+ivy/given-file #'rename-file "Move")) "move")
-     ("f" find-file-other-window "other window")))
+     ("f" find-file-other-window "other window")
+     ("p" (lambda (path) (with-ivy-window (insert (f-relative path)))) "Insert relative path")
+     ("P" (lambda (path) (with-ivy-window (insert path))) "Insert absolute path")
+     ("l" (lambda (path) "Insert org-link with relative path"
+            (with-ivy-window (insert (format "[[./%s]]" (f-relative path))))) "Insert org-link (rel. path)")
+     ("L" (lambda (path) "Insert org-link with absolute path"
+            (with-ivy-window (insert (format "[[%s]]" path)))) "Insert org-link (abs. path)")))
   ;; ** counsel-M-x
   (defun +ivy/helpful-function (prompt)
     (helpful-function (intern prompt)))
