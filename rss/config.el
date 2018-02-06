@@ -68,6 +68,28 @@
               (insert (propertize title 'face title-faces 'kbd-help title)))
           (insert (propertize title 'face title-faces 'kbd-help title))))
       )
+    (defun elfeed-search--header-1 ()
+      "Computes the string to be used as the Elfeed header."
+      (cond
+       ((zerop (elfeed-db-last-update))
+        (elfeed-search--intro-header))
+       ((> (elfeed-queue-count-total) 0)
+        (let ((total (elfeed-queue-count-total))
+              (in-process (elfeed-queue-count-active)))
+          (format "%d feeds pending, %d in process"
+                  (- total in-process) in-process)))
+       ((let* ((db-time (seconds-to-time (elfeed-db-last-update)))
+               (update (format-time-string "%Y-%m-%d %H:%M" db-time))
+               (unread (elfeed-search--count-unread)))
+          (format "Updated %s, %s%s"
+                  (propertize update 'face 'elfeed-search-last-update-face)
+                  (propertize unread 'face 'elfeed-search-unread-count-face)
+                  (cond
+                   (elfeed-search-filter-active "")
+                   ((string-match-p "[^ ]" elfeed-search-filter)
+                    (concat ", " (propertize elfeed-search-filter
+                                             'face 'elfeed-search-filter-face)))
+                   ("")))))))
     (defun elfeed-search-adjust-show-entry (entry)
       "Display the currently selected item in a buffer."
       (interactive (list (elfeed-search-selected :ignore-region)))

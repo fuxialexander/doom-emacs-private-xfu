@@ -13,7 +13,7 @@
   (add-hook 'doom-real-buffer-functions (lambda (buf) (string-match-p ".*frag-master.*" (buffer-name buf)))))
 
 (defun +org|init-latex ()
-  (if (not (boundp mac-frame-tabbing))
+  (if (string-match-p "NS" (emacs-version))
       (setq-default org-format-latex-options `(:background ,(doom-color 'bg-alt)
                                                            :foreground ,(doom-color 'fg)
                                                            :scale 1

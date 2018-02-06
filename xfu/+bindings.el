@@ -19,11 +19,7 @@
       :gnvime "M-o" #'org-open-at-point-global
       :gnvime "M-i" #'org-insert-last-stored-link
       :gnvime "s-j" #'dwim-jump
-      :gnvime "<C-escape>" #'universal-argument
       :m "C-u" #'evil-scroll-up
-      (:map universal-argument-map
-        "C-u" nil
-        "<C-escape>" #'universal-argument-more)
       ;; *** Misc
       :n    "\\"    #'ace-window
       :v    "<escape>"    #'evil-escape
@@ -85,6 +81,10 @@
       "C-x p"     #'+popup/other
       ;; ** <leader>
       ;; *** Global
+      (:map universal-argument-map
+        "C-u" nil
+        (:leader
+          "u" #'universal-argument-more))
       (:leader
         :desc "Ex command"              :nv ";"  #'evil-ex
         :desc "M-x"                     :nv ":"  #'execute-extended-command
