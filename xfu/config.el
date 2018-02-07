@@ -88,6 +88,10 @@
   (add-to-list 'recentf-exclude ".*\\.gif")
   (add-to-list 'recentf-exclude ".*\\.svg")
   (add-to-list 'recentf-exclude ".*Cellar.*"))
+(after! dired
+  (setq dired-dwim-target t
+        dired-listing-switches "-alh")
+  (set! :evil-state 'dired-mode 'normal))
 
 (defun +my-doom-visible-windows (&optional window-list)
   "Return a list of the visible, non-popup windows."

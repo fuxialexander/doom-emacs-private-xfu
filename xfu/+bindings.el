@@ -357,6 +357,148 @@
       (:after bibtex
         :map bibtex-mode-map
         "s-." #'org-ref-bibtex-hydra/body)
+      (:after dired
+        :map dired-mode-map
+        (:localleader
+          :n "'" #'wdired-change-to-wdired-mode
+          (:desc "regexp" :prefix "r"
+            :n "u" #'dired-upcase
+            :n "l" #'dired-downcase
+            :n "d" #'dired-flag-files-regexp
+            :n "g" #'dired-mark-files-containing-regexp
+            :n "m" #'dired-mark-files-regexp
+            :n "r" #'dired-do-rename-regexp
+            :n "c" #'dired-do-copy-regexp
+            :n "h" #'dired-do-hardlink-regexp
+            :n "r" #'dired-do-rename-regexp
+            :n "s" #'dired-do-symlink-regexp
+            :n "&" #'dired-flag-garbage-files)
+          (:desc "mark" :prefix "m"
+            :n "e" #'dired-mark-executables
+            :n "d" #'dired-mark-directories
+            :n "l" #'dired-mark-symlinks
+            :n "r" #'dired-mark-files-regexp
+            :n "c" #'dired-change-marks
+            :n "s" #'dired-mark-subdir-files
+            :n "m" #'dired-mark
+            :n "u" #'dired-unmark
+            :n "af" #'dired-unmark-all-files
+            :n "am" #'dired-unmark-all-marks)
+          (:desc "do" :prefix "d"
+            :n "a" #'dired-do-find-regexp
+            :n "c" #'dired-do-copy
+            :n "b" #'dired-do-byte-compile
+            :n "d" #'dired-do-delete
+            :n "g" #'dired-do-chgrp ;; FIXME: This can probably live on a better binding.
+            :n "h" #'dired-do-hardlink
+            :n "l" #'dired-do-load
+            :n "m" #'dired-do-chmod
+            :n "o" #'dired-do-chown
+            :n "q" #'dired-do-find-regexp-and-replace
+            :n "r" #'dired-do-rename
+            :n "s" #'dired-do-symlink
+            :n "t" #'dired-do-touch
+            :n "x" #'dired-do-shell-command
+            :n "z" #'dired-do-compress
+            :n "Z" #'dired-do-compress-to
+            :n "!" #'dired-do-shell-command
+            :n "&" #'dired-do-async-shell-command)
+          )
+        :n "q" #'quit-window
+        :n "j" #'dired-next-line
+        :n "k" #'dired-previous-line
+        :n "h" #'dired-up-directory
+        :n "l" #'dired-view-file
+        ;; :n "s-." #'hydra-dired/body
+        ;; :n [mouse-2] #'dired-mouse-find-file-other-window
+        ;; :n [follow-link] #'mouse-face
+        :n "#" #'dired-flag-auto-save-files
+        :n "." #'evil-repeat
+        :n "~" #'dired-flag-backup-files
+
+        ;; Comparison commands
+        :n "=" #'dired-diff
+
+        ;; move to marked files
+        :m "[m" #'dired-prev-marked-file
+        :m "]m" #'dired-next-marked-file
+        :m "[d" #'dired-prev-dirline
+        :m "]d" #'dired-next-dirline
+
+
+        ;; Lower keys for commands not operating on all the marked files
+        :n "a" #'dired-find-alternate-file
+        :n "d" #'dired-flag-file-deletion
+        ;; :n "gf" #'dired-find-file
+        ;; :n "gr" #'revert-buffer
+        :n "i" #'dired-maybe-insert-subdir
+        ;; :n "J" #'dired-goto-file
+        :n "K" #'dired-do-kill-lines
+        :n "r" #'dired-do-redisplay
+        :n "m" #'dired-mark
+        :n "t" #'dired-toggle-marks
+        :n "u" #'dired-unmark                   ; also "*u"
+        :n "U" #'dired-unmark-backward
+        ;; :n "W" #'browse-url-of-dired-file
+        :n "x" #'dired-do-flagged-delete
+        ;; :n "gy" #'dired-show-file-type ;; FIXME: This could probably go on a better key.
+        :n "y" #'dired-copy-filename-as-kill
+        :n "Y" (lambda! (dired-copy-filename-as-kill 0))
+        :n "+" #'dired-create-directory
+        :n "RET" #'dired-find-file
+        ;; :n (kbd "S-<return>") #'dired-find-file-other-window
+        ;; :n (kbd "M-<return>") #'dired-display-file
+        ;; :n "gO" #'dired-find-file-other-window
+        ;; :n "go" #'dired-view-file
+        ;; sort
+        :n "o" #'dired-sort-toggle-or-edit
+        ;; moving
+        ;; :n "gj" #'dired-next-dirline
+        ;; :n "gk" #'dired-prev-dirline
+
+
+        ;; hiding
+        :n "<tab>" #'dired-hide-subdir ;; FIXME: This can probably live on a better binding.
+        :n "<backtab>" #'dired-hide-all
+        :n "$" #'dired-hide-details-mode
+
+        ;; isearch
+        ;; :n (kbd "M-s a C-s")   #'dired-do-isearch
+        ;; :n (kbd "M-s a M-C-s") #'dired-do-isearch-regexp
+        ;; :n (kbd "M-s f C-s")   #'dired-isearch-filenames
+        ;; :n (kbd "M-s f M-C-s") #'dired-isearch-filenames-regexp
+        ;; misc
+        ;; :n [remap read-only-mode] #'dired-toggle-read-only
+        ;; :n [remap toggle-read-only] #'dired-toggle-read-only
+        ;; :n "g?" #'dired-summary
+        ;; :n (kbd "<delete>") #'dired-unmark-backward
+        ;; :n [remap undo] #'dired-undo
+        ;; :n [remap advertised-undo] #'dired-undo
+        ;; ;; thumbnail manipulation (image-dired)
+        ;; :n (kbd "C-t d") #'image-dired-display-thumbs
+        ;; :n (kbd "C-t t") #'image-dired-tag-files
+        ;; :n (kbd "C-t r") #'image-dired-delete-tag
+        ;; :n (kbd "C-t j") #'image-dired-jump-thumbnail-buffer
+        ;; :n (kbd "C-t i") #'image-dired-dired-display-image
+        ;; :n (kbd "C-t x") #'image-dired-dired-display-external
+        ;; :n (kbd "C-t a") #'image-dired-display-thumbs-append
+        ;; :n (kbd "C-t .") #'image-dired-display-thumb
+        ;; :n (kbd "C-t c") #'image-dired-dired-comment-files
+        ;; :n (kbd "C-t f") #'image-dired-mark-tagged-files
+        ;; :n (kbd "C-t C-t") #'image-dired-dired-toggle-marked-thumbs
+        ;; :n (kbd "C-t e") #'image-dired-dired-edit-comment-and-tags
+        ;; ;; encryption and decryption (epa-dired)
+        ;; :n "xd" #'epa-dired-do-decrypt
+        ;; :n "xv" #'epa-dired-do-verify
+        ;; :n "xs" #'epa-dired-do-sign
+        ;; :n "xe" #'epa-dired-do-encrypt
+
+        )
+      (:after wdired
+        :map wdired-mode-map
+        (:localleader
+          "," #'wdired-finish-edit
+          "k" #'wdired-abort-changes))
       ;; *** neotree
       (:after neotree
         :map neotree-mode-map
