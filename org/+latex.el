@@ -2,7 +2,8 @@
 (add-hook 'org-load-hook #'+org|init-latex)
 
 (def-package! cdlatex
-  :hook (org-mode . turn-on-org-cdlatex))
+  :commands (org-cdlatex-mode
+             turn-on-org-cdlatex))
 (def-package! org-edit-latex
   :commands (org-edit-latex-mode)
   :config

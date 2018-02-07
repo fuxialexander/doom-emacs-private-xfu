@@ -239,6 +239,7 @@ unfold to point on startup."
      ;;                          :n "C-c C-i" #'org-toggle-inline-images
      (:localleader
        :desc "Schedule"          :n "s"                  #'org-schedule
+       :desc "Math"              :n "m"                  #'+org-toggle-math
        :desc "Remove link"       :n "L"                  #'+org/remove-link
        :desc "Deadline"          :n "d"                  #'org-deadline
        :desc "C-c C-c"           :n doom-localleader-key #'org-ctrl-c-ctrl-c
@@ -254,8 +255,6 @@ unfold to point on startup."
        :desc "Narrow to Element" :n "N"                  #'org-narrow-to-element
        :desc "Widen"             :n "w"                  #'widen
        :desc "Toggle heading"    :n "h"                  #'org-toggle-heading
-       :desc "Toggle Image"      :n "ci"                 #'org-toggle-inline-images
-       :desc "Toggle Latex"      :n "cl"                 #'org-toggle-latex-fragment
        :desc "Archive Subtree"   :n "A"                  #'org-archive-subtree
        :desc "Toggle Archive"    :n "a"                  #'org-toggle-archive-tag
        )
