@@ -24,7 +24,6 @@
       :n    "\\"    #'ace-window
       :v    "<escape>"    #'evil-escape
       :gnvime "<f2>" #'+lookup/documentation
-      :gnvime "<f5>" #'redraw-display
       ;; *** A little sandbox to run code in
       :gnvime "s-;" #'eval-expression
       :gnvime "s-:" #'doom/open-scratch-buffer
@@ -186,6 +185,7 @@
           :desc "Sudo find file"            :n "s" #'doom/sudo-find-file
           :desc "Find file in project"      :n "p" #'projectile-find-file
           :desc "Find file from here"       :n "?" #'counsel-file-jump
+          :desc "Find file on TRAMP"        :n "t" #'counsel-tramp
           :desc "Find other file"           :n "a" #'projectile-find-other-file
           :desc "Open project editorconfig" :n "c" #'editorconfig-find-current-editorconfig
           :desc "Find file in doom"         :n "d" #'+xfu/find-in-doom
@@ -254,9 +254,7 @@
           ;; macos
           (:when IS-MAC
             :desc "Reveal in Finder"          :n "f" #'+macos/reveal-in-finder
-            :desc "Reveal project in Finder"  :n "F" #'+macos/reveal-project-in-finder
-            :desc "Send to Launchbar"         :n "l" #'+macos/send-to-launchbar
-            :desc "Send project to Launchbar" :n "L" #'+macos/send-project-to-launchbar)
+            :desc "Reveal project in Finder"  :n "F" #'+macos/reveal-project-in-finder)
           )
 
 
