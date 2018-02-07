@@ -125,13 +125,13 @@
           (setq elfeed-show-entry entry)
           (elfeed-show-refresh))))
     (defun elfeed-adjust-show-entry (entry)
-    "Display ENTRY in the current buffer."
-    (let ((buff (get-buffer-create "*elfeed-entry*")))
-      (+rss-popup-pane buff)
-      (with-current-buffer buff
-        (elfeed-show-mode)
-        (setq elfeed-show-entry entry)
-        (elfeed-show-refresh))))
+      "Display ENTRY in the current buffer."
+      (let ((buff (get-buffer-create "*elfeed-entry*")))
+        (+rss-popup-pane buff)
+        (with-current-buffer buff
+          (elfeed-show-mode)
+          (setq elfeed-show-entry entry)
+          (elfeed-show-refresh))))
     (push 'elfeed-show-mode evil-snipe-disabled-modes)
     (set! :evil-state 'elfeed-show-mode 'normal))
 
@@ -161,9 +161,9 @@
     "Open a visible link in `elfeed' buffer."
     (interactive)
     (let ((pt (avy-with ace-link-elfeed
-                        (avy--process
-                         (ace-link--elfeed-collect)
-                         #'avy--overlay-pre))))
+                (avy--process
+                 (ace-link--elfeed-collect)
+                 #'avy--overlay-pre))))
       (ace-link--elfeed-action pt)))
 
 
@@ -190,16 +190,17 @@
      (:map elfeed-show-mode-map
        [remap kill-this-buffer]      "q"
        [remap kill-buffer]           "q"
-       :nm "q" #'+rss/delete-pane
-       :nm "o" #'ace-link-elfeed
-       :nm "b" #'org-ref-add-bibtex-entry-from-elfeed-entry
-       :nm "n" #'elfeed-show-next
-       :nm "p" #'elfeed-show-prev
-       :nm "+" #'elfeed-show-tag
-       :nm "-" #'elfeed-show-untag
-       :nm "s" #'elfeed-show-new-live-search
+       :nm "q"   #'+rss/delete-pane
+       :nm "o"   #'ace-link-elfeed
+       :nm "RET" #'org-ref-add-bibtex-entry-from-elfeed-entry
+       :nm "n"   #'elfeed-show-next
+       :nm "p"   #'elfeed-show-prev
+       :nm "+"   #'elfeed-show-tag
+       :nm "-"   #'elfeed-show-untag
+       :nm "s"   #'elfeed-show-new-live-search
        :nm "y" #'elfeed-show-yank)))
-    (elfeed-org))
+  (elfeed-org)
+  (def-package! elfeed-link))
 
 ;;;; Elfeed-org
 (def-package! elfeed-org

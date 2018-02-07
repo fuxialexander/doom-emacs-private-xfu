@@ -13,12 +13,17 @@
         epa-pinentry-mode 'loopback))
 ;; * Settings
 ;; ** Misc
-(setq doom-theme 'doom-solarizedlight
-      request-storage-directory (concat doom-etc-dir "request/")
-      dired-dwim-target t
+(setq request-storage-directory (concat doom-etc-dir "request/")
+      doom-theme 'doom-solarizedlight
+      projectile-ignored-projects '("~/"
+                                    "/tmp"
+                                    "/usr/local/Cellar/emacs-plus/HEAD-5c41444/share/emacs/27.0.50/lisp/net/"
+                                    "/usr/local/Cellar/emacs-plus/HEAD-5c41444/share/emacs/27.0.50/lisp/")
       recentf-auto-cleanup 60
       ivy-use-selectable-prompt t
       ivy-auto-select-single-candidate t
+      ivy-height 9
+      avy-keys '(?a ?s ?d ?f ?j ?k ?l ?\;)
       ivy-rich-parse-remote-buffer nil
       ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-cd-selected
       visual-fill-column-center-text t
@@ -268,6 +273,7 @@ Enable completion of info from magithub in the current buffer.
               company-dabbrev-code-other-buffers t
               company-tooltip-align-annotations t
               company-require-match 'never
+              company-frontends '(company-childframe-frontend company-echo-metadata-frontend)
               company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode)
               company-childframe-child-frame nil
               company-transformers '(company-sort-by-occurrence))
