@@ -1,4 +1,4 @@
-;;; app/rss/config.el -*- lexical-binding: t; -*-
+;;; private/rss/config.el -*- lexical-binding: t; -*-
 
 ;; This is an opinionated workflow that turns Emacs into an RSS reader, inspired
 ;; by apps Reeder and Readkit. It can be invoked via `=rss'. Otherwise, if you
