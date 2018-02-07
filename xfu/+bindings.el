@@ -358,7 +358,7 @@
       (:after dired
         :map dired-mode-map
         (:localleader
-          :n "'" #'wdired-change-to-wdired-mode
+          :desc "wdired" :n "'" #'wdired-change-to-wdired-mode
           (:desc "regexp" :prefix "r"
             :n "u" #'dired-upcase
             :n "l" #'dired-downcase
@@ -401,96 +401,73 @@
             :n "Z" #'dired-do-compress-to
             :n "!" #'dired-do-shell-command
             :n "&" #'dired-do-async-shell-command)
-          )
+          (:desc "subtree" :prefix "i"
+            :n "i" #'dired-subtree-insert
+            :n "r" #'dired-subtree-remove
+            :n "j" #'dired-subtree-down
+            :n "k" #'dired-subtree-up
+            :n "n" #'dired-subtree-next-sibling
+            :n "p" #'dired-subtree-previous-sibling
+            :n "f" #'dired-subtree-apply-filter
+            :n "a" #'dired-subtree-narrow
+            :n "_" #'dired-subtree-beginning
+            :n "$" #'dired-subtree-end
+            :n "m" #'dired-subtree-mark-subtree
+            :n "m" #'dired-subtree-unmark-subtree
+            :n "f" #'dired-subtree-only-this-file
+            :n "d" #'dired-subtree-only-this-directory)
+          ;; encryption and decryption (epa-dired)
+          (:desc "crypt" :prefix "x"
+            :n "d" #'epa-dired-do-decrypt
+            :n "v" #'epa-dired-do-verify
+            :n "s" #'epa-dired-do-sign
+            :n "e" #'epa-dired-do-encrypt))
         :n "q" #'quit-window
-        :n "j" #'dired-next-line
-        :n "k" #'dired-previous-line
+        :n "v" #'evil-visual-char
+        :nv "j" #'dired-next-line
+        :nv "k" #'dired-previous-line
+        :n "H" #'dired-subtree-remove
         :n "h" #'dired-up-directory
-        :n "l" #'dired-view-file
-        ;; :n "s-." #'hydra-dired/body
-        ;; :n [mouse-2] #'dired-mouse-find-file-other-window
-        ;; :n [follow-link] #'mouse-face
+        :n "l" #'dired-find-file
+        :n "L" #'dired-subtree-insert
+        :n "i" #'dired-subtree-insert
         :n "#" #'dired-flag-auto-save-files
         :n "." #'evil-repeat
         :n "~" #'dired-flag-backup-files
-
         ;; Comparison commands
         :n "=" #'dired-diff
-
+        :n "|" #'dired-compare-directories
         ;; move to marked files
         :m "[m" #'dired-prev-marked-file
         :m "]m" #'dired-next-marked-file
         :m "[d" #'dired-prev-dirline
         :m "]d" #'dired-next-dirline
-
-
         ;; Lower keys for commands not operating on all the marked files
+        :desc "wdired" :n "w" #'wdired-change-to-wdired-mode
         :n "a" #'dired-find-alternate-file
-        :n "d" #'dired-flag-file-deletion
-        ;; :n "gf" #'dired-find-file
-        ;; :n "gr" #'revert-buffer
-        :n "i" #'dired-maybe-insert-subdir
-        ;; :n "J" #'dired-goto-file
+        :nv "d" #'dired-flag-file-deletion
         :n "K" #'dired-do-kill-lines
         :n "r" #'dired-do-redisplay
-        :n "m" #'dired-mark
-        :n "t" #'dired-toggle-marks
-        :n "u" #'dired-unmark                   ; also "*u"
-        :n "U" #'dired-unmark-backward
+        :nv "m" #'dired-mark
+        :nv "t" #'dired-toggle-marks
+        :nv "u" #'dired-unmark                   ; also "*u"
+        :nv "p" #'dired-unmark-backward
         ;; :n "W" #'browse-url-of-dired-file
         :n "x" #'dired-do-flagged-delete
-        ;; :n "gy" #'dired-show-file-type ;; FIXME: This could probably go on a better key.
         :n "y" #'dired-copy-filename-as-kill
         :n "Y" (lambda! (dired-copy-filename-as-kill 0))
         :n "+" #'dired-create-directory
         :n "RET" #'dired-find-file
-        ;; :n (kbd "S-<return>") #'dired-find-file-other-window
-        ;; :n (kbd "M-<return>") #'dired-display-file
-        ;; :n "gO" #'dired-find-file-other-window
-        ;; :n "go" #'dired-view-file
-        ;; sort
-        :n "o" #'dired-sort-toggle-or-edit
-        ;; moving
-        ;; :n "gj" #'dired-next-dirline
-        ;; :n "gk" #'dired-prev-dirline
-
-
+        :n "O" #'dired-open-mac
+        :n "o" #'dired-preview-mac
         ;; hiding
         :n "<tab>" #'dired-hide-subdir ;; FIXME: This can probably live on a better binding.
         :n "<backtab>" #'dired-hide-all
         :n "$" #'dired-hide-details-mode
 
-        ;; isearch
-        ;; :n (kbd "M-s a C-s")   #'dired-do-isearch
-        ;; :n (kbd "M-s a M-C-s") #'dired-do-isearch-regexp
-        ;; :n (kbd "M-s f C-s")   #'dired-isearch-filenames
-        ;; :n (kbd "M-s f M-C-s") #'dired-isearch-filenames-regexp
         ;; misc
-        ;; :n [remap read-only-mode] #'dired-toggle-read-only
-        ;; :n [remap toggle-read-only] #'dired-toggle-read-only
-        ;; :n "g?" #'dired-summary
-        ;; :n (kbd "<delete>") #'dired-unmark-backward
-        ;; :n [remap undo] #'dired-undo
-        ;; :n [remap advertised-undo] #'dired-undo
-        ;; ;; thumbnail manipulation (image-dired)
-        ;; :n (kbd "C-t d") #'image-dired-display-thumbs
-        ;; :n (kbd "C-t t") #'image-dired-tag-files
-        ;; :n (kbd "C-t r") #'image-dired-delete-tag
-        ;; :n (kbd "C-t j") #'image-dired-jump-thumbnail-buffer
-        ;; :n (kbd "C-t i") #'image-dired-dired-display-image
-        ;; :n (kbd "C-t x") #'image-dired-dired-display-external
-        ;; :n (kbd "C-t a") #'image-dired-display-thumbs-append
-        ;; :n (kbd "C-t .") #'image-dired-display-thumb
-        ;; :n (kbd "C-t c") #'image-dired-dired-comment-files
-        ;; :n (kbd "C-t f") #'image-dired-mark-tagged-files
-        ;; :n (kbd "C-t C-t") #'image-dired-dired-toggle-marked-thumbs
-        ;; :n (kbd "C-t e") #'image-dired-dired-edit-comment-and-tags
-        ;; ;; encryption and decryption (epa-dired)
-        ;; :n "xd" #'epa-dired-do-decrypt
-        ;; :n "xv" #'epa-dired-do-verify
-        ;; :n "xs" #'epa-dired-do-sign
-        ;; :n "xe" #'epa-dired-do-encrypt
-
+        :n "U" #'dired-undo
+        ;; subtree
         )
       (:after wdired
         :map wdired-mode-map

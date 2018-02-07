@@ -94,8 +94,10 @@
   (add-to-list 'recentf-exclude ".*\\.svg")
   (add-to-list 'recentf-exclude ".*Cellar.*"))
 (after! dired
+  (push 'dired-mode evil-snipe-disabled-modes)
   (setq dired-dwim-target t
         dired-listing-switches "-alh")
+
   (set! :evil-state 'dired-mode 'normal))
 
 (defun +my-doom-visible-windows (&optional window-list)
