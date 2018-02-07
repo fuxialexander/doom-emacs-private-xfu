@@ -127,7 +127,8 @@ the workspace and move to the next."
 (after! tramp-sh
   (add-to-list 'tramp-remote-path "/research/kevinyip10/xfu/miniconda3/bin")
   (add-to-list 'tramp-remote-path "/uac/gds/xfu/bin"))
-
+(def-package! counsel-tramp :load-path "~/.emacs.d/modules/private/xfu/local/"
+  :commands (counsel-tramp))
 (def-package! alert
   :commands (alert)
   :config
