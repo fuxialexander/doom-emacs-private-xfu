@@ -328,19 +328,19 @@ unfold to point on startup."
    (:after org-src
      (:map org-src-mode-map
        (:localleader
-         :desc "Finish" :n "'"  #'org-edit-src-exit
-         :desc "Finish" :n doom-localleader-key  #'org-edit-src-exit
+         :desc "Finish" :n ","  #'org-edit-src-exit
          :desc "Abort"  :n "k"  #'org-edit-src-abort
          )))
    (:after org-capture
      (:map org-capture-mode-map
+         "C-c C-c" nil
+         "C-c C-k" nil
+         "C-c C-w" nil
        (:localleader
-         :desc "Finish" :n "'"  #'org-edit-src-exit
-         :desc "Finish" :n doom-localleader-key  #'org-edit-src-exit
-         :desc "Abort"  :n "k"  #'org-edit-src-abort
-         )))
-   )
-  )
+         :desc "Finish" :n "," #'org-capture-finalize
+         :desc "Refile" :n "r" #'org-capture-refile
+         :desc "Abort"  :n "k" #'org-capture-kill
+         )))))
 
 (defun +org|setup-hacks ()
   "Getting org to behave."
