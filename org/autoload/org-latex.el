@@ -6,7 +6,4 @@
   (interactive)
   (if (bound-and-true-p org-cdlatex-mode)
       (org-cdlatex-mode -1)
-    (org-cdlatex-mode +1))
-  (if (bound-and-true-p org-edit-latex-mode)
-      (org-edit-latex-mode -1)
-    (org-edit-latex-mode +1)))
+    (org-cdlatex-mode +1)))

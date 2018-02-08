@@ -1,9 +1,9 @@
 ;;; lang/latex/config.el -*- lexical-binding: t; -*-
 
-(defvar +latex-bibtex-file ""
+(defvar +latex-bibtex-file "~/Dropbox/org/reference/Bibliography.bib"
   "File AUCTeX (specifically RefTeX) uses to search for citations.")
 
-(defvar +latex-bibtex-dir ""
+(defvar +latex-bibtex-dir "~/Dropbox/org/reference/pdf"
   "Where bibtex files are kept.")
 
 (defvar +latex-indent-level-item-continuation 8
@@ -24,12 +24,12 @@
   :mode ("\\.tex\\'" . TeX-latex-mode)
   :commands (latex-mode LaTeX-mode plain-tex-mode)
   :init
-  ;; Manually load the AUCTEX autoloads. This is normally done by package-initialize,
-  ;; ... which we do not use.
-  ;; (load "auctex.el" nil t t)
-  ;; (load "auctex-autoloads.el" nil t t)
-  :config
+  (load "auctex.el" nil t t)
+  (load "auctex-autoloads.el" nil t t)
   ;; Set some varibles to fontify common LaTeX commands.
+  :config
+  (set! :latex-bibtex-dir "~/Dropbox/org/reference/pdf")
+  (set! :latex-bibtex-file "~/Dropbox/org/reference/Bibliography.bib")
   (load! +fontification)
   (setq
         ;; Enable parse on load.

@@ -25,9 +25,7 @@
   (package! ob-translate))
 
 (when (featurep! +latex)
-  (package! cdlatex)
-  (package! org-edit-latex)
-)
+  (package! cdlatex))
 
 (when (featurep! +export)
   (package! ox-pandoc))

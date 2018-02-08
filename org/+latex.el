@@ -4,14 +4,6 @@
 (def-package! cdlatex
   :commands (org-cdlatex-mode
              turn-on-org-cdlatex))
-(def-package! org-edit-latex
-  :commands (org-edit-latex-mode)
-  :config
-  (setq TeX-region ".region_"
-        org-edit-latex-frag-master ".frag-master.tex")
-  (add-to-list 'recentf-exclude ".*.region_.*")
-  (add-to-list 'recentf-exclude ".*frag-master.*")
-  (add-hook 'doom-real-buffer-functions (lambda (buf) (string-match-p ".*frag-master.*" (buffer-name buf)))))
 
 (defun +org|init-latex ()
   (if (string-match-p "NS" (emacs-version))
@@ -54,9 +46,5 @@
                                             "pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f")
                     org-preview-latex-default-process 'dvisvgm
                     org-preview-latex-image-directory (concat doom-cache-dir "org-latex/")
-                    ))
-  (defun org-latex-clear-fragment ()
-    (interactive)
-    (delete-directory org-preview-latex-image-directory t))
-  )
+                    )))
 
