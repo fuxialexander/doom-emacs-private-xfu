@@ -777,7 +777,6 @@
           "<M-right>"   nil))
       (:after helpful
         (:map helpful-mode-map
-          :n "<f2>" #'helpful-at-point
           :n "RET"  #'helpful-visit-reference
           :n "o"    #'ace-link-help
           :n "q"    #'quit-window

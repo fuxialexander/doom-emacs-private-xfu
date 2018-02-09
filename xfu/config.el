@@ -469,6 +469,7 @@ symbol."
            :unless '(sp-point-before-word-p sp-point-before-same-p))
   (sp-pair "[" nil :post-handlers '(("| " " "))
            :unless '(sp-point-before-word-p sp-point-before-same-p)))
+(set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point)
 
 (defun +ivy-recentf-transformer (str)
   "Dim recentf entries that are not in the current project of the buffer you
