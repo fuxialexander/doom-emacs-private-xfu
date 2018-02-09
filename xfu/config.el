@@ -438,7 +438,6 @@ symbol."
 (def-package! company-lsp
   :after lsp-mode)
 
-
 (def-package! lispy
   :hook (emacs-lisp-mode . lispy-mode)
   :config
@@ -456,17 +455,18 @@ symbol."
      c-w
      (escape insert)
      (slurp/barf-lispy)
-     additional
-     ))
+     additional))
   (map! :map emacs-lisp-mode-map
+        :nmv "h" #'lispyville-left
+        :nmv "l" #'lispyville-right
         :nmv "H" #'lispyville-backward-sexp
         :nmv "L" #'lispyville-forward-sexp
         :nmv "M-h" #'lispyville-beginning-of-defun
         :nmv "M-l" #'lispyville-end-of-defun
+        :nmv "k" #'lispyville-previous-closing
+        :nmv "j" #'lispyville-next-opening
+        :nmv "J" #'lispyville-next-closing
         :nmv "K" #'lispyville-previous-opening
-        :nmv "J" #'lispyville-next-opening
-        :nmv "}" #'lispyville-next-closing
-        :nmv "{" #'lispyville-previous-closing
         :nmv "(" #'lispyville-backward-up-list
         :nmv ")" #'lispyville-up-list))
 
