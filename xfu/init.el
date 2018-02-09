@@ -132,3 +132,10 @@
 
 (def-package-hook! dired-k
   :disable)
+
+(def-package-hook! evil-escape
+  :pre-config
+  (setq-default evil-escape-delay 0.1
+                evil-escape-excluded-states nil)
+  (map! :irvo "C-g" #'evil-escape)
+  nil)

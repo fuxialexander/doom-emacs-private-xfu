@@ -212,27 +212,27 @@ Enable completion of info from magithub in the current buffer.
     `(time-to-number-of-days
       (time-since
        (parse-iso8601-time-string
-	(concat ,iso8601 "+00:00")))))
+        (concat ,iso8601 "+00:00")))))
 
   (defun issue-filter-to-days (days type)
     `(lambda (issue)
        (let ((created_at (magithub--time-number-of-days-since-string
-			  (alist-get 'created_at issue)))
-	     (updated_at (magithub--time-number-of-days-since-string
-			  (alist-get 'updated_at issue))))
-	 (or (< created_at ,days) (< updated_at ,days)))))
+                          (alist-get 'created_at issue)))
+             (updated_at (magithub--time-number-of-days-since-string
+                          (alist-get 'updated_at issue))))
+         (or (< created_at ,days) (< updated_at ,days)))))
 
   (defun magithub-filter-maybe (&optional limit)
     "Add filters to magithub only if number of issues is greter than LIMIT."
     (let ((max-issues (length (ignore-errors (magithub-issues))))
-	  (max-pull-requests (length (ignore-errors (magithub-pull-requests))))
-	  (limit (or limit 1)))
+          (max-pull-requests (length (ignore-errors (magithub-pull-requests))))
+          (limit (or limit 1)))
       (when (> max-issues limit)
-	(add-to-list (make-local-variable 'magithub-issue-issue-filter-functions)
-		     (issue-filter-to-days limit "issues")))
+        (add-to-list (make-local-variable 'magithub-issue-issue-filter-functions)
+                     (issue-filter-to-days limit "issues")))
       (when (> max-pull-requests limit)
-	(add-to-list (make-local-variable 'magithub-issue-pull-request-filter-functions)
-		     (issue-filter-to-days limit "pull-requests")))))
+        (add-to-list (make-local-variable 'magithub-issue-pull-request-filter-functions)
+                     (issue-filter-to-days limit "pull-requests")))))
 
   (add-to-list 'magit-status-mode-hook #'magithub-filter-maybe)
   (setq
@@ -431,21 +431,44 @@ symbol."
 
 (def-package! company-lsp
   :after lsp-mode)
+
+
 (def-package! lispy
   :hook (emacs-lisp-mode . lispy-mode)
   :config
-  (after! evil-escape
-    (setq evil-escape-key-sequence nil))
+  (define-key lispy-mode-map (kbd "k") nil)
+  (define-key lispy-mode-map (kbd "j") nil)
   (map! :map lispy-mode-map
+        :i "J" #'lispy-down
+        :i "K" #'lispy-up
         :i [remap delete-backward-char] #'lispy-delete-backward))
 (def-package! lispyville
-  :hook (lispy-mode . lispyville-mode))
+  :hook (lispy-mode . lispyville-mode)
+  :config
+  (lispyville-set-key-theme
+   '(operators
+     c-w
+     (escape insert)
+     (slurp/barf-lispy)
+     additional
+     ))
+  (map! :map emacs-lisp-mode-map
+        :nmv "H" #'lispyville-backward-sexp
+        :nmv "L" #'lispyville-forward-sexp
+        :nmv "M-h" #'lispyville-beginning-of-defun
+        :nmv "M-l" #'lispyville-end-of-defun
+        :nmv "K" #'lispyville-previous-opening
+        :nmv "J" #'lispyville-next-opening
+        :nmv "}" #'lispyville-next-closing
+        :nmv "{" #'lispyville-previous-closing
+        :nmv "(" #'lispyville-backward-up-list
+        :nmv ")" #'lispyville-up-list))
 
 (def-package! parinfer
   ;; :hook (emacs-lisp-mode . parinfer-mode)
   :commands (parinfer-toggle-mode parinfer-mode)
   :init
-  (setq parinfer-extensions '(defaults pretty-parens evil lispy smart-yank)))
+  (setq parinfer-extensions '(defaults lispy evil smart-yank)))
 
 ;; ** neotree
 (after! neotree
