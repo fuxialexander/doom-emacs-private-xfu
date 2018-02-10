@@ -159,6 +159,16 @@
          (not (cl-reduce (lambda (x y) (or x y))
                          (mapcar 'funcall evil-escape-inhibit-functions)
                          :initial-value nil))))
+  (defun evil-escape--escape-normal-state ()
+    "Return the function to escape from normal state."
+    (cond
+     ((and (fboundp 'helm-alive-p) (helm-alive-p)) 'helm-keyboard-quit)
+     ((eq 'ibuffer-mode major-mode) 'ibuffer-quit)
+     ((eq 'image-mode major-mode) 'quit-window)
+     ((evil-escape--is-magit-buffer) 'evil-escape--escape-with-q)
+     ((bound-and-true-p isearch-mode) 'isearch-abort)
+     ((window-minibuffer-p) (kbd "C-g"))
+     (t (lookup-key evil-normal-state-map [escape]))))
   (setq-default evil-escape-delay 0.1
                 evil-escape-excluded-states nil)
   (map! :irvo "C-g" #'evil-escape)

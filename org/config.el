@@ -279,52 +279,54 @@ unfold to point on startup."
      )
    (:after org-agenda
      (:map org-agenda-mode-map
-       :m "C-k"      #'evil-window-up
-       :m "C-j"      #'evil-window-down
-       :m "C-h"      #'evil-window-left
-       :m "C-l"      #'evil-window-right
-       :m "<escape>" #'org-agenda-Quit
+       :nm "C-k"      #'evil-window-up
+       :nm "C-j"      #'evil-window-down
+       :nm "C-h"      #'evil-window-left
+       :nm "C-l"      #'evil-window-right
+       :nm "<escape>" #'org-agenda-Quit
 
-   	   :m "<C-up>"   #'org-clock-convenience-timestamp-up
-   	   :m "<C-down>" #'org-clock-convenience-timestamp-down
-   	   :m "s-o"      #'org-clock-convenience-fill-gap
-   	   :m "s-e"      #'org-clock-convenience-fill-gap-both
+   	   :nm "<C-up>"   #'org-clock-convenience-timestamp-up
+   	   :nm "<C-down>" #'org-clock-convenience-timestamp-down
+   	   :nm "s-o"      #'org-clock-convenience-fill-gap
+   	   :nm "s-e"      #'org-clock-convenience-fill-gap-both
 
-       :m "\\"       #'ace-window
-       :m "t"        #'org-agenda-todo
-       :m "p"        #'org-set-property
-       :m "e"        #'org-agenda-set-effort
-       :m "h"        #'org-habit-toggle-habits
-       :m "l"        #'org-agenda-log-mode
-       :m "D"        #'org-agenda-toggle-diary
-       :m "G"        #'org-agenda-toggle-time-grid
-       :m ";"        #'counsel-org-tag-agenda
-       :m "s-j"      #'counsel-org-goto-all
+       :nm "\\"       #'ace-window
+       :nm "t"        #'org-agenda-todo
+       :nm "p"        #'org-set-property
+       :nm "r"        #'org-agenda-redo
+       :nm "e"        #'org-agenda-set-effort
+       :nm "h"        #'org-habit-toggle-habits
+       :nm "l"        #'org-agenda-log-mode
+       :nm "D"        #'org-agenda-toggle-diary
+       :nm "G"        #'org-agenda-toggle-time-grid
+       :nm ";"        #'counsel-org-tag-agenda
+       :nm "s-j"      #'counsel-org-goto-all
 
-       :m "i"        #'org-agenda-clock-in
-       :m "o"        #'org-agenda-clock-out
+       :nm "i"        #'org-agenda-clock-in
+       :nm "o"        #'org-agenda-clock-out
 
-       :m "J"        #'org-agenda-later
-       :m "K"        #'org-agenda-earlier
+       :nm "<tab>"        #'org-agenda-goto
 
-       :m "C"        #'org-agenda-capture
-       :m "m"        #'org-agenda-bulk-mark
-       :m "u"        #'org-agenda-bulk-unmark
-       :m "U"        #'org-agenda-bulk-unmark-all
+       :nm "J"        #'org-agenda-later
+       :nm "K"        #'org-agenda-earlier
 
-       :m "f"        #'+org@org-agenda-filter/body
+       :nm "C"        #'org-agenda-capture
+       :nm "m"        #'org-agenda-bulk-mark
+       :nm "u"        #'org-agenda-bulk-unmark
+       :nm "U"        #'org-agenda-bulk-unmark-all
 
-       :m "-"        #'org-agenda-manipulate-query-subtract
-       :m "="        #'org-agenda-manipulate-query-add
-       :m "_"        #'org-agenda-manipulate-query-subtract-re
-       :m "$"        #'org-agenda-manipulate-query-add-re
+       :nm "f"        #'+org@org-agenda-filter/body
 
-       :m "d"        #'org-agenda-deadline
-       :m "s"        #'org-agenda-schedule
+       :nm "-"        #'org-agenda-manipulate-query-subtract
+       :nm "="        #'org-agenda-manipulate-query-add
+       :nm "_"        #'org-agenda-manipulate-query-subtract-re
+       :nm "$"        #'org-agenda-manipulate-query-add-re
 
-       :m "z"        #'org-agenda-view-mode-dispatch
-       :m "S"        #'org-save-all-org-buffers
-       ))
+       :nm "d"        #'org-agenda-deadline
+       :nm "s"        #'org-agenda-schedule
+
+       :nm "z"        #'org-agenda-view-mode-dispatch
+       :nm "S"        #'org-save-all-org-buffers))
    (:after org-src
      (:map org-src-mode-map
        (:localleader

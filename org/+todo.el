@@ -51,7 +51,7 @@
   (push 'org-agenda-mode evil-snipe-disabled-modes)
   (add-hook 'org-agenda-finalize-hook #'doom-hide-modeline-mode)
   ;; (add-hook! 'org-agenda-finalize-hook (org-wild-notifier-mode 1))
-  (set! :evil-state 'org-agenda-mode 'motion)
+  (set! :evil-state 'org-agenda-mode 'normal)
 
   (setq org-agenda-block-separator ""
         org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 3 :fileskip0 t :stepskip0 t :tags "-COMMENT"))

@@ -57,15 +57,15 @@
 
 ;; (after! solaire-mode
 ;;       (add-hook 'doom-init-theme-hook #'solaire-mode-swap-bg t))
-;; (after! anzu
-;;   (require 'loop)
-;;   (defun anzu--where-is-here (positions here)
-;;     (let ((anzucount 0))
-;;       (loop-for-each x positions
-;;         (setq anzucount (1+ anzucount))
-;;         (if (and (>= here (car x)) (<= here (cdr x)))
-;;             (loop-break)))
-;;       anzucount)))
+(after! anzu
+  (require 'loop)
+  (defun anzu--where-is-here (positions here)
+    (let ((anzucount 0))
+      (loop-for-each x positions
+        (setq anzucount (1+ anzucount))
+        (if (and (>= here (car x)) (<= here (cdr x)))
+            (loop-break)))
+      anzucount)))
 (after! xwidget
   (set! :popup "\\*xwidget" '((side . right) (size . 100)) '((select . t) (transient) (quit)))
   (defun xwidget-webkit-new-session (url)
@@ -447,6 +447,7 @@ symbol."
         :i "J" #'lispy-down
         :i "K" #'lispy-up
         :i [remap delete-backward-char] #'lispy-delete-backward))
+
 (def-package! lispyville
   :hook (lispy-mode . lispyville-mode)
   :config
@@ -457,16 +458,16 @@ symbol."
      (slurp/barf-lispy)
      additional))
   (map! :map emacs-lisp-mode-map
-        :nmv "h" #'lispyville-left
-        :nmv "l" #'lispyville-right
-        :nmv "H" #'lispyville-backward-sexp
-        :nmv "L" #'lispyville-forward-sexp
+        :nmv "H" #'lispyville-left
+        :nmv "L" #'lispyville-right
+        :nmv "h" #'lispyville-backward-sexp
+        :nmv "l" #'lispyville-forward-sexp
         :nmv "M-h" #'lispyville-beginning-of-defun
         :nmv "M-l" #'lispyville-end-of-defun
-        :nmv "k" #'lispyville-previous-closing
+        :nmv "k" #'lispyville-previous-opening
         :nmv "j" #'lispyville-next-opening
         :nmv "J" #'lispyville-next-closing
-        :nmv "K" #'lispyville-previous-opening
+        :nmv "K" #'lispyville-previous-closing
         :nmv "(" #'lispyville-backward-up-list
         :nmv ")" #'lispyville-up-list))
 
