@@ -135,6 +135,30 @@
 
 (def-package-hook! evil-escape
   :pre-config
+  (defun evil-escape-p ()
+    "Return non-nil if evil-escape can run."
+    (and evil-escape-key-sequence
+         (not evil-escape-inhibit)
+         (or (window-minibuffer-p)
+             (bound-and-true-p isearch-mode)
+             (memq major-mode '(ibuffer-mode
+                                image-mode))
+             (evil-escape--is-magit-buffer)
+             (+popup-windows)
+             (and (fboundp 'helm-alive-p) (helm-alive-p))
+             (or (not (eq 'normal evil-state))
+                 (not (eq 'evil-force-normal-state
+                          (lookup-key evil-normal-state-map [escape])))))
+         (not (memq major-mode evil-escape-excluded-major-modes))
+         (not (memq evil-state evil-escape-excluded-states))
+         (or (not evil-escape-enable-only-for-major-modes)
+             (memq major-mode evil-escape-enable-only-for-major-modes))
+         (or (equal (this-command-keys) (evil-escape--first-key))
+             (and evil-escape-unordered-key-sequence
+                  (equal (this-command-keys) (evil-escape--second-key))))
+         (not (cl-reduce (lambda (x y) (or x y))
+                         (mapcar 'funcall evil-escape-inhibit-functions)
+                         :initial-value nil))))
   (setq-default evil-escape-delay 0.1
                 evil-escape-excluded-states nil)
   (map! :irvo "C-g" #'evil-escape)
