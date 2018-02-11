@@ -284,6 +284,7 @@ unfold to point on startup."
        :nm "C-h"      #'evil-window-left
        :nm "C-l"      #'evil-window-right
        :nm "<escape>" #'org-agenda-Quit
+       :nm "q" #'org-agenda-Quit
 
    	   :nm "<C-up>"   #'org-clock-convenience-timestamp-up
    	   :nm "<C-down>" #'org-clock-convenience-timestamp-down

@@ -357,16 +357,17 @@
         "s-." #'org-ref-bibtex-hydra/body)
       (:after notmuch
         (:map notmuch-show-mode-map
-          :nmv "o"   #'ace-link-notmuch-show
-          :nmv "i"   #'open-message-with-mail-app-notmuch-show
-          :nmv "I"   #'notmuch-show-view-all-mime-parts
-          :nmv "q"   #'notmuch-bury-or-kill-this-buffer
-          :nmv "s"   #'counsel-notmuch
-          :nmv "t"   #'notmuch-tree-from-show-current-query
-          :nmv "s-n" #'notmuch-mua-new-mail
-          :nmv "n"   #'notmuch-show-next-thread-show
-          :nmv "r"   #'notmuch-show-reply
-          :nmv "R"   #'notmuch-show-reply-sender
+          :nmv "o"     #'ace-link-notmuch-show
+          :nmv "i"     #'open-message-with-mail-app-notmuch-show
+          :nmv "I"     #'notmuch-show-view-all-mime-parts
+          :nmv "q"     #'notmuch-bury-or-kill-this-buffer
+          :nmv "s"     #'counsel-notmuch
+          :nmv "t"     #'notmuch-tree-from-show-current-query
+          :nmv "s-n"   #'notmuch-mua-new-mail
+          :nmv "n"     #'notmuch-show-next-thread-show
+          :nmv "r"     #'notmuch-show-reply
+          :nmv "<tab>" #'notmuch-show-toggle-visibility-headers
+          :nmv "R"     #'notmuch-show-reply-sender
           :nmv "p"   #'notmuch-show-previous-thread-show)
         (:map notmuch-hello-mode-map
           :nmv "o"   #'ace-link-notmuch-hello
