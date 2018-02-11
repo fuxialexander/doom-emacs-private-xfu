@@ -121,8 +121,8 @@ the workspace and move to the next."
                (+workspace/delete current-persp-name)))))))
 
 (add-hook 'minibuffer-setup-hook #'smartparens-mode)
-(add-hook 'minibuffer-setup-hook #'doom|no-fringes-in-minibuffer)
-(set-window-fringes (minibuffer-window) 0 0 nil)
+(add-hook! 'minibuffer-setup-hook (set-window-fringes (minibuffer-window) 0 0 nil))
+
 (after! yasnippet
   (push '+xfu-snippets-dir yas-snippet-dirs))
 
@@ -144,49 +144,7 @@ the workspace and move to the next."
   :commands (alert)
   :config
   (setq alert-default-style 'notifier))
-(def-package! keyfreq
-  :config
-  (setq keyfreq-excluded-commands '(evil-next-line
-                                    evil-previous-line
-                                    evil-next-visual-line
-                                    self-insert-command
-                                    evil-previous-visual-line
-                                    evil-forward-char
-                                    org-self-insert-command
-                                    ivy-next-line
-                                    evil-forward-word-end
-                                    doom/deflate-space-maybe
-                                    evil-backward-word-begin
-                                    ivy-previous-line
-                                    evil-backward-char
-                                    ivy-backward-delete-char
-                                    mwheel-scroll
-                                    company-ignore
-                                    evil-ex-search-next
-                                    evil-normal-state
-                                    evil-scroll-down
-                                    evil-scroll-up
-                                    ivy-done
-                                    right-char
-                                    keyboard-escape-quit
-                                    left-char
-                                    doom/inflate-space-maybe
-                                    evil-visual-char
-                                    term-send-raw
-                                    save-buffer
-                                    company-select-next-or-abort
-                                    term-send-left
-                                    +org/toggle-fold
-                                    evil-delete
-                                    neotree-next-line
-                                    neotree-previous-line
-                                    term-send-backspace
-                                    undo-tree-undo
-                                    xwidget-webkit-scroll-down-line
-                                    evil-force-normal-state
-                                    xwidget-webkit-scroll-up-line))
-  (keyfreq-mode 1)
-  (keyfreq-autosave-mode 1))
+
 ;; ** Org
 ;; *** Org-general
 (after! org
@@ -257,10 +215,10 @@ Enable completion of info from magithub in the current buffer.
      :n "j" #'next-line
      :n "k" #'previous-line
      :n "s" #'magit-repolist-status ))
-  (set! :popup "^\\*Magit" '((slot . -1) (side . right) (size . 80)) '((modeline . nil) (select . t)))
-  (set! :popup "^\\*magit.*popup\\*" '((slot . 0) (side . right)) '((modeline . nil) (select . t)))
-  (set! :popup "^\\*magit-revision:.*" '((vslot . -1) (side . right) (window-height . 0.6)) '((modeline . nil) (select . t)))
-  (set! :popup "^\\*magit-diff:.*" '((vslot . -1) (side . right) (window-height . 0.6)) '((modeline . nil) (select . nil)))
+  (set! :popup "^\\magit" '((slot . -1) (side . right) (size . 80)) '((modeline . nil) (select . t)))
+  (set! :popup "^\\magit.*popup\\*" '((slot . 0) (side . right)) '((modeline . nil) (select . t)))
+  (set! :popup "^\\magit-revision:.*" '((vslot . -1) (side . right) (window-height . 0.6)) '((modeline . nil) (select . t)))
+  (set! :popup "^\\magit-diff:.*" '((vslot . -1) (side . right) (window-height . 0.6)) '((modeline . nil) (select . nil)))
   (add-hook! 'magit-popup-mode-hook #'doom-hide-modeline-mode))
 
 ;; ** company
@@ -441,11 +399,7 @@ symbol."
 (def-package! lispy
   :hook (emacs-lisp-mode . lispy-mode)
   :config
-  (define-key lispy-mode-map (kbd "k") nil)
-  (define-key lispy-mode-map (kbd "j") nil)
   (map! :map lispy-mode-map
-        :i "J" #'lispy-down
-        :i "K" #'lispy-up
         :i [remap delete-backward-char] #'lispy-delete-backward))
 
 (def-package! lispyville
@@ -458,18 +412,18 @@ symbol."
      (slurp/barf-lispy)
      additional))
   (map! :map emacs-lisp-mode-map
-        :nmv "H" #'lispyville-left
-        :nmv "L" #'lispyville-right
-        :nmv "h" #'lispyville-backward-sexp
-        :nmv "l" #'lispyville-forward-sexp
+        :nmv "H"   #'lispyville-left
+        :nmv "L"   #'lispyville-right
+        :nmv "h"   #'lispyville-backward-sexp
+        :nmv "l"   #'lispyville-forward-sexp
         :nmv "M-h" #'lispyville-beginning-of-defun
         :nmv "M-l" #'lispyville-end-of-defun
-        :nmv "k" #'lispyville-previous-opening
-        :nmv "j" #'lispyville-next-opening
-        :nmv "J" #'lispyville-next-closing
-        :nmv "K" #'lispyville-previous-closing
-        :nmv "(" #'lispyville-backward-up-list
-        :nmv ")" #'lispyville-up-list))
+        :nmv "k"   #'lispyville-previous-opening
+        :nmv "j"   #'lispyville-next-opening
+        :nmv "J"   #'lispyville-next-closing
+        :nmv "K"   #'lispyville-previous-closing
+        :nmv "("   #'lispyville-backward-up-list
+        :nmv ")"   #'lispyville-up-list))
 
 (def-package! parinfer
   ;; :hook (emacs-lisp-mode . parinfer-mode)
@@ -477,7 +431,6 @@ symbol."
   :init
   (setq parinfer-extensions '(defaults lispy evil smart-yank)))
 
-;; ** neotree
 (after! neotree
   (set! :popup "^ ?\\*NeoTree"
     `((side . ,neo-window-position) (window-width . ,neo-window-width))
@@ -486,7 +439,6 @@ symbol."
 (after! smartparens
   ;; Auto-close more conservatively and expand braces on RET
   (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
-  (sp-local-pair 'org-mode "\\[" "\\]")
 
   (let ((unless-list '(sp-point-before-word-p
                        sp-point-after-word-p

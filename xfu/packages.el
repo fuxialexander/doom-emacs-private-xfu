@@ -14,7 +14,6 @@
 (package! lispy)
 (package! lispyville)
 (package! company-childframe)
-(package! keyfreq)
 (package! sed-mode)
 (package! company)
 (package! company-statistics)

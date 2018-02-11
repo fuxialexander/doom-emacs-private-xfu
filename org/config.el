@@ -149,6 +149,8 @@ unfold to point on startup."
   ;; make delimiter auto-closing a little more conservative
   (after! smartparens
     (sp-with-modes 'org-mode
+      (sp-local-pair "\\[" "\\]")
+      (sp-local-pair "\\(" "\\)")
       (sp-local-pair "*" nil :unless '(sp-point-after-word-p sp-point-before-word-p sp-point-at-bol-p))
       (sp-local-pair "_" nil :unless '(sp-point-after-word-p sp-point-before-word-p))
       (sp-local-pair "/" nil :unless '(sp-point-after-word-p sp-point-before-word-p +org-sp-point-in-checkbox-p))
@@ -386,6 +388,7 @@ unfold to point on startup."
     (unless
         (or
          (string-equal (buffer-name) "cal.org")
+         (string-equal default-directory "/Users/xfu/Source/playground/gatsby-orga/src/pages/")
          (string-equal (buffer-name) "cal_kevin.org"))
       (save-excursion
         (widen)

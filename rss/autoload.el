@@ -89,27 +89,28 @@
              unless (gethash url living-feeds)
              collect url)))
 
-;;;###autoload
-(defun elfeed-send-to-bookend (url)
-  (let ((uri (concat "bookends:///?&beurl=" (url-hexify-string url))))
-    (start-process "elfeed-bookends" nil "open" "-g" uri)))
+;; ;;;###autoload
+;; (defun elfeed-send-to-bookend (url)
+;;   (let ((uri (concat "bookends:///?&beurl=" (url-hexify-string url))))
+;;     (start-process "elfeed-bookends" nil "open" "-g" uri)))
 
-;;;###autoload
-(defun elfeed-search-send-to-bookend ()
-  (interactive)
-  (let ((entries (elfeed-search-selected)))
-    (cl-loop for entry in entries
-             do (elfeed-untag entry 'unread)
-             when (elfeed-entry-link entry)
-             do (elfeed-send-to-bookend it))
-    (mapc #'elfeed-search-update-entry entries)
-    (unless (use-region-p) (forward-line))))
+;; ;;;###autoload
+;; (defun elfeed-search-send-to-bookend ()
+;;   (interactive)
+;;   (let ((entries (elfeed-search-selected)))
+;;     (cl-loop for entry in entries
+;;              do (elfeed-untag entry 'unread)
+;;              when (elfeed-entry-link entry)
+;;              do (elfeed-send-to-bookend it))
+;;     (mapc #'elfeed-search-update-entry entries)
+;;     (unless (use-region-p) (forward-line))))
 
-;;;###autoload
-(defun elfeed-show-send-to-bookend ()
-  (interactive)
-  (let ((link (elfeed-entry-link elfeed-show-entry)))
-    (when link
-      (message "Sent to bookends: %s" link)
-      (elfeed-send-to-bookend link))))
+;; ;;;###autoload
+;; (defun elfeed-show-send-to-bookend ()
+;;   (interactive)
+;;   (let ((link (elfeed-entry-link elfeed-show-entry)))
+;;     (when link
+;;       (message "Sent to bookends: %s" link)
+;;       (elfeed-send-to-bookend link))))
+
 
