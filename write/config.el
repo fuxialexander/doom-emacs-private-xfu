@@ -1,43 +1,51 @@
 ;;; private/write/config.el -*- lexical-binding: t; -*-
-(def-package! langtool
-  :commands (langtool-check
-             langtool-check-done
-             langtool-switch-default-language
-             langtool-show-message-at-point
-             langtool-correct-buffer
-             )
-  :init
-  (setq langtool-default-language "en-US"
-        langtool-mother-tongue "zh-CN"
-        langtool-language-tool-jar "/usr/local/Cellar/languagetool/4.0/libexec/languagetool-commandline.jar"))
 
-(def-package! wordnut
+(when (featurep! +langtool)
+  (defvar +langtool-default-lang "en-US"
+    "default language for langtool")
+  (defvar +langtool-mother-tongue nil
+    "mother tongue of user")
+  (defvar +langtool-jar-path "/usr/local/Cellar/languagetool/4.0/libexec/languagetool-commandline.jar"
+    "TODO")
+  (def-package! langtool
+    :commands (langtool-check
+               langtool-check-done
+               langtool-switch-default-language
+               langtool-show-message-at-point
+               langtool-correct-buffer)
+    :init
+    (setq langtool-default-language +langtool-default-lang
+          langtool-mother-tongue +langtool-mother-tongue
+          langtool-language-tool-jar +langtool-jar-path)))
+(when (featurep! +wordnut)
+  (def-package! wordnut
   :commands (wordnut-search
-             wordnut-lookup-current-word))
-(def-package! synosaurus
+             wordnut-lookup-current-word)))
+(when (featurep! +synosaurus)
+  (def-package! synosaurus
   :commands (synosaurus-mode
              synosaurus-lookup
              synosaurus-choose-and-replace)
   :init
   (require 'synosaurus-wordnet)
   :config
-  (setq synosaurus-choose-method 'default))
+  (setq synosaurus-choose-method 'default)))
+
 (def-package! mixed-pitch
   :config
-  (push 'org-todo-keyword-todo mixed-pitch-fixed-pitch-faces)
-  (push 'org-todo-keyword-habt mixed-pitch-fixed-pitch-faces)
-  (push 'org-todo-keyword-done mixed-pitch-fixed-pitch-faces)
-  (push 'org-todo-keyword-wait mixed-pitch-fixed-pitch-faces)
-  (push 'org-todo-keyword-kill mixed-pitch-fixed-pitch-faces)
-  (push 'org-todo-keyword-outd mixed-pitch-fixed-pitch-faces)
-  (push 'org-special-keyword mixed-pitch-fixed-pitch-faces)
-  (push 'org-date mixed-pitch-fixed-pitch-faces)
-  (push 'org-property-value mixed-pitch-fixed-pitch-faces)
-  (push 'font-lock-comment-face mixed-pitch-fixed-pitch-faces)
-  (setf mixed-pitch-fixed-pitch-faces
-        (append  '(org-special-keyword
-                   org-property-value
-                   org-ref-cite-face
-                   org-tag
-                   font-lock-comment-face)
-                 mixed-pitch-fixed-pitch-faces)))
+  (setq mixed-pitch-fixed-pitch-faces
+   (append mixed-pitch-fixed-pitch-faces
+           '(org-todo-keyword-todo
+             org-todo-keyword-habt
+             org-todo-keyword-done
+             org-todo-keyword-wait
+             org-todo-keyword-kill
+             org-todo-keyword-outd
+             org-special-keyword
+             org-date
+             org-property-value
+             org-special-keyword
+             org-property-value
+             org-ref-cite-face
+             org-tag
+             font-lock-comment-face))))
