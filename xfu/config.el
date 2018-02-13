@@ -208,13 +208,12 @@ Enable completion of info from magithub in the current buffer.
      :n "j" #'next-line
      :n "k" #'previous-line
      :n "s" #'magit-repolist-status ))
-  (set! :popup "^\\magit" '((slot . -1) (side . right) (size . 80)) '((modeline . nil) (select . t)))
-  (set! :popup "^\\magit.*popup\\*" '((slot . 0) (side . right)) '((modeline . nil) (select . t)))
-  (set! :popup "^\\magit-revision:.*" '((vslot . -1) (side . right) (window-height . 0.6)) '((modeline . nil) (select . t)))
-  (set! :popup "^\\magit-diff:.*" '((vslot . -1) (side . right) (window-height . 0.6)) '((modeline . nil) (select . nil)))
+  (set! :popup "^.*magit" '((slot . -1) (side . right) (size . 80)) '((modeline . nil) (select . t)))
+  (set! :popup "^.*magit.*popup\\*" '((slot . 0) (side . right)) '((modeline . nil) (select . t)))
+  (set! :popup "^.*magit-revision:.*" '((slot . 2) (side . right) (window-height . 0.6)) '((modeline . nil) (select . t)))
+  (set! :popup "^.*magit-diff:.*" '((slot . 2) (side . right) (window-height . 0.6)) '((modeline . nil) (select . nil)))
   (add-hook! 'magit-popup-mode-hook #'doom-hide-modeline-mode))
 
-;; ** company
 (require 'company)
 (def-package! company-childframe
   :after company)
