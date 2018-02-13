@@ -20,10 +20,7 @@
                                                      ("" "minted" t)
                                                      ("" "parskip" t)
                                                      ("" "tikz" t)))
-                    org-latex-pdf-process '("pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"
-                                            "bibtex %b"
-                                            "pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"
-                                            "pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f")
+                    org-latex-pdf-process '("latexmk -pdflatex='lualatex -shell-escape -interaction nonstopmode' -pdf -f  %f")
                     org-preview-latex-default-process 'imagemagick
                     org-preview-latex-image-directory (concat doom-cache-dir "org-latex/")
                     )
@@ -40,10 +37,7 @@
                                                      ("" "minted" t)
                                                      ("" "parskip" t)
                                                      ("" "tikz" t)))
-                    org-latex-pdf-process '("pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"
-                                            "bibtex %b"
-                                            "pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"
-                                            "pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f")
+                    org-latex-pdf-process '("latexmk -pdflatex='lualatex -shell-escape -interaction nonstopmode' -pdf -f  %f")
                     org-preview-latex-default-process 'dvisvgm
                     org-preview-latex-image-directory (concat doom-cache-dir "org-latex/")
                     )))
