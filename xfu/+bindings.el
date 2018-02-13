@@ -242,7 +242,8 @@
           ;; :desc "Debugger"                 :n "d" #'+debug/open
           :desc "REPL"                        :n "r" #'+eval/open-repl
           :v  "r" #'+eval:repl
-          :desc "Neotree"                     :n "n" #'+neotree/toggle
+          :desc "Neotree"                     :n "n" #'+neotree/open
+          :desc "Neotree"                     :n "N" #'+neotree/find-this-file
           :desc "Terminal"                    :n "t" #'+term/open-popup
           :desc "Terminal in project"         :n "T" #'+term/open-popup-in-project
           ;; *** applications

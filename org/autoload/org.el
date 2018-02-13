@@ -79,6 +79,7 @@ If on a:
              ((string= "ARCHIVE" (car-safe (org-get-tags)))
               (org-force-cycle-archived))
              (t
+              (+org/refresh-inline-images)
               (org-remove-latex-fragment-image-overlays)
               (org-toggle-latex-fragment '(4)))))
 
@@ -139,7 +140,6 @@ If on a:
         ((org-in-src-block-p t)
          (doom/dumb-indent))
         (t
-         ;; (call-interactively #'org-babel-insert-header-arg)
          (call-interactively #'self-insert-command))))
 
 ;;;###autoload
@@ -147,14 +147,17 @@ If on a:
   "Depending on the context either a) indent the current line, b) go the next
 table field or c) run `yas-expand'."
   (interactive)
-  (call-interactively
-   (cond ((and (bound-and-true-p yas-minor-mode)
-               (yas--templates-for-key-at-point))
-          #'yas-expand)
-         ((org-at-table-p)
-          #'org-table-next-field)
-         (t
-              #'+org/indent)))))
+  (or  (org-try-cdlatex-tab)
+       (org-try-structure-completion)
+       (org-babel-header-arg-expand)
+       (call-interactively
+        (cond ((and (bound-and-true-p yas-minor-mode)
+                    (yas--templates-for-key-at-point))
+               #'yas-expand)
+              ((org-at-table-p)
+               #'org-table-next-field)
+              (t
+               #'+org/indent)))))
 
 ;;;###autoload
 (defun +org/dedent ()
@@ -192,33 +195,50 @@ I use this instead of `org-insert-item' or `org-insert-heading' which are too
 opinionated and perform this simple task incorrectly (e.g. whitespace in the
 wrong places)."
   (interactive)
-  (let* ((context (org-element-lineage
+  (let* ((context
+          (save-excursion
+            (when (bolp)
+              (back-to-indentation)
+              (forward-char))
+            (org-element-lineage
                    (org-element-context)
                    '(table table-row headline inlinetask item plain-list)
-                   t))
+             t)))
          (type (org-element-type context)))
     (cond ((memq type '(item plain-list))
            (let ((marker (org-element-property :bullet context))
                  (pad (save-excursion
                         (back-to-indentation)
-                        (- (point) (line-beginning-position)))))
+                        (- (point) (line-beginning-position))))
+                 afterp)
+             (save-match-data
              (pcase direction
                ('below
                 (org-end-of-item)
-                (goto-char (line-beginning-position))
-                (insert (make-string pad 32) (or marker ""))
-                (save-excursion (insert "\n")))
+                  (backward-char)
+                  (end-of-line)
+                  (if (and marker (string-match "\\([0-9]+\\)\\([).] *\\)" marker))
+                      (let ((l (line-number-at-pos)))
+                        (org-insert-item)
+                        (when (= l (line-number-at-pos))
+                          (org-next-item)
+                          (org-end-of-line)))
+                    (insert "\n" (make-string pad 32) (or marker ""))))
                ('above
                 (goto-char (line-beginning-position))
+                  (if (and marker (string-match-p "[0-9]+[).]" marker))
+                      (org-insert-item)
                 (insert (make-string pad 32) (or marker ""))
-                (save-excursion (insert "\n")))))
+                    (save-excursion (insert "\n")))))))
            (when (org-element-property :checkbox context)
              (insert "[ ] ")))
 
           ((memq type '(table table-row))
            (pcase direction
-             ('below (org-table-insert-row t))
-             ('above (org-shiftmetadown))))
+             ('below (save-excursion (org-table-insert-row t))
+                     (org-table-next-row))
+             ('above (save-excursion (org-shiftmetadown))
+                     (+org/table-previous-row))))
 
           ((memq type '(headline inlinetask))
            (let ((level (if (eq (org-element-type context) 'headline)
@@ -246,8 +266,10 @@ wrong places)."
 
           (t (user-error "Not a valid list, heading or table")))
 
+    (when (org-invisible-p)
+      (org-show-subtree))
     (when (bound-and-true-p evil-mode)
-      (evil-append-line 1))))
+      (evil-insert 1))))
 
 ;;;###autoload
 (defun +org-get-property (name &optional _file) ; TODO Add FILE
@@ -288,8 +310,7 @@ with `org-cycle'). Also:
   (interactive)
   (save-excursion
     (org-beginning-of-line)
-    (cond ((org-hide-block-toggle-maybe))
-          ((org-at-table-p)
+    (cond ((org-at-table-p)
            (org-table-align))
           ((org-in-src-block-p)
            (org-babel-remove-result))
@@ -313,5 +334,4 @@ with `org-cycle'). Also:
                          (match-string-no-properties 1))))
       (apply #'delete-region remove)
       (insert description))))
-
 
