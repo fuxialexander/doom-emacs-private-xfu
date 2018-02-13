@@ -1,4 +1,4 @@
-;;; org/org/autoload/org.el -*- lexical-binding: t; -*-
+;;; private/org/autoload/org.el -*- lexical-binding: t; -*-
 
 ;;;###autoload
 (define-minor-mode +org-pretty-mode
@@ -154,7 +154,7 @@ table field or c) run `yas-expand'."
          ((org-at-table-p)
           #'org-table-next-field)
          (t
-          #'+org/indent))))
+              #'+org/indent)))))
 
 ;;;###autoload
 (defun +org/dedent ()
