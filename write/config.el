@@ -48,4 +48,16 @@
              org-property-value
              org-ref-cite-face
              org-tag
-             font-lock-comment-face))))
+             font-lock-comment-face
+             markdown-code-face
+             markdown-comment-face
+             markdown-footnote-marker-face
+             markdown-gfm-checkbox-face
+             markdown-inline-code-face
+             markdown-language-info-face
+             markdown-language-info-properties
+             markdown-language-keyword-face
+             markdown-language-keyword-properties
+             markdown-math-face
+             markdown-markup-face
+             markdown-pre-face))))

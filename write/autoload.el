@@ -12,9 +12,10 @@
     (visual-fill-column-mode arg)
     (visual-line-mode arg)
     (flyspell-mode arg)
+    (mixed-pitch-mode arg)
     (when (eq major-mode 'org-mode)
       (+org-pretty-mode arg)
-      (mixed-pitch-mode arg)
       (org-indent-mode iarg))))
+
 
 
