@@ -1,4 +1,4 @@
-;;; private/default/+evil-commands.el -*- lexical-binding: t; -*-
+;;; private/xfu/+evil-commands.el -*- lexical-binding: t; -*-
 
 
 (defalias 'ex! 'evil-ex-define-cmd)
@@ -63,7 +63,7 @@
 (ex! "grevert"     #'git-gutter:revert-hunk)
 ;; Dealing with buffers
 (ex! "clean[up]"   #'doom:cleanup-session)
-(ex! "k[ill]"      #'kill-this-buffer)
+(ex! "k[ill]"      #'doom/kill-this-buffer)
 (ex! "k[ill]all"   #'+default:kill-all-buffers)
 (ex! "k[ill]m"     #'+default:kill-matching-buffers)
 (ex! "k[ill]o"     #'doom/kill-other-buffers)
@@ -111,4 +111,5 @@
 (ex! "tabs"        #'+workspace/display)
 (ex! "tabsave"     #'+workspace:save)
 ;; Org-mode
-(ex! "cap"         #'+org-capture/dwim)
+(ex! "cap"         #'counsel-org-capture)
+
