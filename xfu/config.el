@@ -1,4 +1,4 @@
-;; * private/default/config.el -*- lexical-binding: t; -*-
+;; private/default/config.el -*- lexical-binding: t; -*-
 (if (featurep! +bindings) (load! +bindings))
 
 (when (featurep 'evil)
@@ -11,8 +11,6 @@
         ;; With GPG 2.1, this forces gpg-agent to use the Emacs minibuffer to
         ;; prompt for the key passphrase.
         epa-pinentry-mode 'loopback))
-;; * Settings
-;; ** Misc
 (setq request-storage-directory (concat doom-etc-dir "request/")
       doom-theme 'doom-solarizedlight
       projectile-ignored-projects '("~/"
@@ -126,7 +124,6 @@ the workspace and move to the next."
 (after! yasnippet
   (push '+xfu-snippets-dir yas-snippet-dirs))
 
-;; ** EWW
 (after! shr
   (require 'shr-tag-pre-highlight)
   (add-to-list 'shr-external-rendering-functions
@@ -134,7 +131,6 @@ the workspace and move to the next."
 (after! eww
   (advice-add 'eww-display-html :around
               'eww-display-html--override-shr-external-rendering-functions))
-;; ** Tramp
 (after! tramp-sh
   (add-to-list 'tramp-remote-path "/research/kevinyip10/xfu/miniconda3/bin")
   (add-to-list 'tramp-remote-path "/uac/gds/xfu/bin"))
@@ -145,15 +141,12 @@ the workspace and move to the next."
   :config
   (setq alert-default-style 'notifier))
 
-;; ** Org
-;; *** Org-general
 (after! org
   ;; **** Misc setting
   (setq +org-dir "~/Dropbox/org/"
         org-blank-before-new-entry nil
         org-modules (quote (org-bibtex org-habit org-info org-protocol org-mac-link org-notmuch))
         org-imenu-depth 8))
-;; ** Magit
 (def-package! orgit :after magit)
 (def-package! magithub
   :commands (magithub-clone
@@ -249,8 +242,6 @@ Enable completion of info from magithub in the current buffer.
 (set! :company-backend '(org-mode) '(company-files company-yasnippet company-dabbrev))
 (set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point)
 
-;; * Def-Packages
-;; ** Misc
 (def-package! emacs-snippets)
 (def-package! electric-operator
   :commands (electric-operator-mode)
@@ -267,7 +258,6 @@ Enable completion of info from magithub in the current buffer.
                                         (cons "," ", ")
                                         (cons "|" " | ")))
 (def-package! prettify-utils)
-;; ** Helpful
 (after! helpful
   (set! :popup "^\\*helpful.*"
     '((size . 80) (side . right))
@@ -281,7 +271,6 @@ Enable completion of info from magithub in the current buffer.
     '((transient . nil) (select . t) (quit . t))))
 (def-package! sed-mode
   :commands (sed-mode))
-;; ** Lsp
 (def-package! lsp-mode
   :commands (lsp-mode))
 
@@ -435,7 +424,6 @@ symbol."
   (set! :popup "^ ?\\*NeoTree"
     `((side . ,neo-window-position) (window-width . ,neo-window-width))
     '((quit . current) (select . t))))
-;; ** smartparens
 (after! smartparens
   ;; Auto-close more conservatively and expand braces on RET
   (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
@@ -457,7 +445,6 @@ symbol."
   "Dim recentf entries that are not in the current project of the buffer you
 started `counsel-recentf' from. Also uses `abbreviate-file-name'."
   (abbreviate-file-name str))
-;; * Ivy Actions
 (after! counsel
   ;; ** counsel-find-file
   (defcustom ivy-top-command
