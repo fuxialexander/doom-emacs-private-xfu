@@ -24,13 +24,14 @@
         org-export-with-toc t
         org-export-with-author t)
   ;; Always export to a central location
-  (defun +org*export-output-file-name (args)
-    "Return a centralized export location."
-    (let ((org-export-directory (expand-file-name ".export" default-directory)))
-      (unless (file-directory-p org-export-directory)
-        (make-directory org-export-directory t))
-      (unless (nth 2 args)
-      (setq args (append args (list org-export-directory)))))
-    args)
-  (advice-add #'org-export-output-file-name
-              :filter-args #'+org*export-output-file-name))
+  ;; (defun +org*export-output-file-name (args)
+  ;;   "Return a centralized export location."
+  ;;   (let ((org-export-directory (expand-file-name ".export" default-directory)))
+  ;;     (unless (file-directory-p org-export-directory)
+  ;;       (make-directory org-export-directory t))
+  ;;     (unless (nth 2 args)
+  ;;       (setq args (append args (list org-export-directory)))))
+  ;;   args)
+  ;; (advice-add #'org-export-output-file-name
+  ;;             :filter-args #'+org*export-output-file-name)
+  )
