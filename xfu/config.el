@@ -400,16 +400,16 @@ symbol."
      (slurp/barf-lispy)
      additional))
   (map! :map emacs-lisp-mode-map
-        :nmv "H"   #'lispyville-left
+        :nmv "K"   #'lispyville-backward-sexp
+        :nmv "J"   #'lispyville-forward-sexp
         :nmv "L"   #'lispyville-right
-        :nmv "h"   #'lispyville-backward-sexp
-        :nmv "l"   #'lispyville-forward-sexp
+        :nmv "H"   #'lispyville-left
         :nmv "M-h" #'lispyville-beginning-of-defun
         :nmv "M-l" #'lispyville-end-of-defun
-        :nmv "k"   #'lispyville-previous-opening
-        :nmv "j"   #'lispyville-next-opening
-        :nmv "J"   #'lispyville-next-closing
-        :nmv "K"   #'lispyville-previous-closing
+        :nmv "[["   #'lispyville-previous-opening
+        :nmv "]]"   #'lispyville-next-closing
+        :nmv "{{"   #'lispyville-next-opening
+        :nmv "}}"   #'lispyville-previous-closing
         :nmv "("   #'lispyville-backward-up-list
         :nmv ")"   #'lispyville-up-list))
 
