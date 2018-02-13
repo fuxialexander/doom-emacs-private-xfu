@@ -29,6 +29,19 @@
           (:name "Scheduled earlier\n"
                  :scheduled past))))
 
+(def-package! org-clock-budget :load-path "~/Source/playground/org-clock-budget"
+  :commands (org-clock-budget-report)
+  :init
+  (defun my-buffer-face-mode-org-clock-budget ()
+    "Sets a fixed width (monospace) font in current buffer"
+    (interactive)
+    (setq buffer-face-mode-face '(:family "input mono compressed" :height 1.0))
+    (buffer-face-mode)
+    (setq-local line-spacing nil))
+  :config
+  (add-hook! 'org-clock-budget-report-mode-hook
+    (toggle-truncate-lines 1)
+    (my-buffer-face-mode-org-clock-budget)))
 (def-package! org-clock-convenience
   :commands (org-clock-convenience-timestamp-up
              org-clock-convenience-timestamp-down
