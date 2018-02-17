@@ -8,7 +8,7 @@
         ;; prompt for the key passphrase.
         epa-pinentry-mode 'loopback))
 (setq request-storage-directory (concat doom-etc-dir "request/")
-      ;; doom-theme 'doom-nord
+      doom-theme 'doom-nord
       projectile-ignored-projects '("~/"
                                     "/tmp"
                                     "/usr/local/Cellar/emacs-plus/HEAD-5c41444/share/emacs/27.0.50/lisp/net/"
@@ -409,7 +409,6 @@ symbol."
         :nmv "("   #'lispyville-backward-up-list
         :nmv ")"   #'lispyville-up-list))
 
-
 (def-package! parinfer
   ;; :hook (emacs-lisp-mode . parinfer-mode)
   :commands (parinfer-toggle-mode parinfer-mode)
@@ -514,6 +513,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
   )
 (after! python
   (set! :popup "^\\*anaconda-mode" nil '((select)))
+  (set! :popup "^\\*Python" '((side . right) (size . 60)) '((select) (quit) (transient)))
   (set! :popup "^\\*nosetests" '((size . 0.4)) '((select)))
   )
 (after! org-brain
@@ -524,7 +524,6 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
   (set! :popup "^\\*Org Src" '((size . 0.4) (side . right)) '((quit) (select . t)))
   (set! :popup "^\\*Org Agenda.*\\*$" '((slot . -1) (size . 120) (side . right)) '((select . t)))
   (defvaralias 'org-directory '+org-dir))
-;;; config/xfu/+bindings.el -*- lexical-binding: t; -*-
 
 ;; expand-region's prompt can't tell what key contract-region is bound to, so we
 ;; tell it explicitly.
@@ -1471,8 +1470,6 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
 
       (:after view
         (:map view-mode-map "<escape>" #'View-quit-all)))
-;;; config/xfu/+evil-commands.el -*- lexical-binding: t; -*-
-
 
 (defalias 'ex! 'evil-ex-define-cmd)
 

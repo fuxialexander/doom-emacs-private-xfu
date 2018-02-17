@@ -1,6 +1,4 @@
 ;; autoload/xfu.el -*- lexical-binding: t; -*-
-;;; Functions
-;;;; Jump
 ;;;###autoload
 (defun dwim-jump ()
   (interactive)
@@ -10,7 +8,6 @@
          (counsel-oi))
         (t (counsel-imenu))))
 
-;;;; Mac
 
 ;;;###autoload
 (defun mac-iTerm-shell-command (text)
