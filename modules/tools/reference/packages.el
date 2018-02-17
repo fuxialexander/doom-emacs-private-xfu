@@ -1,4 +1,4 @@
 ;; -*- no-byte-compile: t; -*-
-;;; private/reference/packages.el
+;;; tools/reference/packages.el
 
 (package! ivy-bibtex)

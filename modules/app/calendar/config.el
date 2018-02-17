@@ -1,4 +1,4 @@
-;;; private/calendar/config.el -*- lexical-binding: t; -*-
+;;; app/calendar/config.el -*- lexical-binding: t; -*-
 (defvar org-gcal-secret-file "~/Library/Mobile Documents/com~apple~CloudDocs/secret.el")
 (defvar +calendar-open-calendar-function '+calendar/open-calendar)
 (def-package! calfw

@@ -1,4 +1,4 @@
-;;; private/doom/config.el -*- lexical-binding: t; -*-
+;;; ui/doom/config.el -*- lexical-binding: t; -*-
 
 ;; <https://github.com/hlissner/emacs-doom-theme>
 (def-package! doom-themes :load-path "/Users/xfu/.doom.d/modules/ui/doom/local/emacs-doom-themes"

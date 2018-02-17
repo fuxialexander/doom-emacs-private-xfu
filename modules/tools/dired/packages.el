@@ -1,5 +1,5 @@
 ;; -*- no-byte-compile: t; -*-
-;;; private/dired/packages.el
+;;; tools/dired/packages.el
 
 (package! dired-quick-sort)
 (package! ivy-dired-history)
@@ -8,5 +8,4 @@
 (package! dired-subtree)
 (package! dired-narrow)
 (package! dired-sidebar)
-(package! all-the-icons-dired)
-
+(package! diredfl)

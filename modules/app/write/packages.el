@@ -1,5 +1,5 @@
 ;; -*- no-byte-compile: t; -*-
-;;; private/write/packages.el
+;;; app/write/packages.el
 
 (when (featurep! +langtool)
   (package! langtool))

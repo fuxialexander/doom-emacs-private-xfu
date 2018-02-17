@@ -1,4 +1,4 @@
-;;; private/write/config.el -*- lexical-binding: t; -*-
+;;; app/write/config.el -*- lexical-binding: t; -*-
 
 (when (featurep! +langtool)
   (defvar +langtool-default-lang "en-US"

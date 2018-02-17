@@ -49,8 +49,7 @@
       twittering-connection-type-order '(wget urllib-http native urllib-https)
       +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin)
 
-;; (after! solaire-mode
-;;       (add-hook 'doom-init-theme-hook #'solaire-mode-swap-bg t))
+
 (after! anzu
   (require 'loop)
   (defun anzu--where-is-here (positions here)
@@ -113,7 +112,7 @@ the workspace and move to the next."
                (funcall delete-window-fn))
               ((cdr (+workspace-list-names))
                (+workspace/delete current-persp-name)))))))
-(set-window-fringes (minibuffer-window) 0 0 nil)
+(add-hook 'minibuffer-setup-hook (lambda! (set-window-fringes (minibuffer-window) 0 0 nil)))
 (add-hook 'minibuffer-setup-hook #'smartparens-mode)
 
 
@@ -959,6 +958,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
           :desc "Attach file"         :n "f" #'mml-attach-file))
       (:after dired
         :map dired-mode-map
+        :n "RET" #'dired
         (:localleader
           :desc "wdired" :n "'" #'wdired-change-to-wdired-mode
           (:desc "regexp" :prefix "r"
@@ -1059,7 +1059,6 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         :n "y" #'dired-copy-filename-as-kill
         :n "Y" (lambda! (dired-copy-filename-as-kill 0))
         :n "+" #'dired-create-directory
-        :n "RET" #'dired-find-file
         :n "O" #'dired-open-mac
         :n "o" #'dired-preview-mac
         ;; hiding

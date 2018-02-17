@@ -1,4 +1,4 @@
-;;; private/dired/config.el -*- lexical-binding: t; -*-
+;;; tools/dired/config.el -*- lexical-binding: t; -*-
 
 (def-package! dired
   :defer t
@@ -22,9 +22,6 @@
       (let (buffer-read-only)
         (forward-line 2) ;; beyond dir. header
         (sort-regexp-fields t "^.*$" "[ ]*." (point) (point-max))))
-    (and (featurep 'xemacs)
-         (fboundp 'dired-insert-set-properties)
-         (dired-insert-set-properties (point-min) (point-max)))
     (set-buffer-modified-p nil))
   (add-hook 'dired-after-readin-hook #'+dired|sort-directories-first)
 
@@ -42,10 +39,7 @@
 (def-package! ivy-dired-history
   :after dired
   :init
-  (add-to-list 'savehist-additional-variables 'ivy-dired-history-variable)
-  :config
-  (map! :map dired-mode-map
-        :n "RET" #'dired))
+  (add-to-list 'savehist-additional-variables 'ivy-dired-history-variable))
 
 (def-package! dired-quick-sort
   :after dired
@@ -68,3 +62,5 @@
   (map! :map dired-mode-map
         :n "?" #'dired-narrow-regexp
         :n "/" #'dired-narrow-fuzzy))
+(def-package! diredfl
+  :hook (dired-mode . diredfl-mode))

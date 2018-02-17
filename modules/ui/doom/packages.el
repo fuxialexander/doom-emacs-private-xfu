@@ -1,5 +1,5 @@
 ;; -*- no-byte-compile: t; -*-
-;;; private/doom/packages.el
+;;; ui/doom/packages.el
 
 (package! solaire-mode)
 

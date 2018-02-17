@@ -1,5 +1,5 @@
 ;; -*- no-byte-compile: t; -*-
-;;; private/calendar/packages.el
+;;; app/calendar/packages.el
 
 
 (package! calfw)

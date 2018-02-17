@@ -1,4 +1,4 @@
-;;; private/email/config.el -*- lexical-binding: t; -*-
+;;; app/email/config.el -*- lexical-binding: t; -*-
 
 ;; ** Prodigy
 (def-package! prodigy
