@@ -10,5 +10,7 @@
   "send aynthing I want"
   (interactive)
   (cond ((string-equal (symbol-at-point) "def")
-         (python-shell-send-defun))
-        (t (python-shell-send-region (point-at-bol) (point-at-eol)))))
+         (python-shell-send-defun)
+         (python-nav-beginning-of-defun -1))
+        (t (python-shell-send-region (python-nav-beginning-of-statement) (python-nav-end-of-statement))
+           (python-nav-forward-statement))))
