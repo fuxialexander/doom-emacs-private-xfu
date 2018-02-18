@@ -233,6 +233,7 @@ Enable completion of info from magithub in the current buffer.
 
 (set! :company-backend '(emacs-lisp-mode) '(company-elisp company-files company-yasnippet company-dabbrev-code))
 (set! :company-backend '(python-mode) '(company-anaconda company-files company-yasnippet company-dabbrev-code))
+(set! :company-backend '(inferior-python-mode) 'company-files)
 (set! :company-backend '(org-mode) '(company-files company-yasnippet company-dabbrev))
 (set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point)
 
@@ -323,21 +324,7 @@ Enable completion of info from magithub in the current buffer.
       (set-face-background 'internal-border lsp-ui-doc-border frame)
       (run-hook-with-args 'lsp-ui-doc-frame-hook frame window)
       frame))
-  (defun lsp-ui-doc--move-frame (frame)
-    "Place our FRAME on screen."
-    (lsp-ui-doc--resize-buffer)
-    (-let* (((left top right _bottom) (window-edges nil nil nil t))
-            (window (frame-root-window frame))
-            ((width . height) (window-text-pixel-size window nil nil 10000 10000))
-            (width (+ width (* (frame-char-width frame) 2))) ;; margins
-            (frame-resize-pixelwise t)
-            (x-and-y (company-childframe-compute-pixel-position
-                      (- (point) 1)
-                      (frame-pixel-width frame)
-                      (frame-pixel-height frame))))
-      (set-window-margins window 1 1)
-      (set-frame-size frame width (min 300 height) t)
-      (set-frame-position frame (car x-and-y) (+ (cdr x-and-y) 1))))
+
   (defun my-fontify-mode (text mode)
     (with-temp-buffer
       (erase-buffer)
