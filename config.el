@@ -82,6 +82,7 @@
         (xwidget-webkit-goto-uri (xwidget-webkit-last-session) url))))
   (setq xwidget-webkit-enable-plugins t))
 (after! recentf
+  (add-to-list 'recentf-exclude 'file-remote-p)
   (add-to-list 'recentf-exclude ".*\\.gz")
   (add-to-list 'recentf-exclude ".*\\.gif")
   (add-to-list 'recentf-exclude ".*\\.svg")
@@ -297,6 +298,7 @@ Enable completion of info from magithub in the current buffer.
                   (line-spacing . 0.1)
                   (unsplittable . t)
                   (undecorated . t)
+                  (minibuffer . nil)
                   (visibility . nil)
                   (mouse-wheel-frame . nil)
                   (no-other-frame . t)
