@@ -26,8 +26,7 @@
              notmuch-show
              notmuch-show-mode
              notmuch-message-mode)
-  :init
-
+  :config
   (defun my-buffer-face-mode-notmuch-show ()
     "Sets a fixed width (monospace) font in current buffer"
     (interactive)
@@ -40,21 +39,19 @@
     (setq buffer-face-mode-face '(:family "SF Mono" :height 1.0))
     (buffer-face-mode)
     (setq-local line-spacing 0.2))
-
+  (set! :evil-state 'notmuch-hello-mode 'normal)
+  (set! :evil-state 'notmuch-show-mode 'normal)
+  (set! :evil-state 'notmuch-search-mode 'normal)
+  (set! :evil-state 'notmuch-tree-mode 'normal)
+  (set! :evil-state 'notmuch-message-mode 'normal)
   (add-hook 'notmuch-show-mode-hook 'my-buffer-face-mode-notmuch-show)
   (add-hook 'notmuch-tree-mode-hook 'my-buffer-face-mode-notmuch)
   (add-hook 'notmuch-search-mode-hook 'my-buffer-face-mode-notmuch)
   (add-hook 'notmuch-message-mode-hook 'my-buffer-face-mode-notmuch)
   (add-hook 'notmuch-message-mode-hook (lambda () (set (make-local-variable 'company-backends) '(notmuch-company (company-ispell :with company-yasnippet)))))
   (add-hook 'notmuch-tree-mode-hook (lambda () (setq-local line-spacing nil)))
-  :config
   (remove-hook 'message-mode-hook #'turn-on-auto-fill)
   (remove-hook 'notmuch-message-mode-hook #'turn-on-auto-fill)
-  (set! :evil-state 'notmuch-hello-mode 'normal)
-  (set! :evil-state 'notmuch-show-mode 'normal)
-  (set! :evil-state 'notmuch-search-mode 'normal)
-  (set! :evil-state 'notmuch-tree-mode 'normal)
-  (set! :evil-state 'notmuch-message-mode 'normal)
   (push 'notmuch-tree-mode evil-snipe-disabled-modes)
   (push 'notmuch-hello-mode evil-snipe-disabled-modes)
   (push 'notmuch-search-mode evil-snipe-disabled-modes)
