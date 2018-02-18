@@ -244,8 +244,22 @@ Enable completion of info from magithub in the current buffer.
   :init
   (add-hook 'sh-mode-hook #'electric-operator-mode)
   (add-hook 'python-mode-hook #'electric-operator-mode)
+  (add-hook 'inferior-python-mode-hook #'electric-operator-mode)
   (add-hook 'ess-mode-hook #'electric-operator-mode)
   :config
+  (apply #'electric-operator-add-rules-for-mode 'inferior-python-mode
+       electric-operator-prog-mode-rules)
+  (apply #'electric-operator-add-rules-for-mode 'sh-mode
+         electric-operator-prog-mode-rules)
+  (electric-operator-add-rules-for-mode 'inferior-python-mode
+                                        (cons "**" #'electric-operator-python-mode-**)
+                                        (cons "*" #'electric-operator-python-mode-*)
+                                        (cons ":" #'electric-operator-python-mode-:)
+                                        (cons "//" " // ") ; integer division
+                                        (cons "=" #'electric-operator-python-mode-kwargs-=)
+                                        (cons "-" #'electric-operator-python-mode-negative-slices)
+                                        (cons "->" " -> ") ; function return types
+                                        )
   (electric-operator-add-rules-for-mode 'sh-mode
                                         (cons "=" " = ")
                                         (cons "<=" " <= ")
