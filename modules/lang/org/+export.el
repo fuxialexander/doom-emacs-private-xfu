@@ -18,7 +18,7 @@
 ;;
 (defun +org|init-export ()
   (add-transient-hook! #'org-export-dispatch (require 'ox-pandoc))
-  (add-transient-hook! #'org-export-dispatch (require 'ox-alex "~/.emacs.d/modules/local/ox-alex.el"))
+  (add-transient-hook! #'org-export-dispatch (require 'ox-alex "~/.doom.d/local/ox-alex.el"))
 
   (setq org-export-backends '(alex latex md)
         org-export-with-toc t
