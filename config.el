@@ -516,6 +516,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
 (after! python
   (set! :popup "^\\*anaconda-mode" nil '((select)))
   (set! :popup "^\\*Python" '((side . right) (size . 80)) '((select) (quit) (transient)))
+  (set! :popup "^\\*Anaconda\\*" '((side . right) (size . 80)) '((select) (quit . t) (transient . t)))
   (set! :popup "^\\*nosetests" '((size . 0.4)) '((select)))
   )
 (after! org-brain

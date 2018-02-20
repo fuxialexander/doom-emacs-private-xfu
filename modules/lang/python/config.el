@@ -116,7 +116,9 @@ is loaded.")
         :nv "h" #'anaconda-mode-show-doc
         :nv "a" #'anaconda-mode-find-assignments
         :nv "f" #'anaconda-mode-find-file
-        :nv "u" #'anaconda-mode-find-references))
+        :nv "u" #'anaconda-mode-find-references
+        :map anaconda-view-mode-map
+        :nv "q" #'quit-window))
 
 
 (def-package! pip-requirements
