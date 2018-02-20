@@ -3,13 +3,6 @@
 (defvar +org-dir (expand-file-name "~/Dropbox/org/")
   "The directory where org files are kept.")
 
-;; Ensure ELPA org is prioritized above built-in org.
-;; (when-let* ((path (locate-library "org" nil doom--package-load-path)))
-;;   (setq load-path (delete path load-path))
-;;   (push (file-name-directory path) load-path))
-
-
-
 ;; Sub-modules
 (if (featurep! +todo)   (load! +todo))
 (if (featurep! +attach)  (load! +attach))
@@ -26,7 +19,8 @@
 ;;
 
 (def-package! toc-org
-  :commands toc-org-enable)
+  :commands toc-org-enable
+  :config (setq toc-org-hrefify-default "org"))
 
 ;; (def-package! org-bullets
 ;;   :commands org-bullets-mode
@@ -221,6 +215,8 @@ unfold to point on startup."
   (map!
    (:after org
      :map org-mode-map
+     [remap doom/backward-to-bol-or-indent]          #'org-beginning-of-line
+     [remap doom/forward-to-last-non-comment-or-eol] #'org-end-of-line
      "RET" #'org-return-indent
      "M-o" #'org-open-at-point
      "M-i" #'org-insert-last-stored-link

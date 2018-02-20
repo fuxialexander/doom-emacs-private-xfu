@@ -1,4 +1,7 @@
 ;; ** ESS
+
+(eval-and-compile
+  (load "ess-autoloads" nil t))
 (setq ess-path (car (file-expand-wildcards "~/.emacs.d/.local/packages/elpa/ess*/lisp")))
 (def-package! ess-site :load-path ess-path
   :mode (("\\.sp\\'"           . S-mode)
@@ -31,8 +34,7 @@
          ("\\.[Jj][Mm][Dd]\\'" . ess-jags-mode))
   :commands (R stata julia SAS)
   :config
-  (setq ess-first-continued-statement-offset 2
-        ess-continued-statement-offset 0
+  (setq ess-offset-continued 'straight
         ess-expression-offset 2
         ess-nuke-trailing-whitespace-p t
         ess-default-style 'DEFAULT)
