@@ -8,10 +8,11 @@
        eval                   ; run code, run (also, repls)
        evil                   ; come to the dark side, we have cookies
        (lookup                ; helps you navigate your code and documentation
-        +devdocs              ; ...on devdocs.io online
-        +docsets)             ; ...or in Dash docsets locally
+        ;; +docsets
+        +devdocs)             ; ...or in Dash docsets locally
        snippets               ; my elves. They type so I don't have to
        spellcheck             ; tasing you for misspelling mispelling
+       file-templates
        version-control        ; remember, remember that commit in November
        workspaces             ; tab emulation, persistence & separate workspaces
 
@@ -20,6 +21,9 @@
        ivy                              ; a search engine for love and life
 
        :ui
+       evil-goggles
+       hl-todo
+       ;; nav-flash
        doom-dashboard                   ; a nifty splash screen for Emacs
        doom-modeline                    ; a snazzy Atom-inspired mode-line
        window-select                    ; visually switch windows
@@ -35,6 +39,7 @@
        neotree                      ; a project drawer, like NERDTree for vim
        rgb
        term                           ; terminals in Emacs
+       ;;reference
        upload                         ; map local to remote projects via ssh/ftp
 
        :lang
@@ -44,34 +49,13 @@
        ;; haskell ; a language that's lazier than I am
        javascript                     ; all(hope(abandon(ye(who(enter(here))))))
        ;; latex             ; writing papers in Emacs has never been so fun
-       ledger                           ; an accounting system in Emacs
+
+       ;; ledger                           ; an accounting system in Emacs
        markdown                         ; writing docs for people to ignore
        sh                               ; she sells (ba|z)sh shells on the C xor
-       web                              ; the tubes
+       ;; web                              ; the tubes
+       :config
+       private
+       )
 
-       :app
-
-       :private
-       (xfu
-        +bindings
-        +evil-commands)
-       doom
-       rss
-       latex
-       ess
-       reference
-       twitter
-       syntax-checker                ; tasing you for every semicolon you forget
-       email
-       write
-       calendar
-       python
-       (org
-        +attach
-        +todo
-        +babel
-        +latex
-        +capture
-        +export
-        +present))
 ```
