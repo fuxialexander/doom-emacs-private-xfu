@@ -797,7 +797,6 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
           )
 
 
-        ;; *** project
         (:desc "project" :prefix "p"
           :desc "Browse project"          :n  "." #'+xfu/browse-project
           :desc "Find file in project"    :n  "/" #'projectile-find-file
@@ -807,17 +806,18 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
           :desc "List project tasks"      :n  "t" #'+ivy/tasks
           :desc "Pop term in project"     :n  "o" #'+term/open-popup-in-project
           :desc "Invalidate cache"        :n  "x" #'projectile-invalidate-cache)
-        ;; *** quit
+
         :desc "Quit"                   :n "q" #'evil-save-and-quit
-        ;; *** remote
-        (:desc "remote" :prefix "r"
-          :desc "Upload local"           :n "u" #'+upload/local
-          :desc "Upload local (force)"   :n "U" (λ! (+upload/local t))
-          :desc "Download remote"        :n "d" #'+upload/remote-download
-          :desc "Diff local & remote"    :n "D" #'+upload/diff
-          :desc "Browse remote files"    :n "." #'+upload/browse
-          :desc "Detect remote changes"  :n ">" #'+upload/check-remote)
-        ;; *** snippets
+
+        (:when (featurep! :tools upload)
+          (:desc "remote" :prefix "r"
+            :desc "Upload local"           :n "u" #'ssh-deploy-upload-handler
+            :desc "Upload local (force)"   :n "U" #'ssh-deploy-upload-handler-forced
+            :desc "Download remote"        :n "d" #'ssh-deploy-download-handler
+            :desc "Diff local & remote"    :n "D" #'ssh-deploy-diff-handler
+            :desc "Browse remote files"    :n "." #'ssh-deploy-browse-remote-handler
+            :desc "Detect remote changes"  :n ">" #'ssh-deploy-remote-changes-handler))
+
         (:desc "snippets" :prefix "y"
           :desc "New snippet"            :n  "n" #'yas-new-snippet
           :desc "Insert snippet"         :nv "i" #'yas-insert-snippet
