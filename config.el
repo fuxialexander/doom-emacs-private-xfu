@@ -8,7 +8,7 @@
         ;; prompt for the key passphrase.
         epa-pinentry-mode 'loopback))
 (setq request-storage-directory (concat doom-etc-dir "request/")
-      doom-theme 'doom-nord
+      doom-theme 'doom-solarized-light
       projectile-ignored-projects '("~/"
                                     "/tmp"
                                     "/usr/local/Cellar/emacs-plus/HEAD-5c41444/share/emacs/27.0.50/lisp/net/"
