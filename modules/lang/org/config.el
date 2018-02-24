@@ -391,6 +391,7 @@ unfold to point on startup."
         (or
          (string-equal (buffer-name) "cal.org")
          (string-equal default-directory "/Users/xfu/Source/playground/gatsby-orga/src/pages/")
+         (string-equal default-directory "/Users/xfu/Source/playground/fuxialexander.github.io/src/pages/")
          (string-equal (buffer-name) "cal_kevin.org"))
       (save-excursion
         (widen)

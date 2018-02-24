@@ -91,7 +91,7 @@
  indicate-empty-lines nil
  frame-alpha-lower-limit 0
  which-key-idle-delay 0.3
- +xfu-snippets-dir "~/.doom.d/modules/snippets"
+ +xfu-snippets-dir "~/.doom.d/snippets"
  org-ellipsis " + ")
 
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
