@@ -36,17 +36,23 @@
   :config
   (setq ess-offset-continued 'straight
         ess-expression-offset 2
+        ess-eval-visibly 'nowait
         ess-nuke-trailing-whitespace-p t
         ess-default-style 'DEFAULT)
   (ess-toggle-underscore t)
   (set! :repl 'ess-mode #'+r/repl)
+  (add-hook! 'inferior-ess-mode-hook
+    (smartparens-mode 1)
+    (setq-local comint-use-prompt-regexp nil)
+    (setq-local inhibit-field-text-motion nil))
+  (require 'smartparens-ess)
   (map!
    (:map ess-doc-map
      "h"             #'ess-display-help-on-object
      "p"             #'ess-R-dv-pprint
      "t"             #'ess-R-dv-ctable)
    (:map ess-mode-map
-     "<s-return>"    #'ess-eval-line
+     "<s-return>"    #'ess-eval-line-and-step
      "<up>"          #'comint-next-input
      "<down>"        #'comint-previous-input
      (:localleader
