@@ -253,7 +253,6 @@ Enable completion of info from magithub in the current buffer.
   (setq magit-repository-directories '("/Users/xfu/Source/"))
   (set! :evil-state 'magit-repolist-mode 'normal)
   (push 'magit-repolist-mode evil-snipe-disabled-modes)
-
   (map!
    (:map with-editor-mode-map
      (:localleader
@@ -264,10 +263,10 @@ Enable completion of info from magithub in the current buffer.
      :n "k" #'previous-line
      :n "s" #'magit-repolist-status ))
   (set! :popup "^.*magit" '((slot . -1) (side . right) (size . 80)) '((modeline . nil) (select . t)))
-  (set! :popup "^.*magit.*popup\\*" '((slot . 0) (side . right)) '((modeline . nil) (select . t)))
+  (set! :popup "^\\*magit.*popup\\*" '((slot . 0) (side . right)) '((modeline . nil) (select . t)))
+  (add-hook 'magit-popup-mode-hook #'hide-mode-line-mode)
   (set! :popup "^.*magit-revision:.*" '((slot . 2) (side . right) (window-height . 0.6)) '((modeline . nil) (select . t)))
-  (set! :popup "^.*magit-diff:.*" '((slot . 2) (side . right) (window-height . 0.6)) '((modeline . nil) (select . nil)))
-  (add-hook! 'magit-popup-mode-hook #'doom-hide-modeline-mode))
+  (set! :popup "^.*magit-diff:.*" '((slot . 2) (side . right) (window-height . 0.6)) '((modeline . nil) (select . nil))))
 
 (require 'company)
 (def-package! company-childframe
@@ -293,8 +292,8 @@ Enable completion of info from magithub in the current buffer.
 
 (set! :company-backend '(emacs-lisp-mode) '(company-elisp company-files company-yasnippet company-dabbrev-code))
 (set! :company-backend '(python-mode) '(company-anaconda company-files company-yasnippet company-dabbrev-code))
-(set! :company-backend '(inferior-python-mode) 'company-files)
-(set! :company-backend '(org-mode) '(company-files company-yasnippet company-dabbrev))
+(set! :company-backend '(inferior-python-mode) '(company-capf company-files))
+(set! :company-backend '(org-mode) '(company-capf company-files company-yasnippet company-dabbrev))
 (set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point)
 
 (def-package! emacs-snippets)
@@ -307,7 +306,7 @@ Enable completion of info from magithub in the current buffer.
   (add-hook 'ess-mode-hook #'electric-operator-mode)
   :config
   (apply #'electric-operator-add-rules-for-mode 'inferior-python-mode
-       electric-operator-prog-mode-rules)
+         electric-operator-prog-mode-rules)
   (apply #'electric-operator-add-rules-for-mode 'sh-mode
          electric-operator-prog-mode-rules)
   (electric-operator-add-rules-for-mode 'inferior-python-mode
@@ -448,6 +447,7 @@ symbol."
         :i [remap delete-backward-char] #'lispy-delete-backward))
 
 (def-package! lispyville
+  :after (evil)
   :hook (lispy-mode . lispyville-mode)
   :config
   (lispyville-set-key-theme
@@ -470,12 +470,13 @@ symbol."
         :nmv "("   #'lispyville-backward-up-list
         :nmv ")"   #'lispyville-up-list))
 
-(def-package! parinfer
-  ;; :hook (emacs-lisp-mode . parinfer-mode)
-  :commands (parinfer-toggle-mode parinfer-mode)
-  :init
-  (setq parinfer-extensions '(defaults lispy evil smart-yank)))
-
+;;
+;; (def-package! parinfer
+;;   ;; :hook (emacs-lisp-mode . parinfer-mode)
+;;   :commands (parinfer-toggle-mode parinfer-mode)
+;;   :init
+;;   (setq parinfer-extensions '(defaults lispy evil smart-yank)))
+;;
 (after! neotree
   (set! :popup "^ ?\\*NeoTree"
     `((side . ,neo-window-position) (window-width . ,neo-window-width))
@@ -562,11 +563,11 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
    'counsel-M-x
    `(("h" +ivy/helpful-function "Helpful"))))
 
-(defun doom/goto-main-window (pname frame)
+(defun +workspace/goto-main-window (pname frame)
   (let ((window (car (+my-doom-visible-windows))))
     (if (window-live-p window)
         (select-window window))))
-(add-hook 'persp-before-switch-functions 'doom/goto-main-window)
+(add-hook 'persp-before-switch-functions '+workspace/goto-main-window)
 (advice-remove #'load-theme #'+evil*init-cursors)
 (setq evil-default-cursor "#268bd2"
       evil-emacs-state-cursor  '("#b58900" box)
@@ -592,7 +593,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
 (after! org
   (set! :popup "^CAPTURE.*\\.org$" '((side . bottom) (size . 0.4)) '((select . t)))
   (set! :popup "^\\*Org Src" '((size . 0.4) (side . right)) '((quit) (select . t)))
-  (set! :popup "^\\*Org Agenda.*\\*$" '((slot . -1) (size . 120) (side . right)) '((select . t)))
+  (set! :popup "^\\*Org Agenda.*\\*$" '((slot . -1) (size . 120) (side . right)) '((select . t) (modeline . nil)))
   (defvaralias 'org-directory '+org-dir))
 
 ;; expand-region's prompt can't tell what key contract-region is bound to, so we
