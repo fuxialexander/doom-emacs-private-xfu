@@ -19,9 +19,7 @@
     (delq 'idle-change flycheck-check-syntax-automatically)))
 
 
-;; Long story short, `flycheck-popup-tip' works everywhere but only looks *ok*.
-;; `flycheck-pos-tip' looks great, but only in GUI Emacs on Linux. So we want:
-;;
-;; + GUI Emacs (Linux): pos-tip
-;; + GUI Emacs (MacOS): popup-tip
-;; + tty Emacs (anywhere): popup-tip
+(def-package! flycheck-posframe
+  :hook (flycheck-mode . flycheck-posframe-mode)
+  :config
+  (advice-add #'flycheck-posframe-format-errors :override #'my-flycheck-posframe-format-errors))
