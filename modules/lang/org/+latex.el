@@ -3,7 +3,12 @@
 
 (def-package! cdlatex
   :commands (org-cdlatex-mode
-             turn-on-org-cdlatex))
+             cdlatex-mode
+             turn-on-cdlatex
+             turn-on-org-cdlatex)
+  :init
+  (setq cdlatex-math-modify-alist '((?B "\\mathbb" nil t nil nil)))
+  )
 
 (defun +org|init-latex ()
   (if (string-match-p "NS" (emacs-version))
