@@ -168,37 +168,7 @@
 
 
 
-;;;; Key-binding
-  (map!
-   (:mode elfeed-search-mode
-     (:map elfeed-search-mode-map
-       [remap kill-this-buffer]      "q"
-       [remap kill-buffer]           "q"
 
-       :n "q"   #'+rss/quit
-       :n "e"   #'elfeed-update
-       :n "r"   #'elfeed-search-untag-all-unread
-       :n "u"   #'elfeed-search-tag-all-unread
-       :n "s"   #'elfeed-search-live-filter
-       :n "RET" #'elfeed-search-show-entry
-       :n "+"   #'elfeed-search-tag-all
-       :n "-"   #'elfeed-search-untag-all
-       :n "S"   #'elfeed-search-set-filter
-       :n "o"   #'elfeed-search-browse-url
-       :n "y"   #'elfeed-search-yank))
-   (:mode elfeed-show-mode
-     (:map elfeed-show-mode-map
-       [remap kill-this-buffer]      "q"
-       [remap kill-buffer]           "q"
-       :nm "q"   #'+rss/delete-pane
-       :nm "o"   #'ace-link-elfeed
-       :nm "RET" #'org-ref-add-bibtex-entry-from-elfeed-entry
-       :nm "n"   #'elfeed-show-next
-       :nm "p"   #'elfeed-show-prev
-       :nm "+"   #'elfeed-show-tag
-       :nm "-"   #'elfeed-show-untag
-       :nm "s"   #'elfeed-show-new-live-search
-       :nm "y" #'elfeed-show-yank)))
   (elfeed-org)
   (def-package! elfeed-link))
 

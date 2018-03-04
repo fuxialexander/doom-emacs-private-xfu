@@ -21,6 +21,7 @@
       ivy-rich-parse-remote-buffer nil
       ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-cd-selected
       visual-fill-column-center-text t
+      evil-escape-key-sequence nil
       line-spacing nil
       frame-resize-pixelwise t
       ;; outline-cycle-emulate-tab t
@@ -116,7 +117,65 @@ the workspace and move to the next."
 (add-hook 'minibuffer-setup-hook (lambda! (set-window-fringes (minibuffer-window) 0 0 nil)))
 (add-hook 'minibuffer-setup-hook #'smartparens-mode)
 
-
+(after! notmuch
+  (set! :evil-state 'notmuch-hello-mode 'normal)
+  (set! :evil-state 'notmuch-show-mode 'normal)
+  (set! :evil-state 'notmuch-search-mode 'normal)
+  (set! :evil-state 'notmuch-tree-mode 'normal)
+  (set! :evil-state 'notmuch-message-mode 'normal)
+  (add-hook 'notmuch-show-mode-hook 'my-buffer-face-mode-notmuch-show)
+  (add-hook 'notmuch-tree-mode-hook 'my-buffer-face-mode-notmuch)
+  (add-hook 'notmuch-search-mode-hook 'my-buffer-face-mode-notmuch)
+  (add-hook 'notmuch-message-mode-hook 'my-buffer-face-mode-notmuch)
+  (add-hook 'notmuch-message-mode-hook (lambda () (set (make-local-variable 'company-backends) '(notmuch-company (company-ispell :with company-yasnippet)))))
+  (add-hook 'notmuch-tree-mode-hook (lambda () (setq-local line-spacing nil)))
+  (remove-hook 'message-mode-hook #'turn-on-auto-fill)
+  (remove-hook 'notmuch-message-mode-hook #'turn-on-auto-fill)
+  (push 'notmuch-tree-mode evil-snipe-disabled-modes)
+  (push 'notmuch-hello-mode evil-snipe-disabled-modes)
+  (push 'notmuch-search-mode evil-snipe-disabled-modes)
+  (push 'notmuch-show-mode evil-snipe-disabled-modes))
+(after! twittering-mode
+  (set! :evil-state 'twittering-mode 'normal))
+(after! counsel-projectile
+  (ivy-add-actions
+   'counsel-projectile-switch-project
+   `(("f" counsel-projectile-switch-project-action-find-file
+      "jump to a project file")
+     ("d" counsel-projectile-switch-project-action-find-dir
+      "jump to a project directory")
+     ("b" counsel-projectile-switch-project-action-switch-to-buffer
+      "jump to a project buffer")
+     ("m" counsel-projectile-switch-project-action-find-file-manually
+      "find file manually from project root")
+     ("S" counsel-projectile-switch-project-action-save-all-buffers
+      "save all project buffers")
+     ("k" counsel-projectile-switch-project-action-kill-buffers
+      "kill all project buffers")
+     ("K" counsel-projectile-switch-project-action-remove-known-project
+      "remove project from known projects")
+     ("c" counsel-projectile-switch-project-action-compile
+      "run project compilation command")
+     ("C" counsel-projectile-switch-project-action-configure
+      "run project configure command")
+     ("E" counsel-projectile-switch-project-action-edit-dir-locals
+      "edit project dir-locals")
+     ("v" counsel-projectile-switch-project-action-vc
+      "open project in vc-dir / magit / monky")
+     ("sg" counsel-projectile-switch-project-action-grep
+      "search project with grep")
+     ("ss" counsel-projectile-switch-project-action-ag
+      "search project with ag")
+     ("sr" counsel-projectile-switch-project-action-rg
+      "search project with rg")
+     ("xs" counsel-projectile-switch-project-action-run-shell
+      "invoke shell from project root")
+     ("xe" counsel-projectile-switch-project-action-run-eshell
+      "invoke eshell from project root")
+     ("xt" counsel-projectile-switch-project-action-run-term
+      "invoke term from project root")
+     ("O" counsel-projectile-switch-project-action-org-capture
+      "org-capture into project"))))
 (after! yasnippet
   (push '+xfu-snippets-dir yas-snippet-dirs))
 
@@ -442,6 +501,14 @@ symbol."
   "Dim recentf entries that are not in the current project of the buffer you
 started `counsel-recentf' from. Also uses `abbreviate-file-name'."
   (abbreviate-file-name str))
+;; (after! ivy
+;;     (require 'ivy-posframe "~/.doom.d/local/ivy-posframe.el")
+;;     (setq-default ivy-display-function #'ivy-posframe-display))
+(after! org-agenda
+  (push 'org-agenda-mode evil-snipe-disabled-modes)
+  ;; (add-hook 'org-agenda-mode-hook #'(lambda () (evil-vimish-fold-mode -1)))
+  (add-hook 'org-agenda-finalize-hook #'hide-mode-line-mode)
+  (set! :evil-state 'org-agenda-mode 'normal))
 (after! counsel
   ;; reset fringe after change theme
   (advice-add #'counsel-load-theme :after #'solaire-mode-reset)
@@ -898,6 +965,171 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       (:after bibtex
         :map bibtex-mode-map
         "s-." #'org-ref-bibtex-hydra/body)
+      (:after org-agenda
+        (:map org-agenda-mode-map
+          :nm "C-k"      #'evil-window-up
+          :nm "C-j"      #'evil-window-down
+          :nm "C-h"      #'evil-window-left
+          :nm "C-l"      #'evil-window-right
+          :nm "<escape>" #'org-agenda-Quit
+          :nm "q" #'org-agenda-Quit
+
+          :nm "<C-up>"   #'org-clock-convenience-timestamp-up
+          :nm "<C-down>" #'org-clock-convenience-timestamp-down
+          :nm "s-o"      #'org-clock-convenience-fill-gap
+          :nm "s-e"      #'org-clock-convenience-fill-gap-both
+
+          :nm "\\"       #'ace-window
+          :nm "t"        #'org-agenda-todo
+          :nm "p"        #'org-set-property
+          :nm "r"        #'org-agenda-redo
+          :nm "e"        #'org-agenda-set-effort
+          :nm "h"        #'org-habit-toggle-habits
+          :nm "l"        #'org-agenda-log-mode
+          :nm "D"        #'org-agenda-toggle-diary
+          :nm "G"        #'org-agenda-toggle-time-grid
+          :nm ";"        #'counsel-org-tag-agenda
+          :nm "s-j"      #'counsel-org-goto-all
+
+          :nm "i"        #'org-agenda-clock-in
+          :nm "o"        #'org-agenda-clock-out
+
+          :nm "<tab>"        #'org-agenda-goto
+
+          :nm "J"        #'org-agenda-later
+          :nm "K"        #'org-agenda-earlier
+
+          :nm "C"        #'org-agenda-capture
+          :nm "m"        #'org-agenda-bulk-mark
+          :nm "u"        #'org-agenda-bulk-unmark
+          :nm "U"        #'org-agenda-bulk-unmark-all
+
+          :nm "f"        #'+org@org-agenda-filter/body
+
+          :nm "-"        #'org-agenda-manipulate-query-subtract
+          :nm "="        #'org-agenda-manipulate-query-add
+          :nm "_"        #'org-agenda-manipulate-query-subtract-re
+          :nm "$"        #'org-agenda-manipulate-query-add-re
+
+          :nm "d"        #'org-agenda-deadline
+          :nm "s"        #'org-agenda-schedule
+
+          :nm "z"        #'org-agenda-view-mode-dispatch
+          :nm "S"        #'org-save-all-org-buffers))
+      (:after org-src
+        (:map org-src-mode-map
+          (:localleader
+            :desc "Finish" :n ","  #'org-edit-src-exit
+            :desc "Abort"  :n "k"  #'org-edit-src-abort
+            )))
+      (:after org-capture
+        (:map org-capture-mode-map
+          "C-c C-c" nil
+          "C-c C-k" nil
+          "C-c C-w" nil
+          (:localleader
+            :desc "Finish" :n "," #'org-capture-finalize
+            :desc "Refile" :n "r" #'org-capture-refile
+            :desc "Abort"  :n "k" #'org-capture-kill
+            )))
+      (:after elfeed-search
+        (:map elfeed-search-mode-map
+          [remap kill-this-buffer]      "q"
+          [remap kill-buffer]           "q"
+
+          :n "q"   #'+rss/quit
+          :n "e"   #'elfeed-update
+          :n "r"   #'elfeed-search-untag-all-unread
+          :n "u"   #'elfeed-search-tag-all-unread
+          :n "s"   #'elfeed-search-live-filter
+          :n "RET" #'elfeed-search-show-entry
+          :n "+"   #'elfeed-search-tag-all
+          :n "-"   #'elfeed-search-untag-all
+          :n "S"   #'elfeed-search-set-filter
+          :n "o"   #'elfeed-search-browse-url
+          :n "y"   #'elfeed-search-yank))
+      (:after elfeed-show
+        (:map elfeed-show-mode-map
+          [remap kill-this-buffer]      "q"
+          [remap kill-buffer]           "q"
+          :nm "q"   #'+rss/delete-pane
+          :nm "o"   #'ace-link-elfeed
+          :nm "RET" #'org-ref-add-bibtex-entry-from-elfeed-entry
+          :nm "n"   #'elfeed-show-next
+          :nm "p"   #'elfeed-show-prev
+          :nm "+"   #'elfeed-show-tag
+          :nm "-"   #'elfeed-show-untag
+          :nm "s"   #'elfeed-show-new-live-search
+          :nm "y" #'elfeed-show-yank))
+      (:after twittering-mode :map twittering-mode-map
+        [remap twittering-kill-buffer] #'+twitter/quit
+        :n "q" #'+twitter/quit-all
+        :n "f" #'twittering-visit-timeline
+        :n "e" #'+twitter/rerender-all
+        :n "o" #'ace-link-org
+        :n "." #'+twitter@panel/body
+        :n "h" #'evil-window-left
+        :n "l" #'evil-window-right
+        :n "j" #'twittering-goto-next-status
+        :n "k" #'twittering-goto-previous-status)
+      (:after org
+        :map org-mode-map
+        [remap doom/backward-to-bol-or-indent]          #'org-beginning-of-line
+        [remap doom/forward-to-last-non-comment-or-eol] #'org-end-of-line
+        "RET" #'org-return-indent
+        "M-o" #'org-open-at-point
+        "M-i" #'org-insert-last-stored-link
+        "M-I" #'org-insert-link
+        "s-p" #'org-ref-ivy-insert-cite-link
+        :n  "RET" #'+org/dwim-at-point
+        :n  [tab]     #'+org/toggle-fold
+        :n  "t"       #'org-todo
+        :n  "T"       #'org-insert-todo-heading-respect-content
+        :i  [tab]     #'+org/indent-or-next-field-or-yas-expand
+        :i  [S-tab]   #'+org/dedent-or-prev-field
+
+        ;; "C-c C-S-l" #'+org/remove-link
+        ;;                          :n "C-c C-i" #'org-toggle-inline-images
+        (:localleader
+          :desc "Schedule"          :n "s"                  #'org-schedule
+          :desc "Math"              :n "m"                  #'+org-toggle-math
+          :desc "Remove link"       :n "L"                  #'+org/remove-link
+          :desc "Deadline"          :n "d"                  #'org-deadline
+          :desc "C-c C-c"           :n doom-localleader-key #'org-ctrl-c-ctrl-c
+          :desc "Edit Special"      :n "'"                  #'org-edit-special
+          :desc "Effort"            :n "e"                  #'org-set-effort
+          :desc "TODO"              :n "t"                  #'org-todo
+          :desc "Export"            :n [tab]                #'org-export-dispatch
+          :desc "Clocking Effort"   :n "E"                  #'org-clock-modify-effort-estimate
+          :desc "Property"          :n "p"                  #'org-set-property
+          :desc "Clock-in"          :n "i"                  #'org-clock-in
+          :desc "Clock-out"         :n "o"                  #'org-clock-out
+          :desc "Narrow to Subtree" :n "n"                  #'org-narrow-to-subtree
+          :desc "Narrow to Element" :n "N"                  #'org-narrow-to-element
+          :desc "Widen"             :n "w"                  #'widen
+          :desc "Toggle heading"    :n "h"                  #'org-toggle-heading
+          :desc "Archive Subtree"   :n "A"                  #'org-archive-subtree
+          :desc "Toggle Archive"    :n "a"                  #'org-toggle-archive-tag
+          )
+
+        ;; :i  "RET" #'evil-org-return
+        :ni [s-return]   (λ! (+org/insert-item 'below))
+        :ni [C-s-return] (λ! (+org/insert-item 'above))
+
+        :m  "]]"  (λ! (org-forward-heading-same-level nil) (org-beginning-of-line))
+        :m  "[["  (λ! (org-backward-heading-same-level nil) (org-beginning-of-line))
+
+        ;; Fix code-folding keybindings
+        :n  "za"  #'+org/toggle-fold
+        :n  "zA"  #'org-shifttab
+        :n  "zc"  #'outline-hide-subtree
+        :n  "zC"  (λ! (outline-hide-sublevels 1))
+        :n  "zd"  (lambda (&optional arg) (interactive "p") (outline-hide-sublevels (or arg 3)))
+        :n  "zm"  (λ! (outline-hide-sublevels 1))
+        :n  "zo"  #'outline-show-subtree
+        :n  "zO"  #'outline-show-all
+        :n  "zr"  #'outline-show-all
+        )
       (:after notmuch
         (:map notmuch-show-mode-map
           :nmv "o"     #'ace-link-notmuch-show
@@ -1077,8 +1309,8 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       (:after wdired
         :map wdired-mode-map
         (:localleader
-         :desc "Finish" :n "," #'wdired-finish-edit
-         :desc "Abort"  :n "k" #'wdired-abort-changes))
+          :desc "Finish" :n "," #'wdired-finish-edit
+          :desc "Abort"  :n "k" #'wdired-abort-changes))
 
       ;; *** neotree
       (:after neotree

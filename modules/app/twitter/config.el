@@ -195,19 +195,6 @@
     (add-hook 'twittering-mode-hook #'solaire-mode))
 
 
-  (set! :evil-state 'twittering-mode 'normal)
-  (map! :map twittering-mode-map
-        [remap twittering-kill-buffer] #'+twitter/quit
-        :n "q" #'+twitter/quit-all
-        :n "f" #'twittering-visit-timeline
-        :n "e" #'+twitter/rerender-all
-        :n "o" #'ace-link-org
-        :n "." #'+twitter@panel/body
-        :n "h" #'evil-window-left
-        :n "l" #'evil-window-right
-        :n "j" #'twittering-goto-next-status
-        :n "k" #'twittering-goto-previous-status)
-
   (def-modeline! twitter
     (bar matches " %b " selection-info)
     ()))
