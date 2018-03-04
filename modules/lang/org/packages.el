@@ -16,14 +16,7 @@
   (package! org-download))
 
 (when (featurep! +babel)
-  (package! ob-go)
-  (package! ob-mongo)
-  (package! ob-redis)
-  (package! ob-restclient)
-  (package! ob-rust)
-  (package! ob-ipython)
-  (package! ob-sql-mode)
-  (package! ob-translate))
+  (package! ob-ipython))
 
 (when (featurep! +latex)
   (package! cdlatex))

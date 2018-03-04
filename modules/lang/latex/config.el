@@ -23,9 +23,9 @@
 (def-package! tex-site :load-path tex-path
   :mode ("\\.tex\\'" . TeX-latex-mode)
   :commands (latex-mode LaTeX-mode plain-tex-mode)
-  :init
-  (load "auctex.el" nil t t)
-  (load "auctex-autoloads.el" nil t t)
+  ;; :init
+  ;; (load "auctex.el" nil t t)
+  ;; (load "auctex-autoloads.el" nil t t)
   ;; Set some varibles to fontify common LaTeX commands.
   :config
   (set! :latex-bibtex-dir "~/Dropbox/org/reference/pdf")

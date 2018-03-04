@@ -76,7 +76,8 @@
 ;;; UI
  evil-respect-visual-line-mode t
  doom-font (font-spec :family "SF Mono" :size 12)
- doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 14)
+ doom-variable-pitch-font (font-spec :family "SF Compact Display" :width 'extra-condensed :weight 'normal :slant 'normal :registry "iso10646-1" )
+ ;; Font: #<font-spec nil nil SF Compact Display nil iso10646-1 nil normal extra-condensed nil nil nil nil ((:user-spec . SF Compact Display))>
  doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 12)
  doom-big-font (font-spec :family "SF Mono" :size 16)
  doom-line-numbers-style nil

@@ -2,7 +2,6 @@
 ;;; packages.el
 
 (package! emacs-snippets :recipe (:fetcher github :repo "hlissner/emacs-snippets" :files ("*")))
-;; (package! modern-light-theme :recipe (:fetcher github :repo "fuxialexander/modern-light-theme" :files ("*")))
 (package! prettify-utils :recipe (:fetcher github :repo "Ilazki/prettify-utils.el" :files ("*")))
 (package! pinentry)
 (package! helpful)
@@ -22,7 +21,7 @@
 (package! orgit)
 (package! evil-magit)
 (package! magithub)
-(package! evil-string-inflection)
+;; (package! evil-string-inflection)
 (package! electric-operator)
 (package! lsp-mode)
 (package! company-lsp)

@@ -1,7 +1,7 @@
 ;; ** ESS
 
-(eval-and-compile
-  (load "ess-autoloads" nil t))
+;; (eval-and-compile
+;;   (load "ess-autoloads" nil t))
 (setq ess-path (car (file-expand-wildcards "~/.emacs.d/.local/packages/elpa/ess*/lisp")))
 (def-package! ess-site :load-path ess-path
   :mode (("\\.sp\\'"           . S-mode)

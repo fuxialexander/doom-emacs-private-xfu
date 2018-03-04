@@ -61,10 +61,6 @@
   (defface org-todo-keyword-wait '((t ())) "org-wait" :group 'org)
   (defface org-todo-keyword-done '((t ())) "org-done" :group 'org)
   (defface org-todo-keyword-habt '((t ())) "org-habt" :group 'org)
-  (push 'org-agenda-mode evil-snipe-disabled-modes)
-  (add-hook 'org-agenda-finalize-hook #'doom-hide-modeline-mode)
-  ;; (add-hook! 'org-agenda-finalize-hook (org-wild-notifier-mode 1))
-  (set! :evil-state 'org-agenda-mode 'normal)
 
   (setq org-agenda-block-separator ""
         org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 3 :fileskip0 t :stepskip0 t :tags "-COMMENT"))
@@ -146,8 +142,9 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
 
 
 (after! org-agenda
-    (org-super-agenda-mode)
-    (defun org-agenda-align-tags (&optional line)
+  (org-super-agenda-mode)
+
+  (defun org-agenda-align-tags (&optional line)
     "Align all tags in agenda items to `org-agenda-tags-column'."
     (let ((inhibit-read-only t)
           (org-agenda-tags-column (if (eq 'auto org-agenda-tags-column)
@@ -173,15 +170,15 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
           (delete-region (match-beginning 1) (match-end 1))
           (goto-char (match-beginning 1))
           (insert (org-add-props
-		              (make-string (max 1 (- c (current-column))) ?\ )
-		              (plist-put (copy-sequence (text-properties-at (point)))
-			                     'face nil))))
+                      (make-string (max 1 (- c (current-column))) ?\ )
+                      (plist-put (copy-sequence (text-properties-at (point)))
+                                 'face nil))))
         (goto-char (point-min))
         (org-font-lock-add-tag-faces (point-max)))))
-    (defun start-org-wild-notifier ()
-      (if (bound-and-true-p org-wild-notifier-mode)
-          (message "You already have notifier with you!")
+  (defun start-org-wild-notifier ()
+    (if (bound-and-true-p org-wild-notifier-mode)
+        (message "You already have notifier with you!")
       (run-with-timer 60 nil 'org-wild-notifier-mode 1)
       (message "Org wild notifier, naughty naughty fire!")))
-    (start-org-wild-notifier)
-    )
+  (start-org-wild-notifier)
+  )

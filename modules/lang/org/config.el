@@ -31,7 +31,7 @@
   :after org
   :init
   (setq org-brain-path "~/Dropbox/org")
-  (push 'org-agenda-mode evil-snipe-disabled-modes)
+  (push 'org-brain-visualize-mode evil-snipe-disabled-modes)
   ;; (add-hook 'org-agenda-mode-hook #'(lambda () (evil-vimish-fold-mode -1)))
   (set! :evil-state 'org-brain-visualize-mode 'normal)
   :config
@@ -96,7 +96,7 @@ If run interactively, get ENTRY from context."
 ;;
 (add-hook! 'org-load-hook
   #'(+org|setup-ui
-     +org|setup-keybinds
+     ;; +org|setup-keybinds
      +org|setup-hacks
      +org|setup-overrides))
 

@@ -84,8 +84,8 @@ name of the sub-editing buffer."
       (apply orig-fn args)))
   (advice-add #'org-babel-execute-src-block :around #'+org*babel-execute-src-block)
 
-  ;; I prefer C-c C-c for confirming over the default C-c '
-  (map! :map org-src-mode-map "C-c C-c" #'org-edit-src-exit)
+  ;; ;; I prefer C-c C-c for confirming over the default C-c '
+  ;; (map! :map org-src-mode-map "C-c C-c" #'org-edit-src-exit)
 
   ;; In a recent update, `org-babel-get-header' was removed from org-mode, which
   ;; is something a fair number of babel plugins use. So until those plugins
