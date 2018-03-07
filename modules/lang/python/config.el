@@ -25,6 +25,7 @@ is loaded.")
   (add-hook! 'python-mode-hook #'(highlight-numbers-mode))
   (set! :repl 'python-mode #'+python/repl)
   (set! :electric 'python-mode :chars '(?:))
+  (set! :popup "^\\*Python" '((side . right) (size . 80)) '((select) (quit) (transient)))
   (map! (:map python-mode-map
           (:localleader
             :desc "Conda Enable" :n "c" #'conda-env-activate-for-buffer
@@ -89,6 +90,9 @@ is loaded.")
   :config
   (add-hook 'anaconda-mode-hook #'anaconda-eldoc-mode)
 
+  (set! :popup "^\\*anaconda-mode" nil '((select)))
+  (set! :popup "^\\*Anaconda\\*" '((side . right) (size . 80)) '((select) (quit . t) (transient . t)))
+
   (set! :lookup 'python-mode
     :definition #'anaconda-mode-find-definitions
     :references #'anaconda-mode-find-references
@@ -148,6 +152,7 @@ is loaded.")
   (associate! nose-mode :match "/test_.+\\.py$" :modes (python-mode))
   :config
 
+  (set! :popup "^\\*nosetests" '((size . 0.4)) '((select)))
   (set! :yas-minor-mode 'nose-mode)
   (map! :map nose-mode-map
         :localleader

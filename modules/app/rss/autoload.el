@@ -30,7 +30,7 @@
     (setq-local shr-width 85)
     (setq-local line-spacing 0.3)
     (setq-local shr-current-font '(:family "charter" :height 1.2))
-  (set-buffer-modified-p nil))
+    (set-buffer-modified-p nil))
   (visual-fill-column-mode))
 
 ;;;###autoload
@@ -113,4 +113,147 @@
 ;;       (message "Sent to bookends: %s" link)
 ;;       (elfeed-send-to-bookend link))))
 
+;;;###autoload
+(defun +rss/elfeed-search-print-entry (entry)
+  "Print ENTRY to the buffer."
+  (let* ((elfeed-goodies/wide-threshold 0.5)
+         (elfeed-goodies/tag-column-width 40)
+         (elfeed-goodies/feed-source-column-width 30)
+         (title (or (elfeed-meta entry :title) (elfeed-entry-title entry) ""))
+         (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
+         (feed (elfeed-entry-feed entry))
+         (feed-title
+          (when feed
+            (or (elfeed-meta feed :title) (elfeed-feed-title feed))))
+         (tags (mapcar #'symbol-name (elfeed-entry-tags entry)))
+         (tags-str (concat (mapconcat 'identity tags ",")))
+         (title-width (- (window-width) elfeed-goodies/feed-source-column-width
+                         elfeed-goodies/tag-column-width 4))
+
+         (tag-column (elfeed-format-column
+                      tags-str (elfeed-clamp (length tags-str)
+                                             elfeed-goodies/tag-column-width
+                                             elfeed-goodies/tag-column-width)
+                      :left))
+         (feed-column (elfeed-format-column
+                       feed-title (elfeed-clamp elfeed-goodies/feed-source-column-width
+                                                elfeed-goodies/feed-source-column-width
+                                                elfeed-goodies/feed-source-column-width)
+                       :left)))
+
+    (if (>= (window-width) (* (frame-width) elfeed-goodies/wide-threshold))
+        (progn
+          (insert (propertize feed-column 'face 'elfeed-search-feed-face) " ")
+          (insert (propertize tag-column 'face 'elfeed-search-tag-face) " ")
+          (insert (propertize title 'face title-faces 'kbd-help title)))
+      (insert (propertize title 'face title-faces 'kbd-help title)))))
+
+;;;###autoload
+(defun +rss/elfeed-search--header-1 ()
+  "Computes the string to be used as the Elfeed header."
+  (cond
+   ((zerop (elfeed-db-last-update))
+    (elfeed-search--intro-header))
+   ((> (elfeed-queue-count-total) 0)
+    (let ((total (elfeed-queue-count-total))
+          (in-process (elfeed-queue-count-active)))
+      (format "%d feeds pending, %d in process"
+              (- total in-process) in-process)))
+   ((let* ((db-time (seconds-to-time (elfeed-db-last-update)))
+           (update (format-time-string "%Y-%m-%d %H:%M" db-time))
+           (unread (elfeed-search--count-unread)))
+      (format "Updated %s, %s%s"
+              (propertize update 'face 'elfeed-search-last-update-face)
+              (propertize unread 'face 'elfeed-search-unread-count-face)
+              (cond
+               (elfeed-search-filter-active "")
+               ((string-match-p "[^ ]" elfeed-search-filter)
+                (concat ", " (propertize elfeed-search-filter
+                                         'face 'elfeed-search-filter-face)))
+               ("")))))))
+
+;;;###autoload
+(defun +rss/elfeed-search-adjust-show-entry (entry)
+  "Display the currently selected item in a buffer."
+  (interactive (list (elfeed-search-selected :ignore-region)))
+  (require 'elfeed-show)
+  (when (elfeed-entry-p entry)
+    (elfeed-untag entry 'unread)
+    (elfeed-search-update-entry entry)
+    (+rss/elfeed-adjust-show-entry entry)))
+
+;;;###autoload
+(defun +rss/elfeed-show-next ()
+  "Show the next item in the elfeed-search buffer."
+  (interactive)
+  (quit-window)
+  (with-current-buffer (elfeed-search-buffer)
+    (forward-line)
+    (call-interactively #'+rss/elfeed-search-adjust-show-entry)))
+
+;;;###autoload
+(defun +rss/elfeed-show-prev ()
+  "Show the previous item in the elfeed-search buffer."
+  (interactive)
+  (quit-window)
+  (with-current-buffer (elfeed-search-buffer)
+    (forward-line -1)
+    (call-interactively #'+rss/elfeed-search-adjust-show-entry)))
+
+
+;;;###autoload
+(defun +rss/elfeed-show-entry (entry)
+  "Display ENTRY in the current buffer."
+  (let ((buff (get-buffer-create "*elfeed-entry*")))
+    (+rss-popup-pane buff)
+    (with-current-buffer buff
+      (elfeed-show-mode)
+      (setq elfeed-show-entry entry)
+      (elfeed-show-refresh))))
+
+;;;###autoload
+(defun +rss/elfeed-adjust-show-entry (entry)
+  "Display ENTRY in the current buffer."
+  (let ((buff (get-buffer-create "*elfeed-entry*")))
+    (+rss-popup-pane buff)
+    (with-current-buffer buff
+      (elfeed-show-mode)
+      (setq elfeed-show-entry entry)
+      (elfeed-show-refresh))))
+
+
+(require 'avy)
+
+;;;###autoload
+(defun ace-link--elfeed-collect ()
+  "Collect the positions of visible links in `elfeed' buffer."
+  (let (candidates pt)
+    (save-excursion
+      (save-restriction
+        (narrow-to-region
+         (window-start)
+         (window-end))
+        (goto-char (point-min))
+        (setq pt (point))
+        (while (progn (shr-next-link)
+                      (> (point) pt))
+          (setq pt (point))
+          (when (plist-get (text-properties-at (point)) 'shr-url)
+            (push (point) candidates)))
+        (nreverse candidates)))))
+
+;;;###autoload
+(defun ace-link--elfeed-action  (pt)
+  (goto-char pt)
+  (shr-browse-url))
+
+;;;###autoload
+(defun ace-link-elfeed ()
+  "Open a visible link in `elfeed' buffer."
+  (interactive)
+  (let ((pt (avy-with ace-link-elfeed
+              (avy--process
+               (ace-link--elfeed-collect)
+               #'avy--overlay-pre))))
+    (ace-link--elfeed-action pt)))
 

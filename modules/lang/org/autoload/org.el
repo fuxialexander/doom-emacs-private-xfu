@@ -50,7 +50,8 @@ If on a:
 - checkbox list item or todo heading: toggle it.
 - clock: update its time.
 - headline: toggle latex fragments and inline images underneath.
-- footnote definition: jump to the footnote
+- footnote reference: jump to the footnote's definition
+- footnote definition: jump to the first reference of this footnote
 - table-row or a TBLFM: recalculate the table's formulas
 - table-cell: clear it and go into insert mode. If this is a formula cell,
   recaluclate it instead.
@@ -85,9 +86,11 @@ If on a:
 
       (`clock (org-clock-update-time-maybe))
 
+      (`footnote-reference
+       (org-footnote-goto-definition (org-element-property :label context)))
+
       (`footnote-definition
-       (goto-char (org-element-property :post-affiliated context))
-       (call-interactively #'org-footnote-action))
+       (org-footnote-goto-previous-reference (org-element-property :label context)))
 
       ((or `planning `timestamp)
        (org-follow-timestamp-link))
@@ -127,6 +130,7 @@ If on a:
 
       (_ (+org/refresh-inline-images)))
     (set-window-start nil scroll-pt)))
+
 
 ;;;###autoload
 (defun +org/indent ()

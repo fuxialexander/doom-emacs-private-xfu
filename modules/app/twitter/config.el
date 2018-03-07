@@ -141,6 +141,18 @@
           "(#orgmode+#emacs)"
           "$research"))
 
+  (map! (:after twittering-mode
+          :map twittering-mode-map
+          [remap twittering-kill-buffer] #'+twitter/quit
+          :n "q" #'+twitter/quit-all
+          :n "f" #'twittering-visit-timeline
+          :n "e" #'+twitter/rerender-all
+          :n "o" #'ace-link-org
+          :n "." #'+twitter@panel/body
+          :n "h" #'evil-window-left
+          :n "l" #'evil-window-right
+          :n "j" #'twittering-goto-next-status
+          :n "k" #'twittering-goto-previous-status))
   (def-hydra! +twitter@panel (:color pink :hint nil)
     "
  Tweets^^^^^^                                   User^^^^                Other^^
@@ -188,8 +200,10 @@
           mode-line-format nil))
 
   (add-hook 'doom-real-buffer-functions #'+twitter-buffer-p)
+
   (when (featurep! :feature popup)
-    (setq twittering-pop-to-buffer-function #'+twitter-display-buffer))
+    (setq twittering-pop-to-buffer-function #'+twitter-display-buffer)
+    (set! :popup "^\\*twittering-edit" nil '((transient) (quit) (select . t) (modeline . minimal))))
 
   (after! solaire-mode
     (add-hook 'twittering-mode-hook #'solaire-mode))

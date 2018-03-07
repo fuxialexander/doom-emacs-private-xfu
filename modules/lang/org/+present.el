@@ -43,6 +43,5 @@
 ;; Bootstrap
 ;;
 (defun +org|init-present ()
-  (require 'ox-reveal)
-  (map! :map org-mode-map "<f8>" #'+org-present/start))
+  (require 'ox-reveal))
 

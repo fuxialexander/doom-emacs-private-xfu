@@ -82,6 +82,8 @@
     ;; Adding useful things for latex
     (add-hook! LaTeX-mode (LaTeX-math-mode) (TeX-source-correlate-mode)(TeX-global-PDF-mode t)
                           (TeX-PDF-mode t) (visual-line-mode +1))
+
+    (set! :popup " output\\*$" '((size . 15)) '((modeline . nil)))
     (when (featurep! :feature spellcheck)
       (add-hook! LaTeX-mode (flyspell-mode t)))
     ;; Default language setting.
