@@ -82,18 +82,13 @@
         (xwidget-webkit-mode)
         (xwidget-webkit-goto-uri (xwidget-webkit-last-session) url))))
   (setq xwidget-webkit-enable-plugins t))
+
 (after! recentf
   (add-to-list 'recentf-exclude 'file-remote-p)
   (add-to-list 'recentf-exclude ".*\\.gz")
   (add-to-list 'recentf-exclude ".*\\.gif")
   (add-to-list 'recentf-exclude ".*\\.svg")
   (add-to-list 'recentf-exclude ".*Cellar.*"))
-(after! dired
-  (push 'dired-mode evil-snipe-disabled-modes)
-  (setq dired-dwim-target t
-        dired-listing-switches "-alh")
-
-  (set! :evil-state 'dired-mode 'normal))
 
 (defun +my-doom-visible-windows (&optional window-list)
   "Return a list of the visible, non-popup windows."
@@ -117,24 +112,6 @@ the workspace and move to the next."
 (add-hook 'minibuffer-setup-hook (lambda! (set-window-fringes (minibuffer-window) 0 0 nil)))
 (add-hook 'minibuffer-setup-hook #'smartparens-mode)
 
-(after! notmuch
-  (set! :evil-state 'notmuch-hello-mode 'normal)
-  (set! :evil-state 'notmuch-show-mode 'normal)
-  (set! :evil-state 'notmuch-search-mode 'normal)
-  (set! :evil-state 'notmuch-tree-mode 'normal)
-  (set! :evil-state 'notmuch-message-mode 'normal)
-  (add-hook 'notmuch-show-mode-hook 'my-buffer-face-mode-notmuch-show)
-  (add-hook 'notmuch-tree-mode-hook 'my-buffer-face-mode-notmuch)
-  (add-hook 'notmuch-search-mode-hook 'my-buffer-face-mode-notmuch)
-  (add-hook 'notmuch-message-mode-hook 'my-buffer-face-mode-notmuch)
-  (add-hook 'notmuch-message-mode-hook (lambda () (set (make-local-variable 'company-backends) '(notmuch-company (company-ispell :with company-yasnippet)))))
-  (add-hook 'notmuch-tree-mode-hook (lambda () (setq-local line-spacing nil)))
-  (remove-hook 'message-mode-hook #'turn-on-auto-fill)
-  (remove-hook 'notmuch-message-mode-hook #'turn-on-auto-fill)
-  (push 'notmuch-tree-mode evil-snipe-disabled-modes)
-  (push 'notmuch-hello-mode evil-snipe-disabled-modes)
-  (push 'notmuch-search-mode evil-snipe-disabled-modes)
-  (push 'notmuch-show-mode evil-snipe-disabled-modes))
 (after! twittering-mode
   (set! :evil-state 'twittering-mode 'normal))
 (after! counsel-projectile
@@ -505,7 +482,15 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
 ;; (after! ivy
 ;;     (require 'ivy-posframe "~/.doom.d/local/ivy-posframe.el")
 ;;     (setq-default ivy-display-function #'ivy-posframe-display))
+(after! org-src
+  (set! :popup "^\\*Org Src" '((size . 0.4) (side . right)) '((quit) (select . t)))
+  )
+(after! org-capture
+  (set! :popup "^CAPTURE.*\\.org$" '((side . bottom) (size . 0.4)) '((select . t)))
+  )
 (after! org-agenda
+  (set! :popup "^\\*Org Agenda.*\\*$" '((slot . -1) (size . 120) (side . right)) '((select . t) (modeline . nil)))
+
   (push 'org-agenda-mode evil-snipe-disabled-modes)
   ;; (add-hook 'org-agenda-mode-hook #'(lambda () (evil-vimish-fold-mode -1)))
   (add-hook 'org-agenda-finalize-hook #'hide-mode-line-mode)
@@ -575,26 +560,6 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       evil-normal-state-cursor 'hbar
       evil-visual-state-cursor 'hbar)
 
-(after! twittering-mode
-  (set! :popup "^\\*twittering-edit" nil '((transient) (quit) (select . t) (modeline . minimal)))
-  )
-(after! latex
-  (set! :popup " output\\*$" '((size . 15)))
-  )
-(after! python
-  (set! :popup "^\\*anaconda-mode" nil '((select)))
-  (set! :popup "^\\*Python" '((side . right) (size . 80)) '((select) (quit) (transient)))
-  (set! :popup "^\\*Anaconda\\*" '((side . right) (size . 80)) '((select) (quit . t) (transient . t)))
-  (set! :popup "^\\*nosetests" '((size . 0.4)) '((select)))
-  )
-(after! org-brain
-  (set! :popup "^\\*org-brain\\*$" '((vslot . -1) (size . 0.3) (side . left)) '((select . t) (quit) (transient)))
-  )
-(after! org
-  (set! :popup "^CAPTURE.*\\.org$" '((side . bottom) (size . 0.4)) '((select . t)))
-  (set! :popup "^\\*Org Src" '((size . 0.4) (side . right)) '((quit) (select . t)))
-  (set! :popup "^\\*Org Agenda.*\\*$" '((slot . -1) (size . 120) (side . right)) '((select . t) (modeline . nil)))
-  (defvaralias 'org-directory '+org-dir))
 
 ;; expand-region's prompt can't tell what key contract-region is bound to, so we
 ;; tell it explicitly.
@@ -966,352 +931,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       (:after bibtex
         :map bibtex-mode-map
         "s-." #'org-ref-bibtex-hydra/body)
-      (:after org-agenda
-        (:map org-agenda-mode-map
-          :nm "C-k"      #'evil-window-up
-          :nm "C-j"      #'evil-window-down
-          :nm "C-h"      #'evil-window-left
-          :nm "C-l"      #'evil-window-right
-          :nm "<escape>" #'org-agenda-Quit
-          :nm "q" #'org-agenda-Quit
 
-          :nm "<C-up>"   #'org-clock-convenience-timestamp-up
-          :nm "<C-down>" #'org-clock-convenience-timestamp-down
-          :nm "s-o"      #'org-clock-convenience-fill-gap
-          :nm "s-e"      #'org-clock-convenience-fill-gap-both
-
-          :nm "\\"       #'ace-window
-          :nm "t"        #'org-agenda-todo
-          :nm "p"        #'org-set-property
-          :nm "r"        #'org-agenda-redo
-          :nm "e"        #'org-agenda-set-effort
-          :nm "h"        #'org-habit-toggle-habits
-          :nm "l"        #'org-agenda-log-mode
-          :nm "D"        #'org-agenda-toggle-diary
-          :nm "G"        #'org-agenda-toggle-time-grid
-          :nm ";"        #'counsel-org-tag-agenda
-          :nm "s-j"      #'counsel-org-goto-all
-
-          :nm "i"        #'org-agenda-clock-in
-          :nm "o"        #'org-agenda-clock-out
-
-          :nm "<tab>"        #'org-agenda-goto
-
-          :nm "J"        #'org-agenda-later
-          :nm "K"        #'org-agenda-earlier
-
-          :nm "C"        #'org-agenda-capture
-          :nm "m"        #'org-agenda-bulk-mark
-          :nm "u"        #'org-agenda-bulk-unmark
-          :nm "U"        #'org-agenda-bulk-unmark-all
-
-          :nm "f"        #'+org@org-agenda-filter/body
-
-          :nm "-"        #'org-agenda-manipulate-query-subtract
-          :nm "="        #'org-agenda-manipulate-query-add
-          :nm "_"        #'org-agenda-manipulate-query-subtract-re
-          :nm "$"        #'org-agenda-manipulate-query-add-re
-
-          :nm "d"        #'org-agenda-deadline
-          :nm "s"        #'org-agenda-schedule
-
-          :nm "z"        #'org-agenda-view-mode-dispatch
-          :nm "S"        #'org-save-all-org-buffers))
-      (:after org-src
-        (:map org-src-mode-map
-          (:localleader
-            :desc "Finish" :n ","  #'org-edit-src-exit
-            :desc "Abort"  :n "k"  #'org-edit-src-abort
-            )))
-      (:after org-capture
-        (:map org-capture-mode-map
-          "C-c C-c" nil
-          "C-c C-k" nil
-          "C-c C-w" nil
-          (:localleader
-            :desc "Finish" :n "," #'org-capture-finalize
-            :desc "Refile" :n "r" #'org-capture-refile
-            :desc "Abort"  :n "k" #'org-capture-kill
-            )))
-      (:after elfeed-search
-        (:map elfeed-search-mode-map
-          [remap kill-this-buffer]      "q"
-          [remap kill-buffer]           "q"
-
-          :n "q"   #'+rss/quit
-          :n "e"   #'elfeed-update
-          :n "r"   #'elfeed-search-untag-all-unread
-          :n "u"   #'elfeed-search-tag-all-unread
-          :n "s"   #'elfeed-search-live-filter
-          :n "RET" #'elfeed-search-show-entry
-          :n "+"   #'elfeed-search-tag-all
-          :n "-"   #'elfeed-search-untag-all
-          :n "S"   #'elfeed-search-set-filter
-          :n "o"   #'elfeed-search-browse-url
-          :n "y"   #'elfeed-search-yank))
-      (:after elfeed-show
-        (:map elfeed-show-mode-map
-          [remap kill-this-buffer]      "q"
-          [remap kill-buffer]           "q"
-          :nm "q"   #'+rss/delete-pane
-          :nm "o"   #'ace-link-elfeed
-          :nm "RET" #'org-ref-add-bibtex-entry-from-elfeed-entry
-          :nm "n"   #'elfeed-show-next
-          :nm "p"   #'elfeed-show-prev
-          :nm "+"   #'elfeed-show-tag
-          :nm "-"   #'elfeed-show-untag
-          :nm "s"   #'elfeed-show-new-live-search
-          :nm "y" #'elfeed-show-yank))
-      (:after twittering-mode :map twittering-mode-map
-        [remap twittering-kill-buffer] #'+twitter/quit
-        :n "q" #'+twitter/quit-all
-        :n "f" #'twittering-visit-timeline
-        :n "e" #'+twitter/rerender-all
-        :n "o" #'ace-link-org
-        :n "." #'+twitter@panel/body
-        :n "h" #'evil-window-left
-        :n "l" #'evil-window-right
-        :n "j" #'twittering-goto-next-status
-        :n "k" #'twittering-goto-previous-status)
-      (:after org
-        :map org-mode-map
-        [remap doom/backward-to-bol-or-indent]          #'org-beginning-of-line
-        [remap doom/forward-to-last-non-comment-or-eol] #'org-end-of-line
-        "RET" #'org-return-indent
-        "M-o" #'org-open-at-point
-        "M-i" #'org-insert-last-stored-link
-        "M-I" #'org-insert-link
-        "s-p" #'org-ref-ivy-insert-cite-link
-        :n  "RET" #'+org/dwim-at-point
-        :n  [tab]     #'+org/toggle-fold
-        :n  "t"       #'org-todo
-        :n  "T"       #'org-insert-todo-heading-respect-content
-        :i  [tab]     #'+org/indent-or-next-field-or-yas-expand
-        :i  [S-tab]   #'+org/dedent-or-prev-field
-
-        ;; "C-c C-S-l" #'+org/remove-link
-        ;;                          :n "C-c C-i" #'org-toggle-inline-images
-        (:localleader
-          :desc "Schedule"          :n "s"                  #'org-schedule
-          :desc "Math"              :n "m"                  #'+org-toggle-math
-          :desc "Remove link"       :n "L"                  #'+org/remove-link
-          :desc "Deadline"          :n "d"                  #'org-deadline
-          :desc "C-c C-c"           :n doom-localleader-key #'org-ctrl-c-ctrl-c
-          :desc "Edit Special"      :n "'"                  #'org-edit-special
-          :desc "Effort"            :n "e"                  #'org-set-effort
-          :desc "TODO"              :n "t"                  #'org-todo
-          :desc "Export"            :n [tab]                #'org-export-dispatch
-          :desc "Clocking Effort"   :n "E"                  #'org-clock-modify-effort-estimate
-          :desc "Property"          :n "p"                  #'org-set-property
-          :desc "Clock-in"          :n "i"                  #'org-clock-in
-          :desc "Clock-out"         :n "o"                  #'org-clock-out
-          :desc "Narrow to Subtree" :n "n"                  #'org-narrow-to-subtree
-          :desc "Narrow to Element" :n "N"                  #'org-narrow-to-element
-          :desc "Widen"             :n "w"                  #'widen
-          :desc "Toggle heading"    :n "h"                  #'org-toggle-heading
-          :desc "Archive Subtree"   :n "A"                  #'org-archive-subtree
-          :desc "Toggle Archive"    :n "a"                  #'org-toggle-archive-tag
-          )
-
-        ;; :i  "RET" #'evil-org-return
-        :ni [s-return]   (λ! (+org/insert-item 'below))
-        :ni [C-s-return] (λ! (+org/insert-item 'above))
-
-        :m  "]]"  (λ! (org-forward-heading-same-level nil) (org-beginning-of-line))
-        :m  "[["  (λ! (org-backward-heading-same-level nil) (org-beginning-of-line))
-
-        ;; Fix code-folding keybindings
-        :n  "za"  #'+org/toggle-fold
-        :n  "zA"  #'org-shifttab
-        :n  "zc"  #'outline-hide-subtree
-        :n  "zC"  (λ! (outline-hide-sublevels 1))
-        :n  "zd"  (lambda (&optional arg) (interactive "p") (outline-hide-sublevels (or arg 3)))
-        :n  "zm"  (λ! (outline-hide-sublevels 1))
-        :n  "zo"  #'outline-show-subtree
-        :n  "zO"  #'outline-show-all
-        :n  "zr"  #'outline-show-all
-        )
-      (:after notmuch
-        (:map notmuch-show-mode-map
-          :nmv "o"     #'ace-link-notmuch-show
-          :nmv "i"     #'open-message-with-mail-app-notmuch-show
-          :nmv "I"     #'notmuch-show-view-all-mime-parts
-          :nmv "q"     #'notmuch-bury-or-kill-this-buffer
-          :nmv "s"     #'counsel-notmuch
-          :nmv "t"     #'notmuch-tree-from-show-current-query
-          :nmv "s-n"   #'notmuch-mua-new-mail
-          :nmv "n"     #'notmuch-show-next-thread-show
-          :nmv "r"     #'notmuch-show-reply
-          :nmv "<tab>" #'notmuch-show-toggle-visibility-headers
-          :nmv "R"     #'notmuch-show-reply-sender
-          :nmv "p"   #'notmuch-show-previous-thread-show)
-        (:map notmuch-hello-mode-map
-          :nmv "o"   #'ace-link-notmuch-hello
-          :nmv "t"   #'notmuch-tree
-          :nmv "k"   #'widget-backward
-          :nmv "n"   #'notmuch-mua-new-mail
-          :nmv "s-n" #'notmuch-mua-new-mail
-          :nmv "j"   #'widget-forward
-          :nmv "s"   #'counsel-notmuch
-          :nmv "q"   #'+mail/quit
-          :nmv "e"   #'notmuch-update
-          :nmv "r"   #'notmuch-hello-update)
-        (:map notmuch-search-mode-map
-          :nmv "j"   #'notmuch-search-next-thread
-          :nmv "k"   #'notmuch-search-previous-thread
-          :nmv "t"   #'notmuch-tree-from-search-thread
-          :nmv "RET" #'notmuch-search-show-thread
-          :nmv "s-n" #'notmuch-mua-new-mail
-          :nmv "T"   #'notmuch-tree-from-search-current-query
-          :nmv ";"   #'notmuch-search-tag
-          :nmv "d"   #'notmuch-search-delete
-          :nmv "a"   #'notmuch-search-archive-thread
-          :nmv "q"   #'notmuch
-          :nmv "R"   #'notmuch-search-reply-to-thread-sender
-          :nmv "r"   #'notmuch-search-reply-to-thread
-          :nmv "s"   #'counsel-notmuch
-          :nmv "x"   #'notmuch-search-spam)
-        (:map notmuch-tree-mode-map
-          :nmv "j"   #'notmuch-tree-next-message
-          :nmv "k"   #'notmuch-tree-prev-message
-          :nmv "S"   #'notmuch-search-from-tree-current-query
-          :nmv "s"   #'counsel-notmuch
-          :nmv "t"   #'notmuch-tree
-          :nmv ";"   #'notmuch-tree-tag
-          :nmv "RET" #'notmuch-tree-show-message
-          :nmv "q"   #'notmuch-tree-quit
-          :nmv "s-n" #'notmuch-mua-new-mail
-          :nmv "r"   #'notmuch-search-reply-to-thread-sender
-          :nmv "a"   #'notmuch-tree-archive-message-then-next
-          :nmv "A"   #'notmuch-tree-archive-thread
-          :nmv "i"   #'open-message-with-mail-app-notmuch-tree
-          :nmv "d"   #'notmuch-tree-delete
-          :nmv "x"   #'notmuch-tree-spam)
-        (:map notmuch-message-mode-map
-          :localleader
-          :desc "Send and Exit"       :n doom-localleader-key #'notmuch-mua-send-and-exit
-          :desc "Kill Message Buffer" :n "k" #'notmuch-mua-kill-buffer
-          :desc "Save as Draft"       :n "s" #'message-dont-send
-          :desc "Attach file"         :n "f" #'mml-attach-file))
-      (:after dired
-        :map dired-mode-map
-        :n "RET" #'dired
-        (:localleader
-          :desc "wdired" :n "'" #'wdired-change-to-wdired-mode
-          (:desc "regexp" :prefix "r"
-            :n "u" #'dired-upcase
-            :n "l" #'dired-downcase
-            :n "d" #'dired-flag-files-regexp
-            :n "g" #'dired-mark-files-containing-regexp
-            :n "m" #'dired-mark-files-regexp
-            :n "r" #'dired-do-rename-regexp
-            :n "c" #'dired-do-copy-regexp
-            :n "h" #'dired-do-hardlink-regexp
-            :n "r" #'dired-do-rename-regexp
-            :n "s" #'dired-do-symlink-regexp
-            :n "&" #'dired-flag-garbage-files)
-          (:desc "mark" :prefix "m"
-            :n "e" #'dired-mark-executables
-            :n "d" #'dired-mark-directories
-            :n "l" #'dired-mark-symlinks
-            :n "r" #'dired-mark-files-regexp
-            :n "c" #'dired-change-marks
-            :n "s" #'dired-mark-subdir-files
-            :n "m" #'dired-mark
-            :n "u" #'dired-unmark
-            :n "af" #'dired-unmark-all-files
-            :n "am" #'dired-unmark-all-marks)
-          (:desc "do" :prefix "d"
-            :n "a" #'dired-do-find-regexp
-            :n "c" #'dired-do-copy
-            :n "b" #'dired-do-byte-compile
-            :n "d" #'dired-do-delete
-            :n "g" #'dired-do-chgrp ;; FIXME: This can probably live on a better binding.
-            :n "h" #'dired-do-hardlink
-            :n "l" #'dired-do-load
-            :n "m" #'dired-do-chmod
-            :n "o" #'dired-do-chown
-            :n "q" #'dired-do-find-regexp-and-replace
-            :n "r" #'dired-do-rename
-            :n "s" #'dired-do-symlink
-            :n "t" #'dired-do-touch
-            :n "x" #'dired-do-shell-command
-            :n "z" #'dired-do-compress
-            :n "Z" #'dired-do-compress-to
-            :n "!" #'dired-do-shell-command
-            :n "&" #'dired-do-async-shell-command)
-          (:desc "subtree" :prefix "i"
-            :n "i" #'dired-subtree-insert
-            :n "r" #'dired-subtree-remove
-            :n "j" #'dired-subtree-down
-            :n "k" #'dired-subtree-up
-            :n "n" #'dired-subtree-next-sibling
-            :n "p" #'dired-subtree-previous-sibling
-            :n "f" #'dired-subtree-apply-filter
-            :n "a" #'dired-subtree-narrow
-            :n "_" #'dired-subtree-beginning
-            :n "$" #'dired-subtree-end
-            :n "m" #'dired-subtree-mark-subtree
-            :n "m" #'dired-subtree-unmark-subtree
-            :n "f" #'dired-subtree-only-this-file
-            :n "d" #'dired-subtree-only-this-directory)
-          ;; encryption and decryption (epa-dired)
-          (:desc "crypt" :prefix "x"
-            :n "d" #'epa-dired-do-decrypt
-            :n "v" #'epa-dired-do-verify
-            :n "s" #'epa-dired-do-sign
-            :n "e" #'epa-dired-do-encrypt))
-        :n "q" #'quit-window
-        :n "v" #'evil-visual-char
-        :nv "j" #'dired-next-line
-        :nv "k" #'dired-previous-line
-        :n "H" #'dired-subtree-remove
-        :n "h" #'dired-up-directory
-        :n "l" #'dired-find-file
-        :n "L" #'dired-subtree-insert
-        :n "i" #'dired-subtree-insert
-        :n "#" #'dired-flag-auto-save-files
-        :n "." #'evil-repeat
-        :n "~" #'dired-flag-backup-files
-        ;; Comparison commands
-        :n "=" #'dired-diff
-        :n "|" #'dired-compare-directories
-        ;; move to marked files
-        :m "[m" #'dired-prev-marked-file
-        :m "]m" #'dired-next-marked-file
-        :m "[d" #'dired-prev-dirline
-        :m "]d" #'dired-next-dirline
-        ;; Lower keys for commands not operating on all the marked files
-        :desc "wdired" :n "w" #'wdired-change-to-wdired-mode
-        :n "a" #'dired-find-alternate-file
-        :nv "d" #'dired-flag-file-deletion
-        :n "K" #'dired-do-kill-lines
-        :n "r" #'dired-do-redisplay
-        :nv "m" #'dired-mark
-        :nv "t" #'dired-toggle-marks
-        :nv "u" #'dired-unmark                   ; also "*u"
-        :nv "p" #'dired-unmark-backward
-        ;; :n "W" #'browse-url-of-dired-file
-        :n "x" #'dired-do-flagged-delete
-        :n "y" #'dired-copy-filename-as-kill
-        :n "Y" (lambda! (dired-copy-filename-as-kill 0))
-        :n "+" #'dired-create-directory
-        :n "O" #'dired-open-mac
-        :n "o" #'dired-preview-mac
-        ;; hiding
-        :n "<tab>" #'dired-hide-subdir ;; FIXME: This can probably live on a better binding.
-        :n "<backtab>" #'dired-hide-all
-        :n "$" #'dired-hide-details-mode
-
-        ;; misc
-        :n "U" #'dired-undo
-        ;; subtree
-        )
-      (:after wdired
-        :map wdired-mode-map
-        (:localleader
-          :desc "Finish" :n "," #'wdired-finish-edit
-          :desc "Abort"  :n "k" #'wdired-abort-changes))
 
       ;; *** neotree
       (:after neotree
