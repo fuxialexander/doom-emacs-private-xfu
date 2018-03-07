@@ -52,7 +52,7 @@ inherited from `variable-pitch' and `default'."
             ;; remap default face to variable pitch
             (setq mixed-pitch-variable-cookie
                   (face-remap-add-relative
-                   'default :font var-pitch :height var-height))
+                   'default :font var-pitch :height 1.4))
             (setq mixed-pitch-fixed-cookie nil)
             ;; keep fonts in `mixed-pitch-fixed-pitch-faces' as fixed-pitch.
             (dolist (face mixed-pitch-fixed-pitch-faces)

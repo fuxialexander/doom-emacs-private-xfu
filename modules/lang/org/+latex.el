@@ -14,7 +14,7 @@
   (if (string-match-p "NS" (emacs-version))
       (setq-default org-format-latex-options `(:background ,(doom-color 'bg-alt)
                                                            :foreground ,(doom-color 'fg)
-                                                           :scale 1
+                                                           :scale 2.0
                                                            :html-foreground ,(doom-color 'fg)
                                                            :html-background "Transparent"
                                                            :html-scale 1.0
