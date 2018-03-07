@@ -7,8 +7,9 @@
         ;; With GPG 2.1, this forces gpg-agent to use the Emacs minibuffer to
         ;; prompt for the key passphrase.
         epa-pinentry-mode 'loopback))
+
 (setq request-storage-directory (concat doom-etc-dir "request/")
-      doom-theme 'doom-solarized-light
+      doom-theme 'doom-nord
       projectile-ignored-projects '("~/"
                                     "/tmp"
                                     "/usr/local/Cellar/emacs-plus/HEAD-5c41444/share/emacs/27.0.50/lisp/net/"
@@ -50,7 +51,38 @@
       twittering-connection-type-order '(wget urllib-http native urllib-https)
       +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin)
 
+(after! recentf
+  (add-to-list 'recentf-exclude 'file-remote-p)
+  (add-to-list 'recentf-exclude ".*\\.gz")
+  (add-to-list 'recentf-exclude ".*\\.gif")
+  (add-to-list 'recentf-exclude ".*\\.svg")
+  (add-to-list 'recentf-exclude ".*Cellar.*"))
 
+(after! persp
+  (defun +my-workspace/goto-main-window (pname frame)
+    (let ((window (car (+my-doom-visible-windows))))
+      (if (window-live-p window)
+          (select-window window))))
+  (add-hook 'persp-before-switch-functions '+my-workspace/goto-main-window)
+
+  (defun +my-doom-visible-windows (&optional window-list)
+    "Return a list of the visible, non-popup windows."
+    (cl-loop for window in (or window-list (window-list))
+             unless (window-dedicated-p window)
+             collect window))
+  (defun +my-workspace/close-window-or-workspace ()
+    "Close the selected window. If it's the last window in the workspace, close
+the workspace and move to the next."
+    (interactive)
+    (let ((delete-window-fn (if (featurep 'evil) #'evil-window-delete #'delete-window)))
+      (if (window-dedicated-p)
+          (funcall delete-window-fn)
+        (let ((current-persp-name (+workspace-current-name)))
+          (cond ((or (+workspace--protected-p current-persp-name)
+                     (cdr (+my-doom-visible-windows)))
+                 (funcall delete-window-fn))
+                ((cdr (+workspace-list-names))
+                 (+workspace/delete current-persp-name))))))))
 (after! anzu
   (require 'loop)
   (defun anzu--where-is-here (positions here)
@@ -60,125 +92,51 @@
         (if (and (>= here (car x)) (<= here (cdr x)))
             (loop-break)))
       anzucount)))
-(after! xwidget
-  (set! :popup "\\*xwidget" '((side . right) (size . 100)) '((select . t) (transient) (quit)))
-  (defun xwidget-webkit-new-session (url)
-    "Create a new webkit session buffer with URL."
-    (let*
-        ((bufname (generate-new-buffer-name "*xwidget-webkit*"))
-         xw)
-      (setq xwidget-webkit-last-session-buffer (get-buffer-create bufname))
-      (setq xwidget-webkit-created-window (display-buffer xwidget-webkit-last-session-buffer))
-      ;; The xwidget id is stored in a text property, so we need to have
-      ;; at least character in this buffer.
-      ;; Insert invisible url, good default for next `g' to browse url.
-      (with-selected-window xwidget-webkit-created-window
-        (insert url)
-        (put-text-property 1 (+ 1 (length url)) 'invisible t)
-        (setq xw (xwidget-insert 1 'webkit bufname
-                                 (xwidget-window-inside-pixel-width (selected-window))
-                                 (xwidget-window-inside-pixel-height (selected-window))))
-        (xwidget-put xw 'callback 'xwidget-webkit-callback)
-        (xwidget-webkit-mode)
-        (xwidget-webkit-goto-uri (xwidget-webkit-last-session) url))))
-  (setq xwidget-webkit-enable-plugins t))
+(def-package! prettify-utils)
+(after! neotree
+  (set! :popup "^ ?\\*NeoTree"
+    `((side . ,neo-window-position) (window-width . ,neo-window-width))
+    '((quit . current) (select . t))))
 
-(after! recentf
-  (add-to-list 'recentf-exclude 'file-remote-p)
-  (add-to-list 'recentf-exclude ".*\\.gz")
-  (add-to-list 'recentf-exclude ".*\\.gif")
-  (add-to-list 'recentf-exclude ".*\\.svg")
-  (add-to-list 'recentf-exclude ".*Cellar.*"))
-
-(defun +my-doom-visible-windows (&optional window-list)
-  "Return a list of the visible, non-popup windows."
-  (cl-loop for window in (or window-list (window-list))
-           unless (window-dedicated-p window)
-           collect window))
-
-(defun +my-workspace/close-window-or-workspace ()
-  "Close the selected window. If it's the last window in the workspace, close
-the workspace and move to the next."
-  (interactive)
-  (let ((delete-window-fn (if (featurep 'evil) #'evil-window-delete #'delete-window)))
-    (if (window-dedicated-p)
-        (funcall delete-window-fn)
-      (let ((current-persp-name (+workspace-current-name)))
-        (cond ((or (+workspace--protected-p current-persp-name)
-                   (cdr (+my-doom-visible-windows)))
-               (funcall delete-window-fn))
-              ((cdr (+workspace-list-names))
-               (+workspace/delete current-persp-name)))))))
 (add-hook 'minibuffer-setup-hook (lambda! (set-window-fringes (minibuffer-window) 0 0 nil)))
 (add-hook 'minibuffer-setup-hook #'smartparens-mode)
+(advice-remove #'load-theme #'+evil*init-cursors)
+(setq evil-default-cursor "#268bd2"
+      evil-emacs-state-cursor  '("#b58900" box)
+      evil-insert-state-cursor 'bar
+      evil-normal-state-cursor 'hbar
+      evil-visual-state-cursor 'hbar)
 
-(after! twittering-mode
-  (set! :evil-state 'twittering-mode 'normal))
-(after! counsel-projectile
-  (ivy-add-actions
-   'counsel-projectile-switch-project
-   `(("f" counsel-projectile-switch-project-action-find-file
-      "jump to a project file")
-     ("d" counsel-projectile-switch-project-action-find-dir
-      "jump to a project directory")
-     ("b" counsel-projectile-switch-project-action-switch-to-buffer
-      "jump to a project buffer")
-     ("m" counsel-projectile-switch-project-action-find-file-manually
-      "find file manually from project root")
-     ("S" counsel-projectile-switch-project-action-save-all-buffers
-      "save all project buffers")
-     ("k" counsel-projectile-switch-project-action-kill-buffers
-      "kill all project buffers")
-     ("K" counsel-projectile-switch-project-action-remove-known-project
-      "remove project from known projects")
-     ("c" counsel-projectile-switch-project-action-compile
-      "run project compilation command")
-     ("C" counsel-projectile-switch-project-action-configure
-      "run project configure command")
-     ("E" counsel-projectile-switch-project-action-edit-dir-locals
-      "edit project dir-locals")
-     ("v" counsel-projectile-switch-project-action-vc
-      "open project in vc-dir / magit / monky")
-     ("sg" counsel-projectile-switch-project-action-grep
-      "search project with grep")
-     ("ss" counsel-projectile-switch-project-action-ag
-      "search project with ag")
-     ("sr" counsel-projectile-switch-project-action-rg
-      "search project with rg")
-     ("xs" counsel-projectile-switch-project-action-run-shell
-      "invoke shell from project root")
-     ("xe" counsel-projectile-switch-project-action-run-eshell
-      "invoke eshell from project root")
-     ("xt" counsel-projectile-switch-project-action-run-term
-      "invoke term from project root")
-     ("O" counsel-projectile-switch-project-action-org-capture
-      "org-capture into project"))))
-(after! yasnippet
-  (push '+xfu-snippets-dir yas-snippet-dirs))
 
-(after! shr
-  (require 'shr-tag-pre-highlight)
-  (add-to-list 'shr-external-rendering-functions
-               '(pre . shr-tag-pre-highlight)))
-(after! eww
-  (advice-add 'eww-display-html :around
-              'eww-display-html--override-shr-external-rendering-functions))
+
 (after! tramp-sh
   (add-to-list 'tramp-remote-path "/research/kevinyip10/xfu/miniconda3/bin")
   (add-to-list 'tramp-remote-path "/uac/gds/xfu/bin"))
-(def-package! counsel-tramp :load-path "~/.doom.d/local/"
-  :commands (counsel-tramp))
+
 (def-package! alert
   :commands (alert)
   :config
   (setq alert-default-style 'notifier))
-
 (after! org
   ;; **** Misc setting
   (setq +org-dir "~/Dropbox/org/"
         org-blank-before-new-entry nil
         org-modules (quote (org-bibtex org-habit org-info org-protocol org-mac-link org-notmuch))
         org-imenu-depth 8))
+(after! org-src
+  (set! :popup "^\\*Org Src" '((size . 0.4) (side . right)) '((quit) (select . t)))
+  )
+(after! org-capture
+  (set! :popup "^CAPTURE.*\\.org$" '((side . bottom) (size . 0.4)) '((select . t)))
+  )
+(after! org-agenda
+  (set! :popup "^\\*Org Agenda.*\\*$" '((slot . -1) (size . 120) (side . right)) '((select . t) (modeline . nil)))
+
+  (push 'org-agenda-mode evil-snipe-disabled-modes)
+  ;; (add-hook 'org-agenda-mode-hook #'(lambda () (evil-vimish-fold-mode -1)))
+  (add-hook 'org-agenda-finalize-hook #'hide-mode-line-mode)
+  (set! :evil-state 'org-agenda-mode 'normal))
+
 (def-package! orgit :after magit)
 (def-package! magithub
   :commands (magithub-clone
@@ -245,12 +203,44 @@ Enable completion of info from magithub in the current buffer.
   (set! :popup "^.*magit-revision:.*" '((slot . 2) (side . right) (window-height . 0.6)) '((modeline . nil) (select . t)))
   (set! :popup "^.*magit-diff:.*" '((slot . 2) (side . right) (window-height . 0.6)) '((modeline . nil) (select . nil))))
 
+(after! eww
+  (advice-add 'eww-display-html :around
+              'eww-display-html--override-shr-external-rendering-functions))
+(after! shr
+  (require 'shr-tag-pre-highlight)
+  (add-to-list 'shr-external-rendering-functions
+               '(pre . shr-tag-pre-highlight)))
+(after! xwidget
+  (set! :popup "\\*xwidget" '((side . right) (size . 100)) '((select . t) (transient) (quit)))
+  (defun xwidget-webkit-new-session (url)
+    "Create a new webkit session buffer with URL."
+    (let*
+        ((bufname (generate-new-buffer-name "*xwidget-webkit*"))
+         xw)
+      (setq xwidget-webkit-last-session-buffer (get-buffer-create bufname))
+      (setq xwidget-webkit-created-window (display-buffer xwidget-webkit-last-session-buffer))
+      ;; The xwidget id is stored in a text property, so we need to have
+      ;; at least character in this buffer.
+      ;; Insert invisible url, good default for next `g' to browse url.
+      (with-selected-window xwidget-webkit-created-window
+        (insert url)
+        (put-text-property 1 (+ 1 (length url)) 'invisible t)
+        (setq xw (xwidget-insert 1 'webkit bufname
+                                 (xwidget-window-inside-pixel-width (selected-window))
+                                 (xwidget-window-inside-pixel-height (selected-window))))
+        (xwidget-put xw 'callback 'xwidget-webkit-callback)
+        (xwidget-webkit-mode)
+        (xwidget-webkit-goto-uri (xwidget-webkit-last-session) url))))
+  (setq xwidget-webkit-enable-plugins t))
+
+
+
+
+
+
 (require 'company)
 (def-package! company-childframe
   :after company)
-
-
-
 (setq-default company-idle-delay 0.2
               company-minimum-prefix-length 2
               company-tooltip-limit 10
@@ -274,36 +264,11 @@ Enable completion of info from magithub in the current buffer.
 (set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point)
 
 (def-package! emacs-snippets)
-(def-package! electric-operator
-  :commands (electric-operator-mode)
-  :init
-  (add-hook 'sh-mode-hook #'electric-operator-mode)
-  (add-hook 'python-mode-hook #'electric-operator-mode)
-  (add-hook 'inferior-python-mode-hook #'electric-operator-mode)
-  (add-hook 'ess-mode-hook #'electric-operator-mode)
-  :config
-  (apply #'electric-operator-add-rules-for-mode 'inferior-python-mode
-         electric-operator-prog-mode-rules)
-  (apply #'electric-operator-add-rules-for-mode 'sh-mode
-         electric-operator-prog-mode-rules)
-  (electric-operator-add-rules-for-mode 'inferior-python-mode
-                                        (cons "**" #'electric-operator-python-mode-**)
-                                        (cons "*" #'electric-operator-python-mode-*)
-                                        (cons ":" #'electric-operator-python-mode-:)
-                                        (cons "//" " // ") ; integer division
-                                        (cons "=" #'electric-operator-python-mode-kwargs-=)
-                                        (cons "-" #'electric-operator-python-mode-negative-slices)
-                                        (cons "->" " -> ") ; function return types
-                                        )
-  (electric-operator-add-rules-for-mode 'sh-mode
-                                        (cons "=" " = ")
-                                        (cons "<=" " <= ")
-                                        (cons ">=" " >= ")
-                                        (cons ">" " > ")
-                                        (cons "," ", ")
-                                        (cons "|" " | ")))
-(def-package! prettify-utils)
+(after! yasnippet
+  (push '+xfu-snippets-dir yas-snippet-dirs))
+
 (after! helpful
+  (set! :lookup 'helpful-mode :documentation #'helpful-at-point)
   (set! :popup "^\\*helpful.*"
     '((size . 80) (side . right))
     '((transient . t) (select . t) (quit . t))))
@@ -316,6 +281,7 @@ Enable completion of info from magithub in the current buffer.
     '((transient . nil) (select . t) (quit . t))))
 (def-package! sed-mode
   :commands (sed-mode))
+
 (def-package! lsp-mode
   :commands (lsp-mode))
 (def-package! lsp-ui
@@ -413,7 +379,6 @@ symbol."
        (setq header-line-format (when lsp-ui-doc-header (concat " " symbol))
              mode-line-format nil
              cursor-type nil)))))
-
 (def-package! company-lsp
   :after lsp-mode)
 
@@ -422,7 +387,6 @@ symbol."
   :config
   (map! :map lispy-mode-map
         :i [remap delete-backward-char] #'lispy-delete-backward))
-
 (def-package! lispyville
   :after (evil)
   :hook (lispy-mode . lispyville-mode)
@@ -446,18 +410,34 @@ symbol."
         :nmv "}}"   #'lispyville-previous-closing
         :nmv "("   #'lispyville-backward-up-list
         :nmv ")"   #'lispyville-up-list))
-
-;;
-;; (def-package! parinfer
-;;   ;; :hook (emacs-lisp-mode . parinfer-mode)
-;;   :commands (parinfer-toggle-mode parinfer-mode)
-;;   :init
-;;   (setq parinfer-extensions '(defaults lispy evil smart-yank)))
-;;
-(after! neotree
-  (set! :popup "^ ?\\*NeoTree"
-    `((side . ,neo-window-position) (window-width . ,neo-window-width))
-    '((quit . current) (select . t))))
+(def-package! electric-operator
+  :commands (electric-operator-mode)
+  :init
+  (add-hook 'sh-mode-hook #'electric-operator-mode)
+  (add-hook 'python-mode-hook #'electric-operator-mode)
+  (add-hook 'inferior-python-mode-hook #'electric-operator-mode)
+  (add-hook 'ess-mode-hook #'electric-operator-mode)
+  :config
+  (apply #'electric-operator-add-rules-for-mode 'inferior-python-mode
+         electric-operator-prog-mode-rules)
+  (apply #'electric-operator-add-rules-for-mode 'sh-mode
+         electric-operator-prog-mode-rules)
+  (electric-operator-add-rules-for-mode 'inferior-python-mode
+                                        (cons "**" #'electric-operator-python-mode-**)
+                                        (cons "*" #'electric-operator-python-mode-*)
+                                        (cons ":" #'electric-operator-python-mode-:)
+                                        (cons "//" " // ") ; integer division
+                                        (cons "=" #'electric-operator-python-mode-kwargs-=)
+                                        (cons "-" #'electric-operator-python-mode-negative-slices)
+                                        (cons "->" " -> ") ; function return types
+                                        )
+  (electric-operator-add-rules-for-mode 'sh-mode
+                                        (cons "=" " = ")
+                                        (cons "<=" " <= ")
+                                        (cons ">=" " >= ")
+                                        (cons ">" " > ")
+                                        (cons "," ", ")
+                                        (cons "|" " | ")))
 (after! smartparens
   ;; Auto-close more conservatively and expand braces on RET
   (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
@@ -473,29 +453,15 @@ symbol."
            :unless '(sp-point-before-word-p sp-point-before-same-p))
   (sp-pair "[" nil :post-handlers '(("| " " "))
            :unless '(sp-point-before-word-p sp-point-before-same-p)))
-(set! :lookup 'helpful-mode :documentation #'helpful-at-point)
 
-(defun +ivy-recentf-transformer (str)
-  "Dim recentf entries that are not in the current project of the buffer you
-started `counsel-recentf' from. Also uses `abbreviate-file-name'."
-  (abbreviate-file-name str))
-;; (after! ivy
-;;     (require 'ivy-posframe "~/.doom.d/local/ivy-posframe.el")
-;;     (setq-default ivy-display-function #'ivy-posframe-display))
-(after! org-src
-  (set! :popup "^\\*Org Src" '((size . 0.4) (side . right)) '((quit) (select . t)))
-  )
-(after! org-capture
-  (set! :popup "^CAPTURE.*\\.org$" '((side . bottom) (size . 0.4)) '((select . t)))
-  )
-(after! org-agenda
-  (set! :popup "^\\*Org Agenda.*\\*$" '((slot . -1) (size . 120) (side . right)) '((select . t) (modeline . nil)))
 
-  (push 'org-agenda-mode evil-snipe-disabled-modes)
-  ;; (add-hook 'org-agenda-mode-hook #'(lambda () (evil-vimish-fold-mode -1)))
-  (add-hook 'org-agenda-finalize-hook #'hide-mode-line-mode)
-  (set! :evil-state 'org-agenda-mode 'normal))
+
+
 (after! counsel
+  (defun +ivy-recentf-transformer (str)
+    "Dim recentf entries that are not in the current project of the buffer you
+started `counsel-recentf' from. Also uses `abbreviate-file-name'."
+    (abbreviate-file-name str))
   ;; reset fringe after change theme
   (advice-add #'counsel-load-theme :after #'solaire-mode-reset)
   ;; ** counsel-find-file
@@ -547,27 +513,53 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
   (ivy-add-actions
    'counsel-M-x
    `(("h" +ivy/helpful-function "Helpful"))))
+(after! counsel-projectile
+  (ivy-add-actions
+   'counsel-projectile-switch-project
+   `(("f" counsel-projectile-switch-project-action-find-file
+      "jump to a project file")
+     ("d" counsel-projectile-switch-project-action-find-dir
+      "jump to a project directory")
+     ("b" counsel-projectile-switch-project-action-switch-to-buffer
+      "jump to a project buffer")
+     ("m" counsel-projectile-switch-project-action-find-file-manually
+      "find file manually from project root")
+     ("S" counsel-projectile-switch-project-action-save-all-buffers
+      "save all project buffers")
+     ("k" counsel-projectile-switch-project-action-kill-buffers
+      "kill all project buffers")
+     ("K" counsel-projectile-switch-project-action-remove-known-project
+      "remove project from known projects")
+     ("c" counsel-projectile-switch-project-action-compile
+      "run project compilation command")
+     ("C" counsel-projectile-switch-project-action-configure
+      "run project configure command")
+     ("E" counsel-projectile-switch-project-action-edit-dir-locals
+      "edit project dir-locals")
+     ("v" counsel-projectile-switch-project-action-vc
+      "open project in vc-dir / magit / monky")
+     ("sr" counsel-projectile-switch-project-action-rg
+      "search project with rg")
+     ("xs" counsel-projectile-switch-project-action-run-shell
+      "invoke shell from project root")
+     ("xe" counsel-projectile-switch-project-action-run-eshell
+      "invoke eshell from project root")
+     ("xt" counsel-projectile-switch-project-action-run-term
+      "invoke term from project root")
+     ("O" counsel-projectile-switch-project-action-org-capture
+      "org-capture into project"))))
+(def-package! counsel-tramp :load-path "~/.doom.d/local/"
+  :commands (counsel-tramp))
 
-(defun +workspace/goto-main-window (pname frame)
-  (let ((window (car (+my-doom-visible-windows))))
-    (if (window-live-p window)
-        (select-window window))))
-(add-hook 'persp-before-switch-functions '+workspace/goto-main-window)
-(advice-remove #'load-theme #'+evil*init-cursors)
-(setq evil-default-cursor "#268bd2"
-      evil-emacs-state-cursor  '("#b58900" box)
-      evil-insert-state-cursor 'bar
-      evil-normal-state-cursor 'hbar
-      evil-visual-state-cursor 'hbar)
 
 
+;;; Keybindings
 ;; expand-region's prompt can't tell what key contract-region is bound to, so we
 ;; tell it explicitly.
 (setq expand-region-contract-fast-key "V")
 
 (setq doom-localleader-key ",")
-;; This files defines a Spacemacs-esque keybinding scheme(setq doom-localleader-key ",")
-;; * Keybindings
+
 (map! [remap evil-jump-to-tag] #'projectile-find-tag
       [remap find-tag]         #'projectile-find-tag
       [remap newline]          #'newline-and-indent
@@ -894,15 +886,15 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       ;; repeat in visual mode (FIXME buggy)
       :v  "."  #'evil-repeat
       ;; don't leave visual mode after shifting
-      :v  "<"  #'+evil/visual-dedent  ; vnoremap < <gv
-      :v  ">"  #'+evil/visual-indent  ; vnoremap > >gv
+      :v  "<"  #'+evil/visual-dedent    ; vnoremap < <gv
+      :v  ">"  #'+evil/visual-indent    ; vnoremap > >gv
       ;; paste from recent yank register (which isn't overwritten)
       :v  "C-p" "\"0p"
       :nv "C-a" #'evil-numbers/inc-at-pt
       :nv "C-x" #'evil-numbers/dec-at-pt
 
       ;; *** Window
-      (:map evil-window-map ; prefix "C-w"
+      (:map evil-window-map             ; prefix "C-w"
         ;; **** Navigation
         "C-h"     #'evil-window-left
         "C-j"     #'evil-window-down
@@ -1215,8 +1207,8 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         :n "[["  #'vc-annotate-prev-revision
         :n "TAB" #'vc-annotate-toggle-annotation-visibility
         :n "RET" #'vc-annotate-find-revision-at-line))
-;; ** Custom functionality
-;; *** Fix ;/, as repeat-keys in evil-mode, without overriding ;/, bindings
+;; Custom functionality
+;; Fix ;/, as repeat-keys in evil-mode, without overriding ;/, bindings
 (defmacro do-repeat! (command next-func prev-func)
   "Repeat motions with ;/,"
   (let ((fn-sym (intern (format "+evil*repeat-%s" command))))

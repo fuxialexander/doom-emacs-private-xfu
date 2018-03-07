@@ -58,3 +58,105 @@ that works with the feature/popup module."
       (setq-local line-spacing 0.2)
       (goto-char (point-min))
       )))
+
+;;;###autoload
+(defun +twitter/twittering-make-fontified-tweet-text (str-expr regexp-hash regexp-atmark)
+  (let ((regexp-str
+         (mapconcat
+          'identity
+          (list
+           ;; hashtag
+           (concat regexp-hash "\\([[:alpha:]0-9_-]+\\)")
+           ;; @USER/LIST
+           (concat regexp-atmark
+                   "\\(\\([a-zA-Z0-9_-]+\\)/\\([a-zA-Z0-9_-]+\\)\\)")
+           ;; @USER
+           (concat regexp-atmark "\\([a-zA-Z0-9_-]+\\)")
+           ;; URI
+           "\\(https?://[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+\\)")
+          "\\|")))
+    `(let ((pos 0)
+           (str (copy-sequence ,str-expr)))
+       (while (string-match ,regexp-str str pos)
+         (let* ((beg (match-beginning 0))
+                (end (match-end 0))
+                (range-and-properties
+                 (cond
+                  ((get-text-property beg 'face str)
+                   ;; The matched substring has been already fontified.
+                   ;; The fontification with entities must fontify the
+                   ;; head of the matched string.
+                   nil)
+                  ((match-string 1 str)
+                   ;; hashtag
+                   (let* ((hashtag (match-string 1 str))
+                          (spec-string
+                           (twittering-make-hashtag-timeline-spec-string-direct
+                            hashtag))
+                          (url (twittering-get-search-url
+                                (concat "#" hashtag))))
+                     (list
+                      beg end
+                      'mouse-face 'highlight
+                      'keymap twittering-mode-on-uri-map
+                      'uri url
+                      'goto-spec spec-string
+                      'face 'twittering-username-face)))
+                  ((match-string 2 str)
+                   ;; @USER/LIST
+                   (let ((owner (match-string 3 str))
+                         (list-name (match-string 4 str))
+                         ;; Properties are added to the matched part only.
+                         ;; The prefixes `twittering-regexp-atmark' will not
+                         ;; be highlighted.
+                         (beg (match-beginning 2)))
+                     (list
+                      beg end
+                      'mouse-face 'highlight
+                      'keymap twittering-mode-on-uri-map
+                      'uri (twittering-get-list-url owner list-name)
+                      'goto-spec
+                      (twittering-make-list-timeline-spec-direct owner
+                                                                 list-name)
+                      'face 'twittering-username-face)))
+                  ((match-string 5 str)
+                   ;; @USER
+                   (let ((screen-name (match-string 5 str))
+                         ;; Properties are added to the matched part only.
+                         ;; The prefixes `twittering-regexp-atmark' will not
+                         ;; be highlighted.
+                         (beg (match-beginning 5)))
+                     (list
+                      beg end
+                      'mouse-face 'highlight
+                      'keymap twittering-mode-on-uri-map
+                      'uri (twittering-get-status-url screen-name)
+                      'screen-name-in-text screen-name
+                      'goto-spec
+                      (twittering-make-user-timeline-spec-direct screen-name)
+                      'face 'twittering-uri-face)))
+                  ((match-string 6 str)
+                   ;; URI
+                   (let ((uri (match-string 6 str)))
+                     (list
+                      beg end
+                      'mouse-face 'highlight
+                      'keymap twittering-mode-on-uri-map
+                      'uri uri
+                      'uri-origin 'explicit-uri-in-tweet
+                      'face 'twittering-uri-face)))))
+                (beg (if range-and-properties
+                         (car range-and-properties)
+                       beg))
+                (end (if range-and-properties
+                         (cadr range-and-properties)
+                       end))
+                (properties
+                 `(,@(cddr range-and-properties)
+                   front-sticky nil
+                   rear-nonsticky t)))
+           (when range-and-properties
+             (add-text-properties beg end properties str))
+           (setq pos end)))
+       (add-face-text-property 0 (length str) 'variable-pitch t str)
+       str)))
