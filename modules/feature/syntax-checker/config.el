@@ -20,6 +20,4 @@
 
 
 (def-package! flycheck-posframe
-  :hook (flycheck-mode . flycheck-posframe-mode)
-  :config
-  (advice-add #'flycheck-posframe-format-errors :override #'my-flycheck-posframe-format-errors))
+  :hook (flycheck-mode . flycheck-posframe-mode))
