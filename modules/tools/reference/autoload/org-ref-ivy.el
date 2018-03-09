@@ -324,3 +324,195 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
 (after! elfeed-show
   (map! (:map elfeed-show-mode-map
           :nm "b" #'org-ref-add-bibtex-entry-from-elfeed-entry)))
+
+;;;###autoload
+(defun org-ref-email-bibtex-entry ()
+  "Email current bibtex entry at point and pdf if it exists."
+  (interactive)
+  (save-excursion
+    (bibtex-beginning-of-entry)
+    (let* (
+           (key (reftex-get-bib-field "=key=" (bibtex-parse-entry t)))
+           (entry (bibtex-completion-get-entry key))
+           (title (bibtex-completion-get-value "title" entry))
+           (citation (bibtex-completion-apa-format-reference key))
+           pdf)
+      ;; when we have org-ref defined we may have pdf to find.
+      (when (boundp 'org-ref-pdf-directory)
+        (setq pdf (expand-file-name
+                   (concat key ".pdf")
+                   org-ref-pdf-directory)))
+      (compose-mail)
+      (message-goto-body)
+      (insert citation "\n")
+      (message-goto-subject)
+      (insert "Paper Sharing: " title)
+      (message "%s exists %s" pdf (file-exists-p pdf))
+      (when (file-exists-p pdf)
+        (mml-attach-file pdf))
+      (message-goto-to))))
+
+;;;###autoload
+(defun org-ref-bib-citation ()
+  "From a bibtex entry, create and return a citation string."
+  (bibtex-completion-apa-format-reference (org-ref-get-bibtex-key-under-cursor)))
+
+(defun nature-pdf-url (*org-ref-doi-utils-redirect*)
+  "Get url to the pdf from *ORG-REF-DOI-UTILS-REDIRECT*."
+  (when (string-match "^http://www.nature.com" *org-ref-doi-utils-redirect*)
+    (let ((result *org-ref-doi-utils-redirect*))
+      ;; (setq result (replace-regexp-in-string "/full/" "/pdf/" result))
+      (concat result "\.pdf"))))
+
+(defun biorxiv-pdf-url (*org-ref-doi-utils-redirect*)
+  "Get url to the pdf from *ORG-REF-DOI-UTILS-REDIRECT*."
+  (when (string-match "www.biorxiv.org"
+                      *org-ref-doi-utils-redirect*)
+    (replace-regexp-in-string "early" "biorxiv/early" (concat *org-ref-doi-utils-redirect* ".full.pdf"))))
+
+(defun bmc-pdf-url (*org-ref-doi-utils-redirect*)
+  "Get url to the pdf from *ORG-REF-DOI-UTILS-REDIRECT*."
+  (when (string-match "biomedcentral.com" *org-ref-doi-utils-redirect*)
+    (let ((url (downcase *org-ref-doi-utils-redirect*)))
+      (setq url (replace-regexp-in-string "articles" "track/pdf" url))
+      url)))
+
+(defun oup-pdf-url (*org-ref-doi-utils-redirect*)
+  "Get url to the pdf from *ORG-REF-DOI-UTILS-REDIRECT*."
+  (while *org-ref-doi-utils-waiting* (sleep-for 0.1))
+  (when (string-match "academic.oup.com" *org-ref-doi-utils-redirect*)
+    (org-ref-doi-utils-get-oup-pdf-url *org-ref-doi-utils-redirect*)
+    *org-ref-doi-utils-pdf-url*))
+
+(defun org-ref-doi-utils-get-oup-pdf-url (redirect-url)
+  "Science direct hides the pdf url in html.  We get it out here.
+REDIRECT-URL is where the pdf url will be in."
+  (setq *org-ref-doi-utils-waiting* t)
+  (url-retrieve
+   redirect-url
+   (lambda (status)
+     (goto-char (point-min))
+     (re-search-forward "citation_pdf_url\" content=\"\\([^\"]*\\)\"" nil t)
+     (setq *org-ref-doi-utils-pdf-url* (match-string 1)
+           *org-ref-doi-utils-waiting* nil)
+     ))
+  (while *org-ref-doi-utils-waiting* (sleep-for 0.1))
+  *org-ref-doi-utils-pdf-url*)
+
+
+;; (defun generic-full-pdf-url (*org-ref-doi-utils-redirect*)
+;;   "Get url to the pdf from *ORG-REF-DOI-UTILS-REDIRECT*."
+;;   (when (or
+;;          (string-match "^http://www.jneurosci.org" *org-ref-doi-utils-redirect*)
+;;          (string-match "cshlp.org" *org-ref-doi-utils-redirect*))
+;;     (concat *org-ref-doi-utils-redirect* ".full.pdf")))
+
+;;;###autoload
+(defun generic-as-get-pdf-url (*org-ref-doi-utils-redirect*)
+  "Get url to the pdf from *ORG-REF-DOI-UTILS-REDIRECT*."
+  (do-applescript (concat "
+tell application \"Google Chrome\"
+activate
+set myTab to make new tab at end of tabs of window 1
+set URL of myTab to \""
+                          *org-ref-doi-utils-redirect*
+                          "\"
+end tell
+"))
+  (do-applescript "
+set question to display dialog \"Locate PDF URL\" buttons {\"OK\"} default button 1
+tell application \"Google Chrome\"
+    if button returned of question is \"OK\" then
+        return URL of active tab of front window
+    end if
+end tell
+"))
+
+
+;;;###autoload
+(defun org-ref-get-pdf-from-biorxiv-eprint ()
+  (interactive)
+  (bibtex-beginning-of-entry)
+  (let* ((pdf (bibtex-autokey-get-field "eprint"))
+         (key (cdr (assoc "=key=" (bibtex-parse-entry))))
+         (pdf-file (concat (if org-ref-pdf-directory
+                               (file-name-as-directory org-ref-pdf-directory)
+                             (read-directory-name "PDF directory: " "."))
+                           key ".pdf")))
+    (unless (file-exists-p pdf-file)
+      (url-copy-file pdf pdf-file))))
+
+
+;;;###autoload
+(defun org-ref-ivy-bibtex-get-pdf-for-entry (entry)
+  "Copy selected bibtex ENTRY to the clipboard."
+  (with-temp-buffer
+    (save-window-excursion
+      (ivy-bibtex-show-entry entry)
+      (doi-utils-get-bibtex-entry-pdf))))
+
+;;;###autoload
+(defun org-ref-ivy-bibtex-get-update-for-entry (entry)
+  "Copy selected bibtex ENTRY to the clipboard."
+  (with-temp-buffer
+    (save-window-excursion
+      (ivy-bibtex-show-entry entry)
+      (call-interactively #'doi-utils-update-bibtex-entry-from-doi))))
+
+;;;###autoload
+(defun org-ref-ivy-bibtex-email-entry (entry)
+  "Insert selected ENTRY and attach pdf file to an email.
+Create email unless called from an email."
+  ;; (with-ivy-window
+  (let* (
+         (key (cdr (assoc "=key=" entry)))
+         (entry (bibtex-completion-get-entry key))
+         (title (cdr (assoc "title" entry)))
+         (citation (bibtex-completion-apa-format-reference key))
+         pdf)
+    ;; when we have org-ref defined we may have pdf to find.
+    (when (boundp 'org-ref-pdf-directory)
+      (setq pdf (expand-file-name
+                 (concat key ".pdf")
+                 org-ref-pdf-directory)))
+    (compose-mail)
+    (message-goto-body)
+    (insert citation "\n")
+    (message-goto-subject)
+    (insert "Paper Sharing: " title)
+    (message "%s exists %s" pdf (file-exists-p pdf))
+    (when (file-exists-p pdf)
+      (mml-attach-file pdf))
+    (message-goto-to))
+  ;; )
+  )
+
+;;;###autoload
+(defun org-ref-ivy-bibtex-insert-formatted-citation (entry)
+  "Insert formatted citations at point for selected ENTRY."
+  (with-ivy-window
+    (insert (bibtex-completion-apa-format-reference (bibtex-completion-get-value "=key=" entry)))))
+
+;;;###autoload
+(defun org-ref-ivy-bibtex-copy-formatted-citation (entry)
+  "Copy formatted citation to clipboard for ENTRY."
+  (kill-new (bibtex-completion-apa-format-reference (bibtex-completion-get-value "=key=" entry))))
+
+
+;;;###autoload
+(defun bibtex-completion-quicklook (keys)
+  "Open the associated URL or DOI in a browser."
+  (dolist (key keys)
+    (let* ((pdf (car (bibtex-completion-find-pdf key bibtex-completion-find-additional-pdfs))))
+      (start-process "Live Preview" nil "/usr/bin/qlmanage" "-p" pdf))))
+
+;; (defun bibtex-completion-open-uri (keys)
+;;   "Open the associated URL or DOI in a browser."
+;;   (dolist (key keys)
+;;     (let* ((entry (bibtex-completion-get-entry key))
+;;            (uri (bibtex-completion-get-value "uri" entry))
+;;            (uri (s-replace "\\url{" "" uri))
+;;            (uri (s-replace "}" "" uri))
+;;            )
+;;       (start-process "Open URI" nil "/usr/bin/open" uri)
+;;       )))
