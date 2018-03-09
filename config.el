@@ -58,31 +58,8 @@
   (add-to-list 'recentf-exclude ".*\\.svg")
   (add-to-list 'recentf-exclude ".*Cellar.*"))
 
-(after! persp
-  (defun +my-workspace/goto-main-window (pname frame)
-    (let ((window (car (+my-doom-visible-windows))))
-      (if (window-live-p window)
-          (select-window window))))
-  (add-hook 'persp-before-switch-functions '+my-workspace/goto-main-window)
+(add-hook 'persp-before-switch-functions '+my-workspace/goto-main-window)
 
-  (defun +my-doom-visible-windows (&optional window-list)
-    "Return a list of the visible, non-popup windows."
-    (cl-loop for window in (or window-list (window-list))
-             unless (window-dedicated-p window)
-             collect window))
-  (defun +my-workspace/close-window-or-workspace ()
-    "Close the selected window. If it's the last window in the workspace, close
-the workspace and move to the next."
-    (interactive)
-    (let ((delete-window-fn (if (featurep 'evil) #'evil-window-delete #'delete-window)))
-      (if (window-dedicated-p)
-          (funcall delete-window-fn)
-        (let ((current-persp-name (+workspace-current-name)))
-          (cond ((or (+workspace--protected-p current-persp-name)
-                     (cdr (+my-doom-visible-windows)))
-                 (funcall delete-window-fn))
-                ((cdr (+workspace-list-names))
-                 (+workspace/delete current-persp-name))))))))
 (after! anzu
   (require 'loop)
   (defun anzu--where-is-here (positions here)
@@ -97,8 +74,6 @@ the workspace and move to the next."
   (set! :popup "^ ?\\*NeoTree"
     `((side . ,neo-window-position) (window-width . ,neo-window-width))
     '((quit . current) (select . t))))
-
-(add-hook 'minibuffer-setup-hook (lambda! (set-window-fringes (minibuffer-window) 0 0 nil)))
 (add-hook 'minibuffer-setup-hook #'smartparens-mode)
 (advice-remove #'load-theme #'+evil*init-cursors)
 (setq evil-default-cursor "#268bd2"

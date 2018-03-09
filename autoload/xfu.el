@@ -206,3 +206,31 @@
        (interactive)
        (doom-project-find-file ,dir))))
 
+
+;;;###autoload
+(defun +my-workspace/goto-main-window (pname frame)
+    (let ((window (car (+my-doom-visible-windows))))
+      (if (window-live-p window)
+          (select-window window))))
+
+;;;###autoload
+(defun +my-doom-visible-windows (&optional window-list)
+  "Return a list of the visible, non-popup windows."
+  (cl-loop for window in (or window-list (window-list))
+           unless (window-dedicated-p window)
+           collect window))
+
+;;;###autoload
+(defun +my-workspace/close-window-or-workspace ()
+  "Close the selected window. If it's the last window in the workspace, close
+the workspace and move to the next."
+  (interactive)
+  (let ((delete-window-fn (if (featurep 'evil) #'evil-window-delete #'delete-window)))
+    (if (window-dedicated-p)
+        (funcall delete-window-fn)
+      (let ((current-persp-name (+workspace-current-name)))
+        (cond ((or (+workspace--protected-p current-persp-name)
+                   (cdr (+my-doom-visible-windows)))
+               (funcall delete-window-fn))
+              ((cdr (+workspace-list-names))
+               (+workspace/delete current-persp-name)))))))
