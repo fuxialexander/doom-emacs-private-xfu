@@ -5,6 +5,11 @@
 ;; because all my org files are usually in one place, and I want to be able to
 ;; refer back to old exports if needed.
 
+(def-package! htmlize
+  :commands (htmlize-buffer
+             htmlize-file
+             htmlize-many-files
+             htmlize-many-files-dired))
 (def-package! ox-pandoc
   :defer t
   :config
@@ -18,10 +23,9 @@
 ;;
 (defun +org|init-export ()
   (add-transient-hook! #'org-export-dispatch (require 'ox-pandoc))
-  (add-transient-hook! #'org-export-dispatch (require 'ox-alex "~/.doom.d/local/ox-alex.el"))
-
-  (setq org-export-backends '(alex latex md)
+  (setq org-export-backends '(html latex md)
         org-export-with-toc t
+        org-html-checkbox-type 'html
         org-export-with-author t)
   ;; Always export to a central location
   ;; (defun +org*export-output-file-name (args)

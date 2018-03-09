@@ -22,6 +22,7 @@
   (package! cdlatex))
 
 (when (featurep! +export)
+  (package! htmlize)
   (package! ox-pandoc))
 
 (when (featurep! +present)
