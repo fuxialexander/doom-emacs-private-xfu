@@ -9,12 +9,16 @@
   (+workspace-switch "mail" t)
   (if-let* ((buf (cl-find-if (lambda (it) (string-match-p "^\\*notmuch" (buffer-name (window-buffer it))))
                              (doom-visible-windows))))
-      (select-window (get-buffer-window buf)) (call-interactively 'notmuch))
+      (select-window (get-buffer-window buf))
+    (notmuch-search "tag:inbox")
+    ;; (call-interactively 'notmuch-hello-sidebar)
+    )
   (+workspace/display))
 
 ;;;###autoload
 (defun +mail/quit ()
   (interactive)
+  ;; (+popup/close (get-buffer-window "*notmuch-hello*"))
   (doom-kill-matching-buffers "^\\*notmuch")
   (+workspace/delete "mail"))
 
@@ -37,8 +41,7 @@
 ;;;###autoload
 (defun +mail/notmuch-update ()
   (interactive)
-  (start-process-shell-command "notmuch update" nil "cd ~/.mail/account.gmail && /usr/local/bin/gmi push && /usr/local/bin/gmi pull && /usr/local/bin/notmuch new && /usr/local/bin/afew -a -t")
-  (notmuch-hello-update))
+  (start-process-shell-command "notmuch update" nil "cd ~/.mail/account.gmail && /usr/local/bin/gmi push && /usr/local/bin/gmi pull && /usr/local/bin/notmuch new && /usr/local/bin/afew -a -t"))
 
 
 
@@ -136,7 +139,7 @@
     (when err-file (ignore-errors (delete-file err-file)))))
 
 ;;;###autoload
-(defun +mail/notmuch-show-reuse-buffer (thread-id &optional elide-toggle parent-buffer query-context)
+(defun +mail/notmuch-show-reuse-buffer (thread-id &optional elide-toggle parent-buffer query-context buffer-name)
   "Run \"notmuch show\" with the given thread ID and display results.
 
 ELIDE-TOGGLE, if non-nil, inverts the default elide behavior.
@@ -158,8 +161,9 @@ function is used.
 Returns the buffer containing the messages, or NIL if no messages
 matched."
   (interactive "sNotmuch show: \nP")
-  (let (
-        (buffer-name "*counsel-notmuch-show*")
+  (let ((buffer-name (generate-new-buffer-name
+                      (or (concat "*notmuch-" buffer-name "*")
+                          (concat "*notmuch-" thread-id "*"))))
         ;; We override mm-inline-override-types to stop application/*
         ;; parts from being displayed unless the user has customized
         ;; it themselves.
@@ -170,8 +174,6 @@ matched."
            mm-inline-override-types)))
     (switch-to-buffer (get-buffer-create buffer-name))
     ;; No need to track undo information for this buffer.
-    (let ((inhibit-read-only t))
-      (erase-buffer))
     (setq buffer-undo-list t)
 
     (notmuch-show-mode)
@@ -181,7 +183,9 @@ matched."
     ;; aren't wiped out.
     (setq notmuch-show-thread-id thread-id
           notmuch-show-parent-buffer parent-buffer
-          notmuch-show-query-context query-context
+          notmuch-show-query-context (if (or (string= query-context "")
+                                             (string= query-context "*"))
+                                         nil query-context)
 
           notmuch-show-process-crypto notmuch-crypto-process-mime
           ;; If `elide-toggle', invert the default value.
@@ -192,7 +196,9 @@ matched."
 
     (add-hook 'post-command-hook #'notmuch-show-command-hook nil t)
     (jit-lock-register #'notmuch-show-buttonise-links)
-
+    (call-interactively #'+mail/buffer-face-mode-notmuch-show)
+    (let ((fill-column 120))
+      (visual-fill-column-mode))
     (notmuch-tag-clear-cache)
 
     (let ((inhibit-read-only t))
@@ -312,7 +318,7 @@ with `notmuch-hello-query-counts'."
                                      (otherwise notmuch-search-oldest-first)))
                      (search-type (eq (plist-get elem :search-type) 'tree))
                      (msg-count (plist-get elem :count)))
-                (widget-insert (format "%8s "
+                (widget-insert (format "\n%5s "
                                        (notmuch-hello-nice-number msg-count)))
                 (widget-create 'push-button
                                :notify #'notmuch-hello-widget-search
