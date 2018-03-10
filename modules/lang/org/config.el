@@ -235,7 +235,7 @@ unfold to point on startup."
      "M-I" #'org-insert-link
      "s-p" #'org-ref-ivy-insert-cite-link
      :n  "RET" #'+org/dwim-at-point
-     :n  [tab]     #'+org/toggle-fold
+     :n  [tab]     #'org-cycle
      :n  "t"       #'org-todo
      :n  "T"       #'org-insert-todo-heading-respect-content
      :i  [tab]     #'+org/indent-or-next-field-or-yas-expand
