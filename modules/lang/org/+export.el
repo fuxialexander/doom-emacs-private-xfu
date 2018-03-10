@@ -9,7 +9,9 @@
   :commands (htmlize-buffer
              htmlize-file
              htmlize-many-files
-             htmlize-many-files-dired))
+             htmlize-many-files-dired)
+  :config
+  (setq-default htmlize-pre-style t))
 (def-package! ox-pandoc
   :defer t
   :config
@@ -26,6 +28,16 @@
   (setq org-export-backends '(html latex md)
         org-export-with-toc t
         org-html-checkbox-type 'html
+        org-html-mathjax-options  '((path "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS_SVG" )
+                                    (scale "100")
+                                    (align "center")
+                                    (font "TeX")
+                                    (linebreaks "false")
+                                    (autonumber "AMS")
+                                    (indent "0em")
+                                    (multlinewidth "85%")
+                                    (tagindent ".8em")
+                                    (tagside "right"))
         org-export-with-author t)
   ;; Always export to a central location
   ;; (defun +org*export-output-file-name (args)
