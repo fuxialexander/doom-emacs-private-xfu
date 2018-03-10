@@ -83,7 +83,6 @@
       evil-visual-state-cursor 'hbar)
 
 
-
 (after! tramp-sh
   (add-to-list 'tramp-remote-path "/research/kevinyip10/xfu/miniconda3/bin")
   (add-to-list 'tramp-remote-path "/uac/gds/xfu/bin"))
@@ -431,7 +430,18 @@ symbol."
 
 
 
-
+(def-package! ivy-posframe
+  :after (ivy)
+  :config
+  (setq ivy-display-function nil
+        ivy-fixed-height-minibuffer nil)
+  (push '(swiper . nil) ivy-display-functions-alist)
+  (push '(t . ivy-posframe-display-at-frame-center) ivy-display-functions-alist)
+  (setq ivy-posframe-parameters
+        '((min-width . 120)
+          (internal-border-width . 10))
+        ivy-posframe-font (font-spec :family "SF Compact Display" :size 18 :width 'extra-condensed :weight 'normal :slant 'normal :registry "iso10646-1" ))
+  (ivy-posframe-enable))
 (after! counsel
   (defun +ivy-recentf-transformer (str)
     "Dim recentf entries that are not in the current project of the buffer you

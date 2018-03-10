@@ -222,3 +222,7 @@
                 evil-escape-excluded-states nil)
   (map! :irvo "C-g" #'evil-escape)
   nil)
+
+(def-package-hook! ivy-rich
+  :disable)
+

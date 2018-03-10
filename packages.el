@@ -26,3 +26,5 @@
 (package! lsp-mode)
 (package! company-lsp)
 (package! lsp-ui)
+
+(package! ivy-posframe)
