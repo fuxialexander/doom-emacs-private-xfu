@@ -336,9 +336,11 @@ unfold to point on startup."
           :nm "S"        #'org-save-all-org-buffers))
    (:after org-src
      (:map org-src-mode-map
+       "C-c C-c" nil
+       "C-c C-k" nil
        (:localleader
-         :desc "Finish" :n ","  #'org-edit-src-exit
-         :desc "Abort"  :n "k"  #'org-edit-src-abort
+         :desc "Finish" :nm ","  #'org-edit-src-exit
+         :desc "Abort"  :nm "k"  #'org-edit-src-abort
          )))
    (:after org-capture
      (:map org-capture-mode-map
@@ -346,9 +348,9 @@ unfold to point on startup."
        "C-c C-k" nil
        "C-c C-w" nil
        (:localleader
-         :desc "Finish" :n "," #'org-capture-finalize
-         :desc "Refile" :n "r" #'org-capture-refile
-         :desc "Abort"  :n "k" #'org-capture-kill
+         :desc "Finish" :nm "," #'org-capture-finalize
+         :desc "Refile" :nm "r" #'org-capture-refile
+         :desc "Abort"  :nm "k" #'org-capture-kill
          )))
    ))
 

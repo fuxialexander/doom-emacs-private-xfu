@@ -17,7 +17,7 @@
       recentf-auto-cleanup 60
       ivy-use-selectable-prompt t
       ivy-auto-select-single-candidate t
-      ivy-height 9
+      ivy-height 10
       avy-keys '(?a ?s ?d ?f ?j ?k ?l ?\;)
       ivy-rich-parse-remote-buffer nil
       ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-cd-selected
@@ -91,13 +91,14 @@
   :commands (alert)
   :config
   (setq alert-default-style 'notifier))
+
 (after! org
   ;; **** Misc setting
   (setq +org-dir "~/Dropbox/org/"
         org-blank-before-new-entry nil
         org-modules (quote (org-bibtex org-habit org-info org-protocol org-mac-link org-notmuch))
         org-imenu-depth 8))
-(after! org-src
+(after! org
   (set! :popup "^\\*Org Src" '((size . 0.4) (side . right)) '((quit) (select . t)))
   )
 (after! org-capture
@@ -605,9 +606,9 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       :ne "s-q"   (if (daemonp) #'delete-frame #'save-buffers-kill-emacs)
       :ne "s-f"                 #'swiper
       :ne "s-F"               #'(lambda () "swiper" (interactive) (swiper
-                                                              (if (symbol-at-point)
-                                                                  (format "\\_<%s\\_> " (symbol-at-point))
-                                                                nil)))
+                                                                   (if (symbol-at-point)
+                                                                       (format "\\_<%s\\_> " (symbol-at-point))
+                                                                     nil)))
       :ne "s-/"                 #'evil-commentary-line
       ;; :ne "C-M-f"            #'doom/toggle-fullscreen
       :n  "s-s"                 #'save-buffer
