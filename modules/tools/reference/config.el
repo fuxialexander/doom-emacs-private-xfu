@@ -143,7 +143,7 @@ _o_: Open entry   _e_: Email entry  ^ ^                 _q_: quit
      bibtex-completion-additional-search-fields '("journal")
      bibtex-completion-pdf-symbol "@"
      bibtex-completion-notes-symbol "#"
-     bibtex-completion-display-formats '((t . "${author:20} ${journal:10} ${year:4} ${title:*} ${=type=:3} ${=has-pdf=:1}${=has-note=:1}")))
+     bibtex-completion-display-formats '((t . "${=has-pdf=:1}${=has-note=:1} ${author:20} ${journal:10} ${year:4} ${title:*} ${=type=:3}")))
     (setq ivy-bibtex-default-action 'ivy-bibtex-insert-key)
     (ivy-add-actions 'ivy-bibtex '(("SPC" ivy-bibtex-quicklook "Quick look")))
     (setq bibtex-completion-format-citation-functions

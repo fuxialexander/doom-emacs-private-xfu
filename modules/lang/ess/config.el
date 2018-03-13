@@ -41,6 +41,10 @@
         ess-default-style 'DEFAULT)
   (ess-toggle-underscore t)
   (set! :repl 'ess-mode #'+r/repl)
+  (set! :popup "^\\*R.*" '((slot . 1) (side . right) (size . 80)) '((select) (quit) (transient) (modeline)))
+  (push (lambda (buf)
+          (string-match-p "inferior-ess-mode" (symbol-name (buffer-local-value 'major-mode buf))))
+        doom-real-buffer-functions)
   (add-hook! 'inferior-ess-mode-hook
     (smartparens-mode 1)
     (setq-local comint-use-prompt-regexp nil)
@@ -56,7 +60,7 @@
      "<up>"          #'comint-next-input
      "<down>"        #'comint-previous-input
      (:localleader
-      :nv ","        #'ess-eval-region-or-function-or-paragraph-and-step
+      :nv "RET"        #'ess-eval-region-or-function-or-paragraph-and-step
       :n "'"         #'R
       :n "<tab>"     #'ess-switch-to-inferior-or-script-buffer
       :n "<backtab>" #'ess-switch-process

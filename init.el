@@ -1,108 +1,109 @@
-(doom!
- :feature
- (popup
-  +all
-  +defaults)      ; tame sudden yet inevitable temporary windows
- eval             ; run code, run (also, repls)
- evil             ; come to the dark side, we have cookies
- (lookup          ; helps you navigate your code and documentation
-  ;; +docsets
-  +devdocs)       ; ...or in Dash docsets locally
- snippets         ; my elves. They type so I don't have to
- spellcheck       ; tasing you for misspelling mispelling
- file-templates
- version-control  ; remember, remember that commit in November
- workspaces       ; tab emulation, persistence & separate workspaces
+(doom! :feature
+       (popup
+        +all
+        +defaults)      ; tame sudden yet inevitable temporary windows
+       eval             ; run code, run (also, repls)
+       evil             ; come to the dark side, we have cookies
+       (lookup          ; helps you navigate your code and documentation
+        ;; +docsets
+        +devdocs)       ; ...or in Dash docsets locally
+       snippets         ; my elves. They type so I don't have to
+       spellcheck       ; tasing you for misspelling mispelling
+       file-templates
+       version-control  ; remember, remember that commit in November
+       workspaces       ; tab emulation, persistence & separate workspaces
 
- syntax-checker
- :completion
- company          ; the ultimate code completion backend
- ivy              ; a search engine for love and life
- :ui
- doom
- evil-goggles
- hl-todo
- ;; nav-flash
- doom-dashboard   ; a nifty splash screen for Emacs
- doom-modeline    ; a snazzy Atom-inspired mode-line
- window-select    ; visually switch windows
+       syntax-checker
+       :completion
+       (company +auto)          ; the ultimate code completion backend
+       ivy              ; a search engine for love and life
+       :ui
+       doom
+       evil-goggles
+       hl-todo
+       ;; nav-flash
+       doom-dashboard   ; a nifty splash screen for Emacs
+       doom-modeline    ; a snazzy Atom-inspired mode-line
+       window-select    ; visually switch windows
+       posframe
 
 
- :tools
- dired            ; making dired pretty [functional]
- electric-indent  ; smarter, keyword-based electric-indent
- eshell           ; a consistent, cross-platform shell (WIP)
- gist             ; interacting with github gists
- imenu            ; an imenu sidebar and searchable code index
- macos            ; MacOS-specific commands
- make             ; run make tasks from Emacs
- neotree          ; a project drawer, like NERDTree for vim
- rgb
- term             ; terminals in Emacs
- ;;reference
- upload           ; map local to remote projects via ssh/ftp
+       :tools
+       dired            ; making dired pretty [functional]
+       electric-indent  ; smarter, keyword-based electric-indent
+       eshell           ; a consistent, cross-platform shell (WIP)
+       gist             ; interacting with github gists
+       imenu            ; an imenu sidebar and searchable code index
+       macos            ; MacOS-specific commands
+       make             ; run make tasks from Emacs
+       neotree          ; a project drawer, like NERDTree for vim
+       rgb
+       term             ; terminals in Emacs
+       ;;reference
+       upload           ; map local to remote projects via ssh/ftp
 
- :lang
- python
- ess
- (latex
-  +latexmk
-  +skim)
- (org
-  +attach
-  +todo
-  +babel
-  +latex
-  +capture
-  +export
-  +present)
- ;; cc            ; C/C++/Obj-C madness
- data             ; config/data formats
- emacs-lisp       ; drown in parentheses
- ;; haskell       ; a language that's lazier than I am
- javascript       ; all(hope(abandon(ye(who(enter(here))))))
- ;; latex         ; writing papers in Emacs has never been so fun
+       :lang
+       python
+       ess
+       (latex
+        +latexmk
+        +skim)
+       (org
+        +attach
+        +babel
+        +capture
+        +present)
+       (org-private
+        +todo
+        +babel
+        +capture
+        +latex
+        +export +style)
+       ;; cc            ; C/C++/Obj-C madness
+       data             ; config/data formats
+       emacs-lisp       ; drown in parentheses
+       ;; haskell       ; a language that's lazier than I am
+       javascript       ; all(hope(abandon(ye(who(enter(here))))))
+       ;; latex         ; writing papers in Emacs has never been so fun
 
- ;; ledger        ; an accounting system in Emacs
- markdown         ; writing docs for people to ignore
- sh               ; she sells (ba|z)sh shells on the C xor
- ;; web           ; the tubes
- :tools
- dired
- reference
- :app
- rss
- twitter
- email
- (write
-  +wordnut
-  +synosaurus
-  +langtool)
- calendar
-)
+       ;; ledger        ; an accounting system in Emacs
+       markdown         ; writing docs for people to ignore
+       sh               ; she sells (ba|z)sh shells on the C xor
+       web           ; the tubes
+       :tools
+       dired
+       reference
+       :app
+       rss
+       twitter
+       email
+       (write
+        +wordnut
+        +synosaurus
+        +langtool)
+       calendar)
 
-(setq-default
- evil-want-C-u-scroll t
- exec-path '("/usr/local/opt/coreutils/libexec/gnubin"
-             "/usr/local/opt/texinfo/bin/"
-             "/usr/local/opt/openssl/bin/"
-             "/Library/Internet\\ Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin/"
-             "/usr/local/bin/"
-             "/usr/local/anaconda3/bin/"
-             "/usr/local/texlive/2017/bin/x86_64-darwin/"
-             "/usr/local/opt/imagemagick@6/bin/"
-             "/usr/local/opt/curl/bin/"
-             "/usr/local/sbin/"
-             "/usr/local/opt/texinfo/bin/"
-             "/usr/texbin/"
-             "/usr/bin/"
-             "/usr/sbin/"
-             "/bin/")
- fringe-indicator-alist (delq
-                         (assq 'truncation fringe-indicator-alist)
-                         (delq (assq 'continuation fringe-indicator-alist)
-                               fringe-indicator-alist))
- )
+(setq-default evil-want-C-u-scroll t
+              exec-path
+              '("/usr/local/opt/coreutils/libexec/gnubin"
+                "/usr/local/opt/texinfo/bin/"
+                "/usr/local/opt/openssl/bin/"
+                "/Library/Internet\\ Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin/"
+                "/usr/local/bin/"
+                "/usr/local/anaconda3/bin/"
+                "/usr/local/texlive/2017/bin/x86_64-darwin/"
+                "/usr/local/opt/imagemagick@6/bin/"
+                "/usr/local/opt/curl/bin/"
+                "/usr/local/sbin/"
+                "/usr/local/opt/texinfo/bin/"
+                "/usr/texbin/"
+                "/usr/bin/"
+                "/usr/sbin/"
+                "/bin/")
+              fringe-indicator-alist (delq
+                                      (assq 'truncation fringe-indicator-alist)
+                                      (delq (assq 'continuation fringe-indicator-alist)
+                                            fringe-indicator-alist)))
 (setenv "PATH" "/usr/local/opt/coreutils/libexec/gnubin:/usr/local/opt/texinfo/bin:/usr/local/opt/openssl/bin:/Library/Internet\\ Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin:/usr/local/texlive/2017/bin/x86_64-darwin:/usr/local/bin:/usr/local/anaconda3/bin:/usr/local/texlive/2017/bin/x86_64-darwin:/usr/local/opt/imagemagick@6/bin:/usr/local/opt/curl/bin:/usr/local/sbin:/usr/local/opt/texinfo/bin:/usr/texbin:/usr/bin:/bin")
 (or standard-display-table
     (setq standard-display-table (make-display-table)))
@@ -112,38 +113,32 @@
                                                                 (abbreviate-file-name (buffer-file-name))
                                                               "%b"))))
 
-;; I've swapped these keys on my keyboard
-(setq
- ns-alternate-modifier 'meta
- ns-command-modifier 'super
- mac-command-modifier 'super
- mac-option-modifier 'meta
- user-mail-address "fuxialexander@gmail.com"
- user-full-name    "Alexander Fu Xi"
+(setq ns-alternate-modifier 'meta
+      ns-command-modifier 'super
+      mac-command-modifier 'super
+      mac-option-modifier 'meta
+      user-mail-address "fuxialexander@gmail.com"
+      user-full-name    "Alexander Fu Xi"
 
-;;; Mac
-
-;;; UI
- evil-respect-visual-line-mode t
- doom-font (font-spec :family "SF Mono" :size 13)
- doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 15 :width 'extra-condensed :weight 'normal :slant 'normal :registry "iso10646-1" )
- ;; Font: #<font-spec nil nil SF Compact Display nil iso10646-1 nil normal extra-condensed nil nil nil nil ((:user-spec . SF Compact Display))>
- doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 13)
- doom-big-font (font-spec :family "SF Mono" :size 16)
- doom-line-numbers-style nil
- +doom-modeline-buffer-file-name-style 'truncate-upto-project
- doom-neotree-enable-variable-pitch t
- doom-neotree-project-size 1.2
- doom-neotree-line-spacing 0
- doom-neotree-folder-size 1.0
- doom-neotree-chevron-size 0.6
- max-specpdl-size 10000
- indicate-buffer-boundaries nil
- indicate-empty-lines nil
- frame-alpha-lower-limit 0
- which-key-idle-delay 0.3
- +xfu-snippets-dir "~/.doom.d/snippets"
- org-ellipsis " + ")
+      evil-respect-visual-line-mode t
+      doom-font (font-spec :family "SF Mono" :size 13)
+      doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 15 :width 'extra-condensed :weight 'normal :slant 'normal :registry "iso10646-1" )
+      doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 13)
+      doom-big-font (font-spec :family "SF Mono" :size 16)
+      doom-line-numbers-style nil
+      +doom-modeline-buffer-file-name-style 'truncate-upto-project
+      doom-neotree-enable-variable-pitch t
+      doom-neotree-project-size 1.2
+      doom-neotree-line-spacing 0
+      doom-neotree-folder-size 1.0
+      doom-neotree-chevron-size 0.6
+      max-specpdl-size 10000
+      indicate-buffer-boundaries nil
+      indicate-empty-lines nil
+      frame-alpha-lower-limit 0
+      which-key-idle-delay 0.3
+      +xfu-snippets-dir "~/.doom.d/snippets"
+      org-ellipsis " + ")
 
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(ns-appearance . 'dark))
@@ -160,7 +155,7 @@
   nil)
 
 
-;;;; magit
+;; magit
 (def-package-hook! magit
   :post-init
   (require 'pretty-magit "~/.doom.d/local/pretty-magit.el")
@@ -173,15 +168,18 @@
   (pretty-magit "origin"  ? (:box nil :height 1.0 :family "github-octicons") t)
   t)
 
+;; remote
 (def-package-hook! ssh-deploy
   :pre-init
   (def-package! ediff-diff
     :commands (ediff-same-file-contents))
   t)
 
+;; dired
 (def-package-hook! dired-k
   :disable)
 
+;; edit
 (def-package-hook! evil-escape
   :pre-config
   (defun evil-escape-p ()

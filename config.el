@@ -1,5 +1,5 @@
 ;; config.el -*- lexical-binding: t; -*-
-
+;;;; test
 (def-package! pinentry
   :config (pinentry-start))
 (after! epa
@@ -17,7 +17,7 @@
       recentf-auto-cleanup 60
       ivy-use-selectable-prompt t
       ivy-auto-select-single-candidate t
-      ivy-height 10
+      ivy-height 20
       avy-keys '(?a ?s ?d ?f ?j ?k ?l ?\;)
       ivy-rich-parse-remote-buffer nil
       ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-cd-selected
@@ -92,25 +92,7 @@
   :config
   (setq alert-default-style 'notifier))
 
-(after! org
-  ;; **** Misc setting
-  (setq +org-dir "~/Dropbox/org/"
-        org-blank-before-new-entry nil
-        org-modules (quote (org-bibtex org-habit org-info org-protocol org-mac-link org-notmuch))
-        org-imenu-depth 8))
-(after! org
-  (set! :popup "^\\*Org Src" '((size . 0.4) (side . right)) '((quit) (select . t)))
-  )
-(after! org-capture
-  (set! :popup "^CAPTURE.*\\.org$" '((side . bottom) (size . 0.4)) '((select . t)))
-  )
-(after! org-agenda
-  (set! :popup "^\\*Org Agenda.*\\*$" '((slot . -1) (size . 120) (side . right)) '((select . t) (modeline . nil)))
 
-  (push 'org-agenda-mode evil-snipe-disabled-modes)
-  ;; (add-hook 'org-agenda-mode-hook #'(lambda () (evil-vimish-fold-mode -1)))
-  (add-hook 'org-agenda-finalize-hook #'hide-mode-line-mode)
-  (set! :evil-state 'org-agenda-mode 'normal))
 
 (def-package! orgit :after magit)
 (def-package! magithub
@@ -356,6 +338,7 @@ symbol."
              cursor-type nil)))))
 (def-package! company-lsp
   :after lsp-mode)
+
 
 (def-package! lispy
   :hook (emacs-lisp-mode . lispy-mode)
