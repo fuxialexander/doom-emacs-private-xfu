@@ -221,6 +221,16 @@
   (map! :irvo "C-g" #'evil-escape)
   nil)
 
+;; ivy
 (def-package-hook! ivy-rich
   :disable)
 
+;; syntax-checker
+(def-package-hook! flycheck-popup-tip
+  :disable)
+
+(def-package-hook! flycheck-pos-tip
+  :disable)
+
+(def-package-hook! posframe
+  :pre-config nil)

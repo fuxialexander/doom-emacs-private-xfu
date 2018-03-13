@@ -28,3 +28,4 @@
 (package! lsp-ui)
 
 (package! ivy-posframe)
+(package! flycheck-posframe)

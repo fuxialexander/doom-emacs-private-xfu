@@ -191,33 +191,27 @@ Enable completion of info from magithub in the current buffer.
   (setq xwidget-webkit-enable-plugins t))
 
 
-
-
-
-
-(require 'company)
-(def-package! company-childframe
-  :after company)
-(setq-default company-idle-delay 0.2
-              company-minimum-prefix-length 2
-              company-tooltip-limit 10
-              company-tooltip-minimum-width 60
-              company-tooltip-margin 0
-              company-tooltip-offset-display nil
-              company-dabbrev-downcase nil
-              company-dabbrev-ignore-case nil
-              company-dabbrev-code-other-buffers t
-              company-tooltip-align-annotations t
-              company-require-match 'never
-              company-frontends '(company-childframe-frontend company-echo-metadata-frontend)
-              company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode)
-              company-childframe-child-frame nil
-              company-transformers '(company-sort-by-occurrence))
+(after! company
+  (setq company-tooltip-limit 10
+        company-minimum-prefix-length 2
+        company-tooltip-minimum-width 60
+        company-tooltip-margin 0
+        company-tooltip-offset-display nil
+        company-dabbrev-downcase nil
+        company-dabbrev-ignore-case nil
+        company-dabbrev-code-other-buffers t
+        company-tooltip-align-annotations t
+        company-require-match 'never
+        company-frontends '(company-childframe-frontend company-echo-metadata-frontend)
+        company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode)
+        company-childframe-child-frame nil))
 
 (set! :company-backend '(emacs-lisp-mode) '(company-elisp company-files company-yasnippet company-dabbrev-code))
 (set! :company-backend '(python-mode) '(company-anaconda company-files company-yasnippet company-dabbrev-code))
-(set! :company-backend '(inferior-python-mode) '(company-capf company-files))
+(set! :company-backend '(inferior-python-mode) '(company-capf company-files company-yasnippet company-dabbrev-code))
+(set! :company-backend '(inferior-ess-mode) '(company-capf company-files company-yasnippet company-dabbrev-code))
 (set! :company-backend '(org-mode) '(company-capf company-files company-yasnippet company-dabbrev))
+
 (set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point)
 
 (def-package! emacs-snippets)
@@ -408,20 +402,24 @@ symbol."
            :unless '(sp-point-before-word-p sp-point-before-same-p))
   (sp-pair "[" nil :post-handlers '(("| " " "))
            :unless '(sp-point-before-word-p sp-point-before-same-p)))
+(after! yasnippet
+  (add-hook! (comint-mode
+              inferior-python-mode
+              inferior-ess-mode)
+    #'yas-minor-mode-on))
 
-
-
-(def-package! ivy-posframe
-  :after (ivy)
-  :config
-  (setq ivy-display-function nil
-        ivy-fixed-height-minibuffer nil)
-  (push '(swiper . nil) ivy-display-functions-alist)
+(def-package! flycheck-posframe
+    :hook (flycheck-mode . flycheck-posframe-mode))
+(after! ivy-posframe
+  (push '(counsel-rg . nil) ivy-display-functions-alist)
+  (push '(counsel-ag . nil) ivy-display-functions-alist)
+  (push '(counsel-grep . nil) ivy-display-functions-alist)
   (push '(t . ivy-posframe-display-at-frame-center) ivy-display-functions-alist)
-  (setq ivy-posframe-parameters
-        '((min-width . 120)
-          (internal-border-width . 10))
-        ivy-posframe-font (font-spec :family "SF Compact Display" :size 18 :width 'extra-condensed :weight 'normal :slant 'normal :registry "iso10646-1" ))
+  (setq ivy-height 20
+        ivy-posframe-parameters `((min-width . 120)
+                                  (min-height . ,ivy-height)
+                                  (internal-border-width . 10))
+        ivy-posframe-font (font-spec :family "SF Mono" :size 16 :width 'extra-condensed :weight 'normal :slant 'normal :registry "iso10646-1" ))
   (ivy-posframe-enable))
 (after! counsel
   (defun +ivy-recentf-transformer (str)
