@@ -1,4 +1,4 @@
-;;; lang/org/autoload/org-latex.el -*- lexical-binding: t; -*-
+;;; lang/org-private/autoload/org-latex.el -*- lexical-binding: t; -*-
 ;;;###if (featurep! +latex)
 
 ;;;###autoload

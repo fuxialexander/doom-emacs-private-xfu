@@ -1,5 +1,5 @@
-;;; lang/org/+latex.el -*- lexical-binding: t; -*-
-(add-hook 'org-load-hook #'+org|init-latex)
+;;; lang/org-private/+latex.el -*- lexical-binding: t; -*-
+(add-hook 'org-load-hook #'+org-private|init-latex)
 
 (def-package! cdlatex
   :commands (org-cdlatex-mode
@@ -10,7 +10,7 @@
   (setq cdlatex-math-modify-alist '((?B "\\mathbb" nil t nil nil)))
   )
 
-(defun +org|init-latex ()
+(defun +org-private|init-latex ()
   (if (string-match-p "NS" (emacs-version))
       (setq-default org-format-latex-options `(:background ,(doom-color 'bg-alt)
                                                            :foreground ,(doom-color 'fg)

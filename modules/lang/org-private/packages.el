@@ -1,12 +1,12 @@
 ;; -*- no-byte-compile: t; -*-
-;;; lang/org/packages.el
+;;; lang/org-private/packages.el
 
 (package! org-plus-contrib)
-;; (package! org-bullets :recipe (:fetcher github :repo "hlissner/org-bullets"))
+(package! org-bullets :recipe (:fetcher github :repo "Kaligule/org-bullets"))
 (package! toc-org)
 (package! org-web-tools)
 (package! org-wild-notifier)
-;; (package! evil-org)
+(package! evil-org)
 (package! org-brain)
 (package! org-super-agenda)
 (package! org-clock-convenience)
