@@ -378,8 +378,6 @@ symbol."
   :config
   (apply #'electric-operator-add-rules-for-mode 'inferior-python-mode
          electric-operator-prog-mode-rules)
-  (apply #'electric-operator-add-rules-for-mode 'sh-mode
-         electric-operator-prog-mode-rules)
   (electric-operator-add-rules-for-mode 'inferior-python-mode
                                         (cons "**" #'electric-operator-python-mode-**)
                                         (cons "*" #'electric-operator-python-mode-*)
@@ -394,7 +392,6 @@ symbol."
                                         (cons "<=" " <= ")
                                         (cons ">=" " >= ")
                                         (cons ">" " > ")
-                                        (cons "," ", ")
                                         (cons "|" " | ")))
 (after! smartparens
   ;; Auto-close more conservatively and expand braces on RET
@@ -549,6 +546,9 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       :gnvime "M-i" #'org-insert-last-stored-link
       :gnvime "s-j" #'dwim-jump
       :m "C-u" #'evil-scroll-up
+      :i "C-k" #'kill-line
+      (:map evil-ex-completion-map
+        "C-k" #'kill-line)
       ;; *** Misc
       :n    "\\"    #'ace-window
       :v    "<escape>"    #'evil-escape

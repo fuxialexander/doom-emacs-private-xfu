@@ -5,7 +5,7 @@
   (cond ((eq 'org-mode (buffer-local-value 'major-mode (current-buffer)))
             (counsel-org-goto))
         ((bound-and-true-p outline-minor-mode)
-         (counsel-oi))
+         (counsel-outline))
         (t (counsel-imenu))))
 
 
