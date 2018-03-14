@@ -169,3 +169,32 @@ the workspace and move to the next."
                (funcall delete-window-fn))
               ((cdr (+workspace-list-names))
                (+workspace/delete current-persp-name)))))))
+
+;;;###autoload
+(defun +xfu/browse-private ()
+  (interactive) (doom-project-browse "~/.doom.d"))
+;;;###autoload
+(defun +xfu/find-in-private ()
+  (interactive) (doom-project-find-file "~/.doom.d"))
+
+;;;###autoload
+(defun +xfu/browse-playground ()
+  (interactive) (doom-project-browse "~/Source/playground"))
+;;;###autoload
+(defun +xfu/find-in-playground ()
+  (interactive) (doom-project-find-file "~/Source/playground"))
+
+;;;###autoload
+(defun +xfu/browse-work ()
+  (interactive) (doom-project-browse "~/Source/work"))
+;;;###autoload
+(defun +xfu/find-in-work ()
+  (interactive) (doom-project-find-file "~/Source/work"))
+
+;;;###autoload
+(defun +xfu/browse-snippets ()
+  (interactive) (doom-project-browse "~/.doom.d/snippets"))
+
+;;;###autoload
+(defun +xfu/find-in-snippets ()
+  (interactive) (doom-project-find-file "~/.doom.d/snippets"))
