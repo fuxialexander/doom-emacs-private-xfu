@@ -8,12 +8,10 @@
 
 ;; Sub-modules
 (if (featurep! +todo)    (load! +todo))
-(if (featurep! +attach)  (load! +attach))
 (if (featurep! +babel)   (load! +babel))
 (if (featurep! +latex)   (load! +latex))
 (if (featurep! +capture) (load! +capture))
 (if (featurep! +export)  (load! +export))
-(if (featurep! +present) (load! +present))
 ;; TODO (if (featurep! +publish) (load! +publish))
 
 
@@ -97,6 +95,8 @@ If run interactively, get ENTRY from context."
 (add-hook 'org-load-hook #'+org-private|setup-overrides t)
 
 (remove-hook! 'org-mode-hook #'(visual-line-mode))
+
+(add-hook 'org-mode-hook #'+org-private|setup-editing t)
 
 ;;
 ;; `org-load' hooks
@@ -215,8 +215,7 @@ If run interactively, get ENTRY from context."
           ("KILL" . org-todo-keyword-kill)
           ("OUTD" . org-todo-keyword-outd))
         org-todo-keywords
-        '((sequence "[ ](s)" "[-](p)" "[?](m)" "|" "[X](x)")
-          (sequence "TODO(t!)"  "|" "DONE(d!/@)")
+        '((sequence "TODO(t!)"  "|" "DONE(d!/@)")
           (sequence "WAIT(w@/@)" "|" "OUTD(o@/@)" "KILL(k@/@)")
           (sequence "HABT(h!)" "|" "DONE(d!/@)" "KILL(k@/@)"))
         org-treat-insert-todo-heading-as-state-change t
@@ -492,3 +491,17 @@ If run interactively, get ENTRY from context."
                            (call-interactively 'counsel-org-tag)) t)))))
   (add-hook 'org-ctrl-c-ctrl-c-hook '+org-private/*org-ctrl-c-ctrl-c-counsel-org-tag)
   )
+
+;;
+;; `org-mode' hooks
+;;
+
+(defun +org-private|setup-editing ()
+  (after! smartparens
+    (sp-with-modes 'org-mode
+      (sp-local-pair "\\(" "\\)"
+                     :post-handlers '(sp-latex-insert-spaces-inside-pair)
+                     :unless '(sp-latex-point-after-backslash))
+      (sp-local-pair "\\[" "\\]"
+                     :post-handlers '(sp-latex-insert-spaces-inside-pair)
+                     :unless '(sp-latex-point-after-backslash)))))

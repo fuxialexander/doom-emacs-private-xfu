@@ -8,7 +8,6 @@
          (counsel-outline))
         (t (counsel-imenu))))
 
-
 ;;;###autoload
 (defun mac-iTerm-shell-command (text)
   "Write TEXT into iTerm like user types it with keyboard."
@@ -101,56 +100,6 @@
   (org-agenda arg "a"))
 
 ;;;###autoload
-(defun +xfu/yank-buffer-filename ()
-  "Copy the current buffer's path to the kill ring."
-  (interactive)
-  (if-let* ((filename (or buffer-file-name (bound-and-true-p list-buffers-directory))))
-      (message (kill-new (abbreviate-file-name filename)))
-    (error "Couldn't find filename in current buffer")))
-
-;;;###autoload
-(defmacro +xfu--def-browse-in! (name dir)
-  (let ((prefix "xfu"))
-    `(defun ,(intern (format "+%s/browse-%s" prefix name)) ()
-       (interactive)
-       (doom-project-browse ,dir))))
-
-;;;###autoload
-(defmacro +xfu--def-find-in! (name dir)
-  (let ((prefix "xfu"))
-    `(defun ,(intern (format "+%s/find-in-%s" prefix name)) ()
-       (interactive)
-       (doom-project-find-file ,dir))))
-
-
-;;;###autoload (autoload '+xfu/browse-project "autoload/xfu" nil t)
-(+xfu--def-browse-in! project (doom-project-root))
-
-;;;###autoload (autoload '+xfu/find-in-templates "autoload/xfu" nil t)
-(+xfu--def-find-in!   templates +file-templates-dir)
-;;;###autoload (autoload '+xfu/browse-templates "autoload/xfu" nil t)
-(+xfu--def-browse-in! templates +file-templates-dir)
-
-;;;###autoload (autoload '+xfu/find-in-doom "autoload/xfu" nil t)
-(+xfu--def-find-in!   doom doom-emacs-dir)
-;;;###autoload (autoload '+xfu/browse-doom "autoload/xfu" nil t)
-(+xfu--def-browse-in! doom doom-emacs-dir)
-
-;;;###autoload (autoload '+xfu/find-in-org "autoload/xfu" nil t)
-(+xfu--def-find-in!   org +org-dir)
-;;;###autoload (autoload '+xfu/browse-org "autoload/xfu" nil t)
-(+xfu--def-browse-in! org +org-dir)
-
-;;;###autoload (autoload '+xfu/find-in-private "autoload/xfu" nil t)
-(+xfu--def-find-in! private +private-config-path)
-;;;###autoload (autoload '+xfu/browse-private "autoload/xfu" nil t)
-(+xfu--def-browse-in! private +private-config-path)
-
-;;;###autoload (autoload '+xfu/find-in-snippets "autoload/xfu" nil t)
-(+xfu--def-find-in! snippets +xfu-snippets-dir)
-;; NOTE No need for a browse-snippets variant, use `yas-visit-snippet-file'
-
-;;;###autoload
 (defun cfw:open-org-calendar-withoutkevin ()
   (interactive)
   (let ((org-agenda-files '("~/Dropbox/org/" "~/Dropbox/org/cal/cal.org")))
@@ -191,20 +140,6 @@
   (condition-case nil
       (forward-sexp 2)
     ('scan-error (end-of-buffer))))
-
-;;;###autoload
-(defmacro +default--def-browse-in! (name dir &optional prefix)
-  (let ((prefix (or prefix (cdr (doom-module-from-path (or load-file-name byte-compile-current-file))))))
-    `(defun ,(intern (format "+%s/browse-%s" prefix name)) ()
-       (interactive)
-       (doom-project-browse ,dir))))
-
-;;;###autoload
-(defmacro +default--def-find-in! (name dir &optional prefix)
-  (let ((prefix (or prefix (cdr (doom-module-from-path (or load-file-name byte-compile-current-file))))))
-    `(defun ,(intern (format "+%s/find-in-%s" prefix name)) ()
-       (interactive)
-       (doom-project-find-file ,dir))))
 
 
 ;;;###autoload
