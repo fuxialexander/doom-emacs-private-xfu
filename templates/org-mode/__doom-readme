@@ -1,0 +1,35 @@
+# -*- mode: snippet -*-
+# name: Doom module readme
+# --
+#+TITLE: ${1:`(if (string-match "modules/\\([^/]+\\)/\\([^/]+\\)/.+" buffer-file-name)
+                  (format ":%s %s"
+                          (match-string 1 buffer-file-name)
+                          (match-string 2 buffer-file-name))
+                "")`}
+                   
+${2:A short summary about what this module does.}
+
+${3:If necessary, include a longer description below it that goes into more detail. This may be as long as you like.
+
++ If possible, include a list of features
++ Include links to major plugins that the module uses, if applicable
++ Use links whenever you can
++ Mention dependencies on other modules here}
+
+* Table of Contents :TOC:
+
+* Module Flags
+This module provides no flags.
+
+* Prerequisites
+This module has no prereqisites.
+
+* Features
+A list of features, how to use them, and their dependencies.
+
+* Configuration
+
+* Appendix
+** Commands
+** Hacks
+$0

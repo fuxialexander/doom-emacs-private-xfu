@@ -29,12 +29,15 @@
 
 ;;
 (defun +org|init-export ()
+  (setq org-export-backends '(ascii html latex md)
+        org-publish-timestamp-directory (concat doom-cache-dir "/org-timestamps/"))
+
+  (when (executable-find "pandoc")
+    (require 'ox-pandoc))
+
+
   (defun +org*org-html--format-image (source attributes info)
-    "Return \"img\" tag with given SOURCE and ATTRIBUTES.
-SOURCE is a string specifying the location of the image.
-ATTRIBUTES is a plist, as returned by
-`org-export-read-attribute'.  INFO is a plist used as
-a communication channel."
+    "Optionally embed image into html as base64."
     (let ((source
            (replace-regexp-in-string "file://" ""
                                      (replace-regexp-in-string
@@ -66,17 +69,9 @@ a communication channel."
              attributes))
            info)))))
   (advice-add #'org-html--format-image :override #'+org*org-html--format-image)
-
-  (when (executable-find "pandoc")
-    (require 'ox-pandoc))
-
-  (setq org-export-backends '(ascii html latex md)
-        org-publish-timestamp-directory (concat doom-cache-dir "/org-timestamps/")
-        org-export-with-author t)
-
   (when (featurep! +style)
     (defvar +org-html-export-style-dir "~/.doom.d/modules/lang/org-private/org-html-head"
-      "TODO")
+      "Directory that contains files to be embeded into org export html.")
     (defvar +org-html-export-style-alist '("include.html"
                                            "bootstrap-toc.js"
                                            "bootstrap-toc.css"
@@ -105,6 +100,7 @@ a communication channel."
                     :frame "hsides"))
 
     (defun +org/org--embed-html (file)
+      "Convert html files to string for embedding"
       (concat
        (with-temp-buffer
          (insert-file-contents file)
@@ -112,6 +108,7 @@ a communication channel."
        "\n"))
 
     (defun +org/org--embed-css (file)
+      "Convert css files to string for embedding"
       (concat
        "<style type=\"text/css\">\n"
        "<!--/*--><![CDATA[/*><!--*/\n"
@@ -122,6 +119,7 @@ a communication channel."
        "</style>\n"))
 
     (defun +org/org--embed-js (file)
+      "Convert js files to string for embedding"
       (concat
        "<script type=\"text/javascript\">\n"
        "<!--/*--><![CDATA[/*><!--*/\n"
