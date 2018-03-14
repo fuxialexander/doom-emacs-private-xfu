@@ -77,6 +77,7 @@ inherited from `variable-pitch' and `default'."
                   org-todo-keyword-kill
                   org-todo-keyword-outd
                   org-special-keyword
+                  org-latex-and-related
                   org-date
                   org-property-value
                   org-special-keyword
