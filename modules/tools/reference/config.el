@@ -69,16 +69,17 @@ The default action being to insert a citation.")
   :config
   (setq bibtex-dialect 'BibTeX
         org-ref-clean-bibtex-entry-hook '(org-ref-bibtex-format-url-if-doi
-                                          org-ref-key-comma
+                                          orcb-key-comma
                                           org-ref-replace-nonascii
-                                          org-ref-&
-                                          org-ref-%
+                                          orcb-&
+                                          orcb-%
                                           org-ref-title-case-article
-                                          org-ref-clean-year
+                                          orcb-clean-year
                                           my-org-ref-key
-                                          org-ref-clean-doi
-                                          org-ref-clean-pages
-                                          org-ref-check-journal
+                                          ;; orcb-key
+                                          orcb-clean-doi
+                                          orcb-clean-pages
+                                          orcb-check-journal
                                           org-ref-sort-bibtex-entry)
         org-ref-default-bibliography '("~/Dropbox/org/reference/Bibliography.bib")
         org-ref-bibliography-notes "~/Dropbox/org/reference/ref.org"
