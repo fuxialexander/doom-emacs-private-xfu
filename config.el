@@ -387,16 +387,35 @@ symbol."
 
 
 (def-package! flycheck-posframe
-    :hook (flycheck-mode . flycheck-posframe-mode))
+  :hook (flycheck-mode . flycheck-posframe-mode)
+  :config
+  (setq flycheck-posframe-warning-prefix "⚠ "
+        flycheck-posframe-info-prefix "··· "
+        flycheck-posframe-error-prefix " ")
+  (defun *flycheck-posframe-show-posframe (errors)
+    "Display ERRORS, using posframe.el library."
+    (when errors
+      (posframe-show
+       flycheck-posframe-buffer
+       :string (flycheck-posframe-format-errors errors)
+       :background-color (face-background 'flycheck-posframe-background-face nil t)
+       :override-parameters '((internal-border-width . 10))
+       :position (point))
+      (dolist (hook flycheck-posframe-delete-posframe-hooks)
+        (add-hook hook #'flycheck-posframe-delete-posframe nil t))))
+  (defun *flycheck-posframe-delete-posframe ()
+    "Delete messages currently being shown if any."
+    (posframe-hide flycheck-posframe-buffer)
+    (dolist (hook flycheck-posframe-delete-posframe-hooks)
+      (remove-hook hook #'flycheck-posframe-delete-posframe t)))
+  (advice-add 'flycheck-posframe-delete-posframe :override #'*flycheck-posframe-delete-posframe)
+  (advice-add 'flycheck-posframe-show-posframe :override #'*flycheck-posframe-show-posframe))
 (after! ivy-posframe
   (push '(counsel-rg . nil) ivy-display-functions-alist)
   (push '(counsel-ag . nil) ivy-display-functions-alist)
   (push '(counsel-grep . nil) ivy-display-functions-alist)
   (push '(t . ivy-posframe-display-at-frame-center) ivy-display-functions-alist)
-  (setq ivy-height 20
-        counsel-evil-registers-height 20
-        counsel-yank-pop-height 20
-        ivy-posframe-parameters `((min-width . 120)
+  (setq ivy-posframe-parameters `((min-width . 120)
                                   (min-height . ,ivy-height)
                                   (internal-border-width . 10))
         ivy-posframe-font (font-spec :family "SF Mono" :size 16 :width 'extra-condensed :weight 'normal :slant 'normal :registry "iso10646-1" ))
