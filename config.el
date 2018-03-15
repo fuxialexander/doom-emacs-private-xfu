@@ -83,17 +83,9 @@
 
 
 (def-package! orgit :after magit)
-(def-package! magithub
-  :commands (magithub-clone
-             magithub-feature-autoinject)
-  ;; :ensure t
-  :config
-  (autoload 'magithub-completion-enable "magithub-completion" "\
-Enable completion of info from magithub in the current buffer.
 
-\(fn)" nil nil)
+(after! magithub
   (require 'parse-time)
-
   (defmacro magithub--time-number-of-days-since-string (iso8601)
     `(time-to-number-of-days
       (time-since
@@ -121,30 +113,21 @@ Enable completion of info from magithub in the current buffer.
                      (issue-filter-to-days limit "pull-requests")))))
 
   (add-to-list 'magit-status-mode-hook #'magithub-filter-maybe)
-  (setq
-   magithub-clone-default-directory "/Users/xfu/Source/playground/"
-   magithub-dir (concat doom-etc-dir "magithub/")
-   magithub-preferred-remote-method 'clone_url))
+  (setq magithub-clone-default-directory "/Users/xfu/Source/playground/"))
+
 (def-package! evil-magit :after magit
   :init
   (setq evil-magit-state 'normal))
 (after! magit
-  (magithub-feature-autoinject t)
   (setq magit-repository-directories '("/Users/xfu/Source/"))
   (set! :evil-state 'magit-repolist-mode 'normal)
-  (push 'magit-repolist-mode evil-snipe-disabled-modes)
-  (map!
-   (:map with-editor-mode-map
-     (:localleader
-       :desc "Finish" :n "," #'with-editor-finish
-       :desc "Abort"  :n "k" #'with-editor-cancel))
-   (:map magit-repolist-mode-map
-     :n "j" #'next-line
-     :n "k" #'previous-line
-     :n "s" #'magit-repolist-status ))
+  (map! (:map with-editor-mode-map
+          (:localleader
+            :desc "Finish" :n "," #'with-editor-finish
+            :desc "Abort"  :n "k" #'with-editor-cancel)))
+  (add-hook 'magit-popup-mode-hook #'hide-mode-line-mode)
   (set! :popup "^.*magit" '((slot . -1) (side . right) (size . 80)) '((modeline . nil) (select . t)))
   (set! :popup "^\\*magit.*popup\\*" '((slot . 0) (side . right)) '((modeline . nil) (select . t)))
-  (add-hook 'magit-popup-mode-hook #'hide-mode-line-mode)
   (set! :popup "^.*magit-revision:.*" '((slot . 2) (side . right) (window-height . 0.6)) '((modeline . nil) (select . t)))
   (set! :popup "^.*magit-diff:.*" '((slot . 2) (side . right) (window-height . 0.6)) '((modeline . nil) (select . nil))))
 
