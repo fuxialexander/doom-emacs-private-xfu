@@ -2,7 +2,6 @@
 /default/autoload/evil.el
 /default/config.el
 /default/packages.el
-/README.org
 *.elc
 /default/+evil-commands.el
 /default/+bindings.el
