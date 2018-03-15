@@ -159,6 +159,7 @@ If run interactively, get ENTRY from context."
         org-complete-tags-always-offer-all-agenda-tags t
         org-cycle-include-plain-lists t
         org-cycle-separator-lines 1
+        org-mac-Skim-highlight-selection-p t
         org-enforce-todo-dependencies t
         org-entities-user
         '(("flat"  "\\flat" nil "" "" "266D" "♭")
@@ -291,6 +292,7 @@ If run interactively, get ENTRY from context."
           :desc "Property"          :n "p"                  #'org-set-property
           :desc "Clock-in"          :n "i"                  #'org-clock-in
           :desc "Clock-out"         :n "o"                  #'org-clock-out
+          :desc "Get skim link"     :n "s"                  (λ! (call-interactively #'evil-append) (insert (+reference/skim-get-annotation)))
           :desc "Narrow to Subtree" :n "n"                  #'org-narrow-to-subtree
           :desc "Narrow to Element" :n "N"                  #'org-narrow-to-element
           :desc "Widen"             :n "w"                  #'widen
@@ -359,6 +361,27 @@ If run interactively, get ENTRY from context."
               )))))
 
 (defun +org-private|setup-overrides ()
+  (after! org-html
+    (defun +org-private/org-html--tags (tags info)
+      "Format TAGS into HTML.
+INFO is a plist containing export options."
+      (when tags
+        (format "\n<span class=\"tag\">%s</span>\n"
+	            (mapconcat
+	             (lambda (tag)
+	               (format "<span class=\"%s\">%s</span>"
+		                   (concat (plist-get info :html-tag-class-prefix)
+			                       (org-html-fix-class-name tag))
+		                   tag))
+	             tags " "))))
+    (advice-add 'org-html--tags :override #'+org-private/org-html--tags))
+  (setq org-file-apps
+        `(("pdf" . default)
+          ("\\.x?html?\\'" . default)
+          (auto-mode . emacs)
+          (directory . emacs)
+          (t . ,(cond (IS-MAC "open \"%s\"")
+                      (IS-LINUX "xdg-open \"%s\"")))))
   (defun +org-private/org-add-ids-to-headlines-in-file ()
     "Add CUSTOM_ID properties to all headlines in the current file"
     (interactive)
@@ -373,7 +396,55 @@ If run interactively, get ENTRY from context."
         (goto-char (point-min))
         (org-map-entries 'org-id-get-create))))
   (add-hook 'org-mode-hook (lambda () (add-hook 'before-save-hook '+org-private/org-add-ids-to-headlines-in-file nil 'local)))
+  (after! org-capture
+    (defadvice org-capture-finalize
+        (after org-capture-finalize-after activate)
+      "Advise capture-finalize to close the frame"
+      (if (or (equal "SA" (org-capture-get :key))
+              (equal "GSA" (org-capture-get :key)))
+          (do-applescript "tell application \"Skim\"\n    activate\nend tell")))
+    (add-hook 'org-capture-prepare-finalize-hook
+              #'(lambda () (if (or (equal "SA" (org-capture-get :key))
+                              (equal "GSA" (org-capture-get :key)))
+                          (+reference/append-org-id-to-skim (org-id-get-create))))))
+  (after! elfeed-show
+    (map! (:map elfeed-show-mode-map
+            :nm "b" #'org-ref-add-bibtex-entry-from-elfeed-entry)))
+  (after! org-mac-link
+    (org-link-set-parameters "skim"
+                             :face 'default
+                             :follow #'+reference/org-mac-skim-open
+                             :export (lambda (path desc backend)
+                                       (cond ((eq 'html backend)
+                                              (format "<a href=\"skim:%s\" >%s</a>"
+                                                      (org-html-encode-plain-text path)
+                                                      desc)))))
+    (defun +org-private/as-get-skim-page-link ()
+      (do-applescript
+       (concat
+        "tell application \"Skim\"\n"
+        "set theDoc to front document\n"
+        "set theTitle to (name of theDoc)\n"
+        "set thePath to (path of theDoc)\n"
+        "set thePage to (get index for current page of theDoc)\n"
+        "set theSelection to selection of theDoc\n"
+        "set theContent to contents of (get text for theSelection)\n"
+        "if theContent is missing value then\n"
+        "    set theContent to theTitle & \", p. \" & thePage\n"
+        (when org-mac-Skim-highlight-selection-p
+          (concat
+           "else\n"
+           "    tell theDoc\n"
+           "        set theNote to make note with data theSelection with properties {type:highlight note}\n"
+           "         set text of theNote to (get text for theSelection)\n"
+           "    end tell\n"))
+        "end if\n"
+        "set theLink to \"skim://\" & thePath & \"::\" & thePage & "
+        "\"::split::\" & theContent\n"
+        "end tell\n"
+        "return theLink as string\n")))
 
+    (advice-add 'as-get-skim-page-link :override #'+org-private/as-get-skim-page-link))
   (defun org-refile-get-targets (&optional default-buffer)
     "Produce a table with refile targets."
     (let ((case-fold-search nil)

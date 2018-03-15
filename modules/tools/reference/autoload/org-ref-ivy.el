@@ -176,33 +176,7 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
           (parsebib-find-next-item)
           )
       (parsebib-find-next-item))))
-(after! org-mac-link
-  (setq org-mac-Skim-highlight-selection-p t)
-  ;;;###autoload
-  (defun as-get-skim-page-link ()
-    (do-applescript
-     (concat
-      "tell application \"Skim\"\n"
-      "set theDoc to front document\n"
-      "set theTitle to (name of theDoc)\n"
-      "set thePath to (path of theDoc)\n"
-      "set thePage to (get index for current page of theDoc)\n"
-      "set theSelection to selection of theDoc\n"
-      "set theContent to contents of (get text for theSelection)\n"
-      "if theContent is missing value then\n"
-      "    set theContent to theTitle & \", p. \" & thePage\n"
-      (when org-mac-Skim-highlight-selection-p
-        (concat
-         "else\n"
-         "    tell theDoc\n"
-         "        set theNote to make note with data theSelection with properties {type:highlight note}\n"
-         "         set text of theNote to (get text for theSelection)\n"
-         "    end tell\n"))
-      "end if\n"
-      "set theLink to \"skim://\" & thePath & \"::\" & thePage & "
-      "\"::split::\" & theContent\n"
-      "end tell\n"
-      "return theLink as string\n"))))
+
 ;;;###autoload
 (defun +reference/skim-get-annotation ()
   (interactive)
@@ -212,8 +186,7 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
 (defun +reference/org-mac-skim-insert-page ()
   (interactive)
   (insert (+reference/skim-get-annotation)))
-(after! org
-  (org-link-set-parameters "skim" :follow #'+reference/org-mac-skim-open))
+
 ;;;###autoload
 (defun +reference/org-ref-find-entry-in-notes (key)
   "Find or create bib note for KEY"
@@ -254,18 +227,7 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
                  (org-beginning-of-line))
                 (t (org-previous-visible-heading 1))))
         ))))
-(after! org-capture
-  (defadvice org-capture-finalize
-      (after org-capture-finalize-after activate)
-    "Advise capture-finalize to close the frame"
-    (if (or (equal "SA" (org-capture-get :key))
-            (equal "GSA" (org-capture-get :key)))
-        (do-applescript "tell application \"Skim\"\n    activate\nend tell")))
-  (add-hook 'org-capture-prepare-finalize-hook
-            #'(lambda () (if (or (equal "SA" (org-capture-get :key))
-                            (equal "GSA" (org-capture-get :key)))
-                        (+reference/append-org-id-to-skim (org-id-get-create)))))
-  )
+
 ;;;###autoload
 (defun +reference/org-move-point-to-capture-skim-annotation ()
   (let* ((keystring (+reference/skim-get-bibtex-key)))
@@ -321,9 +283,7 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
            :action 'org-ref-doi-utils-add-bibtex-entry-from-doi)
           (bibtex-beginning-of-entry)
           (delete-char -2)))))))
-(after! elfeed-show
-  (map! (:map elfeed-show-mode-map
-          :nm "b" #'org-ref-add-bibtex-entry-from-elfeed-entry)))
+
 
 ;;;###autoload
 (defun org-ref-email-bibtex-entry ()

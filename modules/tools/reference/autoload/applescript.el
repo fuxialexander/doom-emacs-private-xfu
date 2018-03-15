@@ -1,4 +1,5 @@
 ;;; modules/tools/reference/autoload/applescript.el -*- lexical-binding: t; -*-
+
 ;;;###autoload
 (defun +reference/org-mac-skim-open (uri)
   "Visit page of pdf in Skim"
