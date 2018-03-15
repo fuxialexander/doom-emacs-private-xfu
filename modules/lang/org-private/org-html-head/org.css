@@ -321,6 +321,10 @@ code {
     font-family: SFMono-Regular, monospace;
 }
 
+.tag {
+    font-size: 50%;
+}
+
 .title {
     font-family: "SF Compact Display", 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 0;

@@ -36,6 +36,7 @@
        imenu                        ; an imenu sidebar and searchable code index
        macos                        ; MacOS-specific commands
        make                         ; run make tasks from Emacs
+       magit
        neotree                      ; a project drawer, like NERDTree for vim
        rgb
        term                           ; terminals in Emacs

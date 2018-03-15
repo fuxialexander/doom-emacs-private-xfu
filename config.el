@@ -14,6 +14,10 @@
       avy-keys '(?a ?s ?d ?f ?j ?k ?l ?\;)
       ivy-rich-parse-remote-buffer nil
       ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-cd-selected
+      ivy-height 20
+      ivy-rich-switch-buffer-name-max-length 50
+      counsel-evil-registers-height 20
+      counsel-yank-pop-height 20
       visual-fill-column-center-text t
       evil-escape-key-sequence nil
       line-spacing nil
@@ -537,6 +541,8 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       :gnvime "M-i" #'org-insert-last-stored-link
       :gnvime "s-j" #'dwim-jump
       :m "C-u" #'evil-scroll-up
+      :i "C-e" #'end-of-line
+      :nv "C-e" #'evil-end-of-line
       :i "C-k" #'kill-line
       (:map evil-ex-completion-map
         "C-k" #'kill-line)
@@ -570,6 +576,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       :ne "s-e"                 #'+eval/buffer
       :ne "s-E"                 #'+eval/region-and-replace
       :ne "s-b"                 #'+org/open-brain-here
+      :ne "s-B"                 #'+default/compile
       :ne "s-a"                 #'mark-whole-buffer
       :ne "s-q"   (if (daemonp) #'delete-frame #'save-buffers-kill-emacs)
       :ne "s-f"                 #'swiper
