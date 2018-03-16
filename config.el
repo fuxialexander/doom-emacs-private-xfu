@@ -8,6 +8,8 @@
                                     "/usr/local/Cellar/emacs-plus/HEAD-5c41444/share/emacs/27.0.50/lisp/net/"
                                     "/usr/local/Cellar/emacs-plus/HEAD-5c41444/share/emacs/27.0.50/lisp/")
       recentf-auto-cleanup 60
+      trash-directory "/Users/xfu/.Trash/"
+      delete-by-moving-to-trash t
       ivy-use-selectable-prompt t
       ivy-auto-select-single-candidate t
       ivy-height 20
