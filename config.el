@@ -120,6 +120,7 @@
           calc
           epa
           diff-mode
+          pass
           edebug
           custom
           compile

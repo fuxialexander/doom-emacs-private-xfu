@@ -40,8 +40,10 @@
        neotree                      ; a project drawer, like NERDTree for vim
        rgb
        term                           ; terminals in Emacs
-       ;;reference
+       reference
        upload                         ; map local to remote projects via ssh/ftp
+       password-store    ; password manager for nerds
+       rotate-text       ; cycle region at point between text candidates
 
        :lang
        python
@@ -71,9 +73,6 @@
        markdown                         ; writing docs for people to ignore
        sh                               ; she sells (ba|z)sh shells on the C xor
        web                              ; the tubes
-       :tools
-       dired
-       reference
        :app
        rss
        twitter
