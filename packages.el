@@ -29,3 +29,5 @@
 
 (package! ivy-posframe)
 (package! flycheck-posframe)
+
+(package! evil-collection)

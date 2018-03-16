@@ -87,6 +87,7 @@
        (default +snippets +evil-commands))
 
 (setq-default evil-want-C-u-scroll t
+              evil-want-integration nil
               exec-path
               '("/usr/local/opt/coreutils/libexec/gnubin"
                 "/usr/local/opt/texinfo/bin/"

@@ -109,9 +109,47 @@
   (setq alert-default-style 'notifier))
 
 
+(def-package! evil-collection
+  :after evil
+  :init
+  (setq evil-collection-setup-minibuffer t
+        evil-collection-mode-list
+        `(calendar
+          debug
+          comint
+          calc
+          epa
+          diff-mode
+          edebug
+          custom
+          compile
+          (buff-menu "buff-menu")
+          doc-view
+          elisp-mode
+          elisp-refs
+          eshell
+          eval-sexp-fu
+          etags-select
+          eww
+          image
+          info
+          man
+          ,@(when evil-collection-setup-minibuffer '(minibuffer))
+          prodigy
+          profiler
+          realgud
+          (term term ansi-term multi-term)
+          which-key
+          ibuffer
+          woman
+          bookmark
+          avy))
+  :config
+  (evil-collection-init))
 
+(def-package! evil-ediff :load-path "~/.doom.d/local/"
+  :after ediff)
 (def-package! orgit :after magit)
-
 (after! magithub
   (require 'parse-time)
   (defmacro magithub--time-number-of-days-since-string (iso8601)
@@ -1046,6 +1084,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         "TAB" #'ivy-alt-done
         "<right>" #'ivy-alt-done
         "M-v" #'yank
+        "M-o" #'ivy-dispatching-done-hydra
         "M-z" #'undo
         "C-r" #'evil-paste-from-register
         "C-k" #'ivy-previous-line

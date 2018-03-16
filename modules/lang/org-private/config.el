@@ -242,7 +242,7 @@ If run interactively, get ENTRY from context."
         :ni "C-S-k" #'org-metaup
         :ni "C-S-j" #'org-metadown
         ;; toggle local fold, instead of all children
-        :n  [tab]   #'+org/toggle-fold
+        :n  [tab]   #'org-cycle
         ;; more intuitive RET keybinds
         :i  "RET"   #'org-return-indent
         :n  "RET"   #'+org/dwim-at-point
@@ -281,18 +281,23 @@ If run interactively, get ENTRY from context."
         (:localleader
           :desc "Schedule"          :n "s"                  #'org-schedule
           :desc "Math"              :n "m"                  #'+org-toggle-math
+          :desc "Column View"       :n "c"                  #'org-columns
+          :desc "All Column View"   :n "C"                  #'(lambda () (interactive)
+                                                                (let ((current-prefix-arg 4))
+                                                                  (call-interactively #'org-columns)))
           :desc "Remove link"       :n "L"                  #'+org/remove-link
           :desc "Deadline"          :n "d"                  #'org-deadline
           :desc "C-c C-c"           :n doom-localleader-key #'org-ctrl-c-ctrl-c
           :desc "Edit Special"      :n "'"                  #'org-edit-special
           :desc "Effort"            :n "e"                  #'org-set-effort
           :desc "TODO"              :n "t"                  #'org-todo
+          :desc "org-refile"        :n "r"                  #'org-refile
           :desc "Export"            :n [tab]                #'org-export-dispatch
           :desc "Clocking Effort"   :n "E"                  #'org-clock-modify-effort-estimate
           :desc "Property"          :n "p"                  #'org-set-property
           :desc "Clock-in"          :n "i"                  #'org-clock-in
           :desc "Clock-out"         :n "o"                  #'org-clock-out
-          :desc "Get skim link"     :n "s"                  (λ! (call-interactively #'evil-append) (insert (+reference/skim-get-annotation)))
+          :desc "Get skim link"     :n "="                  (λ! (call-interactively #'evil-append) (insert (+reference/skim-get-annotation)))
           :desc "Narrow to Subtree" :n "n"                  #'org-narrow-to-subtree
           :desc "Narrow to Element" :n "N"                  #'org-narrow-to-element
           :desc "Widen"             :n "w"                  #'widen
