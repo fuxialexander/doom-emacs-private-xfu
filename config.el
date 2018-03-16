@@ -43,6 +43,28 @@
       twittering-connection-type-order '(wget urllib-http native urllib-https)
       +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin)
 
+
+(defun doom|no-fringes-in-whichkey (&optional args)
+  "Disable fringes in the whichkey window."
+  (set-window-fringes (minibuffer-window) 0 0 nil)
+  (set-window-fringes (get-buffer-window which-key--buffer) 0 0 nil)
+  t)
+(advice-add 'which-key--show-buffer-side-window :after #'doom|no-fringes-in-whichkey)
+
+(defun doom|no-fringes-in-posframe (&optional frame force)
+  "Disable fringes in the minibuffer window."
+  (set-window-fringes (minibuffer-window (frame-parent frame)) 0 0 nil))
+
+(advice-add 'make-frame-invisible :after #'doom|no-fringes-in-posframe)
+
+(after! man
+  (add-hook 'Man-mode-hook #'hide-mode-line-mode)
+  (set! :popup "^\\*Man.*"
+    '((size . 80) (side . right))
+    '((transient . t) (select . t) (quit . t))))
+(after! multi-term
+  (add-hook 'term-mode-hook #'hide-mode-line-mode))
+
 (after! recentf
   (add-to-list 'recentf-exclude 'file-remote-p)
   (add-to-list 'recentf-exclude ".*\\.gz")
@@ -118,7 +140,6 @@
 
   (add-to-list 'magit-status-mode-hook #'magithub-filter-maybe)
   (setq magithub-clone-default-directory "/Users/xfu/Source/playground/"))
-
 (def-package! evil-magit :after magit
   :init
   (setq evil-magit-state 'normal))
@@ -209,9 +230,10 @@
   :commands (tldr)
   :config
   (setq tldr-directory-path (concat doom-etc-dir "tldr/"))
+  (add-hook 'tldr-mode-hook #'hide-mode-line-mode)
   (set! :popup "^\\*tldr\\*"
     '((size . 80) (side . right))
-    '((transient . nil) (select . t) (quit . t))))
+    '((transient . nil)  (modeline . nil) (select . t) (quit . t))))
 (def-package! sed-mode
   :commands (sed-mode))
 
@@ -418,7 +440,8 @@ symbol."
   (setq ivy-posframe-parameters `((min-width . 120)
                                   (min-height . ,ivy-height)
                                   (internal-border-width . 10))
-        ivy-posframe-font (font-spec :family "SF Mono" :size 16 :width 'extra-condensed :weight 'normal :slant 'normal :registry "iso10646-1" ))
+        ;; ivy-posframe-font (font-spec :family "SF Mono" :size 16 :width 'extra-condensed :weight 'normal :slant 'normal :registry "iso10646-1" )
+        )
   (ivy-posframe-enable))
 (after! counsel
   (defun counsel-faces ()
@@ -599,10 +622,9 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       :ne "s-a"                 #'mark-whole-buffer
       :ne "s-q"   (if (daemonp) #'delete-frame #'save-buffers-kill-emacs)
       :ne "s-f"                 #'swiper
-      :ne "s-F"               #'(lambda () "swiper" (interactive) (swiper
-                                                              (if (symbol-at-point)
-                                                                  (format "\\_<%s\\_> " (symbol-at-point))
-                                                                nil)))
+      :ne "s-F"               (lambda! (swiper
+                                   (if (symbol-at-point)
+                                       (format "\\_<%s\\_> " (symbol-at-point)) nil)))
       :ne "s-/"                 #'evil-commentary-line
       ;; :ne "C-M-f"            #'doom/toggle-fullscreen
       :n  "s-s"                 #'save-buffer
