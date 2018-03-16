@@ -82,7 +82,7 @@ The default action being to insert a citation.")
                                           orcb-check-journal
                                           org-ref-sort-bibtex-entry)
         org-ref-default-bibliography '("~/Dropbox/org/reference/Bibliography.bib")
-        org-ref-bibliography-notes "~/Dropbox/org/reference/ref.org"
+        org-ref-bibliography-notes "~/Dropbox/org/ref.org"
         org-ref-pdf-directory "~/Dropbox/org/reference/pdf/"
 
         org-ref-get-pdf-filename-function (lambda (key) (car (bibtex-completion-find-pdf key)))
@@ -152,7 +152,7 @@ _o_: Open entry   _e_: Email entry  ^ ^                 _q_: quit
             (default       . bibtex-completion-format-citation-default))
           bibtex-completion-bibliography "~/Dropbox/org/reference/Bibliography.bib"
           bibtex-completion-library-path "~/Dropbox/org/reference/pdf/"
-          bibtex-completion-notes-path "~/Dropbox/org/reference/ref.org"
+          bibtex-completion-notes-path "~/Dropbox/org/ref.org"
           bibtex-completion-pdf-field "file"
           bibtex-completion-pdf-open-function (lambda (fpath) (start-process "open" "*open*" "open" fpath))))
   (ivy-set-actions 'org-ref-ivy-insert-cite-link org-ref-ivy-cite-actions)
