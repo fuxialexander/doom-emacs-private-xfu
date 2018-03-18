@@ -31,3 +31,5 @@
 (package! flycheck-posframe)
 
 (package! evil-collection)
+
+(package! academic-phrases)

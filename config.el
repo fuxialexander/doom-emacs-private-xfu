@@ -1,8 +1,8 @@
 ;; config.el -*- lexical-binding: t; -*-
 
 
+;;* General
 (setq request-storage-directory (concat doom-etc-dir "request/")
-      doom-theme 'doom-nord
       projectile-ignored-projects '("~/"
                                     "/tmp"
                                     "/usr/local/Cellar/emacs-plus/HEAD-5c41444/share/emacs/27.0.50/lisp/net/"
@@ -10,10 +10,9 @@
       recentf-auto-cleanup 60
       trash-directory "/Users/xfu/.Trash/"
       delete-by-moving-to-trash t
+      avy-keys '(?a ?s ?d ?f ?j ?k ?l ?\;)
       ivy-use-selectable-prompt t
       ivy-auto-select-single-candidate t
-      ivy-height 20
-      avy-keys '(?a ?s ?d ?f ?j ?k ?l ?\;)
       ivy-rich-parse-remote-buffer nil
       ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-cd-selected
       ivy-height 20
@@ -45,37 +44,32 @@
       twittering-connection-type-order '(wget urllib-http native urllib-https)
       +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin)
 
-
+;;* UI
 (defun doom|no-fringes-in-whichkey (&optional args)
   "Disable fringes in the whichkey window."
   (set-window-fringes (minibuffer-window) 0 0 nil)
   (set-window-fringes (get-buffer-window which-key--buffer) 0 0 nil)
   t)
-(advice-add 'which-key--show-buffer-side-window :after #'doom|no-fringes-in-whichkey)
-
 (defun doom|no-fringes-in-posframe (&optional frame force)
   "Disable fringes in the minibuffer window."
   (set-window-fringes (minibuffer-window (frame-parent frame)) 0 0 nil))
-
+(advice-add 'which-key--show-buffer-side-window :after #'doom|no-fringes-in-whichkey)
 (advice-add 'make-frame-invisible :after #'doom|no-fringes-in-posframe)
-
+(add-hook 'persp-before-switch-functions '+my-workspace/goto-main-window)
+(def-package! ace-link
+  :commands (ace-link))
+(after! pass
+    (set! :popup "^\\*Password-Store" '((side . left) (size . 0.25)) '((quit))))
+(after! info
+  (map! :map Info-mode-map
+        :n "o" #'ace-link)
+  (set! :popup "^\\*info.*"
+    '((size . 80) (side . right))
+    '((transient . t) (select . t) (quit . t))))
 (after! man
-  (add-hook 'Man-mode-hook #'hide-mode-line-mode)
   (set! :popup "^\\*Man.*"
     '((size . 80) (side . right))
     '((transient . t) (select . t) (quit . t))))
-(after! multi-term
-  (add-hook 'term-mode-hook #'hide-mode-line-mode))
-
-(after! recentf
-  (add-to-list 'recentf-exclude 'file-remote-p)
-  (add-to-list 'recentf-exclude ".*\\.gz")
-  (add-to-list 'recentf-exclude ".*\\.gif")
-  (add-to-list 'recentf-exclude ".*\\.svg")
-  (add-to-list 'recentf-exclude ".*Cellar.*"))
-
-(add-hook 'persp-before-switch-functions '+my-workspace/goto-main-window)
-
 (after! anzu
   (require 'loop)
   (defun anzu--where-is-here (positions here)
@@ -85,71 +79,105 @@
         (if (and (>= here (car x)) (<= here (cdr x)))
             (loop-break)))
       anzucount)))
-(def-package! prettify-utils)
 (after! neotree
   (set! :popup "^ ?\\*NeoTree"
     `((side . ,neo-window-position) (window-width . ,neo-window-width))
     '((quit . current) (select . t))))
-(add-hook 'minibuffer-setup-hook #'smartparens-mode)
-(advice-remove #'load-theme #'+evil*init-cursors)
-(setq evil-default-cursor "#268bd2"
-      evil-emacs-state-cursor  '("#b58900" box)
-      evil-insert-state-cursor 'bar
-      evil-normal-state-cursor 'hbar
-      evil-visual-state-cursor 'hbar)
+(after! colir
+  (defun colir--blend-background (start next prevn face object)
+    (let ((background-prev (face-background prevn)))
+      (progn
+        (put-text-property
+         start next
+         (if background-prev
+             (cons `(background-color
+                     . ,(colir-blend
+                         (colir-color-parse background-prev)
+                         (colir-color-parse (face-background face nil t))))
+                   prevn)
+           (list face prevn))
+         object))))
+  (defun colir-blend-face-background (start end face &optional object)
+    "Append to the face property of the text from START to END the face FACE.
+When the text already has a face with a non-plain background,
+blend it with the background of FACE.
+Optional argument OBJECT is the string or buffer containing the text.
+See also `font-lock-append-text-property'."
+    (let (next prev prevn)
+      (while (/= start end)
+        (setq next (next-single-property-change start 'face object end))
+        (setq prev (get-text-property start 'face object))
+        (setq prevn (if (listp prev)
+                        (cl-find-if #'atom prev)
+                      prev))
+        (cond
+         ((or (keywordp (car-safe prev)) (consp (car-safe prev)))
+          (put-text-property start next 'face (cons face prev) nil object))
+         ((facep prevn)
+          (colir--blend-background start next prevn face object))
+         (t
+          (put-text-property start next 'face face nil object)))
+        (setq start next)))))
 
+;;* File
+(after! recentf
+  (add-to-list 'recentf-exclude 'file-remote-p)
+  (add-to-list 'recentf-exclude ".*\\.gz")
+  (add-to-list 'recentf-exclude ".*\\.gif")
+  (add-to-list 'recentf-exclude ".*\\.svg")
+  (add-to-list 'recentf-exclude ".*Cellar.*"))
 
-(after! tramp-sh
-  (add-to-list 'tramp-remote-path "/research/kevinyip10/xfu/miniconda3/bin")
-  (add-to-list 'tramp-remote-path "/uac/gds/xfu/bin"))
-
-(def-package! alert
-  :commands (alert)
-  :config
-  (setq alert-default-style 'notifier))
-
-
+;;* Evil
 (def-package! evil-collection
   :after evil
   :init
-  (setq evil-collection-setup-minibuffer t
+  (setq evil-collection-setup-minibuffer nil
         evil-collection-mode-list
-        `(calendar
-          debug
-          comint
+        `((buff-menu "buff-menu")
+          (package-menu package)
+          (term term ansi-term multi-term)
+          ;; ,@(when evil-collection-setup-minibuffer '(minibuffer))
+          avy
+          bookmark
           calc
-          epa
-          diff-mode
-          pass
-          edebug
-          custom
+          calendar
+          comint
           compile
-          (buff-menu "buff-menu")
+          custom
+          debug
+          dired
+          diff-mode
           doc-view
+          edebug
           elisp-mode
           elisp-refs
+          epa
           eshell
-          eval-sexp-fu
           etags-select
+          eval-sexp-fu
           eww
+          flycheck
+          ibuffer
           image
           info
           man
-          ,@(when evil-collection-setup-minibuffer '(minibuffer))
+          pass
+          proced
           prodigy
           profiler
           realgud
-          (term term ansi-term multi-term)
+          view
           which-key
-          ibuffer
-          woman
-          bookmark
-          avy))
+          woman))
   :config
   (evil-collection-init))
-
+(def-package! evil-magit :after magit
+  :init
+  (setq evil-magit-state 'normal))
 (def-package! evil-ediff :load-path "~/.doom.d/local/"
   :after ediff)
+
+;;* Magit
 (def-package! orgit :after magit)
 (after! magithub
   (require 'parse-time)
@@ -181,23 +209,24 @@
 
   (add-to-list 'magit-status-mode-hook #'magithub-filter-maybe)
   (setq magithub-clone-default-directory "/Users/xfu/Source/playground/"))
-(def-package! evil-magit :after magit
-  :init
-  (setq evil-magit-state 'normal))
 (after! magit
+  (magithub-feature-autoinject t)
   (setq magit-repository-directories '("/Users/xfu/Source/"))
   (set! :evil-state 'magit-repolist-mode 'normal)
   (map! (:map with-editor-mode-map
           (:localleader
             :desc "Finish" :n "," #'with-editor-finish
             :desc "Abort"  :n "k" #'with-editor-cancel)))
-  (add-hook 'magit-popup-mode-hook #'hide-mode-line-mode)
   (set! :popup "^.*magit" '((slot . -1) (side . right) (size . 80)) '((modeline . nil) (select . t)))
   (set! :popup "^\\*magit.*popup\\*" '((slot . 0) (side . right)) '((modeline . nil) (select . t)))
   (set! :popup "^.*magit-revision:.*" '((slot . 2) (side . right) (window-height . 0.6)) '((modeline . nil) (select . t)))
   (set! :popup "^.*magit-diff:.*" '((slot . 2) (side . right) (window-height . 0.6)) '((modeline . nil) (select . nil))))
 
+;;* Web
 (after! eww
+  (set! :popup "^\\*eww.*"
+    '((size . 80) (side . right))
+    '((select . t) (quit . t)))
   (advice-add 'eww-display-html :around
               'eww-display-html--override-shr-external-rendering-functions))
 (after! shr
@@ -228,56 +257,38 @@
   (setq xwidget-webkit-enable-plugins t))
 
 
-(after! company
-  (setq company-tooltip-limit 10
-        company-minimum-prefix-length 2
-        company-tooltip-minimum-width 60
-        company-tooltip-margin 0
-        company-tooltip-offset-display nil
-        company-dabbrev-downcase nil
-        company-dabbrev-ignore-case nil
-        company-dabbrev-code-other-buffers t
-        company-tooltip-align-annotations t
-        company-require-match 'never
-        company-frontends '(company-childframe-frontend company-echo-metadata-frontend)
-        company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode)
-        company-childframe-child-frame nil))
-
-(set! :company-backend '(emacs-lisp-mode) '(company-elisp company-files company-yasnippet company-dabbrev-code))
-(set! :company-backend '(python-mode) '(company-anaconda company-files company-yasnippet company-dabbrev-code))
-(set! :company-backend '(inferior-python-mode) '(company-capf company-files company-yasnippet company-dabbrev-code))
-(set! :company-backend '(inferior-ess-mode) '(company-capf company-files company-yasnippet company-dabbrev-code))
-(set! :company-backend '(org-mode) '(company-capf company-files company-yasnippet company-dabbrev))
-
-(set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point)
-
-
-(after! yasnippet
-  (push "~/.doom.d/snippets" yas-snippet-dirs)
-  (add-hook! (comint-mode
-              inferior-python-mode
-              inferior-ess-mode)
-    #'yas-minor-mode-on))
-
+;;* Tools
+(def-package! prettify-utils)
+(def-package! alert
+  :commands (alert)
+  :config
+  (setq alert-default-style 'notifier))
+(after! tramp-sh
+  (add-to-list 'tramp-remote-path "/research/kevinyip10/xfu/miniconda3/bin")
+  (add-to-list 'tramp-remote-path "/uac/gds/xfu/bin"))
 (def-package! pinentry
   :config (pinentry-start))
+(def-package! academic-phrases
+  :commands (academic-phrases
+             academic-phrases-by-section))
+(def-package! sed-mode
+  :commands (sed-mode))
 
+;;* Help
 (after! helpful
   (set! :lookup 'helpful-mode :documentation #'helpful-at-point)
   (set! :popup "^\\*helpful.*"
     '((size . 80) (side . right))
-    '((transient . t) (select . t) (quit . t))))
+    '((select . t) (quit . t))))
 (def-package! tldr
   :commands (tldr)
   :config
   (setq tldr-directory-path (concat doom-etc-dir "tldr/"))
-  (add-hook 'tldr-mode-hook #'hide-mode-line-mode)
   (set! :popup "^\\*tldr\\*"
     '((size . 80) (side . right))
     '((transient . nil)  (modeline . nil) (select . t) (quit . t))))
-(def-package! sed-mode
-  :commands (sed-mode))
 
+;;* Coding
 (def-package! lsp-mode
   :commands (lsp-mode))
 (def-package! lsp-ui
@@ -377,8 +388,53 @@ symbol."
              cursor-type nil)))))
 (def-package! company-lsp
   :after lsp-mode)
+(def-package! flycheck-posframe
+  :hook (flycheck-mode . flycheck-posframe-mode)
+  :config
+  (setq flycheck-posframe-warning-prefix "⚠ "
+        flycheck-posframe-info-prefix "··· "
+        flycheck-posframe-error-prefix " ")
+  (defun *flycheck-posframe-show-posframe (errors)
+    "Display ERRORS, using posframe.el library."
+    (when errors
+      (posframe-show
+       flycheck-posframe-buffer
+       :string (flycheck-posframe-format-errors errors)
+       :background-color (face-background 'flycheck-posframe-background-face nil t)
+       :override-parameters '((internal-border-width . 10))
+       :position (point))
+      (dolist (hook flycheck-posframe-delete-posframe-hooks)
+        (add-hook hook #'flycheck-posframe-delete-posframe nil t))))
+  (defun *flycheck-posframe-delete-posframe ()
+    "Delete messages currently being shown if any."
+    (posframe-hide flycheck-posframe-buffer)
+    (dolist (hook flycheck-posframe-delete-posframe-hooks)
+      (remove-hook hook #'flycheck-posframe-delete-posframe t)))
+  (advice-add 'flycheck-posframe-delete-posframe :override #'*flycheck-posframe-delete-posframe)
+  (advice-add 'flycheck-posframe-show-posframe :override #'*flycheck-posframe-show-posframe))
+;;** Company
+(after! company
+  (setq company-tooltip-limit 10
+        company-minimum-prefix-length 2
+        company-tooltip-minimum-width 60
+        company-tooltip-margin 0
+        company-tooltip-offset-display nil
+        company-dabbrev-downcase nil
+        company-dabbrev-ignore-case nil
+        company-dabbrev-code-other-buffers t
+        company-tooltip-align-annotations t
+        company-require-match 'never
+        company-frontends '(company-childframe-frontend company-echo-metadata-frontend)
+        company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode)
+        company-childframe-child-frame nil))
+(set! :company-backend '(emacs-lisp-mode) '(company-elisp company-files company-yasnippet company-dabbrev-code))
+(set! :company-backend '(python-mode) '(company-anaconda company-files company-yasnippet company-dabbrev-code))
+(set! :company-backend '(inferior-python-mode) '(company-capf company-files company-yasnippet company-dabbrev-code))
+(set! :company-backend '(inferior-ess-mode) '(company-capf company-files company-yasnippet company-dabbrev-code))
+(set! :company-backend '(org-mode) '(company-capf company-files company-yasnippet company-dabbrev))
+(set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point)
 
-
+;;** Edit
 (def-package! lispy
   :hook (emacs-lisp-mode . lispy-mode)
   :config
@@ -433,6 +489,7 @@ symbol."
                                         (cons ">" " > ")
                                         (cons "|" " | ")))
 (after! smartparens
+  (add-hook 'minibuffer-setup-hook #'smartparens-mode)
   ;; Auto-close more conservatively and expand braces on RET
   (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
 
@@ -447,32 +504,16 @@ symbol."
            :unless '(sp-point-before-word-p sp-point-before-same-p))
   (sp-pair "[" nil :post-handlers '(("| " " "))
            :unless '(sp-point-before-word-p sp-point-before-same-p)))
+(after! yasnippet
+  (push "~/.doom.d/snippets" yas-snippet-dirs)
+  (add-hook! (comint-mode
+              inferior-python-mode
+              inferior-ess-mode)
+    #'yas-minor-mode-on))
 
-
-(def-package! flycheck-posframe
-  :hook (flycheck-mode . flycheck-posframe-mode)
-  :config
-  (setq flycheck-posframe-warning-prefix "⚠ "
-        flycheck-posframe-info-prefix "··· "
-        flycheck-posframe-error-prefix " ")
-  (defun *flycheck-posframe-show-posframe (errors)
-    "Display ERRORS, using posframe.el library."
-    (when errors
-      (posframe-show
-       flycheck-posframe-buffer
-       :string (flycheck-posframe-format-errors errors)
-       :background-color (face-background 'flycheck-posframe-background-face nil t)
-       :override-parameters '((internal-border-width . 10))
-       :position (point))
-      (dolist (hook flycheck-posframe-delete-posframe-hooks)
-        (add-hook hook #'flycheck-posframe-delete-posframe nil t))))
-  (defun *flycheck-posframe-delete-posframe ()
-    "Delete messages currently being shown if any."
-    (posframe-hide flycheck-posframe-buffer)
-    (dolist (hook flycheck-posframe-delete-posframe-hooks)
-      (remove-hook hook #'flycheck-posframe-delete-posframe t)))
-  (advice-add 'flycheck-posframe-delete-posframe :override #'*flycheck-posframe-delete-posframe)
-  (advice-add 'flycheck-posframe-show-posframe :override #'*flycheck-posframe-show-posframe))
+;;* Ivy
+(def-package! counsel-tramp :load-path "~/.doom.d/local/"
+  :commands (counsel-tramp))
 (after! ivy-posframe
   (push '(counsel-rg . nil) ivy-display-functions-alist)
   (push '(counsel-ag . nil) ivy-display-functions-alist)
@@ -598,15 +639,9 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
      ("O" counsel-projectile-switch-project-action-org-capture
       "org-capture into project"))))
 
-(def-package! counsel-tramp :load-path "~/.doom.d/local/"
-  :commands (counsel-tramp))
-
-
-
-(setq expand-region-contract-fast-key "V")
-
+;;* Bindings
 (setq doom-localleader-key ",")
-
+(setq expand-region-contract-fast-key "V")
 (map! [remap evil-jump-to-tag] #'projectile-find-tag
       [remap find-tag]         #'projectile-find-tag
       [remap newline]          #'newline-and-indent
@@ -624,8 +659,6 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       :gnvime "M-i" #'org-insert-last-stored-link
       :gnvime "s-j" #'dwim-jump
       :m "C-u" #'evil-scroll-up
-      :i "C-e" #'end-of-line
-      :nv "C-e" #'evil-end-of-line
       :i "C-k" #'kill-line
       (:map evil-ex-completion-map
         "C-k" #'kill-line)
@@ -671,8 +704,6 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       :n  "s-s"                 #'save-buffer
       :n  "s-k"                 #'kill-this-buffer
       :n  "s-K"                 #'delete-frame
-      ;; :m  "A-j"              #'+xfu:multi-next-line
-      ;; :m  "A-k"              #'+xfu:multi-previous-line
       :nv "C-SPC"               #'+evil:fold-toggle
       :gnvimer "s-v"            #'clipboard-yank
       ;; Easier window navigation
@@ -1080,23 +1111,24 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       :m  "[t" #'hl-todo-previous
       (:after ivy
         :map ivy-minibuffer-map
-        [escape] #'keyboard-escape-quit
-        "C-SPC" #'ivy-call-and-recenter
-        "TAB" #'ivy-alt-done
-        "<right>" #'ivy-alt-done
-        "M-v" #'yank
-        "M-o" #'ivy-dispatching-done-hydra
-        "M-z" #'undo
-        "C-r" #'evil-paste-from-register
-        "C-k" #'ivy-previous-line
-        "C-j" #'ivy-next-line
-        "s-l" #'ivy-avy
-        "C-l" #'ivy-partial
-        "C-w" #'ivy-backward-kill-word
-        "<left>" #'ivy-backward-kill-word
-        "C-u" #'ivy-kill-line
-        "C-b" #'backward-word
-        "C-f" #'forward-word)
+        :ginm [escape] #'keyboard-escape-quit
+        :ginm "C-SPC" #'ivy-call-and-recenter
+        :ginm "TAB" #'ivy-alt-done
+        :ginm "<right>" #'ivy-alt-done
+        :ginm "M-v" #'yank
+        :ginm "M-o" #'ivy-dispatching-done-hydra
+        :ginm "M-z" #'undo
+        :ginm "C-r" #'evil-paste-from-register
+        :ginm "C-k" #'ivy-previous-line
+        :ginm "C-j" #'ivy-next-line
+        :ginm "s-l" #'ivy-avy
+        :ginm "C-l" #'ivy-partial
+        :ginm "C-w" #'ivy-backward-kill-word
+        :gi [backspace] #'ivy-backward-delete-char
+        :ginm "<left>" #'ivy-backward-kill-word
+        :ginm "C-u" #'ivy-kill-line
+        :ginm "C-b" #'backward-word
+        :ginm "C-f" #'forward-word)
       (:after swiper
         :map swiper-map
         [backtab]  #'+ivy/wgrep-occur
@@ -1199,25 +1231,75 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         :n "[["  #'vc-annotate-prev-revision
         :n "TAB" #'vc-annotate-toggle-annotation-visibility
         :n "RET" #'vc-annotate-find-revision-at-line)
+        :n "W"   #'vc-annotate-working-revision
+        :n "<s-return>" #'vc-annotate-goto-line)
+(map! (:map input-decode-map
+        [S-iso-lefttab] [backtab]
+        (:unless window-system "TAB" [tab])) ; Fix TAB in terminal
 
-      )
+      ;; I want C-a and C-e to be a little smarter. C-a will jump to
+      ;; indentation. Pressing it again will send you to the true bol. Same goes
+      ;; for C-e, except it will ignore comments and trailing whitespace before
+      ;; jumping to eol.
+      :i "C-a" #'doom/backward-to-bol-or-indent
+      :i "C-e" #'doom/forward-to-last-non-comment-or-eol
+      :i "C-u" #'doom/backward-kill-to-bol-and-indent
 
+      ;; textmate-esque newline insertion
+      :i  [M-return]    #'evil-open-below
+      :i  [S-M-return]  #'evil-open-above
+      ;; textmate-esque deletion
+      :ig [M-backspace] #'doom/backward-kill-to-bol-and-indent
+      ;; Emacsien motions for insert mode
+      :i  "C-b" #'backward-word
+      :i  "C-f" #'forward-word
+
+      ;; Restore common editing keys (and ESC) in minibuffer
+      (:map (minibuffer-local-map
+             minibuffer-local-ns-map
+             minibuffer-local-completion-map
+             minibuffer-local-must-match-map
+             minibuffer-local-isearch-map
+             read-expression-map)
+        [escape] #'abort-recursive-edit
+        "C-r" #'evil-paste-from-register
+        "C-a" #'move-beginning-of-line
+        "C-w" #'doom/minibuffer-kill-word
+        "C-u" #'doom/minibuffer-kill-line
+        "C-b" #'backward-word
+        "C-f" #'forward-word
+        "M-z" #'doom/minibuffer-undo)
+
+      (:after evil
+        (:map evil-ex-completion-map
+          "C-a" #'move-beginning-of-line
+          "C-b" #'backward-word
+          "C-f" #'forward-word))
+
+      (:map messages-buffer-mode-map
+        "M-;" #'eval-expression
+        "A-;" #'eval-expression)
+
+      (:after tabulated-list
+        (:map tabulated-list-mode-map
+          [remap evil-record-macro] #'quit-window))
+
+      (:after view
+        (:map view-mode-map "<escape>" #'View-quit-all)))
 ;; Makes ; and , the universal repeat-keys in evil-mode
 (defmacro do-repeat! (command next-func prev-func)
-  "Repeat motions with ;/,"
-  (let ((fn-sym (intern (format "+evil*repeat-%s" command))))
-    `(progn
-       (defun ,fn-sym (&rest _)
-         (define-key evil-motion-state-map (kbd ";") ',next-func)
-         (define-key evil-motion-state-map (kbd ",") ',prev-func))
-       (advice-add #',command :before #',fn-sym))))
-
+      "Repeat motions with ;/,"
+      (let ((fn-sym (intern (format "+evil*repeat-%s" command))))
+        `(progn
+           (defun ,fn-sym (&rest _)
+             (define-key evil-motion-state-map (kbd ";") ',next-func)
+             (define-key evil-motion-state-map (kbd "'") ',prev-func))
+           (advice-add #',command :before #',fn-sym))))
 ;; n/N
 (do-repeat! evil-ex-search-next evil-ex-search-next evil-ex-search-previous)
 (do-repeat! evil-ex-search-previous evil-ex-search-next evil-ex-search-previous)
 (do-repeat! evil-ex-search-forward evil-ex-search-next evil-ex-search-previous)
 (do-repeat! evil-ex-search-backward evil-ex-search-next evil-ex-search-previous)
-
 ;; f/F/t/T/s/S
 (after! evil-snipe
   (setq evil-snipe-repeat-keys nil
@@ -1231,14 +1313,12 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
   (do-repeat! evil-snipe-S evil-snipe-repeat evil-snipe-repeat-reverse)
   (do-repeat! evil-snipe-x evil-snipe-repeat evil-snipe-repeat-reverse)
   (do-repeat! evil-snipe-X evil-snipe-repeat evil-snipe-repeat-reverse))
-
 ;; */#
 (after! evil-visualstar
   (do-repeat! evil-visualstar/begin-search-forward
               evil-ex-search-next evil-ex-search-previous)
   (do-repeat! evil-visualstar/begin-search-backward
               evil-ex-search-previous evil-ex-search-next))
-
 ;; lazy-load `evil-easymotion'
 (map! :m "gs" #'+default/easymotion)
 (defun +default/easymotion ()
