@@ -1,7 +1,7 @@
-;; config.el -*- lexical-binding: t; -*-
+;; * config.el -*- lexical-binding: t; -*-
+;; * Config
+;; ** General
 
-
-;;* General
 (setq request-storage-directory (concat doom-etc-dir "request/")
       projectile-ignored-projects '("~/"
                                     "/tmp"
@@ -44,7 +44,8 @@
       twittering-connection-type-order '(wget urllib-http native urllib-https)
       +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin)
 
-;;* UI
+
+;; ** UI
 (defun doom|no-fringes-in-whichkey (&optional args)
   "Disable fringes in the whichkey window."
   (set-window-fringes (minibuffer-window) 0 0 nil)
@@ -119,7 +120,7 @@ See also `font-lock-append-text-property'."
           (put-text-property start next 'face face nil object)))
         (setq start next)))))
 
-;;* File
+;; ** File
 (after! recentf
   (add-to-list 'recentf-exclude 'file-remote-p)
   (add-to-list 'recentf-exclude ".*\\.gz")
@@ -127,7 +128,7 @@ See also `font-lock-append-text-property'."
   (add-to-list 'recentf-exclude ".*\\.svg")
   (add-to-list 'recentf-exclude ".*Cellar.*"))
 
-;;* Evil
+;; ** Evil
 (def-package! evil-collection
   :after evil
   :init
@@ -177,7 +178,7 @@ See also `font-lock-append-text-property'."
 (def-package! evil-ediff :load-path "~/.doom.d/local/"
   :after ediff)
 
-;;* Magit
+;; ** Magit
 (def-package! orgit :after magit)
 (after! magithub
   (require 'parse-time)
@@ -222,7 +223,7 @@ See also `font-lock-append-text-property'."
   (set! :popup "^.*magit-revision:.*" '((slot . 2) (side . right) (window-height . 0.6)) '((modeline . nil) (select . t)))
   (set! :popup "^.*magit-diff:.*" '((slot . 2) (side . right) (window-height . 0.6)) '((modeline . nil) (select . nil))))
 
-;;* Web
+;; ** Web
 (after! eww
   (set! :popup "^\\*eww.*"
     '((size . 80) (side . right))
@@ -257,7 +258,7 @@ See also `font-lock-append-text-property'."
   (setq xwidget-webkit-enable-plugins t))
 
 
-;;* Tools
+;; ** Tools
 (def-package! prettify-utils)
 (def-package! alert
   :commands (alert)
@@ -274,7 +275,7 @@ See also `font-lock-append-text-property'."
 (def-package! sed-mode
   :commands (sed-mode))
 
-;;* Help
+;; ** Help
 (after! helpful
   (set! :lookup 'helpful-mode :documentation #'helpful-at-point)
   (set! :popup "^\\*helpful.*"
@@ -288,7 +289,7 @@ See also `font-lock-append-text-property'."
     '((size . 80) (side . right))
     '((transient . nil)  (modeline . nil) (select . t) (quit . t))))
 
-;;* Coding
+;; ** Coding
 (def-package! lsp-mode
   :commands (lsp-mode))
 (def-package! lsp-ui
@@ -412,7 +413,8 @@ symbol."
       (remove-hook hook #'flycheck-posframe-delete-posframe t)))
   (advice-add 'flycheck-posframe-delete-posframe :override #'*flycheck-posframe-delete-posframe)
   (advice-add 'flycheck-posframe-show-posframe :override #'*flycheck-posframe-show-posframe))
-;;** Company
+
+;; *** Company
 (after! company
   (setq company-tooltip-limit 10
         company-minimum-prefix-length 2
@@ -434,10 +436,12 @@ symbol."
 (set! :company-backend '(org-mode) '(company-capf company-files company-yasnippet company-dabbrev))
 (set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point)
 
-;;** Edit
+;; *** Edit
 (def-package! lispy
   :hook (emacs-lisp-mode . lispy-mode)
   :config
+  (setq lispy-outline "^;; \\(?:;[^#]\\|\\*+\\)"
+        lispy-outline-header ";; ")
   (map! :map lispy-mode-map
         :i [remap delete-backward-char] #'lispy-delete-backward))
 (def-package! lispyville
@@ -511,7 +515,21 @@ symbol."
               inferior-ess-mode)
     #'yas-minor-mode-on))
 
-;;* Ivy
+;; *** Outline
+(add-hook 'emacs-lisp-mode-hook #'outline-minor-mode)
+(def-package! outshine :load-path "~/.doom.d/local/"
+  :hook (outline-minor-mode . outshine-hook-function)
+  :config
+  (map! :map outline-minor-mode-map
+        :nm "\]o" #'outline-next-heading
+        :nm "\[o" #'outline-previous-heading
+        :nm [tab] #'outline-cycle
+        :nm [backtab] #'outshine-cycle-buffer))
+(def-package! counsel-oi :load-path "~/.doom.d/local/"
+  :after (outshine)
+  :commands (counsel-oi))
+
+;; ** Ivy
 (def-package! counsel-tramp :load-path "~/.doom.d/local/"
   :commands (counsel-tramp))
 (after! ivy-posframe
@@ -638,8 +656,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       "invoke term from project root")
      ("O" counsel-projectile-switch-project-action-org-capture
       "org-capture into project"))))
-
-;;* Bindings
+;; * Binding
 (setq doom-localleader-key ",")
 (setq expand-region-contract-fast-key "V")
 (map! [remap evil-jump-to-tag] #'projectile-find-tag
@@ -649,6 +666,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       ;; Ensure there are no conflicts
       :nmvo doom-leader-key nil
       :nmvo doom-localleader-key nil
+      :i "<M-return>" nil
       :gnvime "M-x" #'execute-extended-command
       :gnvime "s-r" #'counsel-org-capture
       :gnvime "s-g" #'org-agenda-show-daily
@@ -1023,7 +1041,6 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
           "C-C"     #'ace-delete-window))
       :n  "gc"  #'evil-commentary
       :n  "gx"  #'evil-exchange
-      :nv [tab] #'+evil/matchit-or-toggle-fold
       (:after evil-magit
         :map (magit-status-mode-map magit-revision-mode-map)
         :n "C-j" nil
