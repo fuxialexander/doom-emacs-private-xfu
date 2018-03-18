@@ -1,8 +1,10 @@
 ;;; ui/doom/config.el -*- lexical-binding: t; -*-
 
 ;; <https://github.com/hlissner/emacs-doom-theme>
-(def-package! doom-themes :load-path "/Users/xfu/.doom.d/modules/ui/doom/local/emacs-doom-themes"
+(def-package! doom-themes :load-path "/Users/xfu/.doom.d/local/emacs-doom-themes"
   :config
+  (after! solaire-mode
+      (add-hook 'doom-init-theme-hook #'solaire-mode-swap-bg t))
   (unless doom-theme
     (setq doom-theme 'doom-one))
 
@@ -24,8 +26,14 @@
   :hook (after-change-major-mode . turn-on-solaire-mode)
   :config
   (setq solaire-mode-real-buffer-fn #'doom-real-buffer-p)
+  ;; fringe can become unstyled when deleting or focusing frames
+  (add-hook 'focus-in-hook #'solaire-mode-reset)
   ;; Prevent color glitches when reloading either DOOM or the theme
-  (add-hook! '(doom-init-theme-hook doom-reload-hook) #'solaire-mode-reset))
+  (add-hook! '(doom-init-theme-hook doom-reload-hook)
+    #'solaire-mode-reset)
+  ;; org-capture takes an org buffer and narrows it. The result is erroneously
+  ;; considered an unreal buffer, so solaire-mode must be restored.
+  (add-hook 'org-capture-mode-hook #'turn-on-solaire-mode))
 
 
 (after! hideshow
@@ -35,7 +43,7 @@
       (((background light))
        (:inherit font-lock-comment-face :background ,(doom-color 'base3))))
     "Face to hightlight `hideshow' overlays."
-    :group 'doom)
+    :group 'doom-themes)
 
   ;; Nicer code-folding overlays (with fringe indicators)
   (defun +doom-set-up-overlay (ov)
@@ -80,39 +88,3 @@
     "XX......"
     "XXX....."
     "XXXX...."))
-
-(after! colir
-  (defun colir--blend-background (start next prevn face object)
-    (let ((background-prev (face-background prevn)))
-      (progn
-        (put-text-property
-         start next
-         (if background-prev
-             (cons `(background-color
-                     . ,(colir-blend
-                         (colir-color-parse background-prev)
-                         (colir-color-parse (face-background face nil t))))
-                   prevn)
-           (list face prevn))
-         object))))
-  (defun colir-blend-face-background (start end face &optional object)
-    "Append to the face property of the text from START to END the face FACE.
-When the text already has a face with a non-plain background,
-blend it with the background of FACE.
-Optional argument OBJECT is the string or buffer containing the text.
-See also `font-lock-append-text-property'."
-    (let (next prev prevn)
-      (while (/= start end)
-        (setq next (next-single-property-change start 'face object end))
-        (setq prev (get-text-property start 'face object))
-        (setq prevn (if (listp prev)
-                        (cl-find-if #'atom prev)
-                      prev))
-        (cond
-         ((or (keywordp (car-safe prev)) (consp (car-safe prev)))
-          (put-text-property start next 'face (cons face prev) nil object))
-         ((facep prevn)
-          (colir--blend-background start next prevn face object))
-         (t
-          (put-text-property start next 'face face nil object)))
-        (setq start next)))))

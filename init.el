@@ -128,6 +128,7 @@
       doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 15 :width 'extra-condensed :weight 'normal :slant 'normal :registry "iso10646-1" )
       doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 13)
       doom-big-font (font-spec :family "SF Mono" :size 16)
+      doom-theme 'doom-city-lights
       doom-line-numbers-style nil
       +doom-modeline-buffer-file-name-style 'truncate-upto-project
       doom-neotree-enable-variable-pitch t

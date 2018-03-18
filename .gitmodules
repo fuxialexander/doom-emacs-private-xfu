@@ -1,0 +1,3 @@
+[submodule "emacs-doom-themes"]
+	path = local/emacs-doom-themes
+	url = https://github.com/fuxialexander/emacs-doom-themes.git
