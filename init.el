@@ -87,6 +87,7 @@
 
 (setq-default evil-want-C-u-scroll t
               evil-want-integration nil
+              evil-snipe-override-evil-repeat-keys nil
               exec-path
               '("/usr/local/opt/coreutils/libexec/gnubin"
                 "/usr/local/opt/texinfo/bin/"
@@ -246,3 +247,11 @@
 
 (def-package-hook! ob-translate
   :disable)
+
+(def-package-hook! auth-password-store
+    :pre-config nil)
+
+(def-package-hook! pass
+  :pre-config nil)
+
+
