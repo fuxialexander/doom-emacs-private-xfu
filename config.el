@@ -1318,6 +1318,18 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
 (do-repeat! evil-ex-search-previous evil-ex-search-next evil-ex-search-previous)
 (do-repeat! evil-ex-search-forward evil-ex-search-next evil-ex-search-previous)
 (do-repeat! evil-ex-search-backward evil-ex-search-next evil-ex-search-previous)
+;; org
+(after! org
+  (do-repeat! org-next-item org-next-item org-previous-item)
+  (do-repeat! org-next-link org-next-link org-previous-link)
+  (do-repeat! org-next-block org-next-block org-previous-block)
+  (do-repeat! org-babel-next-src-block org-babel-next-src-block org-babel-previous-src-block)
+  (do-repeat! org-next-visible-heading org-next-visible-heading org-previous-visible-heading)
+  (do-repeat! org-previous-item org-next-item org-previous-item)
+  (do-repeat! org-previous-link org-next-link org-previous-link)
+  (do-repeat! org-previous-block org-next-block org-previous-block)
+  (do-repeat! org-babel-previous-src-block org-babel-next-src-block org-babel-previous-src-block)
+  (do-repeat! org-previous-visible-heading org-next-visible-heading org-previous-visible-heading))
 ;; f/F/t/T/s/S
 (after! evil-snipe
   (setq evil-snipe-repeat-keys nil
