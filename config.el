@@ -127,6 +127,12 @@ See also `font-lock-append-text-property'."
   (add-to-list 'recentf-exclude ".*\\.gif")
   (add-to-list 'recentf-exclude ".*\\.svg")
   (add-to-list 'recentf-exclude ".*Cellar.*"))
+(after! projectile
+  (setq projectile-ignored-project-function
+        (lambda (root)
+          (or (file-remote-p root)
+              (string-match ".*Trash.*" root)
+              (string-match ".*Cellar.*" root)))))
 
 ;; ** Evil
 (def-package! evil-collection
