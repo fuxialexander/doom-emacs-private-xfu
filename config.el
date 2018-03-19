@@ -211,6 +211,7 @@ See also `font-lock-append-text-property'."
   (add-to-list 'magit-status-mode-hook #'magithub-filter-maybe)
   (setq magithub-clone-default-directory "/Users/xfu/Source/playground/"))
 (after! magit
+  (define-error 'ghub-404 "Not Found" 'ghub-http-error)
   (magithub-feature-autoinject t)
   (setq magit-repository-directories '("/Users/xfu/Source/"))
   (set! :evil-state 'magit-repolist-mode 'normal)
