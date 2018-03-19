@@ -10,7 +10,6 @@
 (package! org-brain)
 (package! org-super-agenda)
 (package! org-clock-convenience)
-(package! org-mru-clock)
 
 (when (featurep! +attach)
   (package! org-download))

@@ -77,17 +77,10 @@ If run interactively, get ENTRY from context."
 (def-package! org-web-tools
   :after org)
 
-(def-package! org-mru-clock
-  :commands (org-mru-clock-in
-             org-mru-clock-select-recent-task)
-  :init
-  (setq org-mru-clock-how-many 100
-        org-mru-clock-completing-read #'ivy-completing-read))
-
-
 ;;
 ;; Bootstrap
 ;;
+(remove-hook! 'org-load-hook #'(+org|setup-evil))
 
 (add-hook 'org-load-hook #'+org-private|setup-ui t)
 (add-hook 'org-load-hook #'+org-private|setup-agenda t)
