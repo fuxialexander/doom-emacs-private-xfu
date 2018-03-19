@@ -175,6 +175,7 @@ If run interactively, get ENTRY from context."
         org-hide-leading-stars nil
         org-hide-leading-stars-before-indent-mode nil
         org-highest-priority ?A
+        org-insert-heading-respect-content t
         org-id-link-to-org-use-id t
         org-id-locations-file (concat +org-dir ".org-id-locations")
         org-id-track-globally t
@@ -231,30 +232,47 @@ If run interactively, get ENTRY from context."
 (defun +org-private|setup-keybinds ()
   (map! :map org-mode-map
         :i [S-tab] #'+org/dedent
+
         ;; navigate table cells (from insert-mode)
         :i  "C-l"   #'+org/table-next-field
         :i  "C-h"   #'+org/table-previous-field
         :i  "C-k"   #'+org/table-previous-row
         :i  "C-j"   #'+org/table-next-row
+
         ;; expand tables (or shiftmeta move)
-        :ni "C-S-l" #'+org/table-append-field-or-shift-right
-        :ni "C-S-h" #'+org/table-prepend-field-or-shift-left
-        :ni "C-S-k" #'org-metaup
-        :ni "C-S-j" #'org-metadown
+        :ni "M-L" #'org-shiftmetaright
+        :ni "M-H" #'org-shiftmetaleft
+        :ni "M-J" #'org-shiftmetadown
+        :ni "M-K" #'org-shiftmetaup
+        :ni "M-k" #'org-metaup
+        :ni "M-j" #'org-metadown
+        :ni "M-h" #'org-metaleft
+        :ni "M-l" #'org-metaright
+
+        :ni "H" #'org-shiftleft
+        :ni "L" #'org-shiftright
+        :ni "J" #'org-shiftdown
+        :ni "K" #'org-shiftup
+
         ;; toggle local fold, instead of all children
         :n  [tab]   #'org-cycle
         ;; more intuitive RET keybinds
         :i  "RET"   #'org-return-indent
         :n  "RET"   #'+org/dwim-at-point
-        :ni [M-return]   (λ! (+org/insert-item 'below))
-        :ni [S-M-return] (λ! (+org/insert-item 'above))
+        :ni [S-M-return] (lambda! (+org/insert-go-eol)
+                             (call-interactively #'org-insert-todo-heading))
+        :ni [M-return] #'org-meta-return
         ;; more org-ish vim motion keys
         :m  "]]"  (λ! (org-forward-heading-same-level nil) (org-beginning-of-line))
         :m  "[["  (λ! (org-backward-heading-same-level nil) (org-beginning-of-line))
-        :m  "]h"  #'org-next-visible-heading
-        :m  "[h"  #'org-previous-visible-heading
+        :m  "]o"  #'org-next-visible-heading
+        :m  "[o"  #'org-previous-visible-heading
         :m  "]l"  #'org-next-link
         :m  "[l"  #'org-previous-link
+        :m  "]i"  #'org-next-item
+        :m  "[i"  #'org-previous-item
+        :m  "]v"  #'org-next-block
+        :m  "[v"  #'org-previous-block
         :m  "]s"  #'org-babel-next-src-block
         :m  "[s"  #'org-babel-previous-src-block
         :n  "gQ"  #'org-fill-paragraph
@@ -313,8 +331,10 @@ If run interactively, get ENTRY from context."
             :nm "C-l"      #'evil-window-right
             :nm "<escape>" #'org-agenda-Quit
             :nm "q"        #'org-agenda-Quit
-            :nm "<C-up>"   #'org-clock-convenience-timestamp-up
-            :nm "<C-down>" #'org-clock-convenience-timestamp-down
+            :nm "J"        #'org-clock-convenience-timestamp-down
+            :nm "K"        #'org-clock-convenience-timestamp-up
+            :nm "M-j"      #'org-agenda-later
+            :nm "M-k"      #'org-agenda-earlier
             :nm "s-o"      #'org-clock-convenience-fill-gap
             :nm "s-e"      #'org-clock-convenience-fill-gap-both
             :nm "\\"       #'ace-window
@@ -322,8 +342,8 @@ If run interactively, get ENTRY from context."
             :nm "p"        #'org-set-property
             :nm "r"        #'org-agenda-redo
             :nm "e"        #'org-agenda-set-effort
-            :nm "h"        #'org-habit-toggle-habits
-            :nm "l"        #'org-agenda-log-mode
+            :nm "H"        #'org-habit-toggle-habits
+            :nm "L"        #'org-agenda-log-mode
             :nm "D"        #'org-agenda-toggle-diary
             :nm "G"        #'org-agenda-toggle-time-grid
             :nm ";"        #'counsel-org-tag-agenda
@@ -331,8 +351,7 @@ If run interactively, get ENTRY from context."
             :nm "i"        #'org-agenda-clock-in
             :nm "o"        #'org-agenda-clock-out
             :nm "<tab>"    #'org-agenda-goto
-            :nm "J"        #'org-agenda-later
-            :nm "K"        #'org-agenda-earlier
+
             :nm "C"        #'org-agenda-capture
             :nm "m"        #'org-agenda-bulk-mark
             :nm "u"        #'org-agenda-bulk-unmark
@@ -401,6 +420,38 @@ INFO is a plist containing export options."
         (goto-char (point-min))
         (org-map-entries 'org-id-get-create))))
   (add-hook 'org-mode-hook (lambda () (add-hook 'before-save-hook '+org-private/org-add-ids-to-headlines-in-file nil 'local)))
+  (defun +org/insert-item-with-ts ()
+  "When on org timestamp item insert org timestamp item with current time.
+This holds only for inactive timestamps."
+  (interactive)
+  (when (save-excursion
+          (let ((item-pos (org-in-item-p)))
+            (when item-pos
+              (goto-char item-pos)
+              (org-list-at-regexp-after-bullet-p org-ts-regexp-inactive))))
+    (let ((item-pos (org-in-item-p))
+          (pos (point)))
+      (assert item-pos)
+      (goto-char item-pos)
+      (let* ((struct (org-list-struct))
+	     (prevs (org-list-prevs-alist struct))
+	     (s (concat (with-temp-buffer
+                          (org-insert-time-stamp nil t t)
+                          (buffer-string)) " ")))
+        (setq struct (org-list-insert-item pos struct prevs nil s))
+        (org-list-write-struct struct (org-list-parents-alist struct))
+        (looking-at org-list-full-item-re)
+	(goto-char (match-end 0))
+        (end-of-line)))
+    t))
+
+  (defun +org/insert-go-eol ()
+    (when (bound-and-true-p evil-mode)
+      (evil-insert 1))
+    (end-of-line))
+  (add-hook 'org-metareturn-hook '+org/insert-item-with-ts)
+  (add-hook 'org-metareturn-hook '+org/insert-go-eol)
+
   (after! org-capture
     (defadvice org-capture-finalize
         (after org-capture-finalize-after activate)
