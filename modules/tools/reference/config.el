@@ -1,6 +1,6 @@
-;; (add-hook 'org-mode-hook #'org-ref-mode)
+;;; tools/reference/config.el -*- lexical-binding: t; -*-
 
-(def-package! org-ref
+(def-package! org-ref :load-path "~/Source/playground/org-ref"
   :commands (org-ref-bibtex-next-entry
              org-ref-bibtex-previous-entry
              org-ref-doi-utils-get-bibtex-entry-pdf

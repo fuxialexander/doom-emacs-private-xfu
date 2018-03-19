@@ -2,4 +2,4 @@
 ;;; tools/reference/packages.el
 
 (package! ivy-bibtex)
-(package! org-ref)
+(package! org-ref :recipe (:fetcher github :repo "fuxialexander/org-ref" :files ("*")))
