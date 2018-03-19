@@ -49,6 +49,7 @@
         (:after dired
           :map dired-mode-map
           :n "RET" #'dired
+          :n "SPC" nil
           (:localleader
             :desc "wdired" :n "'" #'wdired-change-to-wdired-mode
             (:desc "regexp" :prefix "r"
