@@ -255,3 +255,13 @@
   :pre-config nil)
 
 
+(def-package-hook! magithub
+  :pre-init
+  (define-error 'ghub-404 "Not Found" 'ghub-http-error)
+  t
+  :pre-config
+  (load "magithub-autoloads" nil t)
+  (setq magithub-dir (concat doom-etc-dir "magithub/")
+        magithub-clone-default-directory "~/"
+        magithub-preferred-remote-method 'clone_url)
+  nil)

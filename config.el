@@ -217,7 +217,8 @@ See also `font-lock-append-text-property'."
   (add-to-list 'magit-status-mode-hook #'magithub-filter-maybe)
   (setq magithub-clone-default-directory "/Users/xfu/Source/playground/"))
 (after! magit
-  (define-error 'ghub-404 "Not Found" 'ghub-http-error)
+  (magit-wip-after-save-mode 1)
+  (magit-wip-after-apply-mode 1)
   (magithub-feature-autoinject t)
   (setq magit-repository-directories '("/Users/xfu/Source/"))
   (set! :evil-state 'magit-repolist-mode 'normal)
@@ -1255,8 +1256,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         :n "[["  #'vc-annotate-prev-revision
         :n "TAB" #'vc-annotate-toggle-annotation-visibility
         :n "RET" #'vc-annotate-find-revision-at-line)
-        :n "W"   #'vc-annotate-working-revision
-        :n "<s-return>" #'vc-annotate-goto-line)
+        :n "W"   #'vc-annotate-working-revision)
 (map! (:map input-decode-map
         [S-iso-lefttab] [backtab]
         (:unless window-system "TAB" [tab])) ; Fix TAB in terminal
