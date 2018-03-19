@@ -18,3 +18,27 @@
   (org-indent-mode 1)
   (recenter-top-bottom))
 
+
+;;;###autoload
+(defun +org/work-on-heading ()
+  (interactive)
+  (org-clock-in)
+  (org-tree-to-indirect-buffer)
+  (map! :map org-mode-map
+        :ni "<s-return>" #'+org/finish-work-on-heading))
+
+;;;###autoload
+(defun +org/finish-work-on-heading ()
+  (interactive)
+  (setq *org-git-notes (nth 4 (org-heading-components)))
+  (org-clock-out)
+  (save-buffer)
+  (let ((file (buffer-file-name)))
+    (magit-call-git "add" file)
+    (magit-call-git "commit" "-m" *org-git-notes)
+    (magit-refresh))
+  (widen)
+  (print "Work finished!")
+  (map! :map org-mode-map
+        :ni "<s-return>" #'+org/work-on-heading))
+

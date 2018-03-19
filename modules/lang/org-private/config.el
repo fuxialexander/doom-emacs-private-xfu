@@ -225,13 +225,7 @@ If run interactively, get ENTRY from context."
 (defun +org-private|setup-keybinds ()
   (map! :map org-mode-map
         :i [S-tab] #'+org/dedent
-
-        ;; navigate table cells (from insert-mode)
-        :i  "C-l"   #'+org/table-next-field
-        :i  "C-h"   #'+org/table-previous-field
-        :i  "C-k"   #'+org/table-previous-row
-        :i  "C-j"   #'+org/table-next-row
-
+        :ni "<s-return>" #'+org/work-on-heading
         ;; expand tables (or shiftmeta move)
         :ni "M-L" #'org-shiftmetaright
         :ni "M-H" #'org-shiftmetaleft
@@ -242,10 +236,10 @@ If run interactively, get ENTRY from context."
         :ni "M-h" #'org-metaleft
         :ni "M-l" #'org-metaright
 
-        :ni "H" #'org-shiftleft
-        :ni "L" #'org-shiftright
-        :ni "J" #'org-shiftdown
-        :ni "K" #'org-shiftup
+        :ni "C-S-h" #'org-shiftleft
+        :ni "C-S-l" #'org-shiftright
+        :ni "C-S-j" #'org-shiftdown
+        :ni "C-S-k" #'org-shiftup
 
         ;; toggle local fold, instead of all children
         :n  [tab]   #'org-cycle
@@ -344,7 +338,6 @@ If run interactively, get ENTRY from context."
             :nm "i"        #'org-agenda-clock-in
             :nm "o"        #'org-agenda-clock-out
             :nm "<tab>"    #'org-agenda-goto
-
             :nm "C"        #'org-agenda-capture
             :nm "m"        #'org-agenda-bulk-mark
             :nm "u"        #'org-agenda-bulk-unmark
@@ -384,13 +377,13 @@ If run interactively, get ENTRY from context."
 INFO is a plist containing export options."
       (when tags
         (format "\n<span class=\"tag\">%s</span>\n"
-	            (mapconcat
-	             (lambda (tag)
-	               (format "<span class=\"%s\">%s</span>"
-		                   (concat (plist-get info :html-tag-class-prefix)
-			                       (org-html-fix-class-name tag))
-		                   tag))
-	             tags " "))))
+                (mapconcat
+                 (lambda (tag)
+                   (format "<span class=\"%s\">%s</span>"
+                           (concat (plist-get info :html-tag-class-prefix)
+                                   (org-html-fix-class-name tag))
+                           tag))
+                 tags " "))))
     (advice-add 'org-html--tags :override #'+org-private/org-html--tags))
   (setq org-file-apps
         `(("pdf" . default)
@@ -414,29 +407,29 @@ INFO is a plist containing export options."
         (org-map-entries 'org-id-get-create))))
   (add-hook 'org-mode-hook (lambda () (add-hook 'before-save-hook '+org-private/org-add-ids-to-headlines-in-file nil 'local)))
   (defun +org/insert-item-with-ts ()
-  "When on org timestamp item insert org timestamp item with current time.
+    "When on org timestamp item insert org timestamp item with current time.
 This holds only for inactive timestamps."
-  (interactive)
-  (when (save-excursion
-          (let ((item-pos (org-in-item-p)))
-            (when item-pos
-              (goto-char item-pos)
-              (org-list-at-regexp-after-bullet-p org-ts-regexp-inactive))))
-    (let ((item-pos (org-in-item-p))
-          (pos (point)))
-      (assert item-pos)
-      (goto-char item-pos)
-      (let* ((struct (org-list-struct))
-	     (prevs (org-list-prevs-alist struct))
-	     (s (concat (with-temp-buffer
-                          (org-insert-time-stamp nil t t)
-                          (buffer-string)) " ")))
-        (setq struct (org-list-insert-item pos struct prevs nil s))
-        (org-list-write-struct struct (org-list-parents-alist struct))
-        (looking-at org-list-full-item-re)
-	(goto-char (match-end 0))
-        (end-of-line)))
-    t))
+    (interactive)
+    (when (save-excursion
+            (let ((item-pos (org-in-item-p)))
+              (when item-pos
+                (goto-char item-pos)
+                (org-list-at-regexp-after-bullet-p org-ts-regexp-inactive))))
+      (let ((item-pos (org-in-item-p))
+            (pos (point)))
+        (assert item-pos)
+        (goto-char item-pos)
+        (let* ((struct (org-list-struct))
+               (prevs (org-list-prevs-alist struct))
+               (s (concat (with-temp-buffer
+                            (org-insert-time-stamp nil t t)
+                            (buffer-string)) " ")))
+          (setq struct (org-list-insert-item pos struct prevs nil s))
+          (org-list-write-struct struct (org-list-parents-alist struct))
+          (looking-at org-list-full-item-re)
+          (goto-char (match-end 0))
+          (end-of-line)))
+      t))
 
   (defun +org/insert-go-eol ()
     (when (bound-and-true-p evil-mode)
@@ -610,6 +603,106 @@ This holds only for inactive timestamps."
            (save-excursion (goto-char (org-element-property :begin context))
                            (call-interactively 'counsel-org-tag)) t)))))
   (add-hook 'org-ctrl-c-ctrl-c-hook '+org-private/*org-ctrl-c-ctrl-c-counsel-org-tag)
+  (defvar *org-git-notes nil
+    "use log notes for git commit notes")
+  (defun *org-store-log-note ()
+    "Finish taking a log note, and insert it to where it belongs."
+    (let ((txt (prog1 (buffer-string)
+                 (kill-buffer)))
+          (note (cdr (assq org-log-note-purpose org-log-note-headings)))
+          lines)
+      (while (string-match "\\`# .*\n[ \t\n]*" txt)
+        (setq txt (replace-match "" t t txt)))
+      (when (string-match "\\s-+\\'" txt)
+        (setq txt (replace-match "" t t txt)))
+      (setq lines (and (not (equal "" txt)) (org-split-string txt "\n")))
+      (when (org-string-nw-p note)
+        (setq note
+              (org-replace-escapes
+               note
+               (list (cons "%u" (user-login-name))
+                     (cons "%U" user-full-name)
+                     (cons "%t" (format-time-string
+                                 (org-time-stamp-format 'long 'inactive)
+                                 org-log-note-effective-time))
+                     (cons "%T" (format-time-string
+                                 (org-time-stamp-format 'long nil)
+                                 org-log-note-effective-time))
+                     (cons "%d" (format-time-string
+                                 (org-time-stamp-format nil 'inactive)
+                                 org-log-note-effective-time))
+                     (cons "%D" (format-time-string
+                                 (org-time-stamp-format nil nil)
+                                 org-log-note-effective-time))
+                     (cons "%s" (cond
+                                 ((not org-log-note-state) "")
+                                 ((string-match-p org-ts-regexp
+                                                  org-log-note-state)
+                                  (format "\"[%s]\""
+                                          (substring org-log-note-state 1 -1)))
+                                 (t (format "\"%s\"" org-log-note-state))))
+                     (cons "%S"
+                           (cond
+                            ((not org-log-note-previous-state) "")
+                            ((string-match-p org-ts-regexp
+                                             org-log-note-previous-state)
+                             (format "\"[%s]\""
+                                     (substring
+                                      org-log-note-previous-state 1 -1)))
+                            (t (format "\"%s\""
+                                       org-log-note-previous-state)))))))
+        (when lines (setq note (concat note " \\\\")))
+        (push note lines))
+      (when (and lines (not org-note-abort))
+        (setq *org-git-notes (concat *org-git-notes ": " (substring-no-properties (car lines))))
+        (with-current-buffer (marker-buffer org-log-note-marker)
+          (org-with-wide-buffer
+           ;; Find location for the new note.
+           (goto-char org-log-note-marker)
+           (set-marker org-log-note-marker nil)
+           ;; Note associated to a clock is to be located right after
+           ;; the clock.  Do not move point.
+           (unless (eq org-log-note-purpose 'clock-out)
+             (goto-char (org-log-beginning t)))
+           ;; Make sure point is at the beginning of an empty line.
+           (cond ((not (bolp)) (let ((inhibit-read-only t)) (insert "\n")))
+                 ((looking-at "[ \t]*\\S-") (save-excursion (insert "\n"))))
+           ;; In an existing list, add a new item at the top level.
+           ;; Otherwise, indent line like a regular one.
+           (let ((itemp (org-in-item-p)))
+             (if itemp
+                 (indent-line-to
+                  (let ((struct (save-excursion
+                                  (goto-char itemp) (org-list-struct))))
+                    (org-list-get-ind (org-list-get-top-point struct) struct)))
+               (org-indent-line)))
+           (insert (org-list-bullet-string "-") (pop lines))
+           (let ((ind (org-list-item-body-column (line-beginning-position))))
+             (dolist (line lines)
+               (insert "\n")
+               (indent-line-to ind)
+               (insert line)))
+           (message "Note stored")
+           (org-back-to-heading t)
+           (org-cycle-hide-drawers 'children))
+          ;; Fix `buffer-undo-list' when `org-store-log-note' is called
+          ;; from within `org-add-log-note' because `buffer-undo-list'
+          ;; is then modified outside of `org-with-remote-undo'.
+          (when (eq this-command 'org-agenda-todo)
+            (setcdr buffer-undo-list (cddr buffer-undo-list)))))
+      )
+    ;; Don't add undo information when called from `org-agenda-todo'.
+    (let ((buffer-undo-list (eq this-command 'org-agenda-todo)))
+      (set-window-configuration org-log-note-window-configuration)
+      (with-current-buffer (marker-buffer org-log-note-return-to)
+        (goto-char org-log-note-return-to))
+      (move-marker org-log-note-return-to nil)
+      (let ((file (buffer-file-name)))
+        (magit-call-git "add" file)
+        (magit-call-git "commit" "-m" (concat file ": " *org-git-notes))
+        (magit-refresh))
+      (when org-log-post-message (message "%s" org-log-post-message))))
+  (advice-add 'org-store-log-note :override #'*org-store-log-note)
   )
 
 ;;
