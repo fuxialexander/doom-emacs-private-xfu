@@ -690,21 +690,19 @@ This holds only for inactive timestamps."
           ;; from within `org-add-log-note' because `buffer-undo-list'
           ;; is then modified outside of `org-with-remote-undo'.
           (when (eq this-command 'org-agenda-todo)
-            (setcdr buffer-undo-list (cddr buffer-undo-list)))))
-      )
+            (setcdr buffer-undo-list (cddr buffer-undo-list)))
+          (let ((file (buffer-file-name)))
+            (magit-call-git "add" file)
+            (magit-call-git "commit" "-m" (concat file ": " *org-git-notes))
+            (magit-refresh)))))
     ;; Don't add undo information when called from `org-agenda-todo'.
     (let ((buffer-undo-list (eq this-command 'org-agenda-todo)))
       (set-window-configuration org-log-note-window-configuration)
       (with-current-buffer (marker-buffer org-log-note-return-to)
         (goto-char org-log-note-return-to))
       (move-marker org-log-note-return-to nil)
-      (let ((file (buffer-file-name)))
-        (magit-call-git "add" file)
-        (magit-call-git "commit" "-m" (concat file ": " *org-git-notes))
-        (magit-refresh))
       (when org-log-post-message (message "%s" org-log-post-message))))
-  (advice-add 'org-store-log-note :override #'*org-store-log-note)
-  )
+  (advice-add 'org-store-log-note :override #'*org-store-log-note))
 
 ;;
 ;; `org-mode' hooks

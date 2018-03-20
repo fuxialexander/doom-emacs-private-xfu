@@ -23,9 +23,15 @@
 (defun +org/work-on-heading ()
   (interactive)
   (org-clock-in)
+  (+workspace-switch (nth 4 (org-heading-components)) t)
+  (delete-other-windows)
   (org-tree-to-indirect-buffer)
+  (other-window 1)
+  (delete-other-windows)
+  (+workspace/display)
   (map! :map org-mode-map
-        :ni "<s-return>" #'+org/finish-work-on-heading))
+        :ni "<s-return>" #'+org/finish-work-on-heading
+        :ni "s-k" #'+org/cancel-work-on-heading))
 
 ;;;###autoload
 (defun +org/finish-work-on-heading ()
@@ -33,12 +39,20 @@
   (setq *org-git-notes (nth 4 (org-heading-components)))
   (org-clock-out)
   (save-buffer)
-  (let ((file (buffer-file-name)))
-    (magit-call-git "add" file)
-    (magit-call-git "commit" "-m" *org-git-notes)
-    (magit-refresh))
-  (widen)
-  (print "Work finished!")
+  (kill-this-buffer)
+  (+workspace/delete (+workspace-current-name))
   (map! :map org-mode-map
-        :ni "<s-return>" #'+org/work-on-heading))
+        :ni "<s-return>" #'+org/work-on-heading
+        :ni "s-k" nil))
 
+;;;###autoload
+(defun +org/cancel-work-on-heading ()
+  (interactive)
+  (setq *org-git-notes nil)
+  (org-clock-cancel)
+  (save-buffer)
+  (kill-this-buffer)
+  (+workspace/delete (+workspace-current-name))
+  (map! :map org-mode-map
+        :ni "<s-return>" #'+org/work-on-heading
+        :ni "s-k" nil))
