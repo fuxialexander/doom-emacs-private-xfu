@@ -127,49 +127,7 @@ See also `font-lock-append-text-property'."
               (string-match ".*Cellar.*" root)))))
 
 ;; ** Evil
-(def-package! evil-collection
-  :after evil
-  :init
-  (setq evil-collection-setup-minibuffer nil
-        evil-collection-mode-list
-        `((buff-menu "buff-menu")
-          (package-menu package)
-          (term term ansi-term multi-term)
-          ;; ,@(when evil-collection-setup-minibuffer '(minibuffer))
-          avy
-          bookmark
-          calc
-          calendar
-          comint
-          compile
-          custom
-          debug
-          dired
-          diff-mode
-          doc-view
-          edebug
-          elisp-mode
-          elisp-refs
-          epa
-          eshell
-          etags-select
-          eval-sexp-fu
-          eww
-          flycheck
-          ibuffer
-          image
-          info
-          man
-          pass
-          proced
-          prodigy
-          profiler
-          realgud
-          view
-          which-key
-          woman))
-  :config
-  (evil-collection-init))
+
 (def-package! evil-magit :after magit
   :init
   (setq evil-magit-state 'normal))
@@ -443,6 +401,8 @@ symbol."
   (setq lispy-outline "^;; \\(?:;[^#]\\|\\*+\\)"
         lispy-outline-header ";; ")
   (map! :map lispy-mode-map
+        :i "_" #'special-lispy-different
+        "d" nil
         :i [remap delete-backward-char] #'lispy-delete-backward))
 (def-package! lispyville
   :after (evil)

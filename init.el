@@ -3,7 +3,7 @@
         +all
         +defaults)              ; tame sudden yet inevitable temporary windows
        eval                     ; run code, run (also, repls)
-       evil                     ; come to the dark side, we have cookies
+       (evil +everywhere)                     ; come to the dark side, we have cookies
        (lookup                  ; helps you navigate your code and documentation
         ;; +docsets
         +devdocs)                       ; ...or in Dash docsets locally
@@ -88,6 +88,7 @@
 (setq-default evil-want-C-u-scroll t
               evil-want-integration nil
               evil-snipe-override-evil-repeat-keys nil
+evil-collection-company-use-tng nil
               exec-path
               '("/usr/local/opt/coreutils/libexec/gnubin"
                 "/usr/local/opt/texinfo/bin/"
