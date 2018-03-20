@@ -71,15 +71,7 @@
   (set! :popup "^\\*Man.*"
     '((size . 80) (side . right))
     '((transient . t) (select . t) (quit . t))))
-(after! anzu
-  (require 'loop)
-  (defun anzu--where-is-here (positions here)
-    (let ((anzucount 0))
-      (loop-for-each x positions
-        (setq anzucount (1+ anzucount))
-        (if (and (>= here (car x)) (<= here (cdr x)))
-            (loop-break)))
-      anzucount)))
+
 (after! neotree
   (set! :popup "^ ?\\*NeoTree"
     `((side . ,neo-window-position) (window-width . ,neo-window-width))
