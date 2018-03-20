@@ -306,6 +306,7 @@ If run interactively, get ENTRY from context."
           :desc "Narrow to Subtree" :n "n"                  #'org-narrow-to-subtree
           :desc "Narrow to Element" :n "N"                  #'org-narrow-to-element
           :desc "Widen"             :n "w"                  #'widen
+          :desc "Lookup"            :n "$"                  #'wordnut-lookup-current-word
           :desc "Toggle heading"    :n "h"                  #'org-toggle-heading
           :desc "Archive Subtree"   :n "A"                  #'org-archive-subtree
           :desc "Toggle Archive"    :n "a"                  #'org-toggle-archive-tag
