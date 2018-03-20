@@ -79,6 +79,7 @@
        email
        (write
         +wordnut
+        +osxdict
         +synosaurus
         +langtool)
        calendar

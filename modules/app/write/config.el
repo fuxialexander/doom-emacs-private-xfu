@@ -22,10 +22,13 @@
     :commands (wordnut-search
                wordnut-lookup-current-word)
     :config
+    (add-hook 'wordnut-mode-hook '+write/buffer-face-mode-dict)
     (set! :popup "\\*WordNut"
       '((size . 80) (side . right))
       '((select . t) (quit . t)))
     (map! :map wordnut-mode-map
+          :nm "<C-return>"   (lambda! (osx-dictionary--view-result
+                             (substring-no-properties (car wordnut-completion-hist))))
           :nm "RET"     #'wordnut-lookup-current-word
           :nm "gh"      #'wordnut-lookup-current-word
           :nm "zB"      #'outline-hide-body ; Hide all bodies, Emacs has "C-c C-t".
@@ -54,7 +57,21 @@
     (require 'synosaurus-wordnet)
     :config
     (setq synosaurus-choose-method 'default)))
-
+(when (featurep! +osxdict)
+  (def-package! osx-dictionary
+    :commands (osx-dictionary-search-word-at-point
+               osx-dictionary-search-input)
+    :config
+    (add-hook 'osx-dictionary-mode-hook '+write/buffer-face-mode-dict)
+    (map! :map osx-dictionary-mode-map
+      :nm "o"   #'osx-dictionary-open-dictionary.app
+      :nm "s"   #'osx-dictionary-search-input
+      :nm "q"   #'osx-dictionary-quit
+      :nm "RET" #'osx-dictionary-search-word-at-point
+      :nm "r"   #'osx-dictionary-read-word)
+    (set! :popup "\\*osx-dictionary"
+      '((size . 80) (side . right))
+      '((select . t) (quit . t)))))
 (def-package! mixed-pitch
   :config
   (define-minor-mode mixed-pitch-mode

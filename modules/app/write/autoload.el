@@ -18,4 +18,10 @@
       (org-indent-mode iarg))))
 
 
-
+;;;###autoload
+(defun +write/buffer-face-mode-dict ()
+      "Better fonts and spacing."
+      (interactive)
+      (setq buffer-face-mode-face '(:family "Charter" :height 1.2))
+      (buffer-face-mode)
+      (setq-local line-spacing 0.5))

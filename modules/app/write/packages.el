@@ -5,6 +5,8 @@
   (package! langtool))
 (when (featurep! +wordnut)
   (package! wordnut))
+(when (featurep! +osxdict)
+  (package! osx-dictionary))
 (when (featurep! +synosaurus)
   (package! synosaurus))
 
