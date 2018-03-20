@@ -4,7 +4,7 @@
 (def-package! doom-themes :load-path "/Users/xfu/.doom.d/local/emacs-doom-themes"
   :config
   (after! solaire-mode
-      (add-hook 'doom-init-theme-hook #'solaire-mode-swap-bg t))
+    (add-hook 'doom-init-theme-hook #'solaire-mode-swap-bg t))
   (unless doom-theme
     (setq doom-theme 'doom-one))
 
