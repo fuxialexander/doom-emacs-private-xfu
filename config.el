@@ -191,7 +191,8 @@ ALPHA : [ %(frame-parameter nil 'alpha) ]
   (magit-wip-after-save-mode 1)
   (magit-wip-after-apply-mode 1)
   (magithub-feature-autoinject t)
-  (setq magit-repository-directories '("/Users/xfu/Source/"))
+  (setq magit-repository-directories '("/Users/xfu/Source/")
+        magit-save-repository-buffers 'dontask)
   (set! :evil-state 'magit-repolist-mode 'normal)
   (map! (:map with-editor-mode-map
           (:localleader
