@@ -39,6 +39,7 @@ If run interactively, get ENTRY from context."
       (save-buffer))
     (org-brain--revert-if-visualizing))
   (setq org-brain-visualize-default-choices 'all
+        org-brain-file-entries-use-title nil
         org-brain-title-max-length 30)
   (map!
    (:map org-brain-visualize-mode-map
@@ -212,7 +213,7 @@ If run interactively, get ENTRY from context."
         org-todo-keywords
         '((sequence "TODO(t!)"  "|" "DONE(d!/@)")
           (sequence "WAIT(w@/@)" "|" "OUTD(o@/@)" "KILL(k@/@)")
-          (sequence "HABT(h!)" "|" "DONE(d!/@)" "KILL(k@/@)"))
+          (sequence "HABT(h!/@)" "|" "DONE(d!/@)" "KILL(k@/@)"))
         org-treat-insert-todo-heading-as-state-change t
         org-use-fast-tag-selection nil
         org-use-fast-todo-selection t
