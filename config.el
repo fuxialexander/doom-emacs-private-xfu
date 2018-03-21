@@ -265,6 +265,17 @@ ALPHA : [ %(frame-parameter nil 'alpha) ]
 
 (add-hook 'comint-preoutput-filter-functions #'dirtrack-filter-out-pwd-prompt)
 
+(def-package! iterm :load-path "~/.doom.d/local"
+  :commands (iterm-cd
+             iterm-send-text
+             iterm-send-text-ipy
+             iterm-send-file-ipy
+             iterm-cwd-ipy
+             iterm-send-file-R
+             iterm-cwd-R
+             iterm-send-file-julia
+             iterm-cwd-julia))
+
 ;; ** Help
 (after! helpful
   (set! :lookup 'helpful-mode :documentation #'helpful-at-point)
@@ -768,6 +779,12 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
           :desc "Imenu"                 :nv "i" #'imenu
           :desc "Imenu across buffers"  :nv "I" #'imenu-anywhere
           :desc "Online providers"      :nv "o" #'+lookup/online-select)
+        (:desc "iTerm" :prefix "_"
+          :desc "cd" :nv "d" #'mac-iTerm-cd
+          :desc "send command" :nv "_" #'iterm-send-text
+          :desc "send command" :nv "p" #'iterm-send-text-ipy
+          :desc "send command" :nv "P" #'iterm-send-text-ipy
+          :desc "send command" :nv "R" #'iterm-send-file-R)
         (:desc "workspace" :prefix "TAB"
           :desc "Display tab bar"          :n "TAB" #'+workspace/display
           :desc "New workspace"            :n "n"   #'+workspace/new
