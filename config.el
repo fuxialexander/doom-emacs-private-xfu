@@ -112,6 +112,26 @@ See also `font-lock-append-text-property'."
           (put-text-property start next 'face face nil object)))
         (setq start next)))))
 
+(defun +xfu/set--transparency (inc)
+  "Increase or decrease the selected frame transparency"
+  (let* ((alpha (frame-parameter (selected-frame) 'alpha))
+         (next-alpha (cond ((not alpha) 100)
+                           ((> (- alpha inc) 100) 100)
+                           ((< (- alpha inc) 0) 0)
+                           (t (- alpha inc)))))
+    (set-frame-parameter (selected-frame) 'alpha next-alpha)))
+
+(defhydra +xfu/set-transparency (:columns 2)
+  "
+ALPHA : [ %(frame-parameter nil 'alpha) ]
+"
+  ("j" (lambda () (interactive) (+xfu/set--transparency +1)) "+ more")
+  ("k" (lambda () (interactive) (+xfu/set--transparency -1)) "- less")
+  ("J" (lambda () (interactive) (+xfu/set--transparency +10)) "++ more")
+  ("K" (lambda () (interactive) (+xfu/set--transparency -10)) "-- less")
+  ("=" (lambda (value) (interactive "nTransparency Value 0 - 100 opaque:")
+         (set-frame-parameter (selected-frame) 'alpha value)) "Set to ?" :color blue))
+
 ;; ** File
 (after! recentf
   (add-to-list 'recentf-exclude 'file-remote-p)
