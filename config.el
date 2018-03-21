@@ -255,6 +255,16 @@ ALPHA : [ %(frame-parameter nil 'alpha) ]
 (def-package! sed-mode
   :commands (sed-mode))
 
+;; ** Term
+
+(defun dirtrack-filter-out-pwd-prompt (string)
+    "Remove the PWD match from the prompt."
+    (if (and (stringp string) (string-match "^.*AnSiT.*\n.*\n.*AnSiT.*$" string))
+        (replace-match "" t t string 0)
+      string))
+
+(add-hook 'comint-preoutput-filter-functions #'dirtrack-filter-out-pwd-prompt)
+
 ;; ** Help
 (after! helpful
   (set! :lookup 'helpful-mode :documentation #'helpful-at-point)
