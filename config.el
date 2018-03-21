@@ -139,6 +139,7 @@ ALPHA : [ %(frame-parameter nil 'alpha) ]
   (add-to-list 'recentf-exclude ".*\\.gif")
   (add-to-list 'recentf-exclude ".*\\.svg")
   (add-to-list 'recentf-exclude ".*Cellar.*"))
+
 (after! projectile
   (setq projectile-ignored-project-function
         (lambda (root)
@@ -441,8 +442,8 @@ symbol."
         :nmv "H"   #'lispyville-left
         :nmv "M-h" #'lispyville-beginning-of-defun
         :nmv "M-l" #'lispyville-end-of-defun
-        :nmv "[["   #'lispyville-previous-opening
-        :nmv "]]"   #'lispyville-next-closing
+        :mv "[["   #'lispyville-previous-opening
+        :mv "]]"   #'lispyville-next-closing
         :nmv "{{"   #'lispyville-next-opening
         :nmv "}}"   #'lispyville-previous-closing
         :nmv "("   #'lispyville-backward-up-list
@@ -704,11 +705,11 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       :n  "s-K"                 #'delete-frame
       :nv "C-SPC"               #'+evil:fold-toggle
       :gnvimer "s-v"            #'clipboard-yank
-      ;; Easier window navigation
-      :en "C-h"                 #'evil-window-left
-      :en "C-j"                 #'evil-window-down
-      :en "C-k"                 #'evil-window-up
-      :en "C-l"                 #'evil-window-right
+      ;; ;; Easier window navigation
+      ;; :en "C-h"                 #'evil-window-left
+      ;; :en "C-j"                 #'evil-window-down
+      ;; :en "C-k"                 #'evil-window-up
+      ;; :en "C-l"                 #'evil-window-right
       "C-x p"     #'+popup/other
       (:map universal-argument-map
         "C-u" nil
@@ -931,6 +932,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       :m  "gD" #'+lookup/references
       :m  "gh" #'+lookup/documentation
       :n  "gp" #'+evil/reselect-paste
+      :m  "gs" #'+default/easymotion
       :n  "gr" #'+eval:region
       :n  "gR" #'+eval/buffer
       :v  "gR" #'+eval:replace-region
@@ -1000,10 +1002,6 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         :textobj "J" #'evil-indent-plus-i-indent-up-down #'evil-indent-plus-a-indent-up-down
         (:map evil-window-map ; prefix "C-w"
           ;; Navigation
-          "C-h"     #'evil-window-left
-          "C-j"     #'evil-window-down
-          "C-k"     #'evil-window-up
-          "C-l"     #'evil-window-right
           "C-w"     #'other-window
           ;; Swapping windows
           "H"       #'+evil/window-move-left
@@ -1088,8 +1086,8 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         (:map git-timemachine-mode-map
           :n "C-p" #'git-timemachine-show-previous-revision
           :n "C-n" #'git-timemachine-show-next-revision
-          :n "[["  #'git-timemachine-show-previous-revision
-          :n "]]"  #'git-timemachine-show-next-revision
+          :m "[["  #'git-timemachine-show-previous-revision
+          :m "]]"  #'git-timemachine-show-next-revision
           :n "q"   #'git-timemachine-quit
           :n "gb"  #'git-timemachine-blame))
       (:after gist
@@ -1205,30 +1203,14 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       (:after comint
         ;; TAB auto-completion in term buffers
         :map comint-mode-map [tab] #'company-complete)
-      (:after debug
-        ;; For elisp debugging
-        :map debugger-mode-map
-        :n "RET" #'debug-help-follow
-        :n "e"   #'debugger-eval-expression
-        :n "n"   #'debugger-step-through
-        :n "c"   #'debugger-continue)
+
       (:map help-mode-map
-        :n "[["  #'help-go-back
-        :n "]]"  #'help-go-forward
-        :n "o"   #'ace-link-help
-        :n "q"   #'quit-window
-        :n "Q"   #'+ivy-quit-and-resume)
+        :n "Q"   #'ivy-resume
+        :n "o"   #'ace-link-help)
       (:after vc-annotate
         :map vc-annotate-mode-map
-        :n "q"   #'kill-this-buffer
-        :n "d"   #'vc-annotate-show-diff-revision-at-line
-        :n "D"   #'vc-annotate-show-changeset-diff-revision-at-line
-        :n "SPC" #'vc-annotate-show-log-revision-at-line
-        :n "]]"  #'vc-annotate-next-revision
-        :n "[["  #'vc-annotate-prev-revision
-        :n "TAB" #'vc-annotate-toggle-annotation-visibility
-        :n "RET" #'vc-annotate-find-revision-at-line)
-        :n "W"   #'vc-annotate-working-revision)
+        [remap quit-window] #'kill-this-buffer
+        ))
 (map! (:map input-decode-map
         [S-iso-lefttab] [backtab]
         (:unless window-system "TAB" [tab])) ; Fix TAB in terminal
@@ -1309,10 +1291,9 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
   (do-repeat! org-babel-previous-src-block org-babel-next-src-block org-babel-previous-src-block)
   (do-repeat! org-previous-visible-heading org-next-visible-heading org-previous-visible-heading))
 ;; f/F/t/T/s/S
+(setq evil-snipe-repeat-keys nil
+      evil-snipe-override-evil-repeat-keys nil)
 (after! evil-snipe
-  (setq evil-snipe-repeat-keys nil
-        evil-snipe-override-evil-repeat-keys nil) ; causes problems with remapped ;
-
   (do-repeat! evil-snipe-f evil-snipe-repeat evil-snipe-repeat-reverse)
   (do-repeat! evil-snipe-F evil-snipe-repeat evil-snipe-repeat-reverse)
   (do-repeat! evil-snipe-t evil-snipe-repeat evil-snipe-repeat-reverse)
@@ -1327,24 +1308,3 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
               evil-ex-search-next evil-ex-search-previous)
   (do-repeat! evil-visualstar/begin-search-backward
               evil-ex-search-previous evil-ex-search-next))
-;; lazy-load `evil-easymotion'
-(map! :m "gs" #'+default/easymotion)
-(defun +default/easymotion ()
-  (interactive)
-  (let ((prefix (this-command-keys)))
-    (evilem-default-keybindings prefix)
-    (map! :map evilem-map
-          "n" (evilem-create #'evil-ex-search-next)
-          "N" (evilem-create #'evil-ex-search-previous)
-          "s" (evilem-create #'evil-snipe-repeat
-                             :pre-hook (save-excursion (call-interactively #'evil-snipe-s))
-                             :bind ((evil-snipe-scope 'buffer)
-                                    (evil-snipe-enable-highlight)
-                                    (evil-snipe-enable-incremental-highlight)))
-          "S" (evilem-create #'evil-snipe-repeat-reverse
-                             :pre-hook (save-excursion (call-interactively #'evil-snipe-s))
-                             :bind ((evil-snipe-scope 'buffer)
-                                    (evil-snipe-enable-highlight)
-                                    (evil-snipe-enable-incremental-highlight))))
-    (set-transient-map evilem-map)
-    (which-key-reload-key-sequence prefix)))
