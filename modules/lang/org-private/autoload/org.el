@@ -40,8 +40,8 @@
   (org-clock-out)
   (save-buffer)
   (kill-this-buffer)
-  (start-process-shell-command "Focus" nil "open -g \"focus://focus\"")
   (+workspace/delete (+workspace-current-name))
+  (start-process-shell-command "Unfocus" nil "open -g \"focus://unfocus\"")
   (map! :map org-mode-map
         :ni "<s-return>" #'+org/work-on-heading
         :ni "s-k" nil))
@@ -54,7 +54,7 @@
   (save-buffer)
   (kill-this-buffer)
   (+workspace/delete (+workspace-current-name))
-  (start-process-shell-command "Unfocus" nil "open -g \"focus://unfocus\"")
+  (start-process-shell-command "Focus" nil "open -g \"focus://focus\"")
   (map! :map org-mode-map
         :ni "<s-return>" #'+org/work-on-heading
         :ni "s-k" nil))
