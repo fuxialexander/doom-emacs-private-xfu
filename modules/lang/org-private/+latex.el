@@ -20,6 +20,7 @@
                                                            :html-scale 1.0
                                                            :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
                     org-highlight-latex-and-related '(latex)
+                    org-latex-listings 'minted
                     org-latex-logfiles-extensions (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl"))
                     org-latex-packages-alist (quote (("" "color" t)
                                                      ("" "minted" t)
