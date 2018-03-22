@@ -4,11 +4,11 @@
   :commands twit
   :init
   :config
-
   (defface twitter-divider
-    `((t ()))
-    "test"
+    `((t (:underline (:color "grey"))))
+    "The vertical divider between tweets."
     :group 'twittering-mode)
+
   (advice-add #'twittering-make-fontified-tweet-text :override #'+twitter/twittering-make-fontified-tweet-text)
   (setq twittering-use-master-password t
         twittering-private-info-file (expand-file-name "twittering-mode.gpg" doom-etc-dir)

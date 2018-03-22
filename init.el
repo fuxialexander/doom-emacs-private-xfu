@@ -131,7 +131,7 @@ evil-collection-company-use-tng nil
       doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 15 :width 'extra-condensed :weight 'normal :slant 'normal :registry "iso10646-1" )
       doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 13)
       doom-big-font (font-spec :family "SF Mono" :size 16)
-      doom-theme 'doom-city-lights
+      doom-theme 'doom-nord
       doom-line-numbers-style nil
       +doom-modeline-buffer-file-name-style 'truncate-upto-project
       doom-neotree-enable-variable-pitch t
@@ -148,7 +148,7 @@ evil-collection-company-use-tng nil
       org-ellipsis " + ")
 
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-(add-to-list 'default-frame-alist '(ns-appearance . 'dark))
+(add-to-list 'default-frame-alist '(ns-appearance . dark))
 
 
 (add-hook! doom-big-font-mode

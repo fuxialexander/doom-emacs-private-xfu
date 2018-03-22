@@ -31,7 +31,7 @@
   (+workspace/display)
   (map! :map org-mode-map
         :ni "<s-return>" #'+org/finish-work-on-heading
-        :ni "s-k" #'+org/cancel-work-on-heading))
+        :ni "s-k"        #'+org/cancel-work-on-heading))
 
 ;;;###autoload
 (defun +org/finish-work-on-heading ()
