@@ -63,40 +63,40 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
   (org-ref-get-bibtex-string-from-biorxiv url)
   (backward-char)
   ;; set date added for the record
-  (when org-ref-doi-utils-timestamp-format-function
+  (when doi-utils-timestamp-format-function
     (org-ref-bibtex-set-field
-     org-ref-doi-utils-timestamp-field
-     (funcall org-ref-doi-utils-timestamp-format-function)))
+     doi-utils-timestamp-field
+     (funcall doi-utils-timestamp-format-function)))
   ;; Clean the record
   (org-ref-clean-bibtex-entry)
   ;; try to get pdf
-  (when org-ref-doi-utils-download-pdf
+  (when doi-utils-download-pdf
     (org-ref-get-pdf-from-biorxiv-eprint))
   ;; Make notes
-  (when (and org-ref-doi-utils-make-notes org-ref-bibliography-notes)
+  (when (and doi-utils-make-notes org-ref-bibliography-notes)
     (save-excursion
       (when (f-file? org-ref-bibliography-notes)
         (find-file-noselect org-ref-bibliography-notes)
         (save-buffer))
       (let ((bibtex-files (list (buffer-file-name))))
-        (funcall org-ref-doi-utils-make-notes-function))))
+        (funcall doi-utils-make-notes-function))))
   )
 ;;;###autoload
 (defun org-ref-get-bibtex-string-from-biorxiv (biorxivurl)
   ;; <a href="/highwire/citation/73994/bibtext"
   (require 'url-handlers)
-  (setq *org-ref-doi-utils-waiting* t)
+  (setq *doi-utils-waiting* t)
   (url-retrieve
    biorxivurl
    (lambda (cbargs)
      (goto-char (point-min))
      (re-search-forward "<a href=\"\\(/highwire/citation/.*/bibtext\\)\"" nil t)
-     (setq *org-ref-doi-utils-biorxiv-bibtex-url* (concat "https://www.biorxiv.org" (match-string 1))
-           *org-ref-doi-utils-waiting* nil)))
-  (while *org-ref-doi-utils-waiting* (sleep-for 0.1))
+     (setq *doi-utils-biorxiv-bibtex-url* (concat "https://www.biorxiv.org" (match-string 1))
+           *doi-utils-waiting* nil)))
+  (while *doi-utils-waiting* (sleep-for 0.1))
   (goto-char (point-max))
   (url-insert
-   (url-retrieve-synchronously *org-ref-doi-utils-biorxiv-bibtex-url*)))
+   (url-retrieve-synchronously *doi-utils-biorxiv-bibtex-url*)))
 ;;;###autoload
 (defun org-ref-wash-bib ()
   (interactive)
@@ -120,7 +120,7 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
                                                          (bibtex-completion-get-entry (bibtex-completion-key-at-point))))))
         (progn
           (condition-case nil
-              (call-interactively 'org-ref-doi-utils-update-bibtex-entry-from-doi)
+              (call-interactively 'doi-utils-update-bibtex-entry-from-doi)
             (error t))
           (parsebib-find-next-item)
           ))))
@@ -172,7 +172,7 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
   (while (parsebib-find-next-item)
     (if (not (bibtex-completion-find-pdf (bibtex-completion-key-at-point)))
         (progn
-          (call-interactively 'org-ref-doi-utils-get-bibtex-entry-pdf)
+          (call-interactively 'doi-utils-get-bibtex-entry-pdf)
           (parsebib-find-next-item)
           )
       (parsebib-find-next-item))))
@@ -239,9 +239,9 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
   (let ((url (elfeed-entry-link elfeed-show-entry)))
     (if (string-match ".*biorxiv" url)
         (org-ref-add-bibtex-entry-from-biorxiv url)
-      (org-ref-doi-utils-add-entry-from-elfeed-entry))))
+      (doi-utils-add-entry-from-elfeed-entry))))
 ;;;###autoload
-(defun org-ref-doi-utils-add-entry-from-elfeed-entry ()
+(defun doi-utils-add-entry-from-elfeed-entry ()
   "Add elfeed entry to bibtex."
   (interactive)
   (let* (;;(title (elfeed-entry-title elfeed-show-entry))
@@ -249,12 +249,12 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
          (content (elfeed-deref (elfeed-entry-content elfeed-show-entry)))
          (entry-id (elfeed-entry-id elfeed-show-entry)))
     (if (string-match "DOI: \\(.*\\)$" content)
-        (org-ref-doi-utils-add-bibtex-entry-from-doi (match-string 1 content))
+        (doi-utils-add-bibtex-entry-from-doi (match-string 1 content))
       (let ((dois (org-ref-url-scrape-dois url)))
         (cond
          ;; One doi found. Assume it is what we want.
          ((= 1 (length dois))
-          (org-ref-doi-utils-add-bibtex-entry-from-doi (car dois))
+          (doi-utils-add-bibtex-entry-from-doi (car dois))
           )
          ;; Multiple DOIs found
          ((> (length dois) 1)
@@ -280,7 +280,7 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
                                            dois
                                            :test #'equal)))
                                (reverse dois))))
-           :action 'org-ref-doi-utils-add-bibtex-entry-from-doi)
+           :action 'doi-utils-add-bibtex-entry-from-doi)
           (bibtex-beginning-of-entry)
           (delete-char -2)))))))
 
@@ -317,65 +317,65 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
   "From a bibtex entry, create and return a citation string."
   (bibtex-completion-apa-format-reference (org-ref-get-bibtex-key-under-cursor)))
 
-(defun nature-pdf-url (*org-ref-doi-utils-redirect*)
-  "Get url to the pdf from *ORG-REF-DOI-UTILS-REDIRECT*."
-  (when (string-match "^http://www.nature.com" *org-ref-doi-utils-redirect*)
-    (let ((result *org-ref-doi-utils-redirect*))
+(defun nature-pdf-url (*doi-utils-redirect*)
+  "Get url to the pdf from *DOI-UTILS-REDIRECT*."
+  (when (string-match "^http://www.nature.com" *doi-utils-redirect*)
+    (let ((result *doi-utils-redirect*))
       ;; (setq result (replace-regexp-in-string "/full/" "/pdf/" result))
       (concat result "\.pdf"))))
 
-(defun biorxiv-pdf-url (*org-ref-doi-utils-redirect*)
-  "Get url to the pdf from *ORG-REF-DOI-UTILS-REDIRECT*."
+(defun biorxiv-pdf-url (*doi-utils-redirect*)
+  "Get url to the pdf from *DOI-UTILS-REDIRECT*."
   (when (string-match "www.biorxiv.org"
-                      *org-ref-doi-utils-redirect*)
-    (replace-regexp-in-string "early" "biorxiv/early" (concat *org-ref-doi-utils-redirect* ".full.pdf"))))
+                      *doi-utils-redirect*)
+    (replace-regexp-in-string "early" "biorxiv/early" (concat *doi-utils-redirect* ".full.pdf"))))
 
-(defun bmc-pdf-url (*org-ref-doi-utils-redirect*)
-  "Get url to the pdf from *ORG-REF-DOI-UTILS-REDIRECT*."
-  (when (string-match "biomedcentral.com" *org-ref-doi-utils-redirect*)
-    (let ((url (downcase *org-ref-doi-utils-redirect*)))
+(defun bmc-pdf-url (*doi-utils-redirect*)
+  "Get url to the pdf from *DOI-UTILS-REDIRECT*."
+  (when (string-match "biomedcentral.com" *doi-utils-redirect*)
+    (let ((url (downcase *doi-utils-redirect*)))
       (setq url (replace-regexp-in-string "articles" "track/pdf" url))
       url)))
 
-(defun oup-pdf-url (*org-ref-doi-utils-redirect*)
-  "Get url to the pdf from *ORG-REF-DOI-UTILS-REDIRECT*."
-  (while *org-ref-doi-utils-waiting* (sleep-for 0.1))
-  (when (string-match "academic.oup.com" *org-ref-doi-utils-redirect*)
-    (org-ref-doi-utils-get-oup-pdf-url *org-ref-doi-utils-redirect*)
-    *org-ref-doi-utils-pdf-url*))
+(defun oup-pdf-url (*doi-utils-redirect*)
+  "Get url to the pdf from *DOI-UTILS-REDIRECT*."
+  (while *doi-utils-waiting* (sleep-for 0.1))
+  (when (string-match "academic.oup.com" *doi-utils-redirect*)
+    (doi-utils-get-oup-pdf-url *doi-utils-redirect*)
+    *doi-utils-pdf-url*))
 
-(defun org-ref-doi-utils-get-oup-pdf-url (redirect-url)
+(defun doi-utils-get-oup-pdf-url (redirect-url)
   "Science direct hides the pdf url in html.  We get it out here.
 REDIRECT-URL is where the pdf url will be in."
-  (setq *org-ref-doi-utils-waiting* t)
+  (setq *doi-utils-waiting* t)
   (url-retrieve
    redirect-url
    (lambda (status)
      (goto-char (point-min))
      (re-search-forward "citation_pdf_url\" content=\"\\([^\"]*\\)\"" nil t)
-     (setq *org-ref-doi-utils-pdf-url* (match-string 1)
-           *org-ref-doi-utils-waiting* nil)
+     (setq *doi-utils-pdf-url* (match-string 1)
+           *doi-utils-waiting* nil)
      ))
-  (while *org-ref-doi-utils-waiting* (sleep-for 0.1))
-  *org-ref-doi-utils-pdf-url*)
+  (while *doi-utils-waiting* (sleep-for 0.1))
+  *doi-utils-pdf-url*)
 
 
-;; (defun generic-full-pdf-url (*org-ref-doi-utils-redirect*)
-;;   "Get url to the pdf from *ORG-REF-DOI-UTILS-REDIRECT*."
+;; (defun generic-full-pdf-url (*doi-utils-redirect*)
+;;   "Get url to the pdf from *DOI-UTILS-REDIRECT*."
 ;;   (when (or
-;;          (string-match "^http://www.jneurosci.org" *org-ref-doi-utils-redirect*)
-;;          (string-match "cshlp.org" *org-ref-doi-utils-redirect*))
-;;     (concat *org-ref-doi-utils-redirect* ".full.pdf")))
+;;          (string-match "^http://www.jneurosci.org" *doi-utils-redirect*)
+;;          (string-match "cshlp.org" *doi-utils-redirect*))
+;;     (concat *doi-utils-redirect* ".full.pdf")))
 
 ;;;###autoload
-(defun generic-as-get-pdf-url (*org-ref-doi-utils-redirect*)
-  "Get url to the pdf from *ORG-REF-DOI-UTILS-REDIRECT*."
+(defun generic-as-get-pdf-url (*doi-utils-redirect*)
+  "Get url to the pdf from *DOI-UTILS-REDIRECT*."
   (do-applescript (concat "
 tell application \"Google Chrome\"
 activate
 set myTab to make new tab at end of tabs of window 1
 set URL of myTab to \""
-                          *org-ref-doi-utils-redirect*
+                          *doi-utils-redirect*
                           "\"
 end tell
 "))
