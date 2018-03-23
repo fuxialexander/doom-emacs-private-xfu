@@ -90,6 +90,7 @@ If run interactively, get ENTRY from context."
 
 (remove-hook! 'org-mode-hook #'(visual-line-mode))
 
+(add-hook 'org-mode-hook #'evil-org-mode)
 (add-hook 'org-mode-hook #'+org-private|setup-editing t)
 
 ;;
@@ -221,29 +222,14 @@ If run interactively, get ENTRY from context."
         outline-blank-line t)
 
   ;; Update UI when theme is changed
-  (add-hook 'doom-init-theme-hook #'+org-private|setup-ui))
+  (add-hook 'doom-load-theme-hook #'+org-private|setup-ui))
 
 (defun +org-private|setup-keybinds ()
-  (map! :map org-mode-map
+  (require 'evil-org)
+  (map! :map evil-org-mode-map
         :i [S-tab] #'+org/dedent
         :ni "<s-return>" #'+org/work-on-heading
-        ;; expand tables (or shiftmeta move)
-        :ni "M-L" #'org-shiftmetaright
-        :ni "M-H" #'org-shiftmetaleft
-        :ni "M-J" #'org-shiftmetadown
-        :ni "M-K" #'org-shiftmetaup
-        :ni "M-k" #'org-metaup
-        :ni "M-j" #'org-metadown
-        :ni "M-h" #'org-metaleft
-        :ni "M-l" #'org-metaright
 
-        :ni "C-S-h" #'org-shiftleft
-        :ni "C-S-l" #'org-shiftright
-        :ni "C-S-j" #'org-shiftdown
-        :ni "C-S-k" #'org-shiftup
-
-        ;; toggle local fold, instead of all children
-        :n  [tab]   #'org-cycle
         ;; more intuitive RET keybinds
         :i  "RET"   #'org-return-indent
         :n  "RET"   #'+org/dwim-at-point
@@ -274,15 +260,12 @@ If run interactively, get ENTRY from context."
         :n  "zo"  #'outline-show-subtree
         :n  "zO"  #'outline-show-all
         :n  "zr"  #'outline-show-all)
-  (map! :map org-mode-map
+
+  (map! :map evil-org-mode-map
         "M-o" #'org-open-at-point
         "M-i" #'org-insert-last-stored-link
         "M-I" #'org-insert-link
         "s-p" #'org-ref-ivy-insert-cite-link
-        :n  "RET" #'+org/dwim-at-point
-        ;; :n  [tab]     #'org-cycle
-        :n  "t"       #'org-todo
-        :n  "T"       #'org-insert-todo-heading-respect-content
 
         (:localleader
           :desc "Schedule"          :n "s"                  #'org-schedule
@@ -401,6 +384,7 @@ INFO is a plist containing export options."
         (or
          (string-equal (buffer-name) "cal.org")
          (string-equal default-directory "/Users/xfu/Source/playground/gatsby-orga/src/pages/")
+         (string-match "doom-emacs" default-directory )
          (string-equal default-directory "/Users/xfu/Source/playground/fuxialexander.github.io/src/pages/")
          (string-equal (buffer-name) "cal_kevin.org"))
       (save-excursion

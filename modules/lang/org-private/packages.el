@@ -6,7 +6,6 @@
 (package! toc-org)
 (package! org-web-tools)
 (package! org-wild-notifier)
-(package! evil-org)
 (package! org-brain)
 (package! org-super-agenda)
 (package! org-clock-convenience)
