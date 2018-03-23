@@ -288,7 +288,7 @@ ALPHA : [ %(frame-parameter nil 'alpha) ]
   (setq tldr-directory-path (concat doom-etc-dir "tldr/"))
   (set! :popup "^\\*tldr\\*"
     '((size . 80) (side . right))
-    '((transient . nil)  (modeline . nil) (select . t) (quit . t))))
+    '((select . t) (quit . t))))
 
 ;; ** Coding
 (def-package! lsp-mode
@@ -1014,6 +1014,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
           :desc "Theme"                  :n "t" #'counsel-load-theme
           :desc "Evil goggles"           :n "g" #'+evil-goggles/toggle))
       ;; --- Personal vim-esque bindings ------------------
+      ;; :n  "K"  #'+lookup/documentation
       :n  "zx" #'kill-this-buffer
       :n  "ZX" #'bury-buffer
       :n  "]b" #'next-buffer
@@ -1116,7 +1117,8 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       (:after evil-magit
         :map (magit-status-mode-map magit-revision-mode-map)
         :n "C-j" nil
-        :n "C-k" nil)
+        :n "C-k" nil
+        )
       (:prefix "gz"
         :nv "m" #'evil-mc-make-all-cursors
         :nv "u" #'evil-mc-undo-all-cursors
@@ -1207,14 +1209,12 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         :ginm "M-v" #'yank
         :ginm "M-o" #'ivy-dispatching-done-hydra
         :ginm "M-z" #'undo
-        :ginm "C-r" #'evil-paste-from-register
         :ginm "C-k" #'ivy-previous-line
         :ginm "C-j" #'ivy-next-line
         :ginm "s-l" #'ivy-avy
         :ginm "C-l" #'ivy-partial
         :ginm "C-w" #'ivy-backward-kill-word
         :gi [backspace] #'ivy-backward-delete-char
-        :ginm "<left>" #'ivy-backward-kill-word
         :ginm "C-u" #'ivy-kill-line
         :ginm "C-b" #'backward-word
         :ginm "C-f" #'forward-word)
@@ -1336,11 +1336,11 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         [escape] #'abort-recursive-edit
         "C-r" #'evil-paste-from-register
         "C-a" #'move-beginning-of-line
-        "C-w" #'doom/minibuffer-kill-word
-        "C-u" #'doom/minibuffer-kill-line
+        "C-w" #'backward-kill-word
+        "C-u" #'backward-kill-sentence
         "C-b" #'backward-word
         "C-f" #'forward-word
-        "M-z" #'doom/minibuffer-undo)
+        "C-z" (λ! (ignore-errors (call-interactively #'undo))))
 
       (:after evil
         (:map evil-ex-completion-map
@@ -1348,13 +1348,9 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
           "C-b" #'backward-word
           "C-f" #'forward-word))
 
-      (:map messages-buffer-mode-map
-        "M-;" #'eval-expression
-        "A-;" #'eval-expression)
-
       (:after tabulated-list
         (:map tabulated-list-mode-map
-          [remap evil-record-macro] #'quit-window))
+          "q" #'quit-window))
 
       (:after view
         (:map view-mode-map "<escape>" #'View-quit-all)))

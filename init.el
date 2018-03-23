@@ -156,8 +156,9 @@ evil-collection-company-use-tng nil
 
 (def-package-hook! ace-window
   :pre-config
-  (setq aw-keys '(?a ?s ?d ?f ?g ?j ?k ?l ?\;)
+  (setq aw-keys '(?f ?d ?s ?a ?r ?e ?w ?q)
         aw-scope 'frame
+        aw-ignore-current t
         aw-background nil)
   nil)
 
