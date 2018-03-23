@@ -1,7 +1,7 @@
 ;;; lang/org-private/+capture.el -*- lexical-binding: t; -*-
 
 
-(add-hook 'org-load-hook #'+org-private|init-capture)
+(add-hook 'org-load-hook #'+org-private|init-capture t)
 
 (setq +org-default-notes-file "inbox.org"
       +org-default-todo-file "inbox.org")

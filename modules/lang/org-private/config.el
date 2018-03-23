@@ -81,16 +81,16 @@ If run interactively, get ENTRY from context."
 ;;
 ;; Bootstrap
 ;;
-(remove-hook! 'org-load-hook #'(+org|setup-evil))
 
 (add-hook 'org-load-hook #'+org-private|setup-ui t)
 (add-hook 'org-load-hook #'+org-private|setup-agenda t)
-(add-hook 'org-load-hook #'+org-private|setup-keybinds t)
 (add-hook 'org-load-hook #'+org-private|setup-overrides t)
+(add-hook 'org-load-hook #'+org-private|setup-keybinds t)
+
+
 
 (remove-hook! 'org-mode-hook #'(visual-line-mode))
 
-(add-hook 'org-mode-hook #'evil-org-mode)
 (add-hook 'org-mode-hook #'+org-private|setup-editing t)
 
 ;;
@@ -225,135 +225,137 @@ If run interactively, get ENTRY from context."
   (add-hook 'doom-load-theme-hook #'+org-private|setup-ui))
 
 (defun +org-private|setup-keybinds ()
-  (require 'evil-org)
-  (map! :map evil-org-mode-map
-        :i [S-tab] #'+org/dedent
-        :ni "<s-return>" #'+org/work-on-heading
+  (after! evil-org
+    (setq evil-org-want-hybrid-shift t
+          evil-org-use-additional-insert t)
+    (evil-org-set-key-theme '(navigation
+                              shift
+                              todo
+                              additional
+                              operators
+                              insert
+                              textobjects))
+    (map! :map evil-org-mode-map
+          "M-o" #'org-open-at-point
+          "M-i" #'org-insert-last-stored-link
+          "M-I" #'org-insert-link
+          "s-p" #'org-ref-ivy-insert-cite-link
+          :ni "<s-return>" #'+org/work-on-heading
 
-        ;; more intuitive RET keybinds
-        :i  "RET"   #'org-return-indent
-        :n  "RET"   #'+org/dwim-at-point
-        :ni [S-M-return] (lambda! (+org/insert-go-eol)
-                             (call-interactively #'org-insert-todo-heading))
-        :ni [M-return] #'org-meta-return
-        ;; more org-ish vim motion keys
-        :m  "]]"  (λ! (org-forward-heading-same-level nil) (org-beginning-of-line))
-        :m  "[["  (λ! (org-backward-heading-same-level nil) (org-beginning-of-line))
-        :m  "]o"  #'org-next-visible-heading
-        :m  "[o"  #'org-previous-visible-heading
-        :m  "]l"  #'org-next-link
-        :m  "[l"  #'org-previous-link
-        :m  "]i"  #'org-next-item
-        :m  "[i"  #'org-previous-item
-        :m  "]v"  #'org-next-block
-        :m  "[v"  #'org-previous-block
-        :m  "]s"  #'org-babel-next-src-block
-        :m  "[s"  #'org-babel-previous-src-block
-        :n  "gQ"  #'org-fill-paragraph
-        ;; sensible code-folding vim keybinds
-        :n  "za"  #'+org/toggle-fold
-        :n  "zA"  #'org-shifttab
-        :n  "zc"  #'outline-hide-subtree
-        :n  "zC"  (λ! (outline-hide-sublevels 1))
-        :n  "zd"  (lambda (&optional arg) (interactive "p") (outline-hide-sublevels (or arg 3)))
-        :n  "zm"  (λ! (outline-hide-sublevels 1))
-        :n  "zo"  #'outline-show-subtree
-        :n  "zO"  #'outline-show-all
-        :n  "zr"  #'outline-show-all)
+          :nm  "]v"  #'org-next-block
+          :nm  "[v"  #'org-previous-block
+          :nm  "]i"  #'org-next-item
+          :nm  "[i"  #'org-previous-item
+          :nm  "]]"  (λ! (org-forward-heading-same-level nil) (org-beginning-of-line))
+          :nm  "[["  (λ! (org-backward-heading-same-level nil) (org-beginning-of-line))
+          :nm  "]h"  #'org-next-visible-heading
+          :nm  "[h"  #'org-previous-visible-heading
+          :nm  "]l"  #'org-next-link
+          :nm  "[l"  #'org-previous-link
+          :nm  "]s"  #'org-babel-next-src-block
+          :nm  "[s"  #'org-babel-previous-src-block
+          :nm  "_"   #'evil-org-beginning-of-line
+          :nm  "0"   (λ! (let ((visual-line-mode)) (org-beginning-of-line)))
+          :n  "gQ"  #'org-fill-paragraph
+          ;; sensible code-folding vim keybinds
+          :n  "za"  #'+org/toggle-fold
+          :n  "zA"  #'org-shifttab
+          :n  "zc"  #'outline-hide-subtree
+          :n  "zC"  (λ! (outline-hide-sublevels 1))
+          :n  "zd"  (lambda (&optional arg) (interactive "p") (outline-hide-sublevels (or arg 3)))
+          :n  "zm"  (λ! (outline-hide-sublevels 1))
+          :n  "zo"  #'outline-show-subtree
+          :n  "zO"  #'outline-show-all
+          :n  "zr"  #'outline-show-all
 
-  (map! :map evil-org-mode-map
-        "M-o" #'org-open-at-point
-        "M-i" #'org-insert-last-stored-link
-        "M-I" #'org-insert-link
-        "s-p" #'org-ref-ivy-insert-cite-link
+          :ni [M-return] #'org-meta-return
+          :ni [S-M-return] (lambda! (+org/insert-go-eol)
+                               (call-interactively #'org-insert-todo-heading))
+          (:localleader
+            :n ","   #'org-ctrl-c-ctrl-c
+            :n "s"   #'org-schedule
+            :n "m"   #'+org-toggle-math
+            :n "c"   #'org-columns
+            :n "C"   #'(lambda () (interactive) (let ((current-prefix-arg 2)) (call-interactively #'org-columns)))
+            :n "L"   #'+org/remove-link
+            :n "d"   #'org-deadline
+            :n "'"   #'org-edit-special
+            :n "e"   #'org-set-effort
+            :n "t"   #'org-todo
+            :n "r"   #'org-refile
+            :n [tab] #'org-export-dispatch
+            :n "E"   #'org-clock-modify-effort-estimate
+            :n "p"   #'org-set-property
+            :n "i"   #'org-clock-in
+            :n "o"   #'org-clock-out
+            :n "="   (λ! (call-interactively #'evil-append) (insert (+reference/skim-get-annotation)))
+            :n "n"   #'org-narrow-to-subtree
+            :n "N"   #'org-narrow-to-element
+            :n "w"   #'widen
+            :n "$"   #'wordnut-lookup-current-word
+            :n "h"   #'org-toggle-heading
+            :n "A"   #'org-archive-subtree
+            :n "a"   #'org-toggle-archive-tag)))
+  (map!
+   (:after org-agenda
+     (:map org-agenda-mode-map
+       :nm "C-k"      #'evil-window-up
+       :nm "C-j"      #'evil-window-down
+       :nm "C-h"      #'evil-window-left
+       :nm "C-l"      #'evil-window-right
+       :nm "<escape>" #'org-agenda-Quit
 
-        (:localleader
-          :desc "Schedule"          :n "s"                  #'org-schedule
-          :desc "Math"              :n "m"                  #'+org-toggle-math
-          :desc "Column View"       :n "c"                  #'org-columns
-          :desc "All Column View"   :n "C"                  #'(lambda () (interactive)
-                                                                (let ((current-prefix-arg 4))
-                                                                  (call-interactively #'org-columns)))
-          :desc "Remove link"       :n "L"                  #'+org/remove-link
-          :desc "Deadline"          :n "d"                  #'org-deadline
-          :desc "C-c C-c"           :n doom-localleader-key #'org-ctrl-c-ctrl-c
-          :desc "Edit Special"      :n "'"                  #'org-edit-special
-          :desc "Effort"            :n "e"                  #'org-set-effort
-          :desc "TODO"              :n "t"                  #'org-todo
-          :desc "org-refile"        :n "r"                  #'org-refile
-          :desc "Export"            :n [tab]                #'org-export-dispatch
-          :desc "Clocking Effort"   :n "E"                  #'org-clock-modify-effort-estimate
-          :desc "Property"          :n "p"                  #'org-set-property
-          :desc "Clock-in"          :n "i"                  #'org-clock-in
-          :desc "Clock-out"         :n "o"                  #'org-clock-out
-          :desc "Get skim link"     :n "="                  (λ! (call-interactively #'evil-append) (insert (+reference/skim-get-annotation)))
-          :desc "Narrow to Subtree" :n "n"                  #'org-narrow-to-subtree
-          :desc "Narrow to Element" :n "N"                  #'org-narrow-to-element
-          :desc "Widen"             :n "w"                  #'widen
-          :desc "Lookup"            :n "$"                  #'wordnut-lookup-current-word
-          :desc "Toggle heading"    :n "h"                  #'org-toggle-heading
-          :desc "Archive Subtree"   :n "A"                  #'org-archive-subtree
-          :desc "Toggle Archive"    :n "a"                  #'org-toggle-archive-tag
-          )
-        (:after org-agenda
-          (:map org-agenda-mode-map
-            :nm "C-k"      #'evil-window-up
-            :nm "C-j"      #'evil-window-down
-            :nm "C-h"      #'evil-window-left
-            :nm "C-l"      #'evil-window-right
-            :nm "<escape>" #'org-agenda-Quit
-            :nm "q"        #'org-agenda-Quit
-            :nm "J"        #'org-clock-convenience-timestamp-down
-            :nm "K"        #'org-clock-convenience-timestamp-up
-            :nm "M-j"      #'org-agenda-later
-            :nm "M-k"      #'org-agenda-earlier
-            :nm "s-o"      #'org-clock-convenience-fill-gap
-            :nm "s-e"      #'org-clock-convenience-fill-gap-both
-            :nm "\\"       #'ace-window
-            :nm "t"        #'org-agenda-todo
-            :nm "p"        #'org-set-property
-            :nm "r"        #'org-agenda-redo
-            :nm "e"        #'org-agenda-set-effort
-            :nm "H"        #'org-habit-toggle-habits
-            :nm "L"        #'org-agenda-log-mode
-            :nm "D"        #'org-agenda-toggle-diary
-            :nm "G"        #'org-agenda-toggle-time-grid
-            :nm ";"        #'counsel-org-tag-agenda
-            :nm "s-j"      #'counsel-org-goto-all
-            :nm "i"        #'org-agenda-clock-in
-            :nm "o"        #'org-agenda-clock-out
-            :nm "<tab>"    #'org-agenda-goto
-            :nm "C"        #'org-agenda-capture
-            :nm "m"        #'org-agenda-bulk-mark
-            :nm "u"        #'org-agenda-bulk-unmark
-            :nm "U"        #'org-agenda-bulk-unmark-all
-            :nm "f"        #'+org@org-agenda-filter/body
-            :nm "-"        #'org-agenda-manipulate-query-subtract
-            :nm "="        #'org-agenda-manipulate-query-add
-            :nm "_"        #'org-agenda-manipulate-query-subtract-re
-            :nm "$"        #'org-agenda-manipulate-query-add-re
-            :nm "d"        #'org-agenda-deadline
-            :nm "s"        #'org-agenda-schedule
-            :nm "z"        #'org-agenda-view-mode-dispatch
-            :nm "S"        #'org-save-all-org-buffers))
-        (:after org-src
-          (:map org-src-mode-map
-            "C-c C-c" nil
-            "C-c C-k" nil
-            (:localleader
-              :desc "Finish" :nm ","  #'org-edit-src-exit
-              :desc "Abort"  :nm "k"  #'org-edit-src-abort
-              )))
-        (:after org-capture
-          (:map org-capture-mode-map
-            "C-c C-c" nil
-            "C-c C-k" nil
-            "C-c C-w" nil
-            (:localleader
-              :desc "Finish" :nm "," #'org-capture-finalize
-              :desc "Refile" :nm "r" #'org-capture-refile
-              :desc "Abort"  :nm "k" #'org-capture-kill
-              )))))
+       :nm "J"        #'org-clock-convenience-timestamp-down
+       :nm "K"        #'org-clock-convenience-timestamp-up
+       :nm "M-j"      #'org-agenda-later
+       :nm "M-k"      #'org-agenda-earlier
+       :nm "s-o"      #'org-clock-convenience-fill-gap
+       :nm "s-e"      #'org-clock-convenience-fill-gap-both
+       :nm "\\"       #'ace-window
+       :nm "t"        #'org-agenda-todo
+       :nm "p"        #'org-set-property
+       :nm "r"        #'org-agenda-redo
+       :nm "e"        #'org-agenda-set-effort
+       :nm "H"        #'org-habit-toggle-habits
+       :nm "L"        #'org-agenda-log-mode
+       :nm "D"        #'org-agenda-toggle-diary
+       :nm "G"        #'org-agenda-toggle-time-grid
+       :nm ";"        #'counsel-org-tag-agenda
+       :nm "s-j"      #'counsel-org-goto-all
+       :nm "i"        #'org-agenda-clock-in
+       :nm "o"        #'org-agenda-clock-out
+       :nm "<tab>"    #'org-agenda-goto
+       :nm "C"        #'org-agenda-capture
+       :nm "m"        #'org-agenda-bulk-mark
+       :nm "u"        #'org-agenda-bulk-unmark
+       :nm "U"        #'org-agenda-bulk-unmark-all
+       :nm "f"        #'+org@org-agenda-filter/body
+       :nm "-"        #'org-agenda-manipulate-query-subtract
+       :nm "="        #'org-agenda-manipulate-query-add
+       :nm "_"        #'org-agenda-manipulate-query-subtract-re
+       :nm "$"        #'org-agenda-manipulate-query-add-re
+       :nm "d"        #'org-agenda-deadline
+       :nm "s"        #'org-agenda-schedule
+       :nm "z"        #'org-agenda-view-mode-dispatch
+       :nm "S"        #'org-save-all-org-buffers))
+   (:after org-src
+     (:map org-src-mode-map
+       "C-c C-c" nil
+       "C-c C-k" nil
+       (:localleader
+         :desc "Finish" :nm ","  #'org-edit-src-exit
+         :desc "Abort"  :nm "k"  #'org-edit-src-abort
+         )))
+   (:after org-capture
+     (:map org-capture-mode-map
+       "C-c C-c" nil
+       "C-c C-k" nil
+       "C-c C-w" nil
+       (:localleader
+         :desc "Finish" :nm "," #'org-capture-finalize
+         :desc "Refile" :nm "r" #'org-capture-refile
+         :desc "Abort"  :nm "k" #'org-capture-kill
+         )))))
 
 (defun +org-private|setup-overrides ()
   (after! org-html

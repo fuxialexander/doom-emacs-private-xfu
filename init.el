@@ -239,9 +239,6 @@ evil-collection-company-use-tng nil
 (def-package-hook! posframe
   :pre-config nil)
 
-(def-package-hook! evil-org
-  :disable)
-
 (def-package-hook! ob-mongo
   :disable)
 

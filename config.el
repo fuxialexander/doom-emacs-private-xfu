@@ -524,8 +524,10 @@ symbol."
   :hook (outline-minor-mode . outshine-hook-function)
   :config
   (map! :map outline-minor-mode-map
-        :nm "\]o" #'outline-next-heading
-        :nm "\[o" #'outline-previous-heading
+        :nmv "C-j" #'outline-next-heading
+        :nmv "C-k" #'outline-previous-heading
+        :nmv "\]o" #'outline-next-heading
+        :nmv "\[o" #'outline-previous-heading
         :nm [tab] #'outline-cycle
         :nm [backtab] #'outshine-cycle-buffer))
 (def-package! counsel-oi :load-path "~/.doom.d/local/"
@@ -1363,23 +1365,43 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
              (define-key evil-motion-state-map (kbd ";") ',next-func)
              (define-key evil-motion-state-map (kbd "'") ',prev-func))
            (advice-add #',command :before #',fn-sym))))
-;; n/N
-(do-repeat! evil-ex-search-next evil-ex-search-next evil-ex-search-previous)
-(do-repeat! evil-ex-search-previous evil-ex-search-next evil-ex-search-previous)
-(do-repeat! evil-ex-search-forward evil-ex-search-next evil-ex-search-previous)
-(do-repeat! evil-ex-search-backward evil-ex-search-next evil-ex-search-previous)
+
 ;; org
 (after! org
+  (do-repeat! org-forward-heading-same-level org-forward-heading-same-level org-backward-heading-same-level)
   (do-repeat! org-next-item org-next-item org-previous-item)
   (do-repeat! org-next-link org-next-link org-previous-link)
   (do-repeat! org-next-block org-next-block org-previous-block)
   (do-repeat! org-babel-next-src-block org-babel-next-src-block org-babel-previous-src-block)
   (do-repeat! org-next-visible-heading org-next-visible-heading org-previous-visible-heading)
+  (do-repeat! org-backward-heading-same-level org-forward-heading-same-level org-backward-heading-same-level)
   (do-repeat! org-previous-item org-next-item org-previous-item)
   (do-repeat! org-previous-link org-next-link org-previous-link)
   (do-repeat! org-previous-block org-next-block org-previous-block)
   (do-repeat! org-babel-previous-src-block org-babel-next-src-block org-babel-previous-src-block)
   (do-repeat! org-previous-visible-heading org-next-visible-heading org-previous-visible-heading))
+;; outline
+(after! outline
+  (do-repeat! outline-next-heading outline-next-heading outline-previous-heading)
+  (do-repeat! outline-previous-heading outline-next-heading outline-previous-heading))
+;; buffer
+(do-repeat! previous-buffer next-buffer previous-buffer)
+(do-repeat! next-buffer next-buffer previous-buffer)
+;; workspace
+(after! persp
+  (do-repeat! +workspace/switch-left +workspace/switch-left +workspace/switch-right)
+  (do-repeat! +workspace/switch-right +workspace/switch-left +workspace/switch-right))
+
+;; git-gutter
+(after! git-gutter
+  (do-repeat! git-gutter:next-hunk git-gutter:next-hunk git-gutter:previous-hunk)
+  (do-repeat! git-gutter:previous-hunk git-gutter:next-hunk git-gutter:previous-hunk))
+
+;; n/N
+(do-repeat! evil-ex-search-next evil-ex-search-next evil-ex-search-previous)
+(do-repeat! evil-ex-search-previous evil-ex-search-next evil-ex-search-previous)
+(do-repeat! evil-ex-search-forward evil-ex-search-next evil-ex-search-previous)
+(do-repeat! evil-ex-search-backward evil-ex-search-next evil-ex-search-previous)
 ;; f/F/t/T/s/S
 (setq evil-snipe-repeat-keys nil
       evil-snipe-override-evil-repeat-keys nil)

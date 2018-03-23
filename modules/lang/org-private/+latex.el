@@ -1,5 +1,5 @@
 ;;; lang/org-private/+latex.el -*- lexical-binding: t; -*-
-(add-hook 'org-load-hook #'+org-private|init-latex)
+(add-hook 'org-load-hook #'+org-private|init-latex t)
 
 (def-package! cdlatex
   :commands (org-cdlatex-mode
