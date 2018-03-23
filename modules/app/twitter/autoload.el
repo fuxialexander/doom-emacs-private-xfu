@@ -160,3 +160,211 @@ that works with the feature/popup module."
            (setq pos end)))
        (add-face-text-property 0 (length str) 'variable-pitch t str)
        str)))
+
+;; (defun twittering-generate-format-table (status-sym prefix-sym)
+;; `(("%" . "%")
+;;   ("}" . "}")
+;;   ("#" . (cdr (assq 'id ,status-sym)))
+;;   ("'" . (when (cdr (assq 'truncated ,status-sym))
+;;        "..."))
+;;   ("c" .
+;;    (let ((system-time-locale "C"))
+;;      (format-time-string "%a %b %d %H:%M:%S %z %Y"
+;;   		   (cdr (assq 'created-at ,status-sym)))))
+;;   ("d" . (cdr (assq 'user-description ,status-sym)))
+;;   ("f" .
+;;    (twittering-make-string-with-source-property
+;;     (cdr (assq 'source ,status-sym)) ,status-sym))
+;;   ("i" .
+;;    (when (and twittering-icon-mode window-system)
+;;      (let ((url
+;;         (cond
+;;          ((and twittering-use-profile-image-api
+;;   	     (eq twittering-service-method 'twitter)
+;;   	     (or (null twittering-convert-fix-size)
+;;   		 (member twittering-convert-fix-size '(48 73))))
+;;   	(let ((user (cdr (assq 'user-screen-name ,status-sym)))
+;;   	      (size
+;;   	       (if (or (null twittering-convert-fix-size)
+;;   		       (= 48 twittering-convert-fix-size))
+;;   		   "normal"
+;;   		 "bigger")))
+;;   	  (format "http://%s/%s/%s.xml?size=%s" twittering-api-host
+;;   		  (twittering-api-path "users/profile_image") user size)))
+;;          (t
+;;   	(cdr (assq 'user-profile-image-url ,status-sym))))))
+;;    (twittering-make-icon-string nil nil url))))
+;;   ("j" . (cdr (assq 'user-id ,status-sym)))
+;;   ("L" .
+;;    (let ((location (or (cdr (assq 'user-location ,status-sym)) "")))
+;;      (unless (string= "" location)
+;;    (concat " [" location "]"))))
+;;   ("l" . (cdr (assq 'user-location ,status-sym)))
+;;   ("p" . (when (cdr (assq 'user-protected ,status-sym))
+;;        "[x]"))
+;;   ("r" .
+;;    (let ((reply-id (or (cdr (assq 'in-reply-to-status-id ,status-sym)) ""))
+;;      (reply-name (or (cdr (assq 'in-reply-to-screen-name ,status-sym))
+;;   		   ""))
+;;      (recipient-screen-name
+;;       (cdr (assq 'recipient-screen-name ,status-sym))))
+;;      (let* ((pair
+;;          (cond
+;;   	(recipient-screen-name
+;;   	 (cons (format "sent to %s" recipient-screen-name)
+;;   	       (twittering-get-status-url recipient-screen-name)))
+;;   	((and (not (string= "" reply-id))
+;;   	      (not (string= "" reply-name)))
+;;   	 (cons (format "in reply to %s" reply-name)
+;;   	       (twittering-get-status-url reply-name reply-id)))
+;;   	(t nil)))
+;;         (str (car pair))
+;;         (url (cdr pair))
+;;         (properties
+;;          (list 'mouse-face 'highlight 'face 'twittering-uri-face
+;;   	     'keymap twittering-mode-on-uri-map
+;;   	     'uri url
+;;   	     'front-sticky nil
+;;   	     'rear-nonsticky t)))
+;;    (when (and str url)
+;;      (concat " " (apply 'propertize str properties))))))
+;;   ("R" .
+;;    (let ((retweeted-by
+;;       (or (cdr (assq 'retweeting-user-screen-name ,status-sym)) "")))
+;;      (unless (string= "" retweeted-by)
+;;    (concat " (retweeted by " retweeted-by ")"))))
+;;   ("S" .
+;;    (twittering-make-string-with-user-name-property
+;;     (cdr (assq 'user-name ,status-sym)) ,status-sym))
+;;   ("s" .
+;;    (twittering-make-string-with-user-name-property
+;;     (cdr (assq 'user-screen-name ,status-sym)) ,status-sym))
+;;   ("U" .
+;;    (twittering-make-fontified-tweet-unwound ,status-sym))
+;;   ;; ("D" .
+;;   ;;  (twittering-make-fontified-tweet-unwound ,status-sym))
+;;   ("T" .
+;;    ,(twittering-make-fontified-tweet-text
+;;      `(twittering-make-fontified-tweet-text-with-entity ,status-sym)
+;;      twittering-regexp-hash twittering-regexp-atmark))
+;;   ("t" .
+;;    ,(twittering-make-fontified-tweet-text
+;;      `(twittering-make-fontified-tweet-text-with-entity ,status-sym)
+;;      twittering-regexp-hash twittering-regexp-atmark))
+;;   ("u" . (cdr (assq 'user-url ,status-sym)))))
+
+;; (defsubst twittering-make-fontified-tweet-unwound (status)
+;;   (let* ((entities (cdr (assq 'entity status)))
+;;          text)
+;;     (let ((offset 0))
+;;       (mapc (lambda (url-info)
+;;               (let* ((text-length (length text))
+;;                      (start (cdr (assq 'start url-info)))
+;;                      (end (cdr (assq 'end url-info)))
+;;                      (url (cdr (assq 'url url-info)))
+;;                      (title (or "" (cdr (assq 'title url-info))))
+;;                      ;; (description (cdr (assq 'description url-info)))
+;;                      (replacement
+;;                       (propertize
+;;                        title
+;;                        'mouse-face 'highlight
+;;                        'keymap twittering-mode-on-uri-map
+;;                        'uri url
+;;                        'uri-origin 'explicit-uri-in-tweet
+;;                        'face 'twittering-uri-face
+;;                        'front-sticky nil
+;;                        'rear-nonsticky t)))
+;;                 (setq text replacement)))
+;;             (cdr (assq 'urls entities))))
+;;     text))
+;;   (defun twittering-extract-common-element-from-json (json-object)
+;;     "Extract common parameters of a tweet from JSON-OBJECT.
+;; Return an alist including text, created_at and entities, which are common
+;; to JSON objects from ordinary timeline and search timeline."
+;;     (let* ((encoded-text
+;;             (cdr (or (assq 'text json-object)
+;;                      (assq 'full_text json-object))))
+;;            (text
+;;             (twittering-decode-html-entities
+;;              (twittering-decode-entities-after-parsing-xml encoded-text)))
+;;            (gap-list (twittering-make-gap-list text))
+;;            (entities (cdr (assq 'entities json-object)))
+;;            (urls (cdr (assq 'urls entities)))
+;;            (hashtags (cdr (assq 'hashtags entities)))
+;;            (mentions (cdr (assq 'user_mentions entities)))
+;;            (media (cdr (assq 'media entities)))
+;;            (func
+;;             (lambda (entry sym-table)
+;;               (mapcar (lambda (sym-entry)
+;;                         (let ((sym (car sym-entry))
+;;                               (target (cdr sym-entry)))
+;;                           `(,sym . ,(cdr (assq target entry)))))
+;;                       sym-table))))
+;;       `((text . ,(twittering-normalize-string text))
+;;         (created-at
+;;          . ,(apply 'encode-time
+;;                    (parse-time-string (cdr (assq 'created_at json-object)))))
+;;         (entity
+;;          (hashtags . ,(mapcar (lambda (entry)
+;;                                 (let* ((indices (cdr (assq 'indices entry)))
+;;                                        (start (elt indices 0))
+;;                                        (end (elt indices 1))
+;;                                        (gap
+;;                                         (twittering-get-gap start gap-list)))
+;;                                   `((start . ,(- start gap))
+;;                                     (end . ,(- end gap))
+;;                                     (text
+;;                                      . ,(twittering-normalize-string
+;;                                          (cdr (assq 'text entry)))))))
+;;                               hashtags))
+;;          (mentions . ,(mapcar (lambda (entry)
+;;                                 (let* ((indices (cdr (assq 'indices entry)))
+;;                                        (start (elt indices 0))
+;;                                        (end (elt indices 1))
+;;                                        (gap
+;;                                         (twittering-get-gap start gap-list)))
+;;                                   `((start . ,(- start gap))
+;;                                     (end . ,(- end gap))
+;;                                     (id . ,(cdr (assq 'id_str entry)))
+;;                                     (name
+;;                                      . ,(twittering-normalize-string
+;;                                          (cdr (assq 'name entry))))
+;;                                     (screen-name
+;;                                      . ,(cdr (assq 'screen_name entry))))))
+;;                               mentions))
+;;          (urls . ,(mapcar (lambda (entry)
+;;                             (let* ((indices (cdr (assq 'indices entry)))
+;;                                    (start (elt indices 0))
+;;                                    (end (elt indices 1))
+;;                                    (gap (twittering-get-gap start gap-list))
+;;                                    (unwound (car (cdr (assq 'unwound entry))))
+;;                                    )
+;;                               `((start . ,(- start gap))
+;;                                 (end . ,(- end gap))
+;;                                 (url . ,(cdr (assq 'url entry)))
+;;                                 (display-url
+;;                                  . ,(cdr (assq 'display_url entry)))
+;;                                 (expanded-url
+;;                                  . ,(cdr (assq 'expanded_url entry)))
+;;                                 (title . ,(cdr (assq 'title unwound)))
+;;                                 (description . ,(cdr (assq 'description unwound)))
+;;                                 )))
+;;                           urls))
+
+;;          (media . ,(mapcar (lambda (entry)
+;;                              (let* ((indices (cdr (assq 'indices entry)))
+;;                                     (start (elt indices 0))
+;;                                     (end (elt indices 1))
+;;                                     (gap (twittering-get-gap start gap-list)))
+;;                                `((start . ,(- start gap))
+;;                                  (end . ,(- end gap))
+;;                                  (url . ,(cdr (assq 'url entry)))
+;;                                  (raw-entry . ,entry)
+;;                                  ,@(funcall func entry
+;;                                             '((media-url . media_url)
+;;                                               (display-url . display_url)
+;;                                               (expanded-url . expanded_url))))))
+;;                            media)))
+;;         (retweet-count . ,(cdr (assq 'retweet_count json-object)))
+;;         (favorite-count . ,(cdr (assq 'favorite_count json-object)))
+;;         )))
