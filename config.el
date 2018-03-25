@@ -59,6 +59,8 @@
 (add-hook 'persp-before-switch-functions '+my-workspace/goto-main-window)
 (def-package! ace-link
   :commands (ace-link))
+(def-package! keycast :load-path "~/.doom.d/local/"
+  :commands (keycast-mode))
 (after! pass
     (set! :popup "^\\*Password-Store" '((side . left) (size . 0.25)) '((quit))))
 (after! info

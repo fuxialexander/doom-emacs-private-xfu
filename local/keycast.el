@@ -35,19 +35,6 @@
   "Show the current command and its key binding in the mode line."
   :group 'applications)
 
-(defcustom keycast-insert-after 'mode-line-buffer-identification
-  "The position in `mode-line-format' where `mode-line-keycast' is inserted.
-
-Enabling `keycast-mode' inserts the element `mode-line-keycast'
-into `mode-line-format' after the element specified here."
-  :group 'keycast
-  :type '(cons (choice :tag "Insert after"
-                       (const mode-line-buffer-identification)
-                       (const moody-mode-line-buffer-identification)
-                       variable
-                       sexp)
-               (boolean :tag "Remove following elements")))
-
 (defcustom keycast-remove-tail-elements t
   "Whether enabling `keycast-mode' removes elements to the right.
 
@@ -57,39 +44,7 @@ removes all elements to the right of where that was inserted."
   :group 'keycast
   :type 'boolean)
 
-(defcustom keycast-window-predicate 'keycast-active-frame-bottom-right-p
-  "Whether to display the binding in the mode line of the selected window.
-
-This predicate is used while updating the mode line of a window
-to determine whether the current command and its key binding
-should be displayed in its mode line.  The function is called
-with no argument and act on `selected-window'.
-
-`moody-window-active-p'
-  Return non-nil if the temporarily selected window is the
-  active window, i.e. if it is the selected window as far
-  as the user is concerned.  Load the `moody' library to be
-  able to use this.
-
-`powerline-selected-window-active'
-  This function behaves like `moody-window-active-p', but
-  is defined in the `powerline' library.  Load that library
-  to be able to use this.
-
-`keycast-bottom-right-window-p'
-  Return non-nil if the temporarily selected window is the
-  right-most bottom window of its frame.
-
-`keycast-active-frame-bottom-right-p'
-  Return non-nil if the temporarily selected window is the
-  right-most bottom window of frame that is active as far
-  as the user is concerned.  If neither the `moody' nor
-  the `powerline' library is loaded, then behave the same
-  as `keycast-bottom-right-window-p'."
-  :group 'keycast
-  :type 'function)
-
-(defcustom keycast-separator-width 10
+(defcustom keycast-separator-width 2
   "How many spaces to insert before the key binding."
   :group 'keycast
   :type 'integer)
@@ -186,6 +141,7 @@ instead."
   (bar matches " " buffer-info "  %l:%c %p  " selection-info keycast)
   (buffer-encoding major-mode vcs flycheck))
 
+;;;###autoload
 (define-minor-mode keycast-mode
   "Show current command and its key binding in the mode line."
   :global t
@@ -194,29 +150,7 @@ instead."
     (doom-set-modeline 'main)))
 
 
-
-;; (defun keycast-bottom-right-window-p ()
-;;   (and (window-at-side-p nil 'right)
-;;        (window-at-side-p nil 'bottom)))
-
-
-;; (defun keycast-active-frame-bottom-right-p ()
-;;   (and (keycast-bottom-right-window-p)
-;;        (keycast--active-frame-p)))
-
-
-;; (defun keycast--active-frame-p ()
-;;   (cond ((boundp 'moody--active-window)
-;;          (eq (window-frame) (window-frame moody--active-window)))
-;;         ((boundp 'powerline-selected-window)
-;;          (eq (window-frame) (window-frame powerline-selected-window)))
-;;         (t t)))
-
-
-;; (put 'mode-line-keycast 'risky-local-variable t)
-;; (make-variable-buffer-local 'mode-line-keycast)
-
-;;; _
+;;;
 (provide 'keycast)
 ;; Local Variables:
 ;; indent-tabs-mode: nil
