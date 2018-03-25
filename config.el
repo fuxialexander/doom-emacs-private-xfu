@@ -57,10 +57,18 @@
 (advice-add 'which-key--show-buffer-side-window :after #'doom|no-fringes-in-whichkey)
 (advice-add 'make-frame-invisible :after #'doom|no-fringes-in-posframe)
 (add-hook 'persp-before-switch-functions '+my-workspace/goto-main-window)
+
 (def-package! ace-link
   :commands (ace-link))
+
 (def-package! keycast :load-path "~/.doom.d/local/"
-  :commands (keycast-mode))
+  :commands (keycast-mode)
+  :config
+  (setq keycast-substitute-alist '((evil-next-line nil nil)
+                                   (evil-previous-line nil nil)
+                                   (evil-forward-char nil nil)
+                                   (evil-backward-char nil nil)
+                                   (self-insert-command nil nil))))
 (after! pass
     (set! :popup "^\\*Password-Store" '((side . left) (size . 0.25)) '((quit))))
 (after! info
@@ -1035,8 +1043,8 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       :n  "gr" #'+eval:region
       :n  "gR" #'+eval/buffer
       :v  "gR" #'+eval:replace-region
-      :v  "@"  #'+evil:macro-on-all-lines
-      :n  "g@" #'+evil:macro-on-all-lines
+      :v  "@"  #'+evil:apply-macro
+      :n  "g@" #'+evil:apply-macro
       ;; repeat in visual mode (FIXME buggy)
       :v  "."  #'evil-repeat
       ;; don't leave visual mode after shifting
