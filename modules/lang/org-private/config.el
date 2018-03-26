@@ -227,7 +227,7 @@ If run interactively, get ENTRY from context."
 (defun +org-private|setup-keybinds ()
   (after! evil-org
     (setq evil-org-want-hybrid-shift t
-          evil-org-use-additional-insert t)
+          evil-org-use-additional-insert nil)
     (evil-org-set-key-theme '(navigation
                               shift
                               todo
@@ -236,11 +236,15 @@ If run interactively, get ENTRY from context."
                               insert
                               textobjects))
     (map! :map evil-org-mode-map
-          "M-o" #'org-open-at-point
-          "M-i" #'org-insert-last-stored-link
-          "M-I" #'org-insert-link
-          "s-p" #'org-ref-ivy-insert-cite-link
-          :ni "<s-return>" #'+org/work-on-heading
+          :i "<S-tab>" #'+org/dedent
+          "A-M-o" #'org-open-at-point
+          "A-M-i" #'org-insert-last-stored-link
+          "A-M-I" #'org-insert-link
+          "A-M-p" #'org-ref-ivy-insert-cite-link
+          :ni "<M-return>" #'+org/work-on-heading
+          :n "RET" #'+org/dwim-at-point
+          :i  "RET"   #'org-return-indent
+          :n [tab]   #'org-cycle
 
           :nm  "]v"  #'org-next-block
           :nm  "[v"  #'org-previous-block
@@ -309,8 +313,8 @@ If run interactively, get ENTRY from context."
        :nm "K"        #'org-clock-convenience-timestamp-up
        :nm "M-j"      #'org-agenda-later
        :nm "M-k"      #'org-agenda-earlier
-       :nm "s-o"      #'org-clock-convenience-fill-gap
-       :nm "s-e"      #'org-clock-convenience-fill-gap-both
+       :nm "M-o"      #'org-clock-convenience-fill-gap
+       :nm "M-e"      #'org-clock-convenience-fill-gap-both
        :nm "\\"       #'ace-window
        :nm "t"        #'org-agenda-todo
        :nm "p"        #'org-set-property
@@ -321,7 +325,7 @@ If run interactively, get ENTRY from context."
        :nm "D"        #'org-agenda-toggle-diary
        :nm "G"        #'org-agenda-toggle-time-grid
        :nm ";"        #'counsel-org-tag-agenda
-       :nm "s-j"      #'counsel-org-goto-all
+       :nm "M-j"      #'counsel-org-goto-all
        :nm "i"        #'org-agenda-clock-in
        :nm "o"        #'org-agenda-clock-out
        :nm "<tab>"    #'org-agenda-goto
@@ -437,9 +441,9 @@ This holds only for inactive timestamps."
               #'(lambda () (if (or (equal "SA" (org-capture-get :key))
                               (equal "GSA" (org-capture-get :key)))
                           (+reference/append-org-id-to-skim (org-id-get-create))))))
-  (after! elfeed-show
-    (map! (:map elfeed-show-mode-map
-            :nm "b" #'org-ref-add-bibtex-entry-from-elfeed-entry)))
+  ;; (after! elfeed-show
+  ;;   (map! (:map elfeed-show-mode-map
+  ;;           :n "b" #'org-ref-add-bibtex-entry-from-elfeed-entry)))
   (after! org-mac-link
     (org-link-set-parameters "skim"
                              :face 'default
@@ -689,7 +693,9 @@ This holds only for inactive timestamps."
         (goto-char org-log-note-return-to))
       (move-marker org-log-note-return-to nil)
       (when org-log-post-message (message "%s" org-log-post-message))))
-  (advice-add 'org-store-log-note :override #'*org-store-log-note))
+  (advice-add 'org-store-log-note :override #'*org-store-log-note)
+  (advice-add 'org-shiftcontrolup :override #'*org/shiftcontrolup)
+  (advice-add 'org-shiftcontroldown :override #'*org/shiftcontroldown))
 
 ;;
 ;; `org-mode' hooks
