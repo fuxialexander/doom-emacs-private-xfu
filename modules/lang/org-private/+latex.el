@@ -12,7 +12,7 @@
 
 (defun +org-private|init-latex ()
   (if (string-match-p "NS" (emacs-version))
-      (setq-default org-format-latex-options `(:background ,(doom-color 'bg-alt)
+      (setq-default org-format-latex-options `(:background ,(doom-color 'bg)
                                                            :foreground ,(doom-color 'fg)
                                                            :scale 2.0
                                                            :html-foreground ,(doom-color 'fg)
@@ -30,7 +30,7 @@
                     org-preview-latex-default-process 'imagemagick
                     org-preview-latex-image-directory (concat doom-cache-dir "org-latex/")
                     )
-    (setq-default org-format-latex-options `(:background ,(doom-color 'bg-alt)
+    (setq-default org-format-latex-options `(:background ,(doom-color 'bg)
                                                            :foreground ,(doom-color 'fg)
                                                            :scale 1
                                                            :html-foreground ,(doom-color 'fg)
