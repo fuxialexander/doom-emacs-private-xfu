@@ -635,15 +635,20 @@ symbol."
     ("o" ivy-occur :exit t)))
 
 (after! ivy-posframe
-  (push '(counsel-rg . nil) ivy-display-functions-alist)
-  (push '(counsel-ag . nil) ivy-display-functions-alist)
-  (push '(counsel-grep . nil) ivy-display-functions-alist)
-  (push '(t . ivy-posframe-display-at-frame-center) ivy-display-functions-alist)
-  (setq ivy-posframe-parameters `((min-width . 120)
-                                  (min-height . ,ivy-height)
-                                  (internal-border-width . 10))
-        ;; ivy-posframe-font (font-spec :family "SF Mono" :size 16 :width 'extra-condensed :weight 'normal :slant 'normal :registry "iso10646-1" )
-        )
+  (setq ivy-posframe-parameters
+        `((min-width . 120)
+          (min-height . ,ivy-height)
+          (internal-border-width . 10))
+        ivy-display-functions-alist
+        '((counsel-git-grep)
+          (counsel-grep)
+          (counsel-pt)
+          (counsel-ag)
+          (counsel-rg)
+          (swiper)
+          (counsel-irony . ivy-display-function-overlay)
+          (ivy-completion-in-region . ivy-display-function-overlay)
+          (t . ivy-posframe-display-at-frame-center)))
   (ivy-posframe-enable))
 (after! counsel
   (defun counsel-faces ()
