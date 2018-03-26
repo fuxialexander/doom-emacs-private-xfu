@@ -197,19 +197,39 @@ ALPHA : [ %(frame-parameter nil 'alpha) ]
 
   (add-to-list 'magit-status-mode-hook #'magithub-filter-maybe)
   (setq magithub-clone-default-directory "/Users/xfu/Source/playground/"))
+
 (after! magit
   (magit-wip-after-save-mode 1)
   (magit-wip-after-apply-mode 1)
   (magithub-feature-autoinject t)
-  (setq magit-repository-directories '("/Users/xfu/Source/")
-        magit-save-repository-buffers 'dontask)
+  (setq magit-save-repository-buffers 'dontask
+        magit-repository-directories '("/Users/xfu/Source/"))
+  (defun *magit-list-repositories ()
+    "Display a list of repositories.
+
+Use the options `magit-repository-directories'
+and `magit-repository-directories-depth' to
+control which repositories are displayed."
+    (interactive)
+    (if magit-repository-directories
+        (with-current-buffer (get-buffer-create "*Magit Repositories*")
+          (magit-repolist-mode)
+          (magit-repolist-refresh)
+          (tabulated-list-print)
+          (pop-to-buffer (current-buffer)))
+      (message "You need to customize `magit-repository-directories' %s"
+               "before you can list repositories")))
+  (advice-add 'magit-list-repositories :override #'*magit-list-repositories)
   (set! :evil-state 'magit-repolist-mode 'normal)
-  (map! (:map with-editor-mode-map
-          (:localleader
-            :desc "Finish" :n "," #'with-editor-finish
-            :desc "Abort"  :n "k" #'with-editor-cancel)))
+  (map! :map magit-repolist-mode-map
+        :nmvo doom-leader-key nil
+        :map with-editor-mode-map
+        (:localleader
+          :desc "Finish" :n "," #'with-editor-finish
+          :desc "Abort"  :n "k" #'with-editor-cancel))
   (set! :popup "^.*magit" '((slot . -1) (side . right) (size . 80)) '((modeline . nil) (select . t)))
   (set! :popup "^\\*magit.*popup\\*" '((slot . 0) (side . right)) '((modeline . nil) (select . t)))
+  (set! :popup "^\\*Magit Repo.*\\*" '((side . bottom) (size . +popup-shrink-to-fit)) '((modeline . nil) (select . t)))
   (set! :popup "^.*magit-revision:.*" '((slot . 2) (side . right) (window-height . 0.6)) '((modeline . nil) (select . t)))
   (set! :popup "^.*magit-diff:.*" '((slot . 2) (side . right) (window-height . 0.6)) '((modeline . nil) (select . nil))))
 
