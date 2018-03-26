@@ -84,7 +84,7 @@
         +langtool)
        calendar
        :config
-       (default +snippets +evil-commands))
+       (default +snippets +evil-commands +bindings))
 
 (setq-default evil-want-C-u-scroll t
               evil-want-integration nil
@@ -140,6 +140,9 @@ evil-collection-company-use-tng nil
  doom-neotree-line-spacing 0
  doom-neotree-folder-size 1.0
  doom-neotree-chevron-size 0.6
+ doom-localleader-key ","
+ +default-repeat-forward-key ";"
+ +default-repeat-backward-key "'"
  max-specpdl-size 10000
  indicate-buffer-boundaries nil
  indicate-empty-lines nil
