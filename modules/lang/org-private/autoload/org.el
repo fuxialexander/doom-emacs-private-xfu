@@ -29,9 +29,10 @@
   (other-window 1)
   (delete-other-windows)
   (+workspace/display)
-  (map! :map org-mode-map
-        :ni "<s-return>" #'+org/finish-work-on-heading
-        :ni "s-k"        #'+org/cancel-work-on-heading))
+  (start-process-shell-command "Focus" nil "open -g \"focus://focus\"")
+  (map! :map evil-org-mode-map
+        :ni "<M-return>" #'+org/finish-work-on-heading
+        :ni "M-k"        #'+org/cancel-work-on-heading))
 
 ;;;###autoload
 (defun +org/finish-work-on-heading ()
@@ -42,9 +43,9 @@
   (kill-this-buffer)
   (+workspace/delete (+workspace-current-name))
   (start-process-shell-command "Unfocus" nil "open -g \"focus://unfocus\"")
-  (map! :map org-mode-map
-        :ni "<s-return>" #'+org/work-on-heading
-        :ni "s-k" nil))
+  (map! :map evil-org-mode-map
+        :ni "<M-return>" #'+org/work-on-heading
+        :ni "M-k" nil))
 
 ;;;###autoload
 (defun +org/cancel-work-on-heading ()
@@ -54,7 +55,27 @@
   (save-buffer)
   (kill-this-buffer)
   (+workspace/delete (+workspace-current-name))
-  (start-process-shell-command "Focus" nil "open -g \"focus://focus\"")
-  (map! :map org-mode-map
-        :ni "<s-return>" #'+org/work-on-heading
-        :ni "s-k" nil))
+  (start-process-shell-command "Unfocus" nil "open -g \"focus://unfocus\"")
+  (map! :map evil-org-mode-map
+        :ni "<M-return>" #'+org/work-on-heading
+        :ni "M-k" nil))
+
+;;;###autoload
+(defun *org/shiftcontroldown (&optional n)
+  "Change timestamps synchronously down in CLOCK log lines.
+Optional argument N tells to change by that many units."
+  (interactive "P")
+  (if (and (org-at-clock-log-p) (org-at-timestamp-p 'lax))
+      (let (org-support-shift-select)
+        (org-clock-timestamps-down n))
+    (org-timestamp-down)))
+
+;;;###autoload
+(defun *org/shiftcontrolup (&optional n)
+  "Change timestamps synchronously up in CLOCK log lines.
+Optional argument N tells to change by that many units."
+  (interactive "P")
+  (if (and (org-at-clock-log-p) (org-at-timestamp-p 'lax))
+      (let (org-support-shift-select)
+        (org-clock-timestamps-up n))
+    (org-timestamp-up)))

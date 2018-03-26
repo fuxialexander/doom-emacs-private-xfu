@@ -749,62 +749,68 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       :nmvo doom-localleader-key nil
       :i "<M-return>" nil
       :gnvime "M-x" #'execute-extended-command
-      :gnvime "s-r" #'counsel-org-capture
-      :gnvime "s-g" #'org-agenda-show-daily
-      :gnvime "s-l" #'evil-avy-goto-line
-      :gnvime "s-j" #'dwim-jump
-      :gnvime "M-s" #'org-store-link
-      :gnvime "M-o" #'org-open-at-point-global
-      :gnvime "M-i" #'org-insert-last-stored-link
-      :gnvime "s-j" #'dwim-jump
-      :m "C-u" #'evil-scroll-up
+
+      :gnvime "A-M-s" #'org-store-link
+      :gnvime "A-M-o" #'org-open-at-point-global
+      :gnvime "A-M-i" #'org-insert-last-stored-link
+      ;; :m "C-u" #'evil-scroll-up
       :i "C-k" #'kill-line
+      :gnvime "A-M-r" #'counsel-org-capture
+      :gnvime "A-M-g" #'org-agenda-show-daily
+      :gnvime "A-M-l" #'evil-avy-goto-line
+      :gnvime "A-M-j" #'dwim-jump
+      :gnvime "A-M-j" #'dwim-jump
       (:map evil-ex-completion-map
         "C-k" #'kill-line)
       :n    "\\"    #'ace-window
       :v    "<escape>"    #'evil-escape
-      :gnvime "s-;" #'eval-expression
-      :gnvime "s-:" #'doom/open-scratch-buffer
-      "s-+"       (λ! (text-scale-set 0))
-      "s-="         #'text-scale-increase
-      "s--"         #'text-scale-decrease
-      "C-`" #'+popup/toggle
-      "C-~" #'+popup/raise
-      "s-t" #'+workspace/new
-      "s-0" #'+workspace/display
-      "s-d" #'evil-window-vsplit
-      "s-D" #'evil-window-split
-      "s-w" #'+my-workspace/close-window-or-workspace
-      "s-W" #'+workspace/close-workspace-or-frame
-      "s-n" #'evil-buffer-new
-      "s-N" #'make-frame-command
-      "s-1" (λ! (+workspace/switch-to 0))
-      "s-2" (λ! (+workspace/switch-to 1))
-      "s-3" (λ! (+workspace/switch-to 2))
-      "s-4" (λ! (+workspace/switch-to 3))
-      "s-5" (λ! (+workspace/switch-to 4))
-      "s-6" (λ! (+workspace/switch-to 5))
-      "s-7" (λ! (+workspace/switch-to 6))
-      "s-8" (λ! (+workspace/switch-to 7))
-      "s-9" (λ! (+workspace/switch-to 8))
-      "s-~" #'+workspace/switch-to-last
-      :ne "s-e"                 #'+eval/buffer
-      :ne "s-E"                 #'+eval/region-and-replace
-      :ne "s-b"                 #'+org/open-brain-here
-      :ne "s-B"                 #'+default/compile
-      :ne "s-a"                 #'mark-whole-buffer
-      :ne "s-q"   (if (daemonp) #'delete-frame #'save-buffers-kill-emacs)
-      :ne "s-f"                 #'swiper
-      :ne "s-F"               (lambda! (swiper
-                                   (if (symbol-at-point)
-                                       (format "\\_<%s\\_> " (symbol-at-point)) nil)))
-      :ne "s-/"                 #'evil-commentary-line
-      ;; :ne "C-M-f"            #'doom/toggle-fullscreen
-      :n  "s-s"                 #'save-buffer
-      :n  "s-k"                 #'kill-this-buffer
-      :n  "s-K"                 #'delete-frame
+
+
+      ;; A little sandbox to run code in
+      :gnvime "M-;"             #'eval-expression
+      :gnvime "M-:"             #'doom/open-scratch-buffer
+
+      ;; Text-scaling
+      :ne "M-+"   (λ! (text-scale-set 0))
+      :ne "M-="                 #'text-scale-increase
+      :ne "M--"                 #'text-scale-decrease
+
+      :ne  "C-`"                #'+popup/toggle
+      :ne  "C-~"                #'+popup/raise
+      :ne  "M-t"                #'+workspace/new
+      :ne "M-0"                 #'+workspace/display
+      :ne "M-d"                 #'evil-window-vsplit
+      :ne "M-D"                 #'evil-window-split
+      :ne "M-w"                 #'+my-workspace/close-window-or-workspace
+      :ne "M-n"                 #'evil-buffer-new
+      :ne "M-N"                 #'make-frame-command
+      :ne "M-1"   (λ! (+workspace/switch-to 0))
+      :ne "M-2"   (λ! (+workspace/switch-to 1))
+      :ne "M-3"   (λ! (+workspace/switch-to 2))
+      :ne "M-4"   (λ! (+workspace/switch-to 3))
+      :ne "M-5"   (λ! (+workspace/switch-to 4))
+      :ne "M-6"   (λ! (+workspace/switch-to 5))
+      :ne "M-7"   (λ! (+workspace/switch-to 6))
+      :ne "M-8"   (λ! (+workspace/switch-to 7))
+      :ne "M-9"   (λ! (+workspace/switch-to 8))
+      :ne "M-~"                 #'+workspace/switch-to-last
+      :ne "M-e"                 #'+eval/buffer
+      :ne "M-E"                 #'+eval/region-and-replace
+      :ne "M-b"                 #'+org/open-brain-here
+      :ne "M-B"                 #'+default/compile
+      :ne "M-a"                 #'mark-whole-buffer
+      :ne "M-q"   (if (daemonp) #'delete-frame #'save-buffers-kill-emacs)
+      :ne "M-f"                 #'swiper
+      :ne "M-S-f" (lambda! (swiper
+                       (if (symbol-at-point)
+                           (format "\\_<%s\\_> " (symbol-at-point)) nil)))
+      :ne "M-/"                 #'evil-commentary-line
+      :ne "C-M-f"               #'toggle-frame-fullscreen
+      :n  "M-s"                 #'save-buffer
+      :n  "M-k"                 #'kill-this-buffer
+      :n  "M-K"                 #'delete-frame
       :nv "C-SPC"               #'+evil:fold-toggle
-      :gnvimer "s-v"            #'clipboard-yank
+      :gnvimer "M-v"            #'clipboard-yank
       ;; ;; Easier window navigation
       ;; :en "C-h"                 #'evil-window-left
       ;; :en "C-j"                 #'evil-window-down
@@ -902,13 +908,13 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         (:desc "code" :prefix "c"
           :desc "List errors"               :n  "x" #'flycheck-list-errors
           :desc "Evaluate buffer/region"    :n  "e" #'+eval/buffer
-                                            :v  "e" #'+eval/region
+          :v  "e" #'+eval/region
           :desc "Evaluate & replace region" :nv "E" #'+eval:replace-region
           :desc "Build tasks"               :nv "b" #'+eval/build
           :desc "Jump to definition"        :n  "d" #'+lookup/definition
           :desc "Jump to references"        :n  "D" #'+lookup/references
           :desc "Open REPL"                 :n  "r" #'+eval/open-repl
-                                            :v  "r" #'+eval:repl)
+          :v  "r" #'+eval:repl)
         (:desc "file" :prefix "f"
           :desc "Find file"                 :n "f" #'find-file
           :desc "Sudo find file"            :n "s" #'doom/sudo-find-file
@@ -1057,12 +1063,12 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       :nv [C-tab] #'aya-create
       (:after bibtex
         :map bibtex-mode-map
-        "s-." #'org-ref-bibtex-hydra/body)
+        "A-M-." #'org-ref-bibtex-hydra/body)
       (:after xwidget
         :map xwidget-webkit-mode-map
         :n "r"         #'xwidget-webkit-reload
         :n "y"         #'xwidget-webkit-copy-selection-as-kill
-        :n "s-c"       #'xwidget-webkit-copy-selection-as-kill
+        :n "M-c"       #'xwidget-webkit-copy-selection-as-kill
         :n "t"         #'xwidget-webkit-browse-url
         :n "n"         #'xwidget-webkit-forward
         :n "p"         #'xwidget-webkit-back
@@ -1070,8 +1076,8 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         :n "gg"        #'xwidget-webkit-scroll-top
         :n "C-d"       #'xwidget-webkit-scroll-down
         :n "C-u"       #'xwidget-webkit-scroll-up
-        :n "s-="       #'xwidget-webkit-zoom-in
-        :n "s--"       #'xwidget-webkit-zoom-out
+        :n "M-="       #'xwidget-webkit-zoom-in
+        :n "M--"       #'xwidget-webkit-zoom-out
         :n "j"         #'xwidget-webkit-scroll-up-line
         :n "k"         #'xwidget-webkit-scroll-down-line
         )
@@ -1079,13 +1085,13 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         (:map company-active-map
           ;; Don't interfere with `evil-delete-backward-word' in insert mode
           "C-w"        nil
-          "s-o"        #'company-search-kill-others
+          "M-o"        #'company-search-kill-others
           "C-n"        #'company-select-next
           "C-p"        #'company-select-previous
           "C-f"        #'counsel-company
           "<f1>"       #'company-show-doc-buffer
-          "C-s-f"      #'company-search-candidates
-          "s-f"        #'company-filter-candidates
+          "C-M-f"      #'company-search-candidates
+          "M-f"        #'company-filter-candidates
           [tab]        #'company-complete-common-or-cycle
           [backtab]    #'company-select-previous
           [escape]     (λ! (company-abort) (evil-normal-state 1)))
@@ -1219,11 +1225,11 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         :ginm "TAB" #'ivy-alt-done
         :ginm "<right>" #'ivy-alt-done
         :ginm "M-v" #'yank
-        :ginm "M-o" #'ivy-dispatching-done-hydra
+        :ginm "M-o" #'ivy-posframe-dispatching-done
         :ginm "M-z" #'undo
         :ginm "C-k" #'ivy-previous-line
         :ginm "C-j" #'ivy-next-line
-        :ginm "s-l" #'ivy-avy
+        ;; :ginm "s-l" #'ivy-avy
         :ginm "C-l" #'ivy-partial
         :ginm "C-w" #'ivy-backward-kill-word
         :gi [backspace] #'ivy-backward-delete-char
@@ -1233,7 +1239,8 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       (:after swiper
         :map swiper-map
         [backtab]  #'+ivy/wgrep-occur
-        "s-l" #'swiper-avy)
+        ;; "s-l" #'swiper-avy
+        )
       (:after wgrep
         :map wgrep-mode-map
         (:localleader

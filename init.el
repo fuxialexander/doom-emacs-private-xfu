@@ -119,33 +119,34 @@ evil-collection-company-use-tng nil
                                                                 (abbreviate-file-name (buffer-file-name))
                                                               "%b"))))
 
-(setq ns-alternate-modifier 'meta
-      ns-command-modifier 'super
-      mac-command-modifier 'super
-      mac-option-modifier 'meta
-      user-mail-address "fuxialexander@gmail.com"
-      user-full-name    "Alexander Fu Xi"
+(setq
+ ;; ns-alternate-modifier 'meta
+ ;; ns-command-modifier 'super
+ ;; mac-command-modifier 'super
+ ;; mac-option-modifier 'meta
+ user-mail-address "fuxialexander@gmail.com"
+ user-full-name    "Alexander Fu Xi"
 
-      evil-respect-visual-line-mode t
-      doom-font (font-spec :family "SF Mono" :size 13)
-      doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 15 :width 'extra-condensed :weight 'normal :slant 'normal :registry "iso10646-1" )
-      doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 13)
-      doom-big-font (font-spec :family "SF Mono" :size 16)
-      doom-theme 'doom-nord
-      doom-line-numbers-style nil
-      +doom-modeline-buffer-file-name-style 'truncate-upto-project
-      doom-neotree-enable-variable-pitch t
-      doom-neotree-project-size 1.2
-      doom-neotree-line-spacing 0
-      doom-neotree-folder-size 1.0
-      doom-neotree-chevron-size 0.6
-      max-specpdl-size 10000
-      indicate-buffer-boundaries nil
-      indicate-empty-lines nil
-      frame-alpha-lower-limit 0
-      which-key-idle-delay 0.3
-      +file-templates-dir "~/.doom.d/templates"
-      org-ellipsis " + ")
+ evil-respect-visual-line-mode t
+ doom-font (font-spec :family "SF Mono" :size 13)
+ doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 15 :width 'extra-condensed :weight 'normal :slant 'normal :registry "iso10646-1" )
+ doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 13)
+ doom-big-font (font-spec :family "SF Mono" :size 16)
+ doom-theme 'doom-nord
+ doom-line-numbers-style nil
+ +doom-modeline-buffer-file-name-style 'truncate-upto-project
+ doom-neotree-enable-variable-pitch t
+ doom-neotree-project-size 1.2
+ doom-neotree-line-spacing 0
+ doom-neotree-folder-size 1.0
+ doom-neotree-chevron-size 0.6
+ max-specpdl-size 10000
+ indicate-buffer-boundaries nil
+ indicate-empty-lines nil
+ frame-alpha-lower-limit 0
+ which-key-idle-delay 0.3
+ +file-templates-dir "~/.doom.d/templates"
+ org-ellipsis " + ")
 
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(ns-appearance . dark))

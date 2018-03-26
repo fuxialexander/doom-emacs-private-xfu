@@ -30,8 +30,8 @@ is loaded.")
           (:localleader
             :desc "Conda Enable" :n "c" #'conda-env-activate-for-buffer
             :desc "LSP Enable"   :n "l" #'lsp-python-enable)
-          :v "s-<return>" #'python-shell-send-region
-          :ni "s-<return>" #'+python/repl-send-dwim)
+          :v "A-M-<return>" #'python-shell-send-region
+          :ni "A-M-<return>" #'+python/repl-send-dwim)
         (:map inferior-python-mode-map
           :nv "C-d" #'evil-scroll-down
           "C-h" #'evil-window-left
