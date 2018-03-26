@@ -527,6 +527,7 @@ symbol."
                                         (cons "|" " | ")))
 (after! smartparens
   (add-hook 'minibuffer-setup-hook #'smartparens-mode)
+  (add-hook 'eshell-mode-hook #'smartparens-mode)
   ;; Auto-close more conservatively and expand braces on RET
   (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
 

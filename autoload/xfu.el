@@ -200,3 +200,25 @@ the workspace and move to the next."
 ;;;###autoload
 (defun +xfu/find-in-snippets ()
   (interactive) (doom-project-find-file "~/.doom.d/snippets"))
+
+
+;; ;;;###autoload
+;; (defun +eshell/history ()
+;;   "Interactive search eshell history."
+;;   (interactive)
+;;   (require 'em-hist)
+;;   (save-excursion
+;;     (let* ((start-pos (eshell-bol))
+;; 	   (end-pos (point-at-eol))
+;; 	   (input (buffer-substring-no-properties start-pos end-pos)))
+;;       (let* ((command (ivy-read "Command: "
+;; 				(delete-dups
+;; 				 (when (> (ring-size eshell-history-ring) 0)
+;; 				   (ring-elements eshell-history-ring)))
+;; 				:initial-input input
+;; 				:action #'ivy-completion-in-region-action))
+;; 	     (cursor-move (length command)))
+;; 	(kill-region (+ start-pos cursor-move) (+ end-pos cursor-move))
+;; 	)))
+;;   ;; move cursor to eol
+;;   (end-of-line))
