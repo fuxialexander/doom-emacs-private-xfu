@@ -10,28 +10,27 @@
     :group 'twittering-mode)
 
   (advice-add #'twittering-make-fontified-tweet-text :override #'+twitter/twittering-make-fontified-tweet-text)
+  (advice-add #'twittering-generate-format-table :override #'*twittering-generate-format-table)
+  ;; (advice-add #'twittering-extract-common-element-from-json :override #'*twittering-extract-common-element-from-json)
   (setq twittering-use-master-password t
         twittering-private-info-file (expand-file-name "twittering-mode.gpg" doom-etc-dir)
         twittering-request-confirmation-on-posting t
-        ;; twittering-icon-mode t
-        ;; twittering-use-icon-storage t
-        ;; twittering-icon-storage-file (concat doom-cache-dir "twittering-mode-icons.gz")
-        ;; twittering-convert-fix-size 12
+        twittering-icon-mode t
+        twittering-use-icon-storage t
+        twittering-icon-storage-file (concat doom-cache-dir "twittering-mode-icons.gz")
+        twittering-convert-fix-size 40
         twittering-connection-type-order '(wget curl urllib-http native urllib-https)
         twittering-timeline-header ""
         twittering-timeline-footer ""
         twittering-edit-skeleton 'inherit-any
         twittering-status-format "
-%FACE[font-lock-function-name-face]{  @%s}  %FACE[italic]{%@}  %FACE[error]{%FIELD-IF-NONZERO[❤ %d]{favorite_count}}  %FACE[warning]{%FIELD-IF-NONZERO[↺ %d]{retweet_count}}
+  %i%FACE[font-lock-function-name-face]{  @%s}  %FACE[italic]{%@}  %FACE[error]{%FIELD-IF-NONZERO[❤ %d]{favorite_count}}  %FACE[warning]{%FIELD-IF-NONZERO[↺ %d]{retweet_count}}
 
 %FOLD[   ]{%FILL{%t}
 %QT{
 %FOLD[   ]{%FACE[font-lock-function-name-face]{@%s}\t%FACE[shadow]{%@}
 %FOLD[ ]{%FILL{%t}}
-}}}
-
-
-%FACE[twitter-divider]{                                                                                                                                                                                  }
+}}}%I%FACE[twitter-divider]{                                                                                                                                                                                  }
 "
         twittering-timeline-spec-alias
         ;; '(("research" . "anshulkundaje+ChromatinHaiku+loops_enhancers+MarkGerstein+Gene_Regulation+Nucleosome_Bot+cohesin_papers+CTCF_Papers+TF_binding_bot+broadinstitute+eric_lander+manoliskellis"))
@@ -40,6 +39,7 @@
         '(
           ":home"
           "(#orgmode+#emacs)"
+          "(#DoomEmacs)"
           "$research"))
 
   (set! :evil-state 'twittering-mode 'normal)
