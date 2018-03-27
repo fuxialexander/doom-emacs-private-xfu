@@ -31,8 +31,8 @@
   (+workspace/display)
   (start-process-shell-command "Focus" nil "open -g \"focus://focus\"")
   (map! :map evil-org-mode-map
-        :ni "<M-return>" #'+org/finish-work-on-heading
-        :ni "M-k"        #'+org/cancel-work-on-heading))
+        :ni "<s-return>" #'+org/finish-work-on-heading
+        :ni "s-k"        #'+org/cancel-work-on-heading))
 
 ;;;###autoload
 (defun +org/finish-work-on-heading ()
@@ -44,8 +44,8 @@
   (+workspace/delete (+workspace-current-name))
   (start-process-shell-command "Unfocus" nil "open -g \"focus://unfocus\"")
   (map! :map evil-org-mode-map
-        :ni "<M-return>" #'+org/work-on-heading
-        :ni "M-k" nil))
+        :ni "<s-return>" #'+org/work-on-heading
+        :ni "s-k" nil))
 
 ;;;###autoload
 (defun +org/cancel-work-on-heading ()
@@ -57,8 +57,8 @@
   (+workspace/delete (+workspace-current-name))
   (start-process-shell-command "Unfocus" nil "open -g \"focus://unfocus\"")
   (map! :map evil-org-mode-map
-        :ni "<M-return>" #'+org/work-on-heading
-        :ni "M-k" nil))
+        :ni "<s-return>" #'+org/work-on-heading
+        :ni "s-k" nil))
 
 ;;;###autoload
 (defun *org/shiftcontroldown (&optional n)

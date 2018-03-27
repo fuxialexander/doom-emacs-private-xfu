@@ -237,15 +237,15 @@ If run interactively, get ENTRY from context."
                               textobjects))
     (map! :map evil-org-mode-map
           :i "<S-tab>" #'+org/dedent
-          "A-M-o" #'org-open-at-point
-          "A-M-i" #'org-insert-last-stored-link
-          "A-M-I" #'org-insert-link
-          "A-M-p" #'org-ref-ivy-insert-cite-link
-          :ni "<M-return>" #'+org/work-on-heading
+          "M-o" #'org-open-at-point
+          "M-i" #'org-insert-last-stored-link
+          "M-I" #'org-insert-link
+          "s-p" #'org-ref-ivy-insert-cite-link
+          :ni "<s-return>" #'+org/work-on-heading
           :n "RET" #'+org/dwim-at-point
-          :i  "RET"   #'org-return-indent
+          :i "RET"   #'org-return-indent
           :n [tab]   #'org-cycle
-
+          :n "M-t" nil
           :nm  "]v"  #'org-next-block
           :nm  "[v"  #'org-previous-block
           :nm  "]i"  #'org-next-item
@@ -683,6 +683,7 @@ This holds only for inactive timestamps."
           (when (eq this-command 'org-agenda-todo)
             (setcdr buffer-undo-list (cddr buffer-undo-list)))
           (let ((file (buffer-file-name)))
+            (require 'magit)
             (magit-call-git "add" file)
             (magit-call-git "commit" "-m" (concat file ": " *org-git-notes))
             (magit-refresh)))))
