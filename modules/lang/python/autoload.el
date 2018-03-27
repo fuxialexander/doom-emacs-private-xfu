@@ -14,3 +14,4 @@
          (python-nav-beginning-of-defun -1))
         (t (python-shell-send-region (python-nav-beginning-of-statement) (python-nav-end-of-statement))
            (python-nav-forward-statement))))
+

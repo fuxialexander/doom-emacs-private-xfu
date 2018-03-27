@@ -5,7 +5,7 @@
 (package! org-bullets :recipe (:fetcher github :repo "Kaligule/org-bullets"))
 (package! toc-org)
 (package! org-web-tools)
-(package! org-wild-notifier)
+;; (package! org-wild-notifier)
 (package! org-brain)
 (package! org-super-agenda)
 (package! org-clock-convenience)
