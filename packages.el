@@ -21,15 +21,19 @@
 (package! orgit)
 (package! evil-magit)
 (package! magithub)
-;; (package! evil-string-inflection)
 (package! electric-operator)
 (package! lsp-mode)
 (package! company-lsp)
 (package! lsp-ui)
-
 (package! ivy-posframe)
 (package! flycheck-posframe)
-
 (package! evil-collection)
-
 (package! academic-phrases)
+(package! dired-k :disable t)
+(package! flycheck-popup-tip :disable t)
+(package! flycheck-pos-tip :disable t)
+(package! flycheck-pos-tip :disable t)
+(package! ob-mongo :disable t)
+(package! ob-sql-mode :disable t)
+(package! ob-translate :disable t)
+(package! ob-translate :disable t)

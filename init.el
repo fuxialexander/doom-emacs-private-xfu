@@ -187,10 +187,6 @@ evil-collection-company-use-tng nil
     :commands (ediff-same-file-contents))
   t)
 
-;; dired
-(def-package-hook! dired-k
-  :disable)
-
 ;; edit
 (def-package-hook! evil-escape
   :pre-config
@@ -233,31 +229,14 @@ evil-collection-company-use-tng nil
   (map! :irvo "C-g" #'evil-escape)
   nil)
 
-;; syntax-checker
-(def-package-hook! flycheck-popup-tip
-  :disable)
-
-(def-package-hook! flycheck-pos-tip
-  :disable)
-
 (def-package-hook! posframe
   :pre-config nil)
-
-(def-package-hook! ob-mongo
-  :disable)
-
-(def-package-hook! ob-sql-mode
-  :disable)
-
-(def-package-hook! ob-translate
-  :disable)
 
 (def-package-hook! auth-password-store
     :pre-config nil)
 
 (def-package-hook! pass
   :pre-config nil)
-
 
 (def-package-hook! magithub
   :pre-init
