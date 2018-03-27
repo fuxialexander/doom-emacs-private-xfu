@@ -122,6 +122,7 @@
           :n "H" #'dired-subtree-remove
           :n "h" #'dired-up-directory
           :n "l" #'dired-find-file
+          :n "s" #'hydra-dired-quick-sort/body
           :n "L" #'dired-subtree-insert
           :n "i" #'dired-subtree-insert
           :n "#" #'dired-flag-auto-save-files

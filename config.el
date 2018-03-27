@@ -766,141 +766,166 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
 ;; * Binding
 (map! :i "<M-return>" nil
       :gnvime "M-x" #'execute-extended-command
-
-      :gnvime "A-M-s" #'org-store-link
-      :gnvime "A-M-o" #'org-open-at-point-global
-      :gnvime "A-M-i" #'org-insert-last-stored-link
-      ;; :m "C-u" #'evil-scroll-up
+      :gnvime "s-r" #'counsel-org-capture
+      :gnvime "s-g" #'org-agenda-show-daily
+      :gnvime "s-l" #'evil-avy-goto-line
+      :gnvime "s-j" #'dwim-jump
+      :gnvime "M-s" #'org-store-link
+      :gnvime "M-o" #'org-open-at-point-global
+      :gnvime "M-i" #'org-insert-last-stored-link
+      :gnvime "s-j" #'dwim-jump
+      :m "C-u" #'evil-scroll-up
       :i "C-k" #'kill-line
-      :gnvime "A-M-r" #'counsel-org-capture
-      :gnvime "A-M-g" #'org-agenda-show-daily
-      :gnvime "A-M-l" #'evil-avy-goto-line
-      :gnvime "A-M-j" #'dwim-jump
-      :gnvime "A-M-j" #'dwim-jump
       (:map evil-ex-completion-map
         "C-k" #'kill-line)
       :n    "\\"    #'ace-window
       :v    "<escape>"    #'evil-escape
-
-
-      :ne "M-0"                 #'+workspace/display
-      :ne "M-d"                 #'evil-window-vsplit
-      :ne "M-D"                 #'evil-window-split
-      :ne "M-w"                 #'+my-workspace/close-window-or-workspace
-      :ne "M-n"                 #'evil-buffer-new
-      :ne "M-N"                 #'make-frame-command
-
-      :ne "M-~"                 #'+workspace/switch-to-last
-
-      :ne "M-b"                 #'+org/open-brain-here
-      :ne "M-B"                 #'+default/compile
-      :ne "M-f"                 #'swiper
-      :ne "M-S-f" (lambda! (swiper
-                       (if (symbol-at-point)
-                           (format "\\_<%s\\_> " (symbol-at-point)) nil)))
-      :ne "M-/"                 #'evil-commentary-line
-      :ne "C-M-f"               #'toggle-frame-fullscreen
-      :n  "M-k"                 #'kill-this-buffer
-      :n  "M-K"                 #'delete-frame
-
+      :gnvime "s-;" #'eval-expression
+      :gnvime "s-:" #'doom/open-scratch-buffer
+      "s-+"       (λ! (text-scale-set 0))
+      "s-="         #'text-scale-increase
+      "s--"         #'text-scale-decrease
+      "C-`" #'+popup/toggle
+      "C-~" #'+popup/raise
+      "s-t" #'+workspace/new
+      "s-0" #'+workspace/display
+      "s-d" #'evil-window-vsplit
+      "s-D" #'evil-window-split
+      "s-w" #'+my-workspace/close-window-or-workspace
+      "s-W" #'+workspace/close-workspace-or-frame
+      "s-n" #'evil-buffer-new
+      "s-N" #'make-frame-command
+      "s-1" (λ! (+workspace/switch-to 0))
+      "s-2" (λ! (+workspace/switch-to 1))
+      "s-3" (λ! (+workspace/switch-to 2))
+      "s-4" (λ! (+workspace/switch-to 3))
+      "s-5" (λ! (+workspace/switch-to 4))
+      "s-6" (λ! (+workspace/switch-to 5))
+      "s-7" (λ! (+workspace/switch-to 6))
+      "s-8" (λ! (+workspace/switch-to 7))
+      "s-9" (λ! (+workspace/switch-to 8))
+      "s-~" #'+workspace/switch-to-last
+      :ne "s-e"                 #'+eval/buffer
+      :ne "s-E"                 #'+eval/region-and-replace
+      :ne "s-b"                 #'+org/open-brain-here
+      :ne "s-B"                 #'+default/compile
+      :ne "s-a"                 #'mark-whole-buffer
+      :ne "s-q"   (if (daemonp) #'delete-frame #'save-buffers-kill-emacs)
+      :ne "s-f"                 #'swiper
+      :ne "s-F"               (lambda! (swiper
+                                   (if (symbol-at-point)
+                                       (format "\\_<%s\\_> " (symbol-at-point)) nil)))
+      :ne "s-/"                 #'evil-commentary-line
+      ;; :ne "C-M-f"            #'doom/toggle-fullscreen
+      :n  "s-s"                 #'save-buffer
+      :n  "s-k"                 #'kill-this-buffer
+      :n  "s-K"                 #'delete-frame
+      :nv "C-SPC"               #'+evil:fold-toggle
+      :gnvimer "s-v"            #'clipboard-yank
+      ;; ;; Easier window navigation
+      ;; :en "C-h"                 #'evil-window-left
+      ;; :en "C-j"                 #'evil-window-down
+      ;; :en "C-k"                 #'evil-window-up
+      ;; :en "C-l"                 #'evil-window-right
+      "C-x p"     #'+popup/other
       (:map universal-argument-map
         "C-u" nil
         (:leader
           "u" #'universal-argument-more))
       (:leader
-        :desc "ivy-resume"              :nv "$"  #'ivy-resume
-        :desc "Find file in project"    :nv "SPC" #'execute-extended-command
-        :desc "Browse files"            :n "/"   #'find-file
-        :desc "Find project files"      :n "."   #'counsel-projectile-find-file
-        :desc "Toggle last popup"       :n "`"   #'+popup/toggle
+        :desc "ivy-resume"                    :nv "$"  #'ivy-resume
+        :desc "Find file in project"          :nv "SPC" #'execute-extended-command
+        :desc "Browse files"                  :n "/"   #'find-file
+        :desc "Find project files"            :n "."   #'counsel-projectile-find-file
+        :desc "Toggle last popup"             :n "`"   #'+popup/toggle
         (:desc "search" :prefix "s"
-          :desc "Swiper"                :nv "s" #'swiper
-          :desc "counsel-rg"            :nv "r" #'counsel-rg
-          :desc "Imenu"                 :nv "i" #'imenu
-          :desc "Imenu across buffers"  :nv "I" #'imenu-anywhere
-          :desc "Online providers"      :nv "o" #'+lookup/online-select)
+          :desc "Project"                     :nv "p" #'+ivy/project-search
+          :desc "Directory"                   :nv "d" (λ! (+ivy/project-search t))
+          :desc "Buffer"                      :nv "b" #'swiper
+          :desc "Symbols"                     :nv "i" #'imenu
+          :desc "Symbols across buffers"      :nv "I" #'imenu-anywhere
+          :desc "Online providers"            :nv "o" #'+lookup/online-select)
         (:desc "iTerm" :prefix "_"
-          :desc "cd" :nv "d" #'mac-iTerm-cd
-          :desc "send command" :nv "_" #'iterm-send-text
-          :desc "send command" :nv "p" #'iterm-send-text-ipy
-          :desc "send command" :nv "P" #'iterm-send-text-ipy
-          :desc "send command" :nv "R" #'iterm-send-file-R)
+          :desc "cd"                          :nv "d" #'mac-iTerm-cd
+          :desc "send command"                :nv "_" #'iterm-send-text
+          :desc "send command"                :nv "p" #'iterm-send-text-ipy
+          :desc "send command"                :nv "P" #'iterm-send-text-ipy
+          :desc "send command"                :nv "R" #'iterm-send-file-R)
         (:desc "file" :prefix "f"
-          :desc "Find file"                 :n "f" #'find-file
-          :desc "Sudo find file"            :n "s" #'doom/sudo-find-file
-          :desc "Find file in project"      :n "p" #'projectile-find-file
-          :desc "Find file on TRAMP"        :n "t" #'counsel-tramp
-          :desc "Find file in doom"         :n "d" #'+default/find-in-emacsd
-          :desc "Find file in private"      :n "e" #'+xfu/find-in-private
-          :desc "Find file in org"          :n "o" #'+default/find-in-notes
-          :desc "Browse doom"               :n "D" #'+default/browse-emacsd
-          :desc "Browse private"            :n "E" #'+xfu/browse-private
-          :desc "Browse work"               :n "w" #'+xfu/browse-work
-          :desc "Browse playground"         :n "p" #'+xfu/browse-playground
-          :desc "Browse private"            :n "E" #'+xfu/browse-private
-          :desc "Browse org"                :n "O" #'+default/browse-notes
-          :desc "Yank filename"             :n "y" #'+default/yank-buffer-filename)
+          :desc "Find file"                   :n "f" #'find-file
+          :desc "Sudo find file"              :n "s" #'doom/sudo-find-file
+          :desc "Find file in project"        :n "p" #'projectile-find-file
+          :desc "Find file on TRAMP"          :n "t" #'counsel-tramp
+          :desc "Find file in doom"           :n "d" #'+default/find-in-emacsd
+          :desc "Find file in private"        :n "e" #'+xfu/find-in-private
+          :desc "Find file in org"            :n "o" #'+default/find-in-notes
+          :desc "Browse doom"                 :n "D" #'+default/browse-emacsd
+          :desc "Browse private"              :n "E" #'+xfu/browse-private
+          :desc "Browse work"                 :n "w" #'+xfu/browse-work
+          :desc "Browse playground"           :n "p" #'+xfu/browse-playground
+          :desc "Browse private"              :n "E" #'+xfu/browse-private
+          :desc "Browse org"                  :n "O" #'+default/browse-notes
+          :desc "Yank filename"               :n "y" #'+default/yank-buffer-filename)
         (:desc "git" :prefix "g"
-          :desc "Git status"            :n  "g" #'magit-status
-          :desc "Git Hydra"             :n  "." #'+version-control@git-gutter/body
-          :desc "List gists"            :n  "l" #'+gist:list)
+          :desc "Git status"                  :n  "g" #'magit-status
+          :desc "Git Hydra"                   :n  "." #'+version-control@git-gutter/body
+          :desc "List gists"                  :n  "l" #'+gist:list)
         (:desc "help" :prefix "h"
-          :n "h" help-map
-          :desc "Reload theme"          :n  "r" #'doom//reload-theme
-          :desc "Describe function"     :n  "f" #'counsel-describe-function
-          :desc "Describe key"          :n  "k" #'helpful-key
-          :desc "Describe keymap"       :n  "K" #'describe-keymap
-          :desc "Describe variable"     :n  "v" #'counsel-describe-variable
-          :desc "Describe face"         :n  "t" #'counsel-faces)
+                                              :n "h" help-map
+          :desc "Reload theme"                :n  "r" #'doom//reload-theme
+          :desc "Describe function"           :n  "f" #'counsel-describe-function
+          :desc "Describe key"                :n  "k" #'helpful-key
+          :desc "Describe keymap"             :n  "K" #'describe-keymap
+          :desc "Describe variable"           :n  "v" #'counsel-describe-variable
+          :desc "Describe face"               :n  "t" #'counsel-faces)
         (:desc "open" :prefix "o"
           :desc "Twitter"                     :n "2" #'=twitter
           :desc "RSS"                         :n "e" #'=rss
           :desc "Calendar"                    :n "c" #'=calendar
           :desc "Eshell"                      :n "s" #'+eshell/open-popup
           :desc "Mail"                        :n "m" #'=mail
-          :n "E" nil
-          :n "M" nil
-          :n "T" nil
-          :n "X" nil
+                                              :n "E" nil
+                                              :n "M" nil
+                                              :n "T" nil
+                                              :n "X" nil
           ;; macos
           (:when IS-MAC
             :desc "Reveal in Finder"          :n "f" #'+macos/reveal-in-finder
-            :desc "Reveal project in Finder"  :n "F" #'+macos/reveal-project-in-finder)
-          )
+            :desc "Reveal project in Finder"  :n "F" #'+macos/reveal-project-in-finder))
         (:desc "project" :prefix "p"
-          :desc "Browse project"          :n  "." #'+xfu/browse-project)
+          :desc "Browse project"              :n  "." #'+xfu/browse-project)
 
         (:desc "snippets" :prefix "y"
-          :desc "Find snippet for mode"  :n  "y" #'yas-visit-snippet-file
-          :desc "Find file in templates" :n  "t" #'+default/browse-templates
-          :desc "Find snippet"           :n  "f" #'+xfu/find-in-snippets
-          :desc "Find snippet"           :n  "b" #'+xfu/browse-snippets)
+          :desc "Find snippet for mode"       :n  "y" #'yas-visit-snippet-file
+          :desc "Find file in templates"      :n  "t" #'+default/browse-templates
+          :desc "Find snippet"                :n  "f" #'+xfu/find-in-snippets
+          :desc "Find snippet"                :n  "b" #'+xfu/browse-snippets)
         (:desc "toggle" :prefix "t"
-          :desc "Company"                :n "c" #'company-mode
-          :desc "Line numbers"           :n "n" #'doom/toggle-line-numbers
-          :desc "Truncate Lines"         :n "l" #'toggle-truncate-lines
-          :desc "Highlight Lines"        :n "h" #'hl-line-mode
-          :desc "Visual Lines"           :n "v" #'visual-line-mode
-          :desc "Fullscreen"             :n "f" #'doom/toggle-fullscreen
-          :desc "Theme"                  :n "t" #'counsel-load-theme
-          :desc "Evil goggles"           :n "g" #'+evil-goggles/toggle))
+          :desc "Company"                     :n "c" #'company-mode
+          :desc "Line numbers"                :n "n" #'doom/toggle-line-numbers
+          :desc "Truncate Lines"              :n "l" #'toggle-truncate-lines
+          :desc "Highlight Lines"             :n "h" #'hl-line-mode
+          :desc "Visual Lines"                :n "v" #'visual-line-mode
+          :desc "Fullscreen"                  :n "f" #'doom/toggle-fullscreen
+          :desc "Theme"                       :n "t" #'counsel-load-theme
+          :desc "Evil goggles"                :n "g" #'+evil-goggles/toggle))
       ;; --- Personal vim-esque bindings ------------------
       ;; :n  "K"  #'+lookup/documentation
       :m  "gh" #'+lookup/documentation
       :m  "gs" #'+default/easymotion
 
-      :nv "+" #'evil-numbers/inc-at-pt
-      :nv "-" #'evil-numbers/dec-at-pt
+      ;; :nv "+" #'evil-numbers/inc-at-pt
+      ;; :nv "-" #'evil-numbers/dec-at-pt
       :nv "\""  #'counsel-evil-registers
 
       (:after bibtex
         :map bibtex-mode-map
-        "A-M-." #'org-ref-bibtex-hydra/body)
+        "s-." #'org-ref-bibtex-hydra/body)
       (:after xwidget
         :map xwidget-webkit-mode-map
         :n "r"         #'xwidget-webkit-reload
         :n "y"         #'xwidget-webkit-copy-selection-as-kill
-        :n "M-c"       #'xwidget-webkit-copy-selection-as-kill
+        :n "s-c"       #'xwidget-webkit-copy-selection-as-kill
         :n "t"         #'xwidget-webkit-browse-url
         :n "n"         #'xwidget-webkit-forward
         :n "p"         #'xwidget-webkit-back
@@ -915,23 +940,15 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       (:after company
         (:map company-active-map
           ;; Don't interfere with `evil-delete-backward-word' in insert mode
-          "M-o"        #'company-search-kill-others
+          "s-o"        #'company-search-kill-others
           "C-f"        #'counsel-company
           "<f1>"       #'company-show-doc-buffer
-          "C-M-f"      #'company-search-candidates
-          "M-f"        #'company-filter-candidates)
+          "C-s-f"      #'company-search-candidates
+          "s-f"        #'company-filter-candidates)
         ;; Automatically applies to `company-filter-map'
         (:map company-search-map
           "C-n"        #'company-search-repeat-forward
           "C-p"        #'company-search-repeat-backward))
-
-      ;; evil-multiedit
-      :v  "R"     #'evil-multiedit-match-all
-      :n  "A-M-d"   #'evil-multiedit-match-symbol-and-next
-      :n  "A-M-D"   #'evil-multiedit-match-symbol-and-prev
-      :v  "A-M-d"   #'evil-multiedit-match-and-next
-      :v  "A-M-D"   #'evil-multiedit-match-and-prev
-      :nv "C-M-d" #'evil-multiedit-restore
 
 
       :m  "]C" #'flyspell-correct-word-generic
@@ -942,7 +959,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         :map ivy-minibuffer-map
         "TAB" #'ivy-alt-done
         "<right>" #'ivy-alt-done
-        "M-o" #'ivy-posframe-dispatching-done
+        "s-o" #'ivy-posframe-dispatching-done
         "C-l" #'ivy-partial)
       ;; (:after swiper
       ;;   :map swiper-map

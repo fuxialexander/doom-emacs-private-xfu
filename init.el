@@ -120,10 +120,10 @@ evil-collection-company-use-tng nil
                                                               "%b"))))
 
 (setq
- ;; ns-alternate-modifier 'meta
- ;; ns-command-modifier 'super
- ;; mac-command-modifier 'super
- ;; mac-option-modifier 'meta
+ ns-alternate-modifier 'meta
+ ns-command-modifier 'super
+ mac-command-modifier 'super
+ mac-option-modifier 'meta
  user-mail-address "fuxialexander@gmail.com"
  user-full-name    "Alexander Fu Xi"
 
