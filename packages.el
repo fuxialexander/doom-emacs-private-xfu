@@ -37,3 +37,8 @@
 (package! ob-sql-mode :disable t)
 (package! ob-translate :disable t)
 (package! ob-translate :disable t)
+(package! worf)
+(package! lpy :recipe (:fetcher github :repo "abo-abo/lpy" :files ("*")))
+(package! function-args)
+
+

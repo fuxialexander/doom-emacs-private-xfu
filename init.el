@@ -89,7 +89,7 @@
 (setq-default evil-want-C-u-scroll t
               evil-want-integration nil
               evil-snipe-override-evil-repeat-keys nil
-evil-collection-company-use-tng nil
+              evil-collection-company-use-tng nil
               exec-path
               '("/usr/local/opt/coreutils/libexec/gnubin"
                 "/usr/local/opt/texinfo/bin/"

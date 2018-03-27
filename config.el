@@ -478,7 +478,6 @@ symbol."
         lispy-outline-header ";; ")
   (map! :map lispy-mode-map
         :i "_" #'special-lispy-different
-        "d" nil
         :i [remap delete-backward-char] #'lispy-delete-backward))
 (def-package! lispyville
   :after (evil)
@@ -488,8 +487,7 @@ symbol."
    '(operators
      c-w
      (escape insert)
-     (slurp/barf-lispy)
-     additional))
+     (slurp/barf-lispy)))
   (map! :map emacs-lisp-mode-map
         :nmv "K"   #'lispyville-backward-sexp
         :nmv "J"   #'lispyville-forward-sexp
@@ -987,18 +985,16 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
   (do-repeat! org-next-item org-next-item org-previous-item)
   (do-repeat! org-next-link org-next-link org-previous-link)
   (do-repeat! org-next-block org-next-block org-previous-block)
-  (do-repeat! org-babel-next-src-block org-babel-next-src-block org-babel-previous-src-block)
   (do-repeat! org-next-visible-heading org-next-visible-heading org-previous-visible-heading)
   (do-repeat! org-backward-heading-same-level org-forward-heading-same-level org-backward-heading-same-level)
   (do-repeat! org-previous-item org-next-item org-previous-item)
   (do-repeat! org-previous-link org-next-link org-previous-link)
   (do-repeat! org-previous-block org-next-block org-previous-block)
-  (do-repeat! org-babel-previous-src-block org-babel-next-src-block org-babel-previous-src-block)
   (do-repeat! org-previous-visible-heading org-next-visible-heading org-previous-visible-heading))
 ;; outline
-(after! outline
-  (do-repeat! outline-next-heading outline-next-heading outline-previous-heading)
-  (do-repeat! outline-previous-heading outline-next-heading outline-previous-heading))
+;; (after! outline
+;;   (do-repeat! outline-next-heading outline-next-heading outline-previous-heading)
+;;   (do-repeat! outline-previous-heading outline-next-heading outline-previous-heading))
 ;; buffer
 (do-repeat! previous-buffer next-buffer previous-buffer)
 (do-repeat! next-buffer next-buffer previous-buffer)
@@ -1012,26 +1008,6 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
   (do-repeat! git-gutter:next-hunk git-gutter:next-hunk git-gutter:previous-hunk)
   (do-repeat! git-gutter:previous-hunk git-gutter:next-hunk git-gutter:previous-hunk))
 
-;; n/N
-(do-repeat! evil-ex-search-next evil-ex-search-next evil-ex-search-previous)
-(do-repeat! evil-ex-search-previous evil-ex-search-next evil-ex-search-previous)
-(do-repeat! evil-ex-search-forward evil-ex-search-next evil-ex-search-previous)
-(do-repeat! evil-ex-search-backward evil-ex-search-next evil-ex-search-previous)
-;; f/F/t/T/s/S
-(setq evil-snipe-repeat-keys nil
-      evil-snipe-override-evil-repeat-keys nil)
-(after! evil-snipe
-  (do-repeat! evil-snipe-f evil-snipe-repeat evil-snipe-repeat-reverse)
-  (do-repeat! evil-snipe-F evil-snipe-repeat evil-snipe-repeat-reverse)
-  (do-repeat! evil-snipe-t evil-snipe-repeat evil-snipe-repeat-reverse)
-  (do-repeat! evil-snipe-T evil-snipe-repeat evil-snipe-repeat-reverse)
-  (do-repeat! evil-snipe-s evil-snipe-repeat evil-snipe-repeat-reverse)
-  (do-repeat! evil-snipe-S evil-snipe-repeat evil-snipe-repeat-reverse)
-  (do-repeat! evil-snipe-x evil-snipe-repeat evil-snipe-repeat-reverse)
-  (do-repeat! evil-snipe-X evil-snipe-repeat evil-snipe-repeat-reverse))
-;; */#
-(after! evil-visualstar
-  (do-repeat! evil-visualstar/begin-search-forward
-              evil-ex-search-next evil-ex-search-previous)
-  (do-repeat! evil-visualstar/begin-search-backward
-              evil-ex-search-previous evil-ex-search-next))
+
+
+
