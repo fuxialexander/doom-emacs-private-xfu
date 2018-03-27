@@ -435,16 +435,19 @@ symbol."
        :background-color (face-background 'flycheck-posframe-background-face nil t)
        :override-parameters '((internal-border-width . 10))
        :position (point))
-      (dolist (hook flycheck-posframe-delete-posframe-hooks)
-        (add-hook hook #'flycheck-posframe-delete-posframe nil t))))
+      (dolist (hook flycheck-posframe-hide-posframe-hooks)
+        (add-hook hook #'flycheck-posframe-hide-posframe nil t))))
   (defun *flycheck-posframe-delete-posframe ()
     "Delete messages currently being shown if any."
     (posframe-hide flycheck-posframe-buffer)
     (dolist (hook flycheck-posframe-delete-posframe-hooks)
-      (remove-hook hook #'flycheck-posframe-delete-posframe t)))
+      (remove-hook hook #'flycheck-posframe-hide-posframe t)))
   (advice-add 'flycheck-posframe-delete-posframe :override #'*flycheck-posframe-delete-posframe)
   (advice-add 'flycheck-posframe-show-posframe :override #'*flycheck-posframe-show-posframe))
-
+(def-package! lpy
+  :commands (lpy-mode)
+  :config
+  (require 'le-python))
 ;; *** Company
 (after! company
   (setq company-tooltip-limit 10
