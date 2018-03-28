@@ -1,0 +1,95 @@
+* What's this?
+:PROPERTIES:
+:ID:       789024F0-7375-4B88-8A88-696542663513
+:END:
+This is my config garbage collection. Just in case someday I find those useful.
+* LSP hack
+:PROPERTIES:
+:ID:       573421AF-24AB-45AE-91E9-155981552B70
+:END:
+#+BEGIN_SRC emacs-lisp
+(setq-default lsp-ui-doc-frame-parameters
+                '((left . -1)
+                  (top . -1)
+                  (no-accept-focus . t)
+                  (min-width . 0)
+                  (width . 0)
+                  (min-height . 0)
+                  (height . 0)
+                  (internal-border-width . 5)
+                  (vertical-scroll-bars)
+                  (horizontal-scroll-bars)
+                  (left-fringe . 0)
+                  (right-fringe . 0)
+                  (menu-bar-lines . 0)
+                  (tool-bar-lines . 0)
+                  (line-spacing . 0.1)
+                  (unsplittable . t)
+                  (undecorated . t)
+                  (minibuffer . nil)
+                  (visibility . nil)
+                  (mouse-wheel-frame . nil)
+                  (no-other-frame . t)
+                  (cursor-type)
+                  (no-special-glyphs . t)))
+  (defun lsp-ui-doc--make-frame ()
+    "Create the child frame and return it."
+    (lsp-ui-doc--delete-frame)
+    (let* ((after-make-frame-functions nil)
+           (before-make-frame-hook nil)
+           (name-buffer (lsp-ui-doc--make-buffer-name))
+           (buffer (get-buffer name-buffer))
+           (params (append lsp-ui-doc-frame-parameters
+                           `(
+                             ;; (default-minibuffer-frame . ,(selected-frame))
+                             ;; (minibuffer . ,(minibuffer-window))
+                             (background-color . ,(doom-blend 'blue 'bg 0.1)))))
+           (window (display-buffer-in-child-frame
+                    buffer
+                    `((child-frame-parameters . ,params))))
+           (frame (window-frame window)))
+      (set-frame-parameter nil 'lsp-ui-doc-buffer buffer)
+      (set-window-dedicated-p window t)
+      ;; (redirect-frame-focus frame (frame-parent frame))
+      (set-face-background 'internal-border lsp-ui-doc-border frame)
+      (run-hook-with-args 'lsp-ui-doc-frame-hook frame window)
+      frame))
+
+  (defun my-fontify-mode (text mode)
+    (with-temp-buffer
+      (erase-buffer)
+      (insert text)
+      (delay-mode-hooks (funcall mode))
+      (font-lock-default-function mode)
+      (goto-char (point-min))
+      (font-lock-default-fontify-region (point-at-bol) (point-at-eol) nil)
+      (forward-line 1)
+      (while (not (eq (line-number-at-pos) (line-number-at-pos (point-max))))
+        (if (re-search-forward "[][@#$%^&*|+=\\<>{}]" (point-at-eol) t)
+            (font-lock-default-fontify-region (point-at-bol) (point-at-eol) nil))
+
+        (forward-line 1))
+      (buffer-string)))
+  (defun my-fontify-using-faces (text)
+    (let ((pos 0))
+      (while (setq next (next-single-property-change pos 'face text))
+        (put-text-property pos next 'font-lock-face (get-text-property pos 'face text) text)
+        (setq pos next))
+      (add-text-properties 0  (length text) '(fontified t) text)
+      text))
+  (defun lsp-ui-doc--render-buffer (string symbol)
+    "set the buffer with string.
+symbol."
+    (let ((pmode major-mode))
+      (lsp-ui-doc--with-buffer
+       (erase-buffer)
+       (insert (my-fontify-using-faces (my-fontify-mode string pmode)))
+       (lsp-ui-doc--make-clickable-link)
+       (hl-line-mode -1)
+       (setq-local face-remapping-alist `((header-line lsp-ui-doc-header)))
+       (setq-local window-min-height 1)
+       ;; (variable-pitch-mode 1)
+       (setq header-line-format (when lsp-ui-doc-header (concat " " symbol))
+             mode-line-format nil
+             cursor-type nil))))
+#+END_SRC

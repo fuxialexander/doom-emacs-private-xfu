@@ -574,7 +574,6 @@ control which repositories are displayed."
     ("t" (setq truncate-lines (not truncate-lines)))
     ("C" ivy-toggle-case-fold)
     ("o" ivy-occur :exit t)))
-
 (after! ivy-posframe
   (setq ivy-posframe-parameters
         `((min-width . 120)
@@ -770,6 +769,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       :ne "C-j"  nil
       :ne "C-k"  nil
       :ne "C-l"  nil
+
       "C-x p"     #'+popup/other
       (:map universal-argument-map
         "C-u" nil
