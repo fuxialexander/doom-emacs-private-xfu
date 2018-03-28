@@ -79,7 +79,12 @@
 (setq-default evil-want-C-u-scroll t
               evil-want-integration nil
               evil-snipe-override-evil-repeat-keys nil
+              package-quickstart t
               evil-collection-company-use-tng nil
+              frame-title-format
+              '("emacs%@" (:eval (system-name)) ": " (:eval (if (buffer-file-name)
+                                                                (abbreviate-file-name (buffer-file-name))
+                                                              "%b")))
               exec-path
               '("/usr/local/opt/coreutils/libexec/gnubin"
                 "/usr/local/opt/texinfo/bin/"
@@ -104,10 +109,6 @@
 (or standard-display-table
     (setq standard-display-table (make-display-table)))
 (set-display-table-slot standard-display-table 0 ?\ )
-(setq-default frame-title-format
-              '("emacs%@" (:eval (system-name)) ": " (:eval (if (buffer-file-name)
-                                                                (abbreviate-file-name (buffer-file-name))
-                                                              "%b"))))
 
 (setq
  ns-alternate-modifier 'meta
