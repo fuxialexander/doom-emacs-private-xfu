@@ -325,15 +325,7 @@ control which repositories are displayed."
   :commands (lsp-mode))
 (def-package! lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
-  :config
-  (setq
-   lsp-ui-sideline-enable nil
-   lsp-enable-completion-at-point t
-   lsp-ui-doc-position 'at-point
-   lsp-ui-doc-header nil
-   lsp-ui-doc-include-signature t
-   lsp-ui-doc-background (doom-color 'base4)
-   lsp-ui-doc-border (doom-color 'fg))
+  :init
   (setq-default lsp-ui-doc-frame-parameters
                 '((left . -1)
                   (top . -1)
@@ -358,66 +350,14 @@ control which repositories are displayed."
                   (no-other-frame . t)
                   (cursor-type)
                   (no-special-glyphs . t)))
-  (defun lsp-ui-doc--make-frame ()
-    "Create the child frame and return it."
-    (lsp-ui-doc--delete-frame)
-    (let* ((after-make-frame-functions nil)
-           (before-make-frame-hook nil)
-           (name-buffer (lsp-ui-doc--make-buffer-name))
-           (buffer (get-buffer name-buffer))
-           (params (append lsp-ui-doc-frame-parameters
-                           `(
-                             ;; (default-minibuffer-frame . ,(selected-frame))
-                             ;; (minibuffer . ,(minibuffer-window))
-                             (background-color . ,(doom-blend 'blue 'bg 0.1)))))
-           (window (display-buffer-in-child-frame
-                    buffer
-                    `((child-frame-parameters . ,params))))
-           (frame (window-frame window)))
-      (set-frame-parameter nil 'lsp-ui-doc-buffer buffer)
-      (set-window-dedicated-p window t)
-      ;; (redirect-frame-focus frame (frame-parent frame))
-      (set-face-background 'internal-border lsp-ui-doc-border frame)
-      (run-hook-with-args 'lsp-ui-doc-frame-hook frame window)
-      frame))
-
-  (defun my-fontify-mode (text mode)
-    (with-temp-buffer
-      (erase-buffer)
-      (insert text)
-      (delay-mode-hooks (funcall mode))
-      (font-lock-default-function mode)
-      (goto-char (point-min))
-      (font-lock-default-fontify-region (point-at-bol) (point-at-eol) nil)
-      (forward-line 1)
-      (while (not (eq (line-number-at-pos) (line-number-at-pos (point-max))))
-        (if (re-search-forward "[][@#$%^&*|+=\\<>{}]" (point-at-eol) t)
-            (font-lock-default-fontify-region (point-at-bol) (point-at-eol) nil))
-
-        (forward-line 1))
-      (buffer-string)))
-  (defun my-fontify-using-faces (text)
-    (let ((pos 0))
-      (while (setq next (next-single-property-change pos 'face text))
-        (put-text-property pos next 'font-lock-face (get-text-property pos 'face text) text)
-        (setq pos next))
-      (add-text-properties 0  (length text) '(fontified t) text)
-      text))
-  (defun lsp-ui-doc--render-buffer (string symbol)
-    "set the buffer with string.
-symbol."
-    (let ((pmode major-mode))
-      (lsp-ui-doc--with-buffer
-       (erase-buffer)
-       (insert (my-fontify-using-faces (my-fontify-mode string pmode)))
-       (lsp-ui-doc--make-clickable-link)
-       (hl-line-mode -1)
-       (setq-local face-remapping-alist `((header-line lsp-ui-doc-header)))
-       (setq-local window-min-height 1)
-       ;; (variable-pitch-mode 1)
-       (setq header-line-format (when lsp-ui-doc-header (concat " " symbol))
-             mode-line-format nil
-             cursor-type nil)))))
+  :config
+  (setq lsp-ui-sideline-enable nil
+        lsp-enable-completion-at-point t
+        lsp-ui-doc-position 'at-point
+        lsp-ui-doc-header nil
+        lsp-ui-doc-include-signature t
+        lsp-ui-doc-background (doom-color 'base4)
+        lsp-ui-doc-border (doom-color 'fg)))
 (def-package! company-lsp
   :after lsp-mode)
 (def-package! flycheck-posframe
