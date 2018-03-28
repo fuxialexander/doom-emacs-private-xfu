@@ -237,9 +237,9 @@ If run interactively, get ENTRY from context."
                               textobjects))
     (map! :map evil-org-mode-map
           :i "<S-tab>" #'+org/dedent
-          "M-o" #'org-open-at-point
-          "M-i" #'org-insert-last-stored-link
-          "M-I" #'org-insert-link
+          "s-o" #'org-open-at-point
+          "s-i" #'org-insert-last-stored-link
+          "s-I" #'org-insert-link
           "s-p" #'org-ref-ivy-insert-cite-link
           :ni "<s-return>" #'+org/work-on-heading
           :n "RET" #'+org/dwim-at-point

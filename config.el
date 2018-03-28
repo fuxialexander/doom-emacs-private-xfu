@@ -709,12 +709,10 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       :gnvime "M-x" #'execute-extended-command
       :gnvime "s-r" #'counsel-org-capture
       :gnvime "s-g" #'org-agenda-show-daily
-      :gnvime "s-l" #'evil-avy-goto-line
-      :gnvime "s-j" #'dwim-jump
-      :gnvime "M-s" #'org-store-link
-      :gnvime "M-o" #'org-open-at-point-global
-      :gnvime "M-i" #'org-insert-last-stored-link
-      :gnvime "s-j" #'dwim-jump
+      :gnvime "s-'" #'dwim-jump
+      :gnvime "s-u" #'org-store-link
+      :gnvime "s-o" #'org-open-at-point-global
+      :gnvime "s-i" #'org-insert-last-stored-link
       :m "C-u" #'evil-scroll-up
       :i "C-k" #'kill-line
       (:map evil-ex-completion-map
@@ -763,11 +761,15 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       :n  "s-K"                 #'delete-frame
       :nv "C-SPC"               #'+evil:fold-toggle
       :gnvimer "s-v"            #'clipboard-yank
-      ;; ;; Easier window navigation
-      ;; :en "C-h"                 #'evil-window-left
-      ;; :en "C-j"                 #'evil-window-down
-      ;; :en "C-k"                 #'evil-window-up
-      ;; :en "C-l"                 #'evil-window-right
+      ;; Easier window navigation
+      :gnvime "s-h"      #'evil-window-left
+      :gnvime "s-j"      #'evil-window-down
+      :gnvime "s-k"      #'evil-window-up
+      :gnvime "s-l"      #'evil-window-right
+      :ne "C-h"  nil
+      :ne "C-j"  nil
+      :ne "C-k"  nil
+      :ne "C-l"  nil
       "C-x p"     #'+popup/other
       (:map universal-argument-map
         "C-u" nil
@@ -894,7 +896,6 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
 
       :m  "]C" #'flyspell-correct-word-generic
       :m  "[c" #'flyspell-correct-previous-word-generic
-
 
       (:after ivy
         :map ivy-minibuffer-map
