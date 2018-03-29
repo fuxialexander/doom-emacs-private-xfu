@@ -12,7 +12,10 @@
 (if (featurep! +latex)   (load! +latex))
 (if (featurep! +capture) (load! +capture))
 (if (featurep! +export)  (load! +export))
+
 ;; TODO (if (featurep! +publish) (load! +publish))
+
+
 
 
 ;;

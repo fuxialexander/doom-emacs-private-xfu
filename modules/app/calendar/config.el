@@ -54,6 +54,5 @@
   ;; hack to avoid the deferred.el error
   (defun org-gcal--notify (title mes)
     (message "org-gcal::%s - %s" title mes))
-  (advice-add #'org-gcal-post-at-point :override #'+calendar*org-gcal-post-at-point)
-  )
+  (advice-add #'org-gcal-post-at-point :override #'+calendar*org-gcal-post-at-point))
 
