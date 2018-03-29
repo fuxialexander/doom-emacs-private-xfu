@@ -38,7 +38,7 @@
        term
        reference
        upload
-       password-store
+       (password-store +auth)
        rotate-text
        :lang
        python
@@ -223,11 +223,11 @@
 (def-package-hook! posframe
   :pre-config nil)
 
-(def-package-hook! auth-password-store
-    :pre-config nil)
+;; (def-package-hook! auth-password-store
+;;     :pre-config nil)
 
-(def-package-hook! pass
-  :pre-config nil)
+;; (def-package-hook! pass
+;;   :pre-config nil)
 
 (def-package-hook! magithub
   :pre-init
