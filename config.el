@@ -384,10 +384,7 @@ control which repositories are displayed."
       (remove-hook hook #'flycheck-posframe-hide-posframe t)))
   (advice-add 'flycheck-posframe-delete-posframe :override #'*flycheck-posframe-delete-posframe)
   (advice-add 'flycheck-posframe-show-posframe :override #'*flycheck-posframe-show-posframe))
-(def-package! lpy
-  :commands (lpy-mode)
-  :config
-  (require 'le-python))
+
 ;; *** Company
 (after! company
   (setq company-tooltip-limit 10
@@ -419,6 +416,17 @@ control which repositories are displayed."
   (map! :map lispy-mode-map
         :i "_" #'special-lispy-different
         :i [remap delete-backward-char] #'lispy-delete-backward))
+
+(def-package! worf
+  :hook ((python-mode . worf-mode)))
+(def-package! lpy
+  :hook ((python-mode . lpy-mode))
+  :config
+  (require 'le-python)
+  (map! :map lpy-mode-map
+        :i "C-p" #'previous-line
+        :i "C-n" #'next-line))
+
 (def-package! lispyville
   :after (evil)
   :hook (lispy-mode . lispyville-mode)
