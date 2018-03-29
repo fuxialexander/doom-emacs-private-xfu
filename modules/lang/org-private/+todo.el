@@ -28,19 +28,26 @@
           (:name "Scheduled earlier\n"
                  :scheduled past))))
 
-;; (def-package! org-clock-budget :load-path "~/Source/playground/org-clock-budget"
-;;   :commands (org-clock-budget-report)
-;;   :init
-;;   (defun my-buffer-face-mode-org-clock-budget ()
-;;     "Sets a fixed width (monospace) font in current buffer"
-;;     (interactive)
-;;     (setq buffer-face-mode-face '(:family "input mono compressed" :height 1.0))
-;;     (buffer-face-mode)
-;;     (setq-local line-spacing nil))
-;;   :config
-;;   (add-hook! 'org-clock-budget-report-mode-hook
-;;     (toggle-truncate-lines 1)
-;;     (my-buffer-face-mode-org-clock-budget)))
+(def-package! org-clock-budget :load-path "~/Source/playground/org-clock-budget"
+  :commands (org-clock-budget-report)
+  :init
+  (defun my-buffer-face-mode-org-clock-budget ()
+    "Sets a fixed width (monospace) font in current buffer"
+    (interactive)
+    (setq buffer-face-mode-face '(:family "PragmataPro" :height 1.0))
+    (buffer-face-mode)
+    (setq-local line-spacing nil))
+  :config
+  (map! :map org-clock-budget-report-mode-map
+        :nm "h" #'org-shifttab
+        :nm "l" #'org-cycle
+        :nm "e" #'org-clock-budget-report
+        :nm "s" #'org-clock-budget-report-sort
+        :nm "d" #'org-clock-budget-remove-budget
+        :nm "q" #'quit-window)
+  (add-hook! 'org-clock-budget-report-mode-hook
+    (toggle-truncate-lines 1)
+    (my-buffer-face-mode-org-clock-budget)))
 
 (def-package! org-clock-convenience
   :commands (org-clock-convenience-timestamp-up
