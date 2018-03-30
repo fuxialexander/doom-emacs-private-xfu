@@ -41,14 +41,15 @@ is loaded.")
   (when (executable-find "ipython")
     (setq python-shell-interpreter "ipython"
           ;; python-shell-interpreter-args "-i"
-          python-shell-interpreter-args "-i --simple-prompt --no-color-info"
+          python-shell-interpreter-args "--pylab"
           python-shell-prompt-regexp "In \\[[0-9]+\\]: "
           python-shell-prompt-block-regexp "\\.\\.\\.\\.: "
           python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
-          python-shell-completion-setup-code
-          "from IPython.core.completerlib import module_completion"
-          python-shell-completion-string-code
-          "';'.join(get_ipython().Completer.all_completions('''%s'''))\n"))
+          ;; python-shell-completion-setup-code
+          ;; "from IPython.core.completerlib import module_completion"
+          ;; python-shell-completion-string-code
+          ;; "';'.join(get_ipython().Completer.all_completions('''%s'''))\n"
+          ))
 
 (def-package! conda
   :commands (conda-env-activate-for-buffer)

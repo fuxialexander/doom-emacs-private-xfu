@@ -80,7 +80,6 @@
 (setq-default evil-want-C-u-scroll t
               evil-want-integration nil
               evil-snipe-override-evil-repeat-keys nil
-              package-quickstart t
               evil-collection-company-use-tng nil
               frame-title-format
               '("emacs%@" (:eval (system-name)) ": " (:eval (if (buffer-file-name)
@@ -117,7 +116,7 @@
  mac-command-modifier 'super
  mac-option-modifier 'meta
  user-mail-address "fuxialexander@gmail.com"
- user-full-name    "Alexander Fu Xi"
+ user-full-name "Alexander Fu Xi"
 
  evil-respect-visual-line-mode t
  doom-font (font-spec :family "SF Mono" :size 13)

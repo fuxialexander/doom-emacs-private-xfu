@@ -39,7 +39,7 @@
       ;; tramp
       tramp-default-method "ssh"
       tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=600"
-      tramp-remote-process-environment (quote ("TMOUT=0" "LC_CTYPE=''" "TRAMP='yes'" "CDPATH=" "HISTORY=" "MAIL=" "MAILCHECK=" "MAILPATH=" "PAGER=cat" "autocorrect=" "correct=" "http_proxy=http://proxy.cse.cuhk.edu.hk:8000" "https_proxy=http://proxy.cse.cuhk.edu.hk:8000" "ftp_proxy=http://proxy.cse.cuhk.edu.hk:8000"))
+      tramp-remote-process-environment '("TMOUT=0" "LC_CTYPE=''" "TRAMP='yes'" "CDPATH=" "HISTORY=" "MAIL=" "MAILCHECK=" "MAILPATH=" "PAGER=cat" "autocorrect=" "correct=" "http_proxy=http://proxy.cse.cuhk.edu.hk:8000" "https_proxy=http://proxy.cse.cuhk.edu.hk:8000" "ftp_proxy=http://proxy.cse.cuhk.edu.hk:8000")
       org-bullets-bullet-list '("#" "#" "#" "#" "#" "#" "#" "#")
       twittering-connection-type-order '(wget urllib-http native urllib-https)
       +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin)
@@ -380,24 +380,16 @@ control which repositories are displayed."
 (set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point)
 
 ;; *** Edit
-(def-package! lispy
+ (def-package! lispy
   :hook (emacs-lisp-mode . lispy-mode)
   :config
   (setq lispy-outline "^;; \\(?:;[^#]\\|\\*+\\)"
         lispy-outline-header ";; ")
   (map! :map lispy-mode-map
         :i "_" #'special-lispy-different
+        :i "C-d" #'lispy-delete
+        :i "C-u" #'universal-argument
         :i [remap delete-backward-char] #'lispy-delete-backward))
-
-(def-package! worf
-  :hook ((python-mode . worf-mode)))
-(def-package! lpy
-  :hook ((python-mode . lpy-mode))
-  :config
-  (require 'le-python)
-  (map! :map lpy-mode-map
-        :i "C-p" #'previous-line
-        :i "C-n" #'next-line))
 
 (def-package! lispyville
   :after (evil)
@@ -406,21 +398,20 @@ control which repositories are displayed."
   (lispyville-set-key-theme
    '(operators
      c-w
-     (escape insert)
-     (slurp/barf-lispy)))
-  (map! :map emacs-lisp-mode-map
-        :nmv "K"   #'lispyville-backward-sexp
-        :nmv "J"   #'lispyville-forward-sexp
-        :nmv "L"   #'lispyville-right
-        :nmv "H"   #'lispyville-left
-        :nmv "M-h" #'lispyville-beginning-of-defun
-        :nmv "M-l" #'lispyville-end-of-defun
-        :mv "[["   #'lispyville-previous-opening
-        :mv "]]"   #'lispyville-next-closing
-        :nmv "{{"   #'lispyville-next-opening
-        :nmv "}}"   #'lispyville-previous-closing
-        :nmv "("   #'lispyville-backward-up-list
-        :nmv ")"   #'lispyville-up-list))
+     prettify
+     escape
+     (slurp/barf-lispy))))
+
+(def-package! worf
+  :hook ((python-mode . worf-mode)))
+
+(def-package! lpy
+  :hook ((python-mode . lpy-mode))
+  :config
+  (require 'le-python)
+  (map! :map lpy-mode-map
+        :i "C-p" #'previous-line
+        :i "C-n" #'next-line))
 (def-package! electric-operator
   :commands (electric-operator-mode)
   :init
@@ -750,11 +741,12 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       :ne "C-k"  nil
       :ne "C-l"  nil
 
+
       "C-x p"     #'+popup/other
       (:map universal-argument-map
         "C-u" nil
         (:leader
-          "u" #'universal-argument-more))
+          :n "u" #'universal-argument-more))
       (:leader
         :desc "ivy-resume"                    :nv "$"  #'ivy-resume
         :desc "Find file in project"          :nv "SPC" #'execute-extended-command
@@ -794,7 +786,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
           :desc "Git Hydra"                   :n  "." #'+version-control@git-gutter/body
           :desc "List gists"                  :n  "l" #'+gist:list)
         (:desc "help" :prefix "h"
-                                              :n "h" help-map
+          :n "h" help-map
           :desc "Reload theme"                :n  "r" #'doom//reload-theme
           :desc "Describe function"           :n  "f" #'counsel-describe-function
           :desc "Describe key"                :n  "k" #'helpful-key
@@ -807,10 +799,10 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
           :desc "Calendar"                    :n "c" #'=calendar
           :desc "Eshell"                      :n "s" #'+eshell/open-popup
           :desc "Mail"                        :n "m" #'=mail
-                                              :n "E" nil
-                                              :n "M" nil
-                                              :n "T" nil
-                                              :n "X" nil
+          :n "E" nil
+          :n "M" nil
+          :n "T" nil
+          :n "X" nil
           ;; macos
           (:when IS-MAC
             :desc "Reveal in Finder"          :n "f" #'+macos/reveal-in-finder
