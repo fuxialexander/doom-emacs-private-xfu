@@ -17,19 +17,20 @@
        ivy
        :ui
        doom
-       evil-goggles
-       hl-todo
-
        doom-dashboard
        doom-modeline
-       window-select
+       evil-goggles
+       hl-todo
+       nav-flash
        posframe
+       window-select
        :tools
        dired
        electric-indent
        eshell
        gist
        imenu
+       ;; pdf
        macos
        make
        magit
@@ -62,7 +63,7 @@
        javascript
        markdown
        sh
-       web
+       (web +html)
        :app
        rss
        twitter
