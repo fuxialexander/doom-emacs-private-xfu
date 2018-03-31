@@ -78,7 +78,7 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
   ;;     (run-with-timer 60 nil 'org-wild-notifier-mode 1)
   ;;     (message "Org wild notifier, naughty naughty fire!")))
   ;; (start-org-wild-notifier)
-  (set! :popup "^\\*Org Agenda.*" '((slot . -1) (size . 120) (side . right)) '((select . t) (modeline . nil)))
+  (set! :popup "^\\*Org Agenda.*" '((slot . -1) (size . 120) (side . left)) '((select . t) (modeline . nil)))
   (push 'org-agenda-mode evil-snipe-disabled-modes)
   ;; (add-hook 'org-agenda-finalize-hook #'hide-mode-line-mode)
   (set! :evil-state 'org-agenda-mode 'normal))
