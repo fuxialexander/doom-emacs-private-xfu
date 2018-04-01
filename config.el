@@ -148,6 +148,7 @@ ALPHA : [ %(frame-parameter nil 'alpha) ]
   (add-to-list 'recentf-exclude ".*\\.gz")
   (add-to-list 'recentf-exclude ".*\\.gif")
   (add-to-list 'recentf-exclude ".*\\.svg")
+  (add-to-list 'recentf-exclude ".*\\.pdf")
   (add-to-list 'recentf-exclude ".*Cellar.*"))
 
 (after! projectile

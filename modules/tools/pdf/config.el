@@ -2,6 +2,8 @@
 
 (def-package! pdf-tools
   :mode ("\\.pdf$" . pdf-view-mode)
+  :preface
+  (setq pdf-view-use-unicode-ligther nil)
   :init (load "pdf-tools-autoloads" nil t)
   :config
   (unless noninteractive
@@ -15,24 +17,29 @@
   (setq-default pdf-view-display-size 'fit-page
                 pdf-view-midnight-colors `(,(doom-color 'fg) . ,(doom-color 'bg)))
   ;; turn off cua so copy works
+  (add-hook 'pdf-view-mode-hook
+            (lambda ()
+              (set (make-local-variable 'evil-normal-state-cursor) (list nil))))
+
   (add-hook! 'pdf-view-mode-hook
     (cua-mode 0)
+    (blink-cursor-mode -1)
     (hide-mode-line-mode 1)
     (pdf-view-auto-slice-minor-mode 1)
     (pdf-view-midnight-minor-mode 1)))
 
-(when (featurep! :lang latex)
-  (after! latex
-    ;; add to the program list
-    (add-to-list 'TeX-view-program-selection
-                 '(output-pdf "PDF Tools"))
-    (add-to-list 'TeX-view-program-list
-                 '("PDF Tools" ("TeX-pdf-tools-sync-view")))
+;; (when (featurep! :lang latex)
+;;   (after! latex
+;;     ;; add to the program list
+;;     (add-to-list 'TeX-view-program-selection
+;;                  '(output-pdf "PDF Tools"))
+;;     (add-to-list 'TeX-view-program-list
+;;                  '("PDF Tools" ("TeX-pdf-tools-sync-view")))
 
-    ;; enable document revert
-    (add-hook 'TeX-after-compilation-finished-functions
-              #'TeX-revert-document-buffer)
+;;     ;; enable document revert
+;;     (add-hook 'TeX-after-compilation-finished-functions
+;;               #'TeX-revert-document-buffer)
 
-    ;; correlated mode
-    (setq TeX-source-correlate-start-server t
-          TeX-source-correlate-mode t)))
+;;     ;; correlated mode
+;;     (setq TeX-source-correlate-start-server t
+;;           TeX-source-correlate-mode t)))

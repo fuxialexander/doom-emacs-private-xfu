@@ -30,7 +30,7 @@
        eshell
        gist
        imenu
-       ;; pdf
+       pdf
        macos
        make
        magit
