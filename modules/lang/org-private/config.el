@@ -95,6 +95,7 @@ If run interactively, get ENTRY from context."
 (remove-hook! 'org-mode-hook #'(visual-line-mode))
 
 (add-hook 'org-mode-hook #'+org-private|setup-editing t)
+(add-hook 'org-mode-hook #'eldoc-mode t)
 
 ;;
 ;; `org-load' hooks
@@ -147,6 +148,7 @@ If run interactively, get ENTRY from context."
   (set! :popup "^CAPTURE.*\\.org$" '((side . bottom) (size . 0.4)) '((quit) (select . t)))
 
   ;; setup customized font lock
+  (setq org-ts-regexp-both-braket "\\([[<]\\)\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\} ?[^]\n>]*?\\)\\([]>]\\)")
   (defun *org-set-font-lock-defaults ()
     "Set font lock defaults for the current buffer."
     (let* ((em org-fontify-emphasized-text)
@@ -176,11 +178,28 @@ If run interactively, get ENTRY from context."
              (list org-property-re
                    '(1 'org-special-keyword t)
                    '(3 'org-property-value t))
+            ;; Special keywords
+             (list (concat "\\<\\(DEADLINE: \\)" org-ts-regexp-both-braket)
+                   '(1 'org-deadline-custom prepend)
+                   '(2 'org-deadline-custom-braket prepend)
+                   '(3 'org-deadline-custom prepend)
+                   '(4 'org-deadline-custom-braket prepend))
+             (list (concat "\\<\\(SCHEDULED: \\)" org-ts-regexp-both-braket)
+                   '(1 'org-scheduled-custom prepend)
+                   '(2 'org-scheduled-custom-braket prepend)
+                   '(3 'org-scheduled-custom prepend)
+                   '(4 'org-scheduled-custom-braket prepend))
+             (list (concat "\\<\\(CLOSED: \\)" org-ts-regexp-both-braket)
+                   '(1 'org-closed-custom prepend)
+                   '(2 'org-closed-custom-braket prepend)
+                   '(3 'org-closed-custom prepend)
+                   '(4 'org-closed-custom-braket prepend))
+             (list (concat "\\<" org-clock-string) '(0 'org-special-keyword prepend))
              ;; Link related fontification.
              '(org-activate-links)
              (when (memq 'tag lk) '(org-activate-tags (1 'org-tag prepend)))
              (when (memq 'radio lk) '(org-activate-target-links (1 'org-link t)))
-             (when (memq 'date lk) '(org-activate-dates (1 'org-date-custom prepend)))
+             (when (memq 'date lk) '(org-activate-dates (0 'org-date t)))
              (when (memq 'footnote lk) '(org-activate-footnote-links))
              ;; Targets.
              (list org-any-target-regexp '(0 'org-target t))
@@ -212,11 +231,7 @@ If run interactively, get ENTRY from context."
                              (regexp-opt (mapcar 'car org-tag-groups-alist))
                              ":\\).*$")
                      '(1 'org-tag-group prepend)))
-             ;; Special keywords
-             (list (concat "\\<\\(DEADLINE:\\)") '(1 'org-deadline-custom prepend))
-             (list (concat "\\<\\(SCHEDULED:\\)" ) '(1 'org-scheduled-custom prepend))
-             (list (concat "\\<\\(CLOSED:\\)" ) '(1 'org-close-custom prepend))
-             (list (concat "\\<" org-clock-string) '(0 'org-special-keyword t))
+
              ;; Emphasis
              (when em '(org-do-emphasis-faces))
              ;; Checkboxes
@@ -241,25 +256,27 @@ If run interactively, get ENTRY from context."
              '(org-activate-code (1 'org-code t))
              ;; COMMENT
              (list (format
-		            "^\\*+\\(?: +%s\\)?\\(?: +\\[#[A-Z0-9]\\]\\)? +\\(?9:%s\\)\\(?: \\|$\\)"
-		            org-todo-regexp
-		            org-comment-string)
-		           '(9 'org-special-keyword t))
-	         ;; Blocks and meta lines
-	         '(org-fontify-meta-lines-and-blocks))))
+                    "^\\*+\\(?: +%s\\)?\\(?: +\\[#[A-Z0-9]\\]\\)? +\\(?9:%s\\)\\(?: \\|$\\)"
+                    org-todo-regexp
+                    org-comment-string)
+                   '(9 'org-special-keyword t))
+             ;; Blocks and meta lines
+             '(org-fontify-meta-lines-and-blocks))))
       (setq org-font-lock-extra-keywords (delq nil org-font-lock-extra-keywords))
       (run-hooks 'org-font-lock-set-keywords-hook)
       ;; Now set the full font-lock-keywords
       (setq-local org-font-lock-keywords org-font-lock-extra-keywords)
       (setq-local font-lock-defaults
-		          '(org-font-lock-keywords t nil nil backward-paragraph))
+                  '(org-font-lock-keywords t nil nil backward-paragraph))
       (kill-local-variable 'font-lock-keywords)
       nil))
   (advice-add 'org-set-font-lock-defaults :override #'*org-set-font-lock-defaults)
-  (defface org-date-custom '((t (:inherit 'default))) "org-date" :group 'org)
   (defface org-deadline-custom '((t (:inherit 'default))) "org-deadline" :group 'org)
   (defface org-scheduled-custom '((t (:inherit 'default))) "org-schedule" :group 'org)
-  (defface org-close-custom '((t (:inherit 'default))) "org-close" :group 'org)
+  (defface org-closed-custom '((t (:inherit 'default))) "org-close" :group 'org)
+  (defface org-deadline-custom-braket '((t (:inherit 'default))) "org-deadline" :group 'org)
+  (defface org-scheduled-custom-braket '((t (:inherit 'default))) "org-schedule" :group 'org)
+  (defface org-closed-custom-braket '((t (:inherit 'default))) "org-close" :group 'org)
 
   (setq org-adapt-indentation nil
         org-export-babel-evaluate nil
@@ -732,6 +749,23 @@ This holds only for inactive timestamps."
   (advice-add 'org-store-log-note :override #'*org-store-log-note)
   (advice-add 'org-shiftcontrolup :override #'*org/shiftcontrolup)
   (advice-add 'org-shiftcontroldown :override #'*org/shiftcontroldown)
+
+  (defun *org-eldoc-get-timestamp (str)
+    "Return timestamp if on a headline or nil."
+    (if str
+        (concat
+         (let ((deadline (org-entry-get (point) "DEADLINE" t))
+               (scheduled (org-entry-get (point) "SCHEDULED" t))
+               (closed (org-entry-get (point) "CLOSED" t))
+               timestamp)
+           (if deadline (setq timestamp (concat timestamp (propertize (substring deadline 1 -1) 'face 'org-deadline-custom) " ")))
+           (if scheduled (setq timestamp (concat timestamp (propertize (substring scheduled 1 -1) 'face 'org-scheduled-custom) " ")))
+           (if closed (setq timestamp (concat timestamp (propertize (substring closed 1 -1) 'face 'org-closed-custom) " ")))
+           timestamp)
+         str)
+      nil))
+
+  (advice-add 'org-eldoc-get-breadcrumb :filter-return #'*org-eldoc-get-timestamp)
 
   (defun *org-format-outline-path-normalize (str)
     (add-face-text-property
