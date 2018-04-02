@@ -206,6 +206,7 @@ control which repositories are displayed."
   (set! :popup "^.*magit-revision:.*" '((slot . 2) (side . right) (window-height . 0.6)) '((modeline . nil) (select . t)))
   (set! :popup "^.*magit-diff:.*" '((slot . 2) (side . right) (window-height . 0.6)) '((modeline . nil) (select . nil))))
 
+(set! :popup "^\\*Customize.*" '((slot . 2) (side . right)) '((modeline . nil) (select . t) (quit . t)))
 ;; ** Web
 (after! eww
   (set! :popup "^\\*eww.*"
@@ -752,6 +753,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         :desc "ivy-resume"                    :nv "$"  #'ivy-resume
         :desc "Find file in project"          :nv "SPC" #'execute-extended-command
         :desc "Browse files"                  :n "/"   #'find-file
+        :desc "Goto Line"                     :n "l"   #'avy-goto-line
         :desc "Find project files"            :n "."   #'counsel-projectile-find-file
         :desc "Toggle last popup"             :n "`"   #'+popup/toggle
         (:desc "search" :prefix "s"

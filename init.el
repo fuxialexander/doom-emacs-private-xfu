@@ -115,14 +115,15 @@
  ns-command-modifier 'super
  mac-command-modifier 'super
  mac-option-modifier 'meta
+ mac-pass-command-to-system nil
  user-mail-address "fuxialexander@gmail.com"
  user-full-name "Alexander Fu Xi"
 
  evil-respect-visual-line-mode t
- doom-font (font-spec :family "SF Mono" :size 13)
+ doom-font (font-spec :family "Operator Mono" :size 13)
  doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 15 :width 'extra-condensed :weight 'normal :slant 'normal :registry "iso10646-1" )
  doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 13)
- doom-big-font (font-spec :family "SF Mono" :size 16)
+ doom-big-font (font-spec :family "Operator Mono" :size 16)
  doom-theme 'doom-nord
  doom-line-numbers-style nil
  +doom-modeline-buffer-file-name-style 'truncate-upto-project
@@ -144,7 +145,7 @@
 
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(ns-appearance . dark))
-
+(mac-auto-operator-composition-mode 1)
 
 (add-hook! doom-big-font-mode
   (setq +doom-modeline-height (if doom-big-font-mode 37 29)))
