@@ -8,13 +8,15 @@
   (let ((arg  (if +write-mode +1 -1))
         (iarg (if +write-mode -1 +1)))
     (setq-local visual-fill-column-center-text +write-mode)
-    (setq line-spacing (if +write-mode 0.4))
+    (setq-local visual-fill-column-width 200)
+    (setq line-spacing (if +write-mode 0.2))
     (visual-fill-column-mode arg)
     (visual-line-mode arg)
     (flyspell-mode arg)
-    (mixed-pitch-mode arg)
+    ;; (mixed-pitch-mode arg)
     (when (eq major-mode 'org-mode)
       (+org-pretty-mode arg)
+      (call-interactively #'org-variable-pitch-minor-mode)
       (org-indent-mode iarg))))
 
 
