@@ -24,8 +24,6 @@
   (package! ox-pandoc))
 
 (when (featurep! +present)
-  (package! centered-window :recipe (:fetcher github :repo "anler/centered-window-mode"))
-  (package! org-tree-slide)
   (package! ox-reveal))
 
 ;; (when (featurep! +publish))

@@ -4,9 +4,7 @@
 
 (setq request-storage-directory (concat doom-etc-dir "request/")
       projectile-ignored-projects '("~/"
-                                    "/tmp"
-                                    "/usr/local/Cellar/emacs-plus/HEAD-5c41444/share/emacs/27.0.50/lisp/net/"
-                                    "/usr/local/Cellar/emacs-plus/HEAD-5c41444/share/emacs/27.0.50/lisp/")
+                                    "/tmp")
       recentf-auto-cleanup 60
       trash-directory "/Users/xfu/.Trash/"
       delete-by-moving-to-trash t
@@ -29,21 +27,19 @@
       projectile-ignored-project-function 'file-remote-p
       +rss-elfeed-files '("elfeed.org")
       ;; browse-url-browser-function 'xwidget-webkit-browse-url
-      mac-frame-tabbing nil
+      ;; mac-frame-tabbing nil
       counsel-org-goto-face-style 'org
       counsel-org-headline-display-style 'title
       counsel-org-headline-display-tags t
       counsel-org-headline-display-todo t
+      org-bullets-bullet-list '("#" "#" "#" "#" "#" "#" "#" "#")
       +ivy-buffer-icons nil
       ivy-use-virtual-buffers t
       ;; tramp
-      tramp-default-method "ssh"
-      tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=600"
-      tramp-remote-process-environment '("TMOUT=0" "LC_CTYPE=''" "TRAMP='yes'" "CDPATH=" "HISTORY=" "MAIL=" "MAILCHECK=" "MAILPATH=" "PAGER=cat" "autocorrect=" "correct=" "http_proxy=http://proxy.cse.cuhk.edu.hk:8000" "https_proxy=http://proxy.cse.cuhk.edu.hk:8000" "ftp_proxy=http://proxy.cse.cuhk.edu.hk:8000")
+
       org-bullets-bullet-list '("#" "#" "#" "#" "#" "#" "#" "#")
       twittering-connection-type-order '(wget urllib-http native urllib-https)
       +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin)
-
 
 ;; ** UI
 (defun doom|no-fringes-in-whichkey (&optional args)
@@ -60,6 +56,12 @@
 
 (def-package! ace-link
   :commands (ace-link))
+
+(after! ace-window
+  (setq aw-keys '(?f ?d ?s ?a ?r ?e ?w ?q)
+        aw-scope 'frame
+        aw-ignore-current t
+        aw-background nil))
 
 (def-package! keycast :load-path "~/.doom.d/local/"
   :commands (keycast-mode)
@@ -145,10 +147,6 @@ ALPHA : [ %(frame-parameter nil 'alpha) ]
 ;; ** File
 (after! recentf
   (add-to-list 'recentf-exclude 'file-remote-p)
-  (add-to-list 'recentf-exclude ".*\\.gz")
-  (add-to-list 'recentf-exclude ".*\\.gif")
-  (add-to-list 'recentf-exclude ".*\\.svg")
-  (add-to-list 'recentf-exclude ".*\\.pdf")
   (add-to-list 'recentf-exclude ".*Cellar.*"))
 
 (after! projectile
@@ -172,6 +170,16 @@ ALPHA : [ %(frame-parameter nil 'alpha) ]
   (setq magithub-clone-default-directory "/Users/xfu/Source/playground/"))
 
 (after! magit
+  (def-package! pretty-magit
+    :load-path "~/.doom.d/local/"
+    :config
+    (pretty-magit "Feature" ? '(:foreground "slate gray" :height 1.0 :family "FontAwesome"))
+    (pretty-magit "Add" ? '(:foreground "#375E97" :height 1.0 :family "FontAwesome"))
+    (pretty-magit "Fix" ? '(:foreground "#FB6542" :height 1.0 :family "FontAwesome"))
+    (pretty-magit "Clean" ? '(:foreground "#FFBB00" :height 1.0 :family "FontAwesome"))
+    (pretty-magit "Docs" ? '(:foreground "#3F681C" :height 1.0 :family "FontAwesome"))
+    (pretty-magit "master" ? '(:box nil :height 1.0 :family "github-octicons") t)
+    (pretty-magit "origin" ? '(:box nil :height 1.0 :family "github-octicons") t))
   (magit-wip-after-save-mode 1)
   (magit-wip-after-apply-mode 1)
   (magithub-feature-autoinject t)
@@ -199,12 +207,32 @@ control which repositories are displayed."
         :map with-editor-mode-map
         (:localleader
           :desc "Finish" :n "," #'with-editor-finish
-          :desc "Abort"  :n "k" #'with-editor-cancel))
-  (set! :popup "^.*magit" '((slot . -1) (side . right) (size . 80)) '((modeline . nil) (select . t)))
-  (set! :popup "^\\*magit.*popup\\*" '((slot . 0) (side . right)) '((modeline . nil) (select . t)))
-  (set! :popup "^\\*Magit Repo.*\\*" '((side . bottom) (size . +popup-shrink-to-fit)) '((modeline . nil) (select . t)))
-  (set! :popup "^.*magit-revision:.*" '((slot . 2) (side . right) (window-height . 0.6)) '((modeline . nil) (select . t)))
-  (set! :popup "^.*magit-diff:.*" '((slot . 2) (side . right) (window-height . 0.6)) '((modeline . nil) (select . nil))))
+          :desc "Abort" :n "k" #'with-editor-cancel))
+
+  (defun +magit/quit (&optional _kill-buffer)
+    (interactive)
+    (magit-restore-window-configuration)
+    (mapc #'kill-buffer (doom-buffers-in-mode 'magit-mode nil t)))
+
+  (setq magit-bury-buffer-function #'+magit/quit
+        magit-popup-display-buffer-action nil)
+  (map! :map magit-mode-map
+        [remap quit-window] #'+magit/quit
+        :n "\\" nil
+        :n "RET" #'magit-diff-visit-file-other-window)
+
+  (set! :popup "^\\(?: ?\\*\\)?magit: "
+    '((slot . -1) (side . right) (size . 80))
+    '((select . t) (quit . nil)))
+  (set! :popup "^\\*magit.*popup\\*"
+    '((slot . 0) (side . right))
+    '((select . t)))
+  (set! :popup "^\\(?: ?\\*\\)?magit-revision:.*"
+    '((slot . 2) (side . right) (window-height . 0.6))
+    '((select . t)))
+  (set! :popup "^\\(?: ?\\*\\)?magit-diff:.*"
+    '((slot . 2) (side . right) (window-height . 0.6))
+    '((select . nil))))
 
 (set! :popup "^\\*Customize.*" '((slot . 2) (side . right)) '((modeline . nil) (select . t) (quit . t)))
 ;; ** Web
@@ -248,9 +276,17 @@ control which repositories are displayed."
   :commands (alert)
   :config
   (setq alert-default-style 'notifier))
-(after! tramp-sh
+(after! tramp
+  (setq tramp-default-method "ssh"
+        tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=600"
+        tramp-remote-process-environment
+        (append tramp-remote-process-environment
+                '("http_proxy=http://proxy.cse.cuhk.edu.hk:8000"
+                  "https_proxy=http://proxy.cse.cuhk.edu.hk:8000"
+                  "ftp_proxy=http://proxy.cse.cuhk.edu.hk:8000")))
   (add-to-list 'tramp-remote-path "/research/kevinyip10/xfu/miniconda3/bin")
   (add-to-list 'tramp-remote-path "/uac/gds/xfu/bin"))
+
 (def-package! pinentry
   :config (pinentry-start))
 (def-package! academic-phrases
@@ -907,10 +943,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
   (do-repeat! org-previous-link org-next-link org-previous-link)
   (do-repeat! org-previous-block org-next-block org-previous-block)
   (do-repeat! org-previous-visible-heading org-next-visible-heading org-previous-visible-heading))
-;; outline
-;; (after! outline
-;;   (do-repeat! outline-next-heading outline-next-heading outline-previous-heading)
-;;   (do-repeat! outline-previous-heading outline-next-heading outline-previous-heading))
+
 ;; buffer
 (do-repeat! previous-buffer next-buffer previous-buffer)
 (do-repeat! next-buffer next-buffer previous-buffer)

@@ -33,6 +33,7 @@
 (package! flycheck-popup-tip :disable t)
 (package! flycheck-pos-tip :disable t)
 (package! flycheck-pos-tip :disable t)
+(package! exec-path-from-shell :disable t)
 (package! ob-mongo :disable t)
 (package! ob-sql-mode :disable t)
 (package! ob-translate :disable t)

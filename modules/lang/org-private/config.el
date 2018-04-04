@@ -92,7 +92,8 @@ If run interactively, get ENTRY from context."
 
 
 
-(remove-hook! 'org-mode-hook #'(visual-line-mode))
+(remove-hook! 'org-mode-hook #'(visual-line-mode
+                                toc-org-enable))
 
 (add-hook 'org-mode-hook #'+org-private|setup-editing t)
 (add-hook 'org-mode-hook #'eldoc-mode t)
@@ -381,20 +382,14 @@ If run interactively, get ENTRY from context."
           :i "RET"   #'org-return-indent
           :n [tab]   #'org-cycle
           :n "M-t" nil
-          :nm  "]v"  #'org-next-block
-          :nm  "[v"  #'org-previous-block
-          :nm  "]i"  #'org-next-item
-          :nm  "[i"  #'org-previous-item
-          :nm  "]]"  (λ! (org-forward-heading-same-level nil) (org-beginning-of-line))
-          :nm  "[["  (λ! (org-backward-heading-same-level nil) (org-beginning-of-line))
-          :nm  "]h"  #'org-next-visible-heading
-          :nm  "[h"  #'org-previous-visible-heading
-          :nm  "]l"  #'org-next-link
-          :nm  "[l"  #'org-previous-link
-          :nm  "]s"  #'org-babel-next-src-block
-          :nm  "[s"  #'org-babel-previous-src-block
-          :nm  "_"   #'evil-org-beginning-of-line
-          :nm  "0"   (λ! (let ((visual-line-mode)) (org-beginning-of-line)))
+          :n   "]v"  #'org-next-block
+          :n   "[v"  #'org-previous-block
+          :n   "]i"  #'org-next-item
+          :n   "[i"  #'org-previous-item
+          :n   "]h"  #'org-next-visible-heading
+          :n   "[h"  #'org-previous-visible-heading
+          :m   "_"   #'evil-org-beginning-of-line
+          :m   "0"   (λ! (let ((visual-line-mode)) (org-beginning-of-line)))
           :n  "gQ"  #'org-fill-paragraph
           ;; sensible code-folding vim keybinds
           :n  "za"  #'+org/toggle-fold

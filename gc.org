@@ -127,3 +127,80 @@ symbol."
 
   (add-to-list 'magit-status-mode-hook #'magithub-filter-maybe)
 #+END_SRC
+* Evil-escape
+:PROPERTIES:
+:ID:       D180DEC3-D977-4362-8F78-216503E7D101
+:END:
+- Make it can escape from minibuffer
+#+BEGIN_SRC elisp
+(def-package-hook! evil-escape
+  :pre-config
+  (defun evil-escape-p ()
+    "Return non-nil if evil-escape can run."
+    (and evil-escape-key-sequence
+         (not evil-escape-inhibit)
+         (or (window-minibuffer-p)
+             (bound-and-true-p isearch-mode)
+             (memq major-mode '(ibuffer-mode
+                                image-mode))
+             (evil-escape--is-magit-buffer)
+             (+popup-windows)
+             (and (fboundp 'helm-alive-p) (helm-alive-p))
+             (or (not (eq 'normal evil-state))
+                 (not (eq 'evil-force-normal-state
+                          (lookup-key evil-normal-state-map [escape])))))
+         (not (memq major-mode evil-escape-excluded-major-modes))
+         (not (memq evil-state evil-escape-excluded-states))
+         (or (not evil-escape-enable-only-for-major-modes)
+             (memq major-mode evil-escape-enable-only-for-major-modes))
+         (or (equal (this-command-keys) (evil-escape--first-key))
+             (and evil-escape-unordered-key-sequence
+                  (equal (this-command-keys) (evil-escape--second-key))))
+         (not (cl-reduce (lambda (x y) (or x y))
+                         (mapcar 'funcall evil-escape-inhibit-functions)
+                         :initial-value nil))))
+  (defun evil-escape--escape-normal-state ()
+    "Return the function to escape from normal state."
+    (cond
+     ((and (fboundp 'helm-alive-p) (helm-alive-p)) 'helm-keyboard-quit)
+     ((eq 'ibuffer-mode major-mode) 'ibuffer-quit)
+     ((eq 'image-mode major-mode) 'quit-window)
+     ((evil-escape--is-magit-buffer) 'evil-escape--escape-with-q)
+     ((bound-and-true-p isearch-mode) 'isearch-abort)
+     ((window-minibuffer-p) (kbd "C-g"))
+     (t (lookup-key evil-normal-state-map [escape]))))
+  (setq-default evil-escape-delay 0.1
+                evil-escape-excluded-states nil)
+  (map! :irvo "C-g" #'evil-escape)
+  nil)
+#+END_SRC
+* ssh-deploy
+:PROPERTIES:
+:ID:       43C20488-EB51-4500-B7BE-FF2D9B82BC2B
+:END:
+- used to emit errors
+#+BEGIN_SRC elisp
+(def-package-hook! ssh-deploy
+  :pre-init
+  (def-package! ediff-diff
+    :commands (ediff-same-file-contents))
+  t)
+#+END_SRC
+* fringe and contiuation symbol
+:PROPERTIES:
+:ID:       031F8C2B-CD34-4579-A48C-8BCD26EF1F96
+:END:
+- used to be this
+#+BEGIN_SRC elisp
+(or standard-display-table
+    (setq standard-display-table (make-display-table)))
+(set-display-table-slot standard-display-table 0 ?\ )
+(setq fringe-indicator-alist (delq
+                              (assq 'truncation fringe-indicator-alist)
+                              (delq (assq 'continuation fringe-indicator-alist)
+                                    fringe-indicator-alist)))
+#+END_SRC
+- Now use this:
+#+BEGIN_SRC elisp
+(map-delete fringe-indicator-alist 'truncation)
+#+END_SRC
