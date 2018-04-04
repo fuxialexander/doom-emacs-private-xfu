@@ -30,6 +30,8 @@
 ;;
 (defun +org|init-export ()
   (setq org-export-backends '(ascii html latex md)
+        org-export-async-debug t
+        org-export-async-init-file "/Users/xfu/.doom.d/local/ox-init.el"
         org-publish-timestamp-directory (concat doom-cache-dir "/org-timestamps/"))
 
   (when (executable-find "pandoc")
