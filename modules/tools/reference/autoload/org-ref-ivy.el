@@ -250,7 +250,7 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
          (entry-id (elfeed-entry-id elfeed-show-entry)))
     (if (string-match "DOI: \\(.*\\)$" content)
         (doi-utils-add-bibtex-entry-from-doi (match-string 1 content))
-      (let ((dois (url-scrape-dois url)))
+      (let ((dois (org-ref-url-scrape-dois url)))
         (cond
          ;; One doi found. Assume it is what we want.
          ((= 1 (length dois))

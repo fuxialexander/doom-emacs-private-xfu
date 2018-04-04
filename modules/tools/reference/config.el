@@ -3,7 +3,7 @@
 (def-package! org-ref :load-path "~/Source/playground/org-ref"
   :commands (org-ref-bibtex-next-entry
              org-ref-bibtex-previous-entry
-             org-ref-doi-utils-get-bibtex-entry-pdf
+             doi-utils-get-bibtex-entry-pdf
              org-ref-ivy-insert-cite-link
              org-ref-open-in-browser
              org-ref-open-bibtex-notes
