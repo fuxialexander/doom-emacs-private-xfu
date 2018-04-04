@@ -1,27 +1,43 @@
 ;;; modules/app/calendar/autoload.el -*- lexical-binding: t; -*-
 
+(defvar +calendar--wconf nil)
+
+(defun +calendar--init ()
+  (if-let* ((win (cl-loop for win in (doom-visible-windows)
+                          if (string-match-p "^\\*cfw:" (buffer-name (window-buffer win)))
+                          return win)))
+      (select-window win)
+    (call-interactively +calendar-open-function)))
+
 ;;;###autoload
 (defun =calendar ()
   "Activate (or switch to) `calendar' in its workspace."
   (interactive)
-  (unless (featurep! :feature workspaces)
-    (user-error ":feature workspaces is required, but disabled"))
-  (+workspace-switch "Calendar" t)
-  (if-let* ((buf (cl-find-if (lambda (it) (string-match-p "^\\*cfw" (buffer-name (window-buffer it))))
-                             (doom-visible-windows))))
-      (select-window (get-buffer-window buf))
-    (call-interactively +calendar-open-calendar-function))
-  (+workspace/display))
+  (if (featurep! :feature workspaces)
+      (progn
+        (+workspace-switch "Calendar" t)
+        (+calendar--init)
+        (+workspace/display))
+    (setq +calendar--wconf (current-window-configuration))
+    (delete-other-windows)
+    (+calendar--init)))
 
 ;;;###autoload
 (defun +calendar/quit ()
+  "TODO"
   (interactive)
-  (+workspace/delete "Calendar"))
+  (if (featurep! :feature workspaces)
+      (+workspace/delete "Calendar")
+    (doom-kill-matching-buffers "^\\*cfw:")
+    (set-window-configuration +calendar--wconf)
+    (setq +calendar--wconf nil)))
 
 ;;;###autoload
 (defun +calendar/open-calendar ()
+  "TODO"
   (interactive)
   (cfw:open-calendar-buffer
+   ;; :custom-map cfw:my-cal-map
    :contents-sources
    (list
     (cfw:org-create-source (doom-color 'fg))  ; orgmode source
