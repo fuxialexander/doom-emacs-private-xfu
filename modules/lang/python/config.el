@@ -41,6 +41,8 @@ is loaded.")
   (when (executable-find "ipython")
     (setq python-shell-interpreter "ipython"
           ;; python-shell-interpreter-args "-i"
+          python-shell-prompt-detect-enabled nil
+          python-shell-completion-native-disabled-interpreters '("jupyter")
           python-shell-interpreter-args "--pylab"
           python-shell-prompt-regexp "In \\[[0-9]+\\]: "
           python-shell-prompt-block-regexp "\\.\\.\\.\\.: "

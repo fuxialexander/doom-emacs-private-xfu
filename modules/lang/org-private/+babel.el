@@ -32,6 +32,9 @@
           (unless (string= host "*")
             (push host hosts))))
       hosts))
+  (set! :popup "\\*remote-.*"
+        '((slot . -1) (side . right) (size . 80))
+        '((select . t) (quit . nil)))
   (defun ob-ipython-generate-local-path-from-remote (session host)
     "Copy remote config to local, start a jupyter console to generate a new one."
     (interactive
@@ -47,9 +50,14 @@
       ;; scp remote file to local
       (copy-file tramp-path tramp-copy t)
       ;; connect to remote use new config
-      (start-process (concat "remote-" session)
-                     (concat "remote-" session)
-                     ob-ipython-command "console" "--simple-prompt" "--existing" tramp-copy "--ssh" host)
+
+      (let ((python-shell-interpreter-interactive-arg " console --simple-prompt"))
+        (get-buffer-process
+         (python-shell-make-comint
+          (concat ob-ipython-command " console --simple-prompt --existing " tramp-copy " --ssh " host)
+          (concat "remote-" session) t)))
+      ;; (start-process (concat "remote-" session)
+      ;;                ob-ipython-command "console" "--simple-prompt" "--existing" tramp-copy "--ssh" host)
       )))
 
 
