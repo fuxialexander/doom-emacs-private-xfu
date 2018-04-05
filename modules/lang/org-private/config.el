@@ -361,6 +361,8 @@ If run interactively, get ENTRY from context."
   (add-hook 'doom-load-theme-hook #'+org-private|setup-ui))
 
 (defun +org-private|setup-keybinds ()
+  (remove-hook 'org-tab-first-hook #'+org|toggle-only-current-fold)
+  (add-hook 'org-tab-first-hook #'+org-private|toggle-only-current-fold)
   (after! evil-org
     (setq evil-org-want-hybrid-shift t
           evil-org-use-additional-insert nil)
