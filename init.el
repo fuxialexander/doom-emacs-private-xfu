@@ -96,12 +96,19 @@
  doom-neotree-line-spacing 0
  doom-neotree-folder-size 1.0
  doom-neotree-chevron-size 0.6
-  indicate-buffer-boundaries nil
+ scroll-conservatively 0
+ indicate-buffer-boundaries nil
  frame-alpha-lower-limit 0
  indicate-empty-lines nil
- which-key-idle-delay 0.3
-)
-(map-delete fringe-indicator-alist 'truncation)
+ which-key-idle-delay 0.3)
+
+(or standard-display-table
+    (setq standard-display-table (make-display-table)))
+(set-display-table-slot standard-display-table 0 ?\ )
+(setq fringe-indicator-alist (delq
+                              (assq 'truncation fringe-indicator-alist)
+                              (delq (assq 'continuation fringe-indicator-alist)
+                                    fringe-indicator-alist)))
 
 ;; * Mac-specific
 (if (string-match-p "NS" (emacs-version))
