@@ -215,13 +215,13 @@ control which repositories are displayed."
     (mapc #'kill-buffer (doom-buffers-in-mode 'magit-mode nil t)))
 
   (setq magit-bury-buffer-function #'+magit/quit
-        magit-popup-display-buffer-action nil)
+        magit-popup-display-buffer-action nil
+        magit-display-file-buffer-function 'switch-to-buffer-other-window)
   (map! :map magit-mode-map
         [remap quit-window] #'+magit/quit
-        :n "\\" nil
-        :n "RET" #'magit-diff-visit-file-other-window)
+        :n "\\" nil)
 
-  (set! :popup "^\\(?: ?\\*\\)?magit: "
+  (set! :popup "^\\(?: ?\\*\\)?magit.*: "
     '((slot . -1) (side . right) (size . 80))
     '((select . t) (quit . nil)))
   (set! :popup "^\\*magit.*popup\\*"
