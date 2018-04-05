@@ -84,10 +84,10 @@
  '("emacs%@" (:eval (system-name)) ": " (:eval (if (buffer-file-name)
                                                    (abbreviate-file-name (buffer-file-name))
                                                  "%b")))
- doom-font (font-spec :family "Operator Mono" :size 13)
+ doom-font (font-spec :family "SF Mono" :size 13)
  doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 15 :width 'extra-condensed :weight 'normal :slant 'normal :registry "iso10646-1")
  doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 13)
- doom-big-font (font-spec :family "Operator Mono" :size 16)
+ doom-big-font (font-spec :family "SF Mono" :size 16)
  doom-theme 'doom-nord
  doom-line-numbers-style nil
  +doom-modeline-buffer-file-name-style 'truncate-upto-project
@@ -105,7 +105,7 @@
 (or standard-display-table
     (setq standard-display-table (make-display-table)))
 (set-display-table-slot standard-display-table 0 ?\ )
-(setq fringe-indicator-alist (delq
+(setq-default fringe-indicator-alist (delq
                               (assq 'truncation fringe-indicator-alist)
                               (delq (assq 'continuation fringe-indicator-alist)
                                     fringe-indicator-alist)))
@@ -136,6 +136,7 @@
  +default-repeat-backward-key "'"
  evil-want-C-u-scroll t
  evil-want-integration nil
+ evil-shift-width 2
  evil-snipe-override-evil-repeat-keys nil
  evil-collection-company-use-tng nil
  evil-respect-visual-line-mode t)
