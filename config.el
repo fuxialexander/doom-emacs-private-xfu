@@ -688,21 +688,21 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       "jump to a project buffer")
      ("m" counsel-projectile-switch-project-action-find-file-manually
       "find file manually from project root")
-     ("S" counsel-projectile-switch-project-action-save-all-buffers
+     ("s" counsel-projectile-switch-project-action-save-all-buffers
       "save all project buffers")
      ("k" counsel-projectile-switch-project-action-kill-buffers
       "kill all project buffers")
-     ("K" counsel-projectile-switch-project-action-remove-known-project
+     ("r" counsel-projectile-switch-project-action-remove-known-project
       "remove project from known projects")
      ("c" counsel-projectile-switch-project-action-compile
       "run project compilation command")
-     ("C" counsel-projectile-switch-project-action-configure
+     ("$" counsel-projectile-switch-project-action-configure
       "run project configure command")
-     ("E" counsel-projectile-switch-project-action-edit-dir-locals
+     ("e" counsel-projectile-switch-project-action-edit-dir-locals
       "edit project dir-locals")
      ("v" counsel-projectile-switch-project-action-vc
       "open project in vc-dir / magit / monky")
-     ("sr" counsel-projectile-switch-project-action-rg
+     ("/" counsel-projectile-switch-project-action-rg
       "search project with rg")
      ("xs" counsel-projectile-switch-project-action-run-shell
       "invoke shell from project root")
@@ -710,7 +710,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       "invoke eshell from project root")
      ("xt" counsel-projectile-switch-project-action-run-term
       "invoke term from project root")
-     ("O" counsel-projectile-switch-project-action-org-capture
+     ("_" counsel-projectile-switch-project-action-org-capture
       "org-capture into project"))))
 ;; * Binding
 (map! :i "<M-return>" nil
