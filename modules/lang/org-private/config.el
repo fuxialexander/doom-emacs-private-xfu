@@ -379,6 +379,7 @@ If run interactively, get ENTRY from context."
           "s-i" #'org-insert-last-stored-link
           "s-I" #'org-insert-link
           "s-p" #'org-ref-ivy-insert-cite-link
+          :ni "<s-backspace>" #'org-babel-remove-result
           :ni "<s-return>" #'+org/work-on-heading
           :n "RET" #'+org/dwim-at-point
           :i "RET"   #'org-return-indent
@@ -411,6 +412,7 @@ If run interactively, get ENTRY from context."
             :n ","   #'org-ctrl-c-ctrl-c
             :n "s"   #'org-schedule
             :n "m"   #'+org-toggle-math
+            :n "b"   #'+org-private@org-babel-hydra/body
             :n "c"   #'org-columns
             :n "C"   #'(lambda () (interactive) (let ((current-prefix-arg 2)) (call-interactively #'org-columns)))
             :n "L"   #'+org/remove-link
@@ -491,7 +493,18 @@ If run interactively, get ENTRY from context."
          :desc "Finish" :nm "," #'org-capture-finalize
          :desc "Refile" :nm "r" #'org-capture-refile
          :desc "Abort"  :nm "k" #'org-capture-kill
-         )))))
+         ))))
+  (def-hydra! +org-private@org-babel-hydra (:color pink :hint nil)
+    "
+Org-Babel: _j_/_k_ next/prev    _e_ execute    _c_ clear result    _TAB_/_i_/_I_ show/hide  "
+    ("c" org-babel-remove-result)
+    ("e" org-babel-execute-src-block)
+    ("TAB" org-hide-block-toggle-maybe)
+    ("i" org-show-block-all)
+    ("I" org-hide-block-all)
+    ("j" org-babel-next-src-block)
+    ("k" org-babel-previous-src-block)
+    ("q" nil "cancer" :color blue)))
 
 (defun +org-private|setup-overrides ()
   (after! org-html
