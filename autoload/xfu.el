@@ -174,32 +174,32 @@ the workspace and move to the next."
 
 ;;;###autoload
 (defun +xfu/browse-private ()
-  (interactive) (doom-project-browse "~/.doom.d"))
+  (interactive) (doom-project-browse "~/.doom.d/"))
 ;;;###autoload
 (defun +xfu/find-in-private ()
-  (interactive) (doom-project-find-file "~/.doom.d"))
+  (interactive) (doom-project-find-file "~/.doom.d/"))
 
 ;;;###autoload
 (defun +xfu/browse-playground ()
-  (interactive) (doom-project-browse "~/Source/playground"))
+  (interactive) (doom-project-browse "~/Source/playground/"))
 ;;;###autoload
 (defun +xfu/find-in-playground ()
-  (interactive) (doom-project-find-file "~/Source/playground"))
+  (interactive) (doom-project-find-file "~/Source/playground/"))
 
 ;;;###autoload
 (defun +xfu/browse-work ()
-  (interactive) (doom-project-browse "~/Source/work"))
+  (interactive) (doom-project-browse "~/Source/work/"))
 ;;;###autoload
 (defun +xfu/find-in-work ()
-  (interactive) (doom-project-find-file "~/Source/work"))
+  (interactive) (doom-project-find-file "~/Source/work/"))
 
 ;;;###autoload
 (defun +xfu/browse-snippets ()
-  (interactive) (doom-project-browse "~/.doom.d/snippets"))
+  (interactive) (doom-project-browse "~/.doom.d/snippets/"))
 
 ;;;###autoload
 (defun +xfu/find-in-snippets ()
-  (interactive) (doom-project-find-file "~/.doom.d/snippets"))
+  (interactive) (doom-project-find-file "~/.doom.d/snippets/"))
 
 
 ;; ;;;###autoload
