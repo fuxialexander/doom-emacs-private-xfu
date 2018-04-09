@@ -3,12 +3,14 @@
 (defvar +doom-solaire-themes
   '((doom-city-lights . t)
     (doom-dracula . t)
+    (doom-challenger-deep . t)
     (doom-molokai . t)
     (doom-nord . t)
-    (doom-nova . nil)
+    (doom-nova . t)
     (doom-one . t)
     (doom-one-light . t)
-    (doom-solarized-light . nil)
+    (doom-nord-light . t)
+    (doom-solarized-light . t)
     (doom-spacegrey . nil)
     (doom-vibrant . nil))
   "An alist of themes that support `solaire-mode'. If CDR is t, then use
@@ -20,6 +22,7 @@
 ;;
 
 ;; <https://github.com/hlissner/emacs-doom-theme>
+;; def-package! doom-themes :load-path "/Users/xfu/Source/playground/emacs-doom-themes"
 (def-package! doom-themes :load-path "/Users/xfu/.doom.d/local/emacs-doom-themes"
   :config
   (unless doom-theme
