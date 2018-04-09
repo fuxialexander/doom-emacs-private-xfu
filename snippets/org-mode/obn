@@ -3,9 +3,10 @@
 # key: obn_
 # --
 #+NAME: $1
-#+BEGIN_SRC ipython :session hpc14-kernel-120661-ssh.json :ipyfile /Users/xfu/Dropbox/org/.attach/$1_`(format-time-string "%Y-%m-%d")`.png :dir /ssh:xfu@hpc14:/research/kevinyip10/xfu/hscr/pipeline :exports both :async t :results raw drawer :tangle /ssh:xfu@hpc14:/research/kevinyip10/xfu/hscr/pipeline/$1.py
+#+BEGIN_SRC ipython :session hpc14-kernel-78116-ssh.json :ipyfile /Users/xfu/Dropbox/org/.attach/$1_`(format-time-string "%Y-%m-%d")`.png :dir /ssh:xfu@hpc14:/research/kevinyip10/xfu/hscr/pipeline :exports both :async t :results raw drawer :tangle /ssh:xfu@hpc14:/research/kevinyip10/xfu/hscr/pipeline/$1.py
 %matplotlib inline
 $0
 #+END_SRC
+
 #+RESULTS: $1
 

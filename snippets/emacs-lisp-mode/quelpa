@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: quelpa
+# key: que_
+# condition: (string-match "packages.el" (buffer-name))
+# --
+(package! $1 :recipe (:fetcher github :repo "$2" :files ("${3:*}")))
+
