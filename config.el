@@ -675,6 +675,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       "invoke term from project root")
      ("_" counsel-projectile-switch-project-action-org-capture
       "org-capture into project"))))
+
 ;; * Binding
 (map! :i "<M-return>" nil
       :gnvime "M-x" #'execute-extended-command
