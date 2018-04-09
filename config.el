@@ -277,6 +277,8 @@ control which repositories are displayed."
 
 
 ;; ** Tools
+(def-package! esup
+  :commands (esup))
 (def-package! prettify-utils)
 (def-package! alert
   :commands (alert)
