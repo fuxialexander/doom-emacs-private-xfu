@@ -1,12 +1,12 @@
-;; * modules
+;; * Modules
 (doom! :feature
        (popup
         +all
         +defaults)
        eval
        (evil +everywhere)
-       (lookup
-        +devdocs)
+       lookup
+        ;; +devdocs
        snippets
        spellcheck
        file-templates
@@ -20,9 +20,7 @@
        doom
        doom-dashboard
        doom-modeline
-       evil-goggles
        hl-todo
-       nav-flash
        posframe
        window-select
        :tools
@@ -31,7 +29,6 @@
        eshell
        gist
        imenu
-       pdf
        macos
        make
        magit
@@ -41,9 +38,10 @@
        reference
        upload
        (password-store +auth)
-       rotate-text
        :lang
+       lsp
        python
+       cc-private
        ess
        (latex
         +latexmk
@@ -59,13 +57,14 @@
         +capture
         +latex
         +export +style)
-       data
+       ;; data
        emacs-lisp
-       javascript
+       ;; javascript
        markdown
        sh
-       (web +html)
+       ;; (web +html)
        :app
+       ;; sx
        rss
        twitter
        email
@@ -81,14 +80,24 @@
 ;; * UI
 (setq
  frame-title-format
- '("emacs%@" (:eval (system-name)) ": " (:eval (if (buffer-file-name)
-                                                   (abbreviate-file-name (buffer-file-name))
-                                                 "%b")))
- doom-font (font-spec :family "SF Mono" :size 13)
- doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 15 :width 'extra-condensed :weight 'normal :slant 'normal :registry "iso10646-1")
- doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 13)
+ '("emacs%@"
+   (:eval (system-name)) ": "
+   (:eval (if (buffer-file-name)
+              (abbreviate-file-name (buffer-file-name))
+            "%b")))
+ doom-font (font-spec :family "SF Mono" :size 12)
+ doom-variable-pitch-font
+ (font-spec
+  :family "SF Compact Display"
+  :size 14
+  :width 'extra-condensed
+  :weight 'normal
+  :slant 'normal
+  :registry "iso10646-1")
+ doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 12)
  doom-big-font (font-spec :family "SF Mono" :size 16)
- doom-theme 'doom-nord
+ ovp-font "SF Mono"
+ doom-theme 'doom-nord-light
  doom-line-numbers-style nil
  +doom-modeline-buffer-file-name-style 'truncate-upto-project
  doom-neotree-enable-variable-pitch t
@@ -116,11 +125,10 @@
       (setq ns-alternate-modifier 'meta
             ns-command-modifier 'super)
       (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-      (add-to-list 'default-frame-alist '(ns-appearance . dark)))
+      (add-to-list 'default-frame-alist '(ns-appearance . light)))
   (setq mac-command-modifier 'super
         mac-option-modifier 'meta
-        mac-pass-command-to-system nil)
-  (mac-auto-operator-composition-mode 1))
+        mac-pass-command-to-system nil))
 
 ;; * Config
 (setq

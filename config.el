@@ -1,4 +1,4 @@
-;; * config.el -*- lexical-binding: t; -*-
+;;; config.el -*- lexical-binding: t; -*-
 ;; * Config
 ;; ** General
 
@@ -54,6 +54,9 @@
 (advice-add 'make-frame-invisible :after #'doom|no-fringes-in-posframe)
 (add-hook 'persp-before-switch-functions '+my-workspace/goto-main-window)
 
+(set! :popup "^\\*Customize.*" '((slot . 2) (side . right)) '((modeline . nil) (select . t) (quit . t)))
+(set! :popup " \\*undo-tree\\*" '((slot . 2) (side . left) (size . 20)) '((modeline . nil) (select . t) (quit . t)))
+
 (def-package! ace-link
   :commands (ace-link))
 
@@ -88,6 +91,10 @@
   (set! :popup "^ ?\\*NeoTree"
     `((side . ,neo-window-position) (window-width . ,neo-window-width))
     '((quit . current) (select . t))))
+
+(after! vc
+  (set! :evil-state 'vc-git-region-history-mode 'normal)
+  (set! :popup "\\*VC-history\\*" '((slot . 2) (side . right) (size . 80)) '((modeline . nil) (select . t) (quit . t))))
 (after! colir
   (defun colir--blend-background (start next prevn face object)
     (let ((background-prev (face-background prevn)))
@@ -234,7 +241,6 @@ control which repositories are displayed."
     '((slot . 2) (side . right) (window-height . 0.6))
     '((select . nil))))
 
-(set! :popup "^\\*Customize.*" '((slot . 2) (side . right)) '((modeline . nil) (select . t) (quit . t)))
 ;; ** Web
 (after! eww
   (set! :popup "^\\*eww.*"
@@ -247,11 +253,11 @@ control which repositories are displayed."
   (add-to-list 'shr-external-rendering-functions
                '(pre . shr-tag-pre-highlight)))
 (after! xwidget
-  (set! :popup "\\*xwidget" '((side . right) (size . 100)) '((select . t) (transient) (quit)))
+  ;; (set! :popup "\\*xwidget" '((side . right) (size . 100)) '((select . t) (transient) (quit)))
   (defun xwidget-webkit-new-session (url)
     "Create a new webkit session buffer with URL."
     (let*
-        ((bufname (generate-new-buffer-name "*xwidget-webkit*"))
+        ((bufname (generate-new-buffer-name "xwidget-webkit"))
          xw)
       (setq xwidget-webkit-last-session-buffer (get-buffer-create bufname))
       (setq xwidget-webkit-created-window (display-buffer xwidget-webkit-last-session-buffer))
