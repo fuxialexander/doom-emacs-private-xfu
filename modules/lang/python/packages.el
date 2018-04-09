@@ -3,7 +3,7 @@
 
 ;; requires: python jedi setuptools
 
-(package! lsp-python)
+(package! lpy :recipe (:fetcher github :repo "abo-abo/lpy" :files ("*")))
 (package! anaconda-mode)
 (package! nose)
 (package! conda)

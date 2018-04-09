@@ -75,14 +75,14 @@ is loaded.")
   (sp-with-modes 'python-mode
     (sp-local-pair "'" nil :unless '(sp-point-before-word-p sp-point-after-word-p sp-point-before-same-p))))
 
-(def-package! lsp-python
-  :commands (lsp-python-enable)
+
+(def-package! lpy
+  :hook ((python-mode . lpy-mode))
   :config
-  (setq python-indent-guess-indent-offset-verbose nil)
-  (set! :company-backend '(python-mode) '(company-lsp company-files company-yasnippet))
-  (set! :lookup 'python-mode
-    :definition #'lsp-ui-peek-find-definitions
-    :references #'lsp-ui-peek-find-references))
+  (require 'le-python)
+  (map! :map lpy-mode-map
+        :i "C-p" #'previous-line
+        :i "C-n" #'next-line))
 
 (def-package! anaconda-mode
   :after python
