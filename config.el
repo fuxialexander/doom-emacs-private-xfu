@@ -386,18 +386,18 @@ control which repositories are displayed."
 (set! :company-backend '(inferior-ess-mode) '(company-capf company-files company-yasnippet company-dabbrev-code))
 (set! :company-backend '(org-mode) '(company-capf company-files company-yasnippet company-dabbrev))
 (set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point)
-
 ;; *** Edit
  (def-package! lispy
-  :hook (emacs-lisp-mode . lispy-mode)
-  :config
-  (setq lispy-outline "^;; \\(?:;[^#]\\|\\*+\\)"
-        lispy-outline-header ";; ")
-  (map! :map lispy-mode-map
-        :i "_" #'special-lispy-different
-        :i "C-d" #'lispy-delete
-        :i "C-u" #'universal-argument
-        :i [remap delete-backward-char] #'lispy-delete-backward))
+   :hook (emacs-lisp-mode . lispy-mode)
+   :init
+   (setq-default lispy-outline "^;; \\(?:;[^#]\\|\\*+\\)"
+                 lispy-outline-header ";; ")
+   :config
+   (map! :map lispy-mode-map
+         :i "_" #'special-lispy-different
+         :i "C-d" #'lispy-delete
+         :i "C-u" #'universal-argument
+         :i [remap delete-backward-char] #'lispy-delete-backward))
 
 (def-package! lispyville
   :after (evil)
@@ -857,6 +857,10 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       (:after company
         (:map company-active-map
           ;; Don't interfere with `evil-delete-backward-word' in insert mode
+          "TAB"     nil
+          [tab]     nil
+          "S-TAB"   nil
+          [backtab] nil
           "s-o"        #'company-search-kill-others
           "C-f"        #'counsel-company
           "<f1>"       #'company-show-doc-buffer

@@ -51,7 +51,7 @@
           (:map elfeed-search-mode-map
             [remap kill-this-buffer]      "q"
             [remap kill-buffer]           "q"
-
+            :n doom-leader-key nil
             :n "q"   #'+rss/quit
             :n "e"   #'elfeed-update
             :n "r"   #'elfeed-search-untag-all-unread
@@ -67,6 +67,7 @@
           (:map elfeed-show-mode-map
             [remap kill-this-buffer]      "q"
             [remap kill-buffer]           "q"
+            :n doom-leader-key nil
             :nm "q"   #'+rss/delete-pane
             :nm "o"   #'ace-link-elfeed
             :nm "RET" #'org-ref-add-bibtex-entry-from-elfeed-entry
