@@ -149,4 +149,5 @@
 
 (defun +org-private|init-capture ()
   (add-hook 'org-capture-prepare-finalize-hook #'counsel-org-tag)
-  (add-hook 'org-capture-after-finalize-hook #'org-gcal-sync))
+  (if (featurep! calendar)
+      (add-hook 'org-capture-after-finalize-hook #'org-gcal-sync)))

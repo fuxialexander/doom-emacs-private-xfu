@@ -74,7 +74,7 @@
         +osxdict
         +synosaurus
         +langtool)
-       calendar
+       ;; calendar
        :config
        (default +snippets +evil-commands +bindings))
 
