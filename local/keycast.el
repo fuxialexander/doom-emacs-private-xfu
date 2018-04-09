@@ -29,7 +29,7 @@
 ;; and updates them whenever another command is invoked.
 
 ;;; Code:
-;;; Options
+;; * Options
 
 (defgroup keycast nil
   "Show the current command and its key binding in the mode line."
@@ -98,7 +98,7 @@ instead."
   "When Keycast mode is enabled, face used for the command in the mode line."
   :group 'keycast)
 
-;;; Core
+;; * Core
 
 (defvar keycast--this-command nil)
 (defvar keycast--this-command-keys nil)

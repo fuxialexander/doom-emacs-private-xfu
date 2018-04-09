@@ -39,7 +39,6 @@
         '(
           ":home"
           "(#orgmode+#emacs)"
-          "(#DoomEmacs)"
           "$research"))
 
   (set! :evil-state 'twittering-mode 'normal)
