@@ -384,15 +384,27 @@ control which repositories are displayed."
         company-dabbrev-code-other-buffers t
         company-tooltip-align-annotations t
         company-require-match 'never
-        company-frontends '(company-childframe-frontend company-echo-metadata-frontend)
-        company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode)
-        company-childframe-child-frame nil))
+        company-frontends '(company-box-frontend)
+        company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode inferior-python-mode)))
 (set! :company-backend '(emacs-lisp-mode) '(company-elisp company-files company-yasnippet company-dabbrev-code))
 (set! :company-backend '(python-mode) '(company-anaconda company-files company-yasnippet company-dabbrev-code))
 (set! :company-backend '(inferior-python-mode) '(company-capf company-files company-yasnippet company-dabbrev-code))
 (set! :company-backend '(inferior-ess-mode) '(company-capf company-files company-yasnippet company-dabbrev-code))
 (set! :company-backend '(org-mode) '(company-capf company-files company-yasnippet company-dabbrev))
 (set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point)
+
+(def-package! company-box
+  :hook (company-mode . company-box-mode)
+  :init
+  (setq company-box-icons-elisp
+        (list
+         (concat (all-the-icons-material "functions") " ")
+         (concat (all-the-icons-material "check_circle") " ")
+         (concat (all-the-icons-material "stars") " ")
+         (concat (all-the-icons-material "format_paint") " ")))
+  (setq company-box-icons-unknown (concat (all-the-icons-material "find_in_page") " "))
+  (setq company-box-backends-colors nil)
+  (setq company-box-icons-yasnippet (concat (all-the-icons-material "short_text") " ")))
 ;; *** Edit
 (def-package! lispy
   :hook (emacs-lisp-mode . lispy-mode)
