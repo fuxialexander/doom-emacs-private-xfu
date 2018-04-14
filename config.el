@@ -305,6 +305,10 @@ control which repositories are displayed."
              academic-phrases-by-section))
 (def-package! sed-mode
   :commands (sed-mode))
+(def-package! webkit-color-picker :load-path "/Users/xfu/Source/playground/emacs-webkit-color-picker"
+  :commands (webkit-color-picker-show)
+  :config
+  (require 'xwidget))
 
 ;; ** Term
 
