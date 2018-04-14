@@ -430,7 +430,7 @@ control which repositories are displayed."
      (slurp/barf-lispy))))
 
 (def-package! worf
-  :hook ((python-mode . worf-mode)))
+  :hook (org-mode . worf-mode))
 
 (def-package! electric-operator
   :commands (electric-operator-mode)
