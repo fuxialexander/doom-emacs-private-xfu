@@ -7,8 +7,12 @@
              turn-on-cdlatex
              turn-on-org-cdlatex)
   :init
-  (setq cdlatex-math-modify-alist '((?B "\\mathbb" nil t nil nil)))
-  )
+  (setq cdlatex-math-modify-alist '((?B "\\mathbb" nil t nil nil))))
+
+(def-package! webkit-katex-render :load-path "~/Source/playground/emacs-webkit-katex-render"
+  :commands (webkit-katex-render-mode)
+  :config
+  (setq webkit-katex-render--background-color (doom-color 'bg)))
 
 (defun +org-private|init-latex ()
   (cond
