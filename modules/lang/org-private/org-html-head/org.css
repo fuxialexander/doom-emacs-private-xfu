@@ -510,17 +510,17 @@ p {
 }
 
 pre.src {
-    background-color: #2E3440;
-    color: #E5E9F0;
+    background-color: #E5E9F0;
+    color: #2E3440;
     font-family: SFMono-Regular, monospace;
     margin: 0;
     overflow: scroll;
 }
 
 pre.src:before {
-    background-color: #2E3440;
+    background-color: #E5E9F0;
     border: 1px solid #E5E9F0;
-    color: #E5E9F0;
+    color: #2E3440;
     display: none;
     font-family: "SF Compact Display", 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     padding: 3px;

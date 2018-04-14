@@ -53,10 +53,13 @@
 (advice-add 'which-key--show-buffer-side-window :after #'doom|no-fringes-in-whichkey)
 (advice-add 'make-frame-invisible :after #'doom|no-fringes-in-posframe)
 (add-hook 'persp-before-switch-functions '+my-workspace/goto-main-window)
-
+(remove-hook 'text-mode-hook #'hl-line-mode)
+(remove-hook 'prog-mode-hook #'hl-line-mode)
+(remove-hook 'conf-mode-hook #'hl-line-mode)
+(menu-bar-mode 1)
+(toggle-frame-fullscreen)
 (set! :popup "^\\*Customize.*" '((slot . 2) (side . right)) '((modeline . nil) (select . t) (quit . t)))
 (set! :popup " \\*undo-tree\\*" '((slot . 2) (side . left) (size . 20)) '((modeline . nil) (select . t) (quit . t)))
-
 (def-package! ace-link
   :commands (ace-link))
 
@@ -75,7 +78,7 @@
                                    (evil-backward-char nil nil)
                                    (self-insert-command nil nil))))
 (after! pass
-    (set! :popup "^\\*Password-Store" '((side . left) (size . 0.25)) '((quit))))
+  (set! :popup "^\\*Password-Store" '((side . left) (size . 0.25)) '((quit))))
 (after! info
   (map! :map Info-mode-map
         :n "o" #'ace-link)
@@ -144,9 +147,9 @@ See also `font-lock-append-text-property'."
   "
 ALPHA : [ %(frame-parameter nil 'alpha) ]
 "
-  ("j" (lambda () (interactive) (+xfu/set--transparency +1)) "+ more")
+  ("j" (lambda () (interactive) (+xfu/set--transparency 1)) "+ more")
   ("k" (lambda () (interactive) (+xfu/set--transparency -1)) "- less")
-  ("J" (lambda () (interactive) (+xfu/set--transparency +10)) "++ more")
+  ("J" (lambda () (interactive) (+xfu/set--transparency 10)) "++ more")
   ("K" (lambda () (interactive) (+xfu/set--transparency -10)) "-- less")
   ("=" (lambda (value) (interactive "nTransparency Value 0 - 100 opaque:")
          (set-frame-parameter (selected-frame) 'alpha value)) "Set to ?" :color blue))
@@ -306,10 +309,10 @@ control which repositories are displayed."
 ;; ** Term
 
 (defun dirtrack-filter-out-pwd-prompt (string)
-    "Remove the PWD match from the prompt."
-    (if (and (stringp string) (string-match "^.*AnSiT.*\n.*\n.*AnSiT.*$" string))
-        (replace-match "" t t string 0)
-      string))
+  "Remove the PWD match from the prompt."
+  (if (and (stringp string) (string-match "^.*AnSiT.*\n.*\n.*AnSiT.*$" string))
+      (replace-match "" t t string 0)
+    string))
 
 (add-hook 'comint-preoutput-filter-functions #'dirtrack-filter-out-pwd-prompt)
 
@@ -387,17 +390,17 @@ control which repositories are displayed."
 (set! :company-backend '(org-mode) '(company-capf company-files company-yasnippet company-dabbrev))
 (set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point)
 ;; *** Edit
- (def-package! lispy
-   :hook (emacs-lisp-mode . lispy-mode)
-   :init
-   (setq-default lispy-outline "^;; \\(?:;[^#]\\|\\*+\\)"
-                 lispy-outline-header ";; ")
-   :config
-   (map! :map lispy-mode-map
-         :i "_" #'special-lispy-different
-         :i "C-d" #'lispy-delete
-         :i "C-u" #'universal-argument
-         :i [remap delete-backward-char] #'lispy-delete-backward))
+(def-package! lispy
+  :hook (emacs-lisp-mode . lispy-mode)
+  :init
+  (setq-default lispy-outline "^;; \\(?:;[^#]\\|\\*+\\)"
+                lispy-outline-header ";; ")
+  :config
+  (map! :map lispy-mode-map
+        :i "_" #'special-lispy-different
+        :i "C-d" #'lispy-delete
+        :i "C-u" #'universal-argument
+        :i [remap delete-backward-char] #'lispy-delete-backward))
 
 (def-package! lispyville
   :after (evil)
@@ -447,7 +450,7 @@ control which repositories are displayed."
   (let ((unless-list '(sp-point-before-word-p
                        sp-point-after-word-p
                        sp-point-before-same-p)))
-    (sp-pair "'"  nil :unless unless-list)
+    (sp-pair "'" nil :unless unless-list)
     (sp-pair "\"" nil :unless unless-list))
   (sp-pair "{" nil :post-handlers '(("||\n[i]" "RET") ("| " " "))
            :unless '(sp-point-before-word-p sp-point-before-same-p))
@@ -564,27 +567,27 @@ control which repositories are displayed."
   (ivy-posframe-enable))
 (after! counsel
   (defun counsel-faces ()
-  "Show a list of all defined faces.
+    "Show a list of all defined faces.
 
 You can describe, customize, insert or kill the name or selected
 candidate."
-  (interactive)
-  (let* ((minibuffer-allow-text-properties t)
-         (max-length
-          (apply #'max
-                 (mapcar
-                  (lambda (x)
-                    (length (symbol-name x)))
-                  (face-list))))
-         (counsel--faces-fmt (format "%%-%ds  " max-length))
-         (ivy-format-function #'counsel--faces-format-function))
-    (ivy-read "%d Face: " (face-list)
-              :require-match t
-              :action #'counsel-faces-action-describe
-              :preselect (symbol-name (face-at-point t))
-              :history 'counsel-faces-history
-              :caller 'counsel-faces
-              :sort t)))
+    (interactive)
+    (let* ((minibuffer-allow-text-properties t)
+           (max-length
+            (apply #'max
+                   (mapcar
+                    (lambda (x)
+                      (length (symbol-name x)))
+                    (face-list))))
+           (counsel--faces-fmt (format "%%-%ds  " max-length))
+           (ivy-format-function #'counsel--faces-format-function))
+      (ivy-read "%d Face: " (face-list)
+                :require-match t
+                :action #'counsel-faces-action-describe
+                :preselect (symbol-name (face-at-point t))
+                :history 'counsel-faces-history
+                :caller 'counsel-faces
+                :sort t)))
   (defun +ivy-recentf-transformer (str)
     "Dim recentf entries that are not in the current project of the buffer you
 started `counsel-recentf' from. Also uses `abbreviate-file-name'."
@@ -612,7 +615,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
     (lambda (x)
       (funcall cmd x)
       (ivy--reset-state ivy-last)))
-  (defun +ivy/given-file (cmd prompt) ; needs lexical-binding
+  (defun +ivy/given-file (cmd prompt)   ; needs lexical-binding
     (lambda (source)
       (let ((target
              (let ((enable-recursive-minibuffers t))
@@ -621,6 +624,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         (funcall cmd source target 1))))
   (defun +ivy/confirm-delete-file (x)
     (dired-delete-file x 'confirm-each-subdirectory))
+
   (ivy-add-actions
    'counsel-find-file
    `(("c" ,(+ivy/given-file #'copy-file "Copy file") "copy file")
@@ -679,12 +683,16 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
 ;; * Binding
 (map! :i "<M-return>" nil
       :gnvime "M-x" #'execute-extended-command
+      :gnvime "s-x" #'execute-extended-command
       :gnvime "s-r" #'counsel-org-capture
       :gnvime "s-g" #'org-agenda-show-daily
       :gnvime "s-'" #'dwim-jump
       :gnvime "s-u" #'org-store-link
       :gnvime "s-o" #'org-open-at-point-global
       :gnvime "s-i" #'org-insert-last-stored-link
+      :gnvime "M-s-i" (lambda! (find-file "~/Dropbox/org/inbox.org"))
+      :gnvime "M-s-r" (lambda! (find-file "~/Dropbox/org/review.org"))
+
       :m "C-u" #'evil-scroll-up
       :i "C-k" #'kill-line
       (:map evil-ex-completion-map
@@ -722,7 +730,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       :ne "s-B"                 #'+default/compile
       :ne "s-a"                 #'mark-whole-buffer
       :ne "s-q"   (if (daemonp) #'delete-frame #'save-buffers-kill-emacs)
-      :ne "s-f"                 #'swiper
+      :ne "s-f"                 #'+ivy:swiper
       :ne "s-F"               (lambda! (swiper
                                    (if (symbol-at-point)
                                        (format "\\_<%s\\_> " (symbol-at-point)) nil)))

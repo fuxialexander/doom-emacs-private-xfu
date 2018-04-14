@@ -25,7 +25,7 @@ is loaded.")
   (add-hook! 'python-mode-hook #'(highlight-numbers-mode))
   (set! :repl 'python-mode #'+python/repl)
   (set! :electric 'python-mode :chars '(?:))
-  (set! :popup "^\\*Python" '((side . right) (size . 80)) '((select) (quit) (transient)))
+  (set! :popup "^\\*Python" '((slot . 0) (side . right) (size . 100)) '((select) (quit) (transient)))
   (map! (:map python-mode-map
           (:localleader
             :desc "Conda Enable" :n "c" #'conda-env-activate-for-buffer
@@ -42,7 +42,7 @@ is loaded.")
     (setq python-shell-interpreter "ipython"
           ;; python-shell-interpreter-args "-i"
           python-shell-prompt-detect-enabled nil
-          python-shell-completion-native-disabled-interpreters '("jupyter")
+          ;; python-shell-completion-native-disabled-interpreters '("jupyter")
           python-shell-interpreter-args "--pylab"
           python-shell-prompt-regexp "In \\[[0-9]+\\]: "
           python-shell-prompt-block-regexp "\\.\\.\\.\\.: "

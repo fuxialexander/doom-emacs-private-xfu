@@ -55,7 +55,7 @@
   :group 'org
   :prefix "ovp-")
 
-(defcustom ovp-font "Operator Mono"
+(defcustom ovp-font "SF Mono"
   "Monospace font to use with ‘org-variable-pitch-minor-mode’.")
 (defface ovp-face
   `((t . (:family ,ovp-font :height 1.0)))
@@ -89,7 +89,6 @@ This face is used to keep them in monospace when using
     org-list-dt
     org-meta-line
     org-property-value
-    org-ref-cite-face
     org-special-keyword
     org-tag
     org-verbatim

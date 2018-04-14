@@ -145,7 +145,7 @@ If run interactively, get ENTRY from context."
   (defface org-todo-keyword-done '((t ())) "org-done" :group 'org)
   (defface org-todo-keyword-habt '((t ())) "org-habt" :group 'org)
 
-  (set! :popup "^\\*Org Src" '((size . 0.4) (side . right)) '((quit) (select . t) (modeline)))
+  (set! :popup "^\\*Org Src" '((size . 100) (side . right) (slot . -1) (window-height . 0.6)) '((quit) (select . t) (modeline)))
   (set! :popup "^CAPTURE.*\\.org$" '((side . bottom) (size . 0.4)) '((quit) (select . t)))
 
   ;; setup customized font lock
@@ -179,7 +179,7 @@ If run interactively, get ENTRY from context."
              (list org-property-re
                    '(1 'org-special-keyword t)
                    '(3 'org-property-value t))
-            ;; Special keywords
+             ;; Special keywords
              (list (concat "\\<\\(DEADLINE: \\)" org-ts-regexp-both-braket)
                    '(1 'org-deadline-custom prepend)
                    '(2 'org-deadline-custom-braket prepend)
@@ -278,10 +278,9 @@ If run interactively, get ENTRY from context."
   (defface org-deadline-custom-braket '((t (:inherit 'default))) "org-deadline" :group 'org)
   (defface org-scheduled-custom-braket '((t (:inherit 'default))) "org-schedule" :group 'org)
   (defface org-closed-custom-braket '((t (:inherit 'default))) "org-close" :group 'org)
-
   (setq org-adapt-indentation nil
         org-export-babel-evaluate nil
-        org-blank-before-new-entry nil
+        org-blank-before-new-entry '((heading . t) (plain-list-item . nil))
         org-clock-clocktable-default-properties (quote (:maxlevel 3 :scope agenda :tags "-COMMENT"))
         org-clock-persist t
         org-clock-persist-file (expand-file-name ".org-clock-persist-data.el" +org-dir)
@@ -358,7 +357,8 @@ If run interactively, get ENTRY from context."
         outline-blank-line t)
 
   ;; Update UI when theme is changed
-  (add-hook 'doom-load-theme-hook #'+org-private|setup-ui))
+  (add-hook 'doom-load-theme-hook #'+org-private|setup-ui)
+  (org-clock-persistence-insinuate))
 
 (defun +org-private|setup-keybinds ()
   (remove-hook 'org-tab-first-hook #'+org|toggle-only-current-fold)
@@ -494,17 +494,7 @@ If run interactively, get ENTRY from context."
          :desc "Refile" :nm "r" #'org-capture-refile
          :desc "Abort"  :nm "k" #'org-capture-kill
          ))))
-  (def-hydra! +org-private@org-babel-hydra (:color pink :hint nil)
-    "
-Org-Babel: _j_/_k_ next/prev    _e_ execute    _c_ clear result    _TAB_/_i_/_I_ show/hide  "
-    ("c" org-babel-remove-result)
-    ("e" org-babel-execute-src-block)
-    ("TAB" org-hide-block-toggle-maybe)
-    ("i" org-show-block-all)
-    ("I" org-hide-block-all)
-    ("j" org-babel-next-src-block)
-    ("k" org-babel-previous-src-block)
-    ("q" nil "cancer" :color blue)))
+  )
 
 (defun +org-private|setup-overrides ()
   (after! org-html
