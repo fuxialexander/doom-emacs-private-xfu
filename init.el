@@ -5,17 +5,19 @@
         +defaults)
        eval
        (evil +everywhere)
+       file-templates
        lookup
-        ;; +devdocs
+       ;; +devdocs
        snippets
        spellcheck
-       file-templates
+       syntax-checker
        version-control
        workspaces
-       syntax-checker
+
        :completion
        (company +auto)
        ivy
+
        :ui
        doom
        doom-dashboard
@@ -24,6 +26,7 @@
        nav-flash
        posframe
        window-select
+
        :tools
        dired
        electric-indent
@@ -39,6 +42,7 @@
        reference
        upload
        (password-store +auth)
+
        :lang
        lsp
        python
@@ -64,6 +68,7 @@
        markdown
        sh
        ;; (web +html)
+
        :app
        ;; sx
        rss
@@ -75,6 +80,7 @@
         +synosaurus
         +langtool)
        ;; calendar
+
        :config
        (default +snippets +evil-commands +bindings))
 
