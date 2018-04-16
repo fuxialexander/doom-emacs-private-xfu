@@ -432,7 +432,12 @@ control which repositories are displayed."
      (slurp/barf-lispy))))
 
 (def-package! worf
-  :hook (org-mode . worf-mode))
+  :hook (org-mode . worf-mode)
+  :config
+  (map! :map worf-mode-map
+        :i "M-]" (lambda! (insert " \\\(  \\\) ") (backward-char 4))
+        :i "M-}" (lambda! (insert " \\[  \\] ") (backward-char 4))
+        :i "M-[" (lambda! (insert " [ ] "))))
 
 (def-package! electric-operator
   :commands (electric-operator-mode)
