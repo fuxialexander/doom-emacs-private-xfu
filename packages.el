@@ -35,6 +35,7 @@
 (package! company-box)
 (package! worf)
 (package! function-args)
+(package! realgud)
 ;; * Maintain
 (package! esup)
 

@@ -346,6 +346,8 @@ control which repositories are displayed."
     '((select . t) (quit . t))))
 
 ;; ** Coding
+(def-package! realgud
+  :commands (realgud:gdb realgud:trepanjs realgud:ipdb realgud:bashdb realgud:zshdb))
 
 (def-package! flycheck-posframe
   :hook (flycheck-mode . flycheck-posframe-mode)
