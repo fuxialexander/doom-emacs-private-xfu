@@ -437,10 +437,6 @@ If run interactively, get ENTRY from context."
   (map!
    (:after org-agenda
      (:map org-agenda-mode-map
-       :nm "C-k"      #'evil-window-up
-       :nm "C-j"      #'evil-window-down
-       :nm "C-h"      #'evil-window-left
-       :nm "C-l"      #'evil-window-right
        :nm "<escape>" #'org-agenda-Quit
 
        :nm "J"        #'org-clock-convenience-timestamp-down

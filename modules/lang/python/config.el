@@ -33,11 +33,7 @@ is loaded.")
           :v "s-<return>" #'python-shell-send-region
           :ni "s-<return>" #'+python/repl-send-dwim)
         (:map inferior-python-mode-map
-          :nv "C-d" #'evil-scroll-down
-          "C-h" #'evil-window-left
-          "C-j" #'evil-window-down
-          "C-k" #'evil-window-up
-          "C-l" #'evil-window-right))
+          :nv "C-d" #'evil-scroll-down))
   (when (executable-find "ipython")
     (setq python-shell-interpreter "ipython"
           ;; python-shell-interpreter-args "-i"

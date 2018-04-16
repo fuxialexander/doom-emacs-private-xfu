@@ -746,11 +746,11 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       :ne "s-B"                 #'+default/compile
       :ne "s-a"                 #'mark-whole-buffer
       :ne "s-q"   (if (daemonp) #'delete-frame #'save-buffers-kill-emacs)
-      :ne "s-f"                 #'+ivy:swiper
-      :ne "s-F"               (lambda! (swiper
+      :nie "s-f"                 #'+ivy:swiper
+      :nie "s-F"               (lambda! (swiper
                                    (if (symbol-at-point)
                                        (format "\\_<%s\\_> " (symbol-at-point)) nil)))
-      :ne "s-/"                 #'evil-commentary-line
+      :nie "s-/"                 #'evil-commentary-line
       ;; :ne "C-M-f"            #'doom/toggle-fullscreen
       :n  "s-s"                 #'save-buffer
       :n  "s-k"                 #'kill-this-buffer
