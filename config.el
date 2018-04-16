@@ -384,7 +384,7 @@ control which repositories are displayed."
         company-dabbrev-code-other-buffers t
         company-tooltip-align-annotations t
         company-require-match 'never
-        company-frontends '(company-box-frontend)
+        company-frontends nil
         company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode inferior-python-mode)))
 (set! :company-backend '(emacs-lisp-mode) '(company-elisp company-files company-yasnippet company-dabbrev-code))
 (set! :company-backend '(python-mode) '(company-anaconda company-files company-yasnippet company-dabbrev-code))
