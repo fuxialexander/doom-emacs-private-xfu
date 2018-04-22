@@ -385,12 +385,12 @@ If run interactively, get ENTRY from context."
           :i "RET"   #'org-return-indent
           :n [tab]   #'org-cycle
           :n "M-t" nil
-          :n   "]v"  #'org-next-block
-          :n   "[v"  #'org-previous-block
-          :n   "]i"  #'org-next-item
-          :n   "[i"  #'org-previous-item
-          :n   "]h"  #'org-next-visible-heading
-          :n   "[h"  #'org-previous-visible-heading
+          :m   "]v"  #'org-next-block
+          :m   "[v"  #'org-previous-block
+          :m   "]i"  #'org-next-item
+          :m   "[i"  #'org-previous-item
+          :m   "]h"  #'org-next-visible-heading
+          :m   "[h"  #'org-previous-visible-heading
           :m   "_"   #'evil-org-beginning-of-line
           :m   "0"   (λ! (let ((visual-line-mode)) (org-beginning-of-line)))
           :n  "gQ"  #'org-fill-paragraph
