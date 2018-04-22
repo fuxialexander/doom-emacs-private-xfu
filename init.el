@@ -4,7 +4,9 @@
         +all
         +defaults)
        eval
-       (evil +everywhere)
+       (evil
+        ;; +everywhere
+        )
        file-templates
        lookup
        ;; +devdocs
@@ -101,7 +103,7 @@
   :weight 'normal
   :slant 'normal
   :registry "iso10646-1")
- doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 12)
+ doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 11)
  doom-big-font (font-spec :family "SF Mono" :size 16)
  ovp-font "Iosevka"
  doom-theme 'doom-nord-light
