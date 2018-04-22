@@ -886,6 +886,14 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         :n "M--"       #'xwidget-webkit-zoom-out
         :n "j"         #'xwidget-webkit-scroll-up-line
         :n "k"         #'xwidget-webkit-scroll-down-line)
+
+      (:after comint
+        (:map comint-mode-map
+          :i "C-k" #'comint-previous-input
+          :i "C-j" #'comint-previous-input
+          :n "]p" #'comint-next-prompt
+          :n "[p" #'comint-previous-prompt))
+
       (:after company
         (:map company-active-map
           ;; Don't interfere with `evil-delete-backward-word' in insert mode
