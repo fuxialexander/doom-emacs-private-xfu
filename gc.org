@@ -263,3 +263,21 @@ name of the sub-editing buffer."
       t)))
 (advice-add #'org-edit-src-code #'+org-private|org-edit-src-code)
 #+END_SRC
+
+* org-wild-notifier
+:PROPERTIES:
+:ID:       C8C6E74C-5936-4C00-AF8F-4F68BBDD77F1
+:END:
+#+begin_src emacs-lisp :tangle yes
+(def-package! org-wild-notifier
+  :commands (org-wild-notifier-mode
+             org-wild-notifier-check)
+  :config
+  (setq org-wild-notifier-keyword-whitelist '("TODO" "HABT")))
+(defun start-org-wild-notifier ()
+  (if (bound-and-true-p org-wild-notifier-mode)
+      (message "You already have notifier with you!")
+    (run-with-timer 60 nil 'org-wild-notifier-mode 1)
+    (message "Org wild notifier, naughty naughty fire!")))
+(start-org-wild-notifier)
+#+end_src
