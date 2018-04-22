@@ -55,11 +55,6 @@
              org-clock-convenience-fill-gap
              org-clock-convenience-fill-gap-both))
 
-;; (def-package! org-wild-notifier
-;;   :commands (org-wild-notifier-mode
-;;              org-wild-notifier-check)
-;;   :config
-;;   (setq org-wild-notifier-keyword-whitelist '("TODO" "HABT")))
 
 (after! org-agenda
   (org-super-agenda-mode)
@@ -72,13 +67,7 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
     ("r" org-agenda-filter-by-regexp)
     ("d" org-agenda-filter-remove-all)
     ("q" nil "cancel" :color blue))
-  ;; (defun start-org-wild-notifier ()
-  ;;   (if (bound-and-true-p org-wild-notifier-mode)
-  ;;       (message "You already have notifier with you!")
-  ;;     (run-with-timer 60 nil 'org-wild-notifier-mode 1)
-  ;;     (message "Org wild notifier, naughty naughty fire!")))
-  ;; (start-org-wild-notifier)
+
   (set! :popup "^\\*Org Agenda.*" '((slot . -1) (size . 120) (side . left)) '((select . t) (modeline . nil)))
   (push 'org-agenda-mode evil-snipe-disabled-modes)
-  ;; (add-hook 'org-agenda-finalize-hook #'hide-mode-line-mode)
   (set! :evil-state 'org-agenda-mode 'normal))

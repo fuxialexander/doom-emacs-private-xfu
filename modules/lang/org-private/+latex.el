@@ -9,6 +9,7 @@
   :init
   (setq cdlatex-math-modify-alist '((?B "\\mathbb" nil t nil nil))))
 
+
 (def-package! webkit-katex-render :load-path "~/Source/playground/emacs-webkit-katex-render"
   :commands (webkit-katex-render-mode)
   :config
@@ -53,4 +54,3 @@
                   org-latex-pdf-process '("latexmk -pdflatex='lualatex -shell-escape -interaction nonstopmode' -pdf -f  %f")
                   org-preview-latex-default-process 'imagemagick
                   org-preview-latex-image-directory (concat doom-cache-dir "org-latex/")))))
-

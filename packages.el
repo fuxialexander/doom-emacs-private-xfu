@@ -10,7 +10,6 @@
 (package! ob-sql-mode :disable t)
 (package! ob-translate :disable t)
 (package! ob-translate :disable t)
-(package! company-childframe :disable t)
 ;; * UI
 (package! prettify-utils :recipe (:fetcher github :repo "Ilazki/prettify-utils.el" :files ("*")))
 (package! flycheck-posframe)
@@ -32,7 +31,6 @@
 (package! emacs-snippets :recipe (:fetcher github :repo "hlissner/emacs-snippets" :files ("*")))
 (package! lispyville)
 (package! sed-mode)
-(package! company-box)
 (package! worf)
 (package! function-args)
 (package! realgud)
