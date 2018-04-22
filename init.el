@@ -31,6 +31,7 @@
 
        :tools
        dired
+       ein
        electric-indent
        eshell
        gist
