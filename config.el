@@ -647,7 +647,9 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         (funcall cmd source target 1))))
   (defun +ivy/confirm-delete-file (x)
     (dired-delete-file x 'confirm-each-subdirectory))
-
+  (ivy-add-actions
+   'ivy-switch-buffer
+   '(("d" (lambda (buf) (display-buffer buf)) "Display")))
   (ivy-add-actions
    'counsel-find-file
    `(("c" ,(+ivy/given-file #'copy-file "Copy file") "copy file")
