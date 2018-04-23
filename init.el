@@ -17,7 +17,7 @@
        workspaces
 
        :completion
-       (company +auto)
+       (company +auto +childframe)
        ivy
 
        :ui

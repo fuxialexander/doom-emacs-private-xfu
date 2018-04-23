@@ -375,8 +375,8 @@ control which repositories are displayed."
 (after! company
   (setq company-tooltip-limit 10
         company-tooltip-minimum-width 60
-        company-tooltip-margin 0
-        company-tooltip-offset-display nil
+        company-backends
+        '(company-capf company-dabbrev company-files company-yasnippet)
         company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode inferior-python-mode)))
 (set! :company-backend '(emacs-lisp-mode) '(company-elisp company-files company-yasnippet company-dabbrev-code))
 (set! :company-backend '(python-mode) '(company-anaconda company-files company-yasnippet company-dabbrev-code))
@@ -384,17 +384,10 @@ control which repositories are displayed."
 (set! :company-backend '(inferior-ess-mode) '(company-capf company-files company-yasnippet company-dabbrev-code))
 (set! :company-backend '(org-mode) '(company-capf company-files company-yasnippet company-dabbrev))
 (set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point)
+
 (after! company-box
-  (setq
-   company-box-icons-elisp
-   (list
-    (concat (all-the-icons-material "functions" :height 0.8 :face 'all-the-icons-red))
-    (concat (all-the-icons-material "check_circle" :height 0.8 :face 'all-the-icons-blue))
-    (concat (all-the-icons-material "stars" :height 0.8 :face 'all-the-icons-orange))
-    (concat (all-the-icons-material "format_paint" :height 0.8 :face 'all-the-icons-pink))))
-  (setq company-box-icons-unknown (concat (all-the-icons-material "find_in_page" :height 0.8 :face 'all-the-icons-purple)))
-  (setq company-box-backends-colors nil)
-  (setq company-box-icons-yasnippet (concat (all-the-icons-material "short_text" :height 0.8 :face 'all-the-icons-green))))
+  (remove-hook 'company-box-selection-hook 'company-box-doc)
+  (remove-hook 'company-box-hide-hook 'company-box-doc--hide))
 ;; *** Edit
 (def-package! lispy
   :hook (emacs-lisp-mode . lispy-mode)
