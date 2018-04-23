@@ -32,11 +32,8 @@
       counsel-org-headline-display-style 'title
       counsel-org-headline-display-tags t
       counsel-org-headline-display-todo t
-      org-bullets-bullet-list '("#" "#" "#" "#" "#" "#" "#" "#")
       +ivy-buffer-icons nil
       ivy-use-virtual-buffers t
-      ;; tramp
-
       org-bullets-bullet-list '("#" "#" "#" "#" "#" "#" "#" "#")
       twittering-connection-type-order '(wget urllib-http native urllib-https)
       +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin)
@@ -377,16 +374,9 @@ control which repositories are displayed."
 ;; *** Company
 (after! company
   (setq company-tooltip-limit 10
-        company-minimum-prefix-length 2
         company-tooltip-minimum-width 60
         company-tooltip-margin 0
         company-tooltip-offset-display nil
-        company-dabbrev-downcase nil
-        company-dabbrev-ignore-case nil
-        company-dabbrev-code-other-buffers t
-        company-tooltip-align-annotations t
-        company-frontends nil
-        company-require-match 'never
         company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode inferior-python-mode)))
 (set! :company-backend '(emacs-lisp-mode) '(company-elisp company-files company-yasnippet company-dabbrev-code))
 (set! :company-backend '(python-mode) '(company-anaconda company-files company-yasnippet company-dabbrev-code))
