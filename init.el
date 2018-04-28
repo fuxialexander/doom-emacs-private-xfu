@@ -73,7 +73,7 @@
        ;; (web +html)
 
        :app
-       ;; sx
+       sx
        rss
        twitter
        email

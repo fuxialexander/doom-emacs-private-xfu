@@ -13,13 +13,29 @@
   (map!
    (:after sx-question-list
      :map sx-question-list-mode-map
-     :ni "q" #'+my-workspace/close-window-or-workspace)
+     :ni "q" #'quit-window
+     :ni "RET" #'sx-display
+     :ni "j" #'sx-question-list-next
+     :ni "k" #'sx-question-list-previous
+     :ni "n" #'sx-question-list-view-next
+     :ni "p" #'sx-question-list-view-previous)
    (:after sx-question-mode
      :map sx-question-mode-map
-     :ni "q" #'+my-workspace/close-window-or-workspace))
+     :i "j" #'sx-question-mode-next-section
+     :i "k" #'sx-question-mode-previous-section
+     :i "n" #'sx-question-list-view-next
+     :i "p" #'sx-question-list-view-previous
+     :ni "q" #'quit-window))
   (set! :popup "\\*sx-search-result\\*"
     '((slot . -1) (side . right) (size . 100))
-    '((select . t) (quit . nil)))
+    '((select . t) (quit . nil) (transient . t)))
+  (set! :popup "\\*sx-question\\*"
+    '((slot . 0) (side . right) (window-height . 0.6))
+    '((select . t) (quit . nil) (transient . t)))
+  (advice-add 'sx-search :override #'*sx-search)
+  (advice-add 'sx-question-list--create-question-window :override #'*sx-question-list--create-question-window)
+  (advice-add 'sx-question-list-view-previous :before #'*goto-sx-question-list)
+  (advice-add 'sx-question-list-view-next :before #'*goto-sx-question-list)
   (def-hydra! sx-hydra (:color red :hint nil)
     "
 ┌^^───────────────┐
@@ -39,51 +55,4 @@
     ("u" sx-tab-unanswered-my-tags)
     ("n" sx-ask)
     ("s" sx-search)
-    ("r" sx-question-list-order-by))
-  ;; cannot get auth to work
-  ;; (defun *sx-authenticate ()
-;;     "Authenticate this application.
-;; Authentication is required to read your personal data (such as
-;; notifications) and to write with the API (asking and answering
-;; questions).
-
-;; When this function is called, `browse-url' is used to send the
-;; user to an authorization page managed by StackExchange.  The
-;; following privileges are requested:
-
-;; * read_inbox
-;;     use SX to manage and visit items in your inbox
-
-;; * write_acesss
-;;     write comments, ask questions, and post answers on your
-;;     behalf
-
-;; * no_expiry
-;;     do not pester you to reauthorize again
-
-;; After authorization with StackExchange, the user is then
-;; redirected to a website managed by SX.  The access token required
-;; to use authenticated methods is included in the hash (which is
-;; parsed and displayed prominently on the page)."
-;;     (interactive)
-;;     (setq
-;;      sx-auth-access-token
-;;      (let ((url (concat
-;;                  sx-auth-root
-;;                  "?"
-;;                  (sx-request--build-keyword-arguments
-;;                   `((client_id . ,sx-auth-client-id)
-;;                     (scope . (read_inbox
-;;                               no_expiry
-;;                               private_info
-;;                               write_access))
-;;                     (redirect_uri . ,sx-auth-redirect-uri))
-;;                   ","))))
-;;        (browse-url url)
-;;        (read-string "Enter the access token displayed on the webpage: ")))
-;;     (if (string-equal "" sx-auth-access-token)
-;;         (progn (setq sx-auth-access-token nil)
-;;                (error "You must enter this code to use this client fully"))
-;;       (sx-cache-set 'auth `((access_token . ,sx-auth-access-token)))))
-  ;; (advice-add 'sx-authenticate :override #'*sx-authenticate)
-  )
+    ("r" sx-question-list-order-by)))
