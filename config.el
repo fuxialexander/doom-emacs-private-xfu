@@ -381,8 +381,8 @@ control which repositories are displayed."
 (set! :company-backend '(inferior-python-mode) '(company-capf company-files company-yasnippet company-dabbrev-code))
 (set! :company-backend '(inferior-ess-mode) '(company-capf company-files company-yasnippet company-dabbrev-code))
 (set! :company-backend '(org-mode) '(company-capf company-files company-yasnippet company-dabbrev))
-(set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point)
-
+(after! elisp-mode
+  (set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point))
 (after! company-box
   (remove-hook 'company-box-selection-hook 'company-box-doc)
   (remove-hook 'company-box-hide-hook 'company-box-doc--hide))
@@ -736,8 +736,8 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       :ne "s-q"   (if (daemonp) #'delete-frame #'save-buffers-kill-emacs)
       :nie "s-f"                 #'+ivy:swiper
       :nie "s-F"               (lambda! (swiper
-                                   (if (symbol-at-point)
-                                       (format "\\_<%s\\_> " (symbol-at-point)) nil)))
+                                    (if (symbol-at-point)
+                                        (format "\\_<%s\\_> " (symbol-at-point)) nil)))
       :nie "s-/"                 #'evil-commentary-line
       ;; :ne "C-M-f"            #'doom/toggle-fullscreen
       :n  "s-s"                 #'save-buffer
@@ -782,30 +782,14 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
           :desc "send command"                :nv "P" #'iterm-send-text-ipy
           :desc "send command"                :nv "R" #'iterm-send-file-R)
         (:desc "file" :prefix "f"
-          :desc "Find file"                   :n "f" #'find-file
-          :desc "Sudo find file"              :n "s" #'doom/sudo-find-file
-          :desc "Find file in project"        :n "p" #'projectile-find-file
-          :desc "Find file on TRAMP"          :n "t" #'counsel-tramp
-          :desc "Find file in doom"           :n "d" #'+default/find-in-emacsd
-          :desc "Find file in private"        :n "e" #'+xfu/find-in-private
-          :desc "Find file in org"            :n "o" #'+default/find-in-notes
-          :desc "Browse doom"                 :n "D" #'+default/browse-emacsd
-          :desc "Browse private"              :n "E" #'+xfu/browse-private
-          :desc "Browse work"                 :n "w" #'+xfu/browse-work
-          :desc "Browse playground"           :n "p" #'+xfu/browse-playground
-          :desc "Browse private"              :n "E" #'+xfu/browse-private
-          :desc "Browse org"                  :n "O" #'+default/browse-notes
-          :desc "Yank filename"               :n "y" #'+default/yank-buffer-filename)
+          :desc "Find file on TRAMP"          :n "t" #'counsel-tramp)
         (:desc "git" :prefix "g"
-          :desc "Git status"                  :n  "g" #'magit-status
-          :desc "Git Hydra"                   :n  "." #'+version-control@git-gutter/body
-          :desc "List gists"                  :n  "l" #'+gist:list)
+          :desc "Git Hydra"                   :n  "." #'+version-control@git-gutter/body)
         (:desc "help" :prefix "h"
           :n "h" help-map
           :desc "Reload theme"                :n  "r" #'doom//reload-theme
           :desc "Describe function"           :n  "f" #'counsel-describe-function
           :desc "Describe key"                :n  "k" #'helpful-key
-          :desc "Describe keymap"             :n  "K" #'describe-keymap
           :desc "Describe variable"           :n  "v" #'counsel-describe-variable
           :desc "Describe face"               :n  "t" #'counsel-faces)
         (:desc "open" :prefix "o"
@@ -840,7 +824,6 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
           :desc "Theme"                       :n "t" #'counsel-load-theme
           :desc "Evil goggles"                :n "g" #'+evil-goggles/toggle))
       ;; --- Personal vim-esque bindings ------------------
-      ;; :n  "K"  #'+lookup/documentation
       :m  "gh" #'+lookup/documentation
       :m  "gs" #'+default/easymotion
 
@@ -892,6 +875,10 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
           "C-n"        #'company-search-repeat-forward
           "C-p"        #'company-search-repeat-backward))
 
+      (:after yasnippet
+        (:map yas-minor-mode-map
+          :v  "<tab>" nil
+          :v  "TAB" nil))
 
       :m  "]C" #'flyspell-correct-word-generic
       :m  "[c" #'flyspell-correct-previous-word-generic
@@ -902,11 +889,6 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         "<right>" #'ivy-alt-done
         "s-o" #'ivy-posframe-dispatching-done
         "C-l" #'ivy-partial)
-      ;; (:after swiper
-      ;;   :map swiper-map
-      ;;   [backtab]  #'+ivy/wgrep-occur
-      ;;   ;; "s-l" #'swiper-avy
-      ;;   )
       (:after wgrep
         :map wgrep-mode-map
         (:localleader
