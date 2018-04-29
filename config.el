@@ -227,7 +227,6 @@ control which repositories are displayed."
   (map! :map magit-mode-map
         [remap quit-window] #'+magit/quit
         :n "\\" nil)
-
   (set! :popup "^\\(?: ?\\*\\)?magit.*: "
     '((slot . -1) (side . right) (size . 80))
     '((select . t) (quit . nil)))
@@ -240,7 +239,6 @@ control which repositories are displayed."
   (set! :popup "^\\(?: ?\\*\\)?magit-diff:.*"
     '((slot . 2) (side . right) (window-height . 0.6))
     '((select . nil))))
-
 ;; ** Web
 (after! eww
   (set! :popup "^\\*eww.*"
