@@ -67,10 +67,10 @@
         +export +style)
        ;; data
        emacs-lisp
-       ;; javascript
+       javascript
        markdown
        sh
-       ;; (web +html)
+       (web +html)
 
        :app
        sx
