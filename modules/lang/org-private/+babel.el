@@ -19,7 +19,21 @@
     '((select) (quit) (transient)))
   (set! :popup "\\*Python:.*"
     '((slot . 0) (side . right) (size . 100))
-    '((select) (quit) (transient))))
+    '((select) (quit) (transient)))
+  (when (eq window-system 'ns)
+    (defun mac-high-resolution-image-file-name (filename &optional scale)
+      "Return the name of high-resolution image file for FILENAME.
+     The optional arg SCALE is the scale factor, and defaults to 2."
+      (let ((pos (or (string-match "\\.[^./]*\\'" filename) (length filename))))
+        (format "%s@%dx%s" (substring filename 0 pos) (or scale 2)
+                (substring filename pos))))
+    (defun my-ob-ipython-write-base64-string-retina (oldfunc &rest args)
+      (let ((file (car args)) (b64-string (cdr args)))
+        (let ((file2x (mac-high-resolution-image-file-name file)))
+          (apply oldfunc file2x b64-string)
+          (shell-command (concat "convert " file2x " -resize 50% " file)))))
+    (advice-add 'ob-ipython--write-base64-string :around
+                #'my-ob-ipython-write-base64-string-retina)))
 
 (defun +org-private|init-babel ()
   (def-hydra! +org-private@org-babel-hydra (:color pink :hint nil)
