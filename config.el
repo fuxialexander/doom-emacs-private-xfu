@@ -959,6 +959,10 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
   (do-repeat! git-gutter:next-hunk git-gutter:next-hunk git-gutter:previous-hunk)
   (do-repeat! git-gutter:previous-hunk git-gutter:next-hunk git-gutter:previous-hunk))
 
-
-
-
+;; load time consuming stuff when idle
+(run-with-idle-timer 30 t (lambda! (org-agenda-show-daily)
+                              (require 'org-clock)
+                              (require 'org-capture)
+                              (require 'org-ref)
+                              (require 'elfeed)
+                              (elfeed-update)))
