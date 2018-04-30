@@ -67,10 +67,9 @@ This function is called by `org-babel-execute-src-block'."
 
 ;;;###autoload
 (defun *org-babel-edit-prep:ipython (info)
-  ;; TODO: based on kernel, should change the major mode
-  (ob-ipython--create-kernel (->> info (nth 2) (assoc :session) cdr
-                                  ob-ipython--normalize-session)
-                             (->> info (nth 2) (assoc :kernel) cdr))
+  (let* ((params (nth 2 info))
+         (session (cdr (assoc :session params))))
+    (org-babel-ipython-initiate-session session params))
   ;; Support for python.el's "send-code" commands within edit buffers.
   (setq-local python-shell-buffer-name
               (format "Python:ob-ipython-%s" (->> info (nth 2) (assoc :session) cdr
