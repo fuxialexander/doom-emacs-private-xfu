@@ -2,7 +2,6 @@
 ;;; lang/org-private/packages.el
 
 (package! org-plus-contrib)
-(package! org-bullets :recipe (:fetcher github :repo "Kaligule/org-bullets"))
 (package! toc-org)
 (package! org-web-tools)
 ;; (package! org-wild-notifier)

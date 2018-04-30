@@ -93,7 +93,8 @@ If run interactively, get ENTRY from context."
 
 
 (remove-hook! 'org-mode-hook #'(visual-line-mode
-                                toc-org-enable))
+                                toc-org-enable
+                                org-bullets-mode))
 
 (add-hook 'org-mode-hook #'+org-private|setup-editing t)
 (add-hook 'org-mode-hook #'eldoc-mode t)

@@ -34,5 +34,6 @@
 (package! worf)
 (package! function-args)
 (package! realgud)
+(package! org-bullets :disable t)
 ;; * Maintain
 (package! esup)
