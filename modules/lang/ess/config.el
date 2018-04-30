@@ -1,9 +1,8 @@
 ;; ** ESS
 
-;; (eval-and-compile
-;;   (load "ess-autoloads" nil t))
-(setq ess-path (car (file-expand-wildcards "~/.emacs.d/.local/packages/elpa/ess*/lisp")))
-(def-package! ess-site :load-path ess-path
+;; (setq ess-path (car (file-expand-wildcards "~/.emacs.d/.local/packages/elpa/ess*/lisp")))
+(def-package! ess-site
+  :commands (R stata julia SAS)
   :mode (("\\.sp\\'"           . S-mode)
          ("/R/.*\\.q\\'"       . R-mode)
          ("\\.[qsS]\\'"        . S-mode)
@@ -32,16 +31,22 @@
          ("\\.[Jj][Aa][Gg]\\'" . ess-jags-mode)
          ("\\.[Jj][Oo][Gg]\\'" . ess-jags-mode)
          ("\\.[Jj][Mm][Dd]\\'" . ess-jags-mode))
-  :commands (R stata julia SAS)
+  :init
+  (unless (featurep! :lang julia)
+    (push (cons "\\.jl\\'" 'ess-julia-mode) auto-mode-alist))
   :config
   (setq ess-offset-continued 'straight
         ess-expression-offset 2
+        ess-r-smart-operators t
         ess-eval-visibly 'nowait
         ess-nuke-trailing-whitespace-p t
-        ess-default-style 'DEFAULT)
+        ess-default-style 'RStudio)
   (ess-toggle-underscore t)
   (set! :repl 'ess-mode #'+r/repl)
+  (set! :evil-state 'ess-help-mode 'normal)
+  (set! :lookup 'ess-mode :documentation #'ess-display-help-on-object)
   (set! :popup "^\\*R.*" '((slot . 1) (side . right) (size . 80)) '((select) (quit) (transient) (modeline)))
+  (set! :popup "^\\*help.R.*" '((slot . 1) (side . right) (size . 80)) '((select . t) (quit . t) (transient . t) (modeline)))
   (push (lambda (buf)
           (string-match-p "inferior-ess-mode" (symbol-name (buffer-local-value 'major-mode buf))))
         doom-real-buffer-functions)
@@ -55,8 +60,15 @@
      "h"             #'ess-display-help-on-object
      "p"             #'ess-R-dv-pprint
      "t"             #'ess-R-dv-ctable)
+   (:map inferior-ess-mode-map
+     "C-d" nil)
+   (:map ess-help-mode-map
+          :n "q" #'quit-window
+          :v "RET" #'ess-eval-region-and-go
+          :n "J" #'ess-skip-to-next-section
+          :n "K" #'ess-skip-to-previous-section)
    (:map ess-mode-map
-     "<s-return>"    #'ess-eval-line-and-step
+     :niv "<s-return>" #'ess-eval-region-or-line-and-step
      "<up>"          #'comint-next-input
      "<down>"        #'comint-previous-input
      (:localleader
