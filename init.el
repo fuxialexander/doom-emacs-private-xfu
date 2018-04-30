@@ -116,6 +116,7 @@
  doom-neotree-folder-size 1.0
  doom-neotree-chevron-size 0.6
  scroll-conservatively 0
+ doom-line-numbers-visual-style t
  indicate-buffer-boundaries nil
  frame-alpha-lower-limit 0
  indicate-empty-lines nil
