@@ -452,12 +452,11 @@ control which repositories are displayed."
         :i "M-[" (lambda! (insert " [ ] "))))
 
 (def-package! electric-operator
-  :commands (electric-operator-mode)
-  :init
-  (add-hook 'sh-mode-hook #'electric-operator-mode)
-  (add-hook 'python-mode-hook #'electric-operator-mode)
-  (add-hook 'inferior-python-mode-hook #'electric-operator-mode)
-  (add-hook 'ess-mode-hook #'electric-operator-mode)
+  :hook ((sh-mode . electric-operator-mode)
+         (ess-mode . electric-operator-mode)
+         (python-mode . electric-operator-mode)
+         (inferior-python-mode . electric-operator-mode)
+         (inferior-ess-mode . electric-operator-mode))
   :config
   (apply #'electric-operator-add-rules-for-mode 'inferior-python-mode
          electric-operator-prog-mode-rules)
