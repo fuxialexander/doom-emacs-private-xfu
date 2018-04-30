@@ -67,39 +67,45 @@ This function is called by `org-babel-execute-src-block'."
 
 ;;;###autoload
 (defun *org-babel-edit-prep:ipython (info)
-    ;; TODO: based on kernel, should change the major mode
-    (ob-ipython--create-kernel (->> info (nth 2) (assoc :session) cdr
-                                    ob-ipython--normalize-session)
-                               (->> info (nth 2) (assoc :kernel) cdr))
-    ;; Support for python.el's "send-code" commands within edit buffers.
-    (setq-local python-shell-buffer-name
-                (format "Python:ob-ipython-%s" (->> info (nth 2) (assoc :session) cdr
-                                                    ob-ipython--normalize-session)))
-    (setq-local
-     default-directory (format "%s" (->> info (nth 2) (assoc :pydir) cdr
-                                         ob-ipython--normalize-session)))
-    (ob-ipython-mode 1))
+  ;; TODO: based on kernel, should change the major mode
+  (ob-ipython--create-kernel (->> info (nth 2) (assoc :session) cdr
+                                  ob-ipython--normalize-session)
+                             (->> info (nth 2) (assoc :kernel) cdr))
+  ;; Support for python.el's "send-code" commands within edit buffers.
+  (setq-local python-shell-buffer-name
+              (format "Python:ob-ipython-%s" (->> info (nth 2) (assoc :session) cdr
+                                                  ob-ipython--normalize-session)))
+  (setq lispy-python-proc (format "Python:ob-ipython-%s" (->> info (nth 2) (assoc :session) cdr
+                                                              ob-ipython--normalize-session)))
+  (setq-local
+   default-directory (format "%s" (->> info (nth 2) (assoc :pydir) cdr
+                                       ob-ipython--normalize-session)))
+  (ob-ipython-mode 1)
+  (setq lispy--python-middleware-loaded-p nil)
+  (setq-local company-idle-delay nil)
+  (setq company-backends '(company-capf company-dabbrev company-files company-yasnippet))
+  (lispy--python-middleware-load))
 
 ;;;###autoload
 (defun ob-ipython-generate-local-path-from-remote (session host params)
-    "Copy remote config to local, start a jupyter console to generate a new one."
-    (let* ((runtime-dir (substring (shell-command-to-string
-                                    (concat "ssh " host " jupyter --runtime-dir")) 0 -1))
-           (runtime-file (concat runtime-dir "/" "kernel-" session ".json"))
-           (tramp-path (concat "/ssh:" host ":" runtime-file))
-           (tramp-copy (concat jupyter-local-runtime-dir "/remote-" host "-kernel-" session ".json"))
-           (local-path (concat "Python:ob-ipython-" (file-name-sans-extension (file-name-nondirectory tramp-copy)) "-ssh.json")))
-      ;; scp remote file to local
-      (copy-file tramp-path tramp-copy t)
-      ;; connect to remote use new config
-      (let* ((python-shell-interpreter-interactive-arg " console --simple-prompt")
-             (python-shell-completion-native-enable nil)
-             (buf (python-shell-make-comint
-                   (concat ob-ipython-command " console --simple-prompt --existing " tramp-copy " --ssh " host)
-                   (concat "" local-path) t))
-             (proc (get-buffer-process buf))
-             (dir (cdr (assoc :pydir params))))
-        (sleep-for 3)
-        (if dir (with-current-buffer buf
-                  (setq-local default-directory dir)))
-        (format "*%s*" proc))))
+  "Copy remote config to local, start a jupyter console to generate a new one."
+  (let* ((runtime-dir (substring (shell-command-to-string
+                                  (concat "ssh " host " jupyter --runtime-dir")) 0 -1))
+         (runtime-file (concat runtime-dir "/" "kernel-" session ".json"))
+         (tramp-path (concat "/ssh:" host ":" runtime-file))
+         (tramp-copy (concat jupyter-local-runtime-dir "/remote-" host "-kernel-" session ".json"))
+         (local-path (concat "Python:ob-ipython-" (file-name-sans-extension (file-name-nondirectory tramp-copy)) "-ssh.json")))
+    ;; scp remote file to local
+    (copy-file tramp-path tramp-copy t)
+    ;; connect to remote use new config
+    (let* ((python-shell-interpreter-interactive-arg " console --simple-prompt")
+           (python-shell-completion-native-enable nil)
+           (buf (python-shell-make-comint
+                 (concat ob-ipython-command " console --simple-prompt --existing " tramp-copy " --ssh " host)
+                 (concat "" local-path) t))
+           (proc (get-buffer-process buf))
+           (dir (cdr (assoc :pydir params))))
+      (sleep-for 3)
+      (if dir (with-current-buffer buf
+                (setq-local default-directory dir)))
+      (format "*%s*" proc))))

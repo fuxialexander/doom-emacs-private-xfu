@@ -36,10 +36,9 @@ is loaded.")
           :nv "C-d" #'evil-scroll-down))
   (when (executable-find "ipython")
     (setq python-shell-interpreter "ipython"
-          ;; python-shell-interpreter-args "-i"
           python-shell-prompt-detect-enabled nil
-          ;; python-shell-completion-native-disabled-interpreters '("jupyter")
-          python-shell-interpreter-args "--pylab"
+          python-shell-completion-native-disabled-interpreters '("pypy" "jupyter" "ipython")
+          python-shell-interpreter-args "console --simple-prompt"
           python-shell-prompt-regexp "In \\[[0-9]+\\]: "
           python-shell-prompt-block-regexp "\\.\\.\\.\\.: "
           python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
@@ -77,8 +76,12 @@ is loaded.")
   :config
   (require 'le-python)
   (map! :map lpy-mode-map
+        "n" nil
         :i "C-p" #'previous-line
-        :i "C-n" #'next-line))
+        :i "C-n" #'next-line)
+  (advice-add 'lispy--python-proc :override #'*lispy--python-proc)
+  (advice-add 'lispy-short-process-name :override #'*lispy-short-process-name)
+  (advice-add 'lispy-set-python-process-action :override #'*lispy-set-python-process-action))
 
 (def-package! anaconda-mode
   :after python

@@ -882,7 +882,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
       (:after comint
         (:map comint-mode-map
           :i "C-k" #'comint-previous-input
-          :i "C-j" #'comint-previous-input
+          :i "C-j" #'comint-next-input
           :n "]p" #'comint-next-prompt
           :n "[p" #'comint-previous-prompt))
 
