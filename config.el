@@ -376,11 +376,7 @@ control which repositories are displayed."
         company-backends
         '(company-capf company-dabbrev company-files company-yasnippet)
         company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode inferior-python-mode)))
-(set! :company-backend '(emacs-lisp-mode) '(company-elisp company-files company-yasnippet company-dabbrev-code))
-(set! :company-backend '(python-mode) '(company-anaconda company-files company-yasnippet company-dabbrev-code))
-(set! :company-backend '(inferior-python-mode) '(company-capf company-files company-yasnippet company-dabbrev-code))
-(set! :company-backend '(inferior-ess-mode) '(company-capf company-files company-yasnippet company-dabbrev-code))
-(set! :company-backend '(org-mode) '(company-capf company-files company-yasnippet company-dabbrev))
+;; (set! :company-backend 'python-mode 'company-anaconda)
 (after! elisp-mode
   (set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point))
 (after! company-box
