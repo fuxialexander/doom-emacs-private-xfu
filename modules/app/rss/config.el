@@ -29,6 +29,7 @@
   (push (lambda (buf) (string-match-p "^\\*elfeed" (buffer-name buf)))
         doom-real-buffer-functions)
 
+  (set! :popup "\\*elfeed-xwidget-webkit*" '((side . bottom) (window-height . 40)) '((select . t) (transient) (quit)))
   ;; Enhance readability of a post
   (add-hook 'elfeed-show-mode-hook #'+rss|elfeed-wrap)
 

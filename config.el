@@ -251,7 +251,14 @@ control which repositories are displayed."
   (add-to-list 'shr-external-rendering-functions
                '(pre . shr-tag-pre-highlight)))
 (after! xwidget
-  ;; (set! :popup "\\*xwidget" '((side . right) (size . 100)) '((select . t) (transient) (quit)))
+  (set! :popup "\\*xwidget" '((side . right) (size . 100)) '((select . t) (transient) (quit)))
+  (defun xwidget-webkit-goto-url (url)
+    "Goto URL."
+    (if (xwidget-webkit-current-session)
+        (progn
+          (xwidget-webkit-goto-uri (xwidget-webkit-current-session) url)
+          (display-buffer xwidget-webkit-last-session-buffer))
+      (xwidget-webkit-new-session url)))
   (defun xwidget-webkit-new-session (url)
     "Create a new webkit session buffer with URL."
     (let*
@@ -864,6 +871,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         "s-." #'org-ref-bibtex-hydra/body)
       (:after xwidget
         :map xwidget-webkit-mode-map
+        :n "q"         #'quit-window
         :n "r"         #'xwidget-webkit-reload
         :n "y"         #'xwidget-webkit-copy-selection-as-kill
         :n "s-c"       #'xwidget-webkit-copy-selection-as-kill

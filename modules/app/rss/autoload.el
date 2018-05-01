@@ -1,5 +1,8 @@
 ;;; modules/app/rss/autoload.el -*- lexical-binding: t; -*-
+(require 'avy)
+(require 'xwidget)
 
+;; * UI
 ;;;###autoload
 (defun =rss ()
   "Activate (or switch to) `elfeed' in its workspace."
@@ -222,8 +225,8 @@
       (elfeed-show-refresh))))
 
 
-(require 'avy)
 
+;; * ace-link and xwidget
 ;;;###autoload
 (defun ace-link--elfeed-collect ()
   "Collect the positions of visible links in `elfeed' buffer."
@@ -245,7 +248,66 @@
 ;;;###autoload
 (defun ace-link--elfeed-action  (pt)
   (goto-char pt)
-  (shr-browse-url))
+  (xwidget-webkit-browse-url-elfeed))
+
+;;;###autoload
+(defun xwidget-webkit-browse-url-elfeed ()
+  (let ((url (get-text-property (point) 'shr-url)))
+    (cond
+     ((not url)
+      (message "No link under point"))
+     ((string-match "^mailto:" url)
+      (browse-url-mail url))
+     (t (let*
+            ((bufname "*elfeed-xwidget-webkit*")
+             xw)
+          (select-window (display-buffer (get-buffer-create bufname)))
+          ;; The xwidget id is stored in a text property, so we need to have
+          ;; at least character in this buffer.
+          ;; Insert invisible url, good default for next `g' to browse url.
+          (insert url)
+          (put-text-property 1 (+ 1 (length url)) 'invisible t)
+          (setq xw (xwidget-insert 1 'webkit bufname
+                                   (xwidget-window-inside-pixel-width (selected-window))
+                                   (xwidget-window-inside-pixel-height (selected-window))))
+          (xwidget-put xw 'callback 'xwidget-webkit-elfeed-callback)
+          (xwidget-webkit-mode)
+          (xwidget-webkit-goto-uri xw url))))))
+
+;;;###autoload
+(defun xwidget-webkit-elfeed-callback (xwidget xwidget-event-type)
+  "Callback for xwidgets.
+XWIDGET instance, XWIDGET-EVENT-TYPE depends on the originating xwidget."
+  (if (not (buffer-live-p (xwidget-buffer xwidget)))
+      (xwidget-log
+       "error: callback called for xwidget with dead buffer")
+    (with-current-buffer (xwidget-buffer xwidget)
+      (cond ((eq xwidget-event-type 'load-changed)
+;;; We do not change selected window for the finish of loading a page.
+;;; And do not adjust webkit size to window here, the selected window
+;;; can be the mini-buffer window unwantedly.
+             (let ((title (xwidget-webkit-title xwidget)))
+               (xwidget-log "webkit finished loading: %s" title)))
+            ((eq xwidget-event-type 'decide-policy)
+             (let ((strarg  (nth 3 last-input-event)))
+               (if (string-match ".*#\\(.*\\)" strarg)
+                   (xwidget-webkit-show-id-or-named-element
+                    xwidget
+                    (match-string 1 strarg)))))
+;;; TODO: Response handling other than download.
+            ((eq xwidget-event-type 'response-callback)
+             (let ((url  (nth 3 last-input-event))
+                   (mime-type (nth 4 last-input-event))
+                   (file-name (nth 5 last-input-event)))
+               (xwidget-webkit-save-as-file xwidget url mime-type file-name)))
+            ((eq xwidget-event-type 'javascript-callback)
+             (let ((proc (nth 3 last-input-event))
+                   (arg  (nth 4 last-input-event)))
+               ;; Some javascript return vector as result
+               (if (vectorp arg)
+                   (funcall proc (seq-into arg 'list))
+                 (funcall proc arg))))
+            (t (xwidget-log "unhandled event:%s" xwidget-event-type))))))
 
 ;;;###autoload
 (defun ace-link-elfeed ()

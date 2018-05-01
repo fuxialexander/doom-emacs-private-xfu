@@ -117,6 +117,7 @@
  doom-neotree-chevron-size 0.6
  scroll-conservatively 0
  doom-line-numbers-visual-style t
+ browse-url-browser-function 'xwidget-webkit-browse-url
  indicate-buffer-boundaries nil
  frame-alpha-lower-limit 0
  indicate-empty-lines nil
