@@ -1,0 +1,52 @@
+#+TITLE: Reference Module
+
+* Collect
+I got the paper from two sources. 
+
+1. ~Elfeed~. I subscribed some journal's (and
+also bioRxiv's) RSS. And I scan through the title, once I found something
+interesting I check it's abstract (usually in RSS content). If it's really
+interesting, I press [[https://github.com/fuxialexander/doom-emacs-private-xfu/blob/master/modules/app/rss/config.el#L74][RET]]. Which will automatically download that paper's bibtex
+and PDF (if it can handle the journal) and add it to the ivy-bibtex libraray.
+
+2. Second source is manually searching, after searching I will copy the doi of
+   that paper and use [[https://github.com/fuxialexander/doom-emacs-private-xfu/blob/a817539e4296146bb010c2900d3277fcd3e362c7/modules/tools/reference/config.el#L16][doi-utils-add-bibtex-entry-from-doi]] to save the bibtex and PDF of that paper.
+   
+* Read and note taking
+After I download a paper's PDF file locally to my ~reference folder~, I can find
+and open them using ~org-ref-ivy-insert-cite-link~. I bound that to ~command-p~
+in ~org-mode~. Through the ~ivy-action~ provided by ~org-ref~ and ~ivy-bibtex~,
+I can easily open the PDF of a target papar in my system default PDF viewer,
+~Skim.app~.
+
+I use ~Skim.app~ mainly for it's fast rendering and ~Applescript~ support. I've
+came up with a set of helper function to interact with ~Skim.app~ in ~Emacs~.
+With those function, I can have the following two types of workflow:
+
+1. If I'm dedicately reading a important paper, I open it's companion notes
+   (also using ~ivy-action~ in ~org-ref-ivy-insert-cite-link~). Usually I'll
+   setup headings / sections like "Highlights", "Results", "Methods", etc.. Then
+   I use the openned note as the main front. 
+   
+   If I find a couple of sentences is worth noting, I select the region using
+   mouse in ~Skim.app~, then went back to the ~org~ notes, and press ~,=~ in
+   ~normal-mode~. That keybinding will automatically have the selected region
+   highlighted with background color in ~Skim.app~ and automatically setup a
+   "magic link" at current point in the notes. Click that link will bring you
+   to exactly to that highlight in ~Skim.app~, even you haven't openned that
+   PDF before.
+   
+   Even better, if you have ~bettertouchtool/alfred/launchpad/...~ installed,
+   you can use the following two applescript to jump from the ~Skim.app~
+   annotation to the exact corresponding heading in Emacs (You need to enable
+   ~org-id~  in your notes for that).
+   
+2. If I'm just casually reading a paper, I simply open the PDF, selecting any
+   sentence that I find worth noting, and I press ~command-e~ to setup a note
+   for that reference.
+
+* Reference
+~ivy-bibtex~ is a bibtex-collection interface from where you can search, tag,
+and take notes on particular reference items. However, I mainly use it as a
+searching interface and part of ~org-ref~, which is a full-fledged reference
+management system written by @jkitchen. 
