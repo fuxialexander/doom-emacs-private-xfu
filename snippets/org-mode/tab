@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: table
+# key: tab_
+# --
+#+CAPTION: $1
+#+ATTR_LATEX: :environment tabularx :booktabs t :font \footnotesize :width \textwidth :align $4
+#+LABEL: tab:$2
+$3
+$0
+
