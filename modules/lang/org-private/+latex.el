@@ -16,6 +16,7 @@
   (setq webkit-katex-render--background-color (doom-color 'bg)))
 
 (defun +org-private|init-latex ()
+  (setq-default org-latex-prefer-user-labels t)
   (cond
    ((eq window-system 'mac)
     (setq-default org-format-latex-options
@@ -49,6 +50,8 @@
                   org-latex-packages-alist
                   '(("" "color" t)
                     ("" "minted" t)
+                    ("" "booktabs" t)
+                    ("" "tabularx" t)
                     ("" "parskip" t)
                     ("" "tikz" t))
                   org-latex-pdf-process '("latexmk -pdflatex='lualatex -shell-escape -interaction nonstopmode' -pdf -f  %f")
