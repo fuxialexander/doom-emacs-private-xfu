@@ -72,6 +72,17 @@
        sh
        (web +html)
 
+       :app
+       sx
+       rss
+       twitter
+       email
+       (write
+        +wordnut
+        +osxdict
+        +synosaurus
+        +langtool)
+       ;; calendar
 
        :config
        (default +snippets +evil-commands +bindings))

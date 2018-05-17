@@ -10,13 +10,13 @@
        ;; +devdocs
        snippets
        spellcheck
-       (syntax-checker +childframe)
+       (syntax-checker)
        version-control
        workspaces
 
        :completion
-       (company +auto +childframe)
-       (ivy +childframe)
+       (company +auto)
+       ivy
 
        :ui
        doom
@@ -37,34 +37,36 @@
        eshell
        gist
        imenu
-       macos
+       ;; macos
        make
        magit
-       rgb
+       ;; rgb
        term
-       reference
-       upload
-       (password-store +auth)
+       ;; reference
+       ;; upload
+       ;; (password-store +auth)
 
        :lang
        lsp
        python
-       cc-private
+       ;; cc-private
        ess
-       (latex
-        +latexmk
-        +skim)
+       ;; (latex
+       ;;  +latexmk
+       ;;  +skim)
        (org
-        +attach
+        ;; +attach
         +babel
-        +capture
-        +present)
+        ;; +capture
+        ;; +present
+        )
        (org-private
-        +todo
+        ;; +todo
         +babel
-        +capture
-        +latex
-        +export +style)
+        ;; +capture
+        ;; +latex
+        ;; +export +style
+        )
        ;; data
        emacs-lisp
        javascript
@@ -143,17 +145,6 @@
 
 (advice-add 'doom-dashboard-widget-banner :override #'*doom-dashboard-widget-banner)
 
-
-;; * Mac-specific
-(if (string-match-p "NS" (emacs-version))
-    (progn
-      (setq ns-alternate-modifier 'meta
-            ns-command-modifier 'super)
-      (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-      (add-to-list 'default-frame-alist '(ns-appearance . light)))
-  (setq mac-command-modifier 'super
-        mac-option-modifier 'meta
-        mac-pass-command-to-system nil))
 
 ;; * Config
 (setq
