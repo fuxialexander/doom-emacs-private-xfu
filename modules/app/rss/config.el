@@ -71,7 +71,7 @@
             :n doom-leader-key nil
             :nm "q"   #'+rss/delete-pane
             :nm "o"   #'ace-link-elfeed
-            :nm "RET" #'org-ref-add-bibtex-entry-from-elfeed-entry
+            :nm "RET" #'+reference/elfeed-add
             :nm "n"   #'elfeed-show-next
             :nm "p"   #'elfeed-show-prev
             :nm "+"   #'elfeed-show-tag
