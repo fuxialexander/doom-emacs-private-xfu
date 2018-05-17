@@ -41,7 +41,10 @@
 ;;;###autoload
 (defun +mail/notmuch-update ()
   (interactive)
-  (start-process-shell-command "notmuch update" nil "cd ~/.mail/account.gmail && /usr/local/bin/gmi push && /usr/local/bin/gmi pull && /usr/local/bin/notmuch new && /usr/local/bin/afew -a -t"))
+  (start-process-shell-command
+   "notmuch update"
+   nil
+   "cd ~/.mail/account.gmail && /usr/local/anaconda3/bin/gmi push && /usr/local/anaconda3/bin/gmi pull && notmuch new && /usr/local/anaconda3/bin/afew -a -t"))
 
 
 

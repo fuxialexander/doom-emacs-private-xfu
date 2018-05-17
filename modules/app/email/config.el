@@ -151,4 +151,7 @@
 ;;;; org-mime
 (def-package! org-mime
   :after (org notmuch)
-  :config (setq org-mime-library 'mml))
+  :config
+  (setq
+   org-mime-library 'mml
+   org-mime-export-options '(:section-numbers nil :with-author nil :with-toc nil)))
