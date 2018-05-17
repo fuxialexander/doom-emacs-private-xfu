@@ -32,6 +32,7 @@
       counsel-org-headline-display-style 'title
       counsel-org-headline-display-tags t
       counsel-org-headline-display-todo t
+      evil-shift-width 2
       +ivy-buffer-icons nil
       ivy-use-virtual-buffers t
       org-bullets-bullet-list '("#" "#" "#" "#" "#" "#" "#" "#")
@@ -348,38 +349,41 @@ control which repositories are displayed."
     '((select . t) (quit . t))))
 
 ;; ** Coding
+(def-package! ivy-yasnippet
+  :commands (ivy-yasnippet))
 (def-package! realgud
   :commands (realgud:gdb realgud:trepanjs realgud:ipdb realgud:bashdb realgud:zshdb))
 
-(def-package! flycheck-posframe
-  :hook (flycheck-mode . flycheck-posframe-mode)
-  :config
-  (setq flycheck-posframe-warning-prefix "⚠ "
-        flycheck-posframe-info-prefix "··· "
-        flycheck-posframe-error-prefix " ")
-  (defun *flycheck-posframe-show-posframe (errors)
-    "Display ERRORS, using posframe.el library."
-    (when errors
-      (posframe-show
-       flycheck-posframe-buffer
-       :string (flycheck-posframe-format-errors errors)
-       :background-color (face-background 'flycheck-posframe-background-face nil t)
-       :override-parameters '((internal-border-width . 10))
-       :position (point))
-      (dolist (hook flycheck-posframe-hide-posframe-hooks)
-        (add-hook hook #'flycheck-posframe-hide-posframe nil t))))
-  (defun *flycheck-posframe-delete-posframe ()
-    "Delete messages currently being shown if any."
-    (posframe-hide flycheck-posframe-buffer)
-    (dolist (hook flycheck-posframe-delete-posframe-hooks)
-      (remove-hook hook #'flycheck-posframe-hide-posframe t)))
-  (advice-add 'flycheck-posframe-delete-posframe :override #'*flycheck-posframe-delete-posframe)
-  (advice-add 'flycheck-posframe-show-posframe :override #'*flycheck-posframe-show-posframe))
+;; (def-package! flycheck-posframe
+;;   :hook (flycheck-mode . flycheck-posframe-mode)
+;;   :config
+;;   (setq flycheck-posframe-warning-prefix "⚠ "
+;;         flycheck-posframe-info-prefix "··· "
+;;         flycheck-posframe-error-prefix " ")
+;;   (defun *flycheck-posframe-show-posframe (errors)
+;;     "Display ERRORS, using posframe.el library."
+;;     (when errors
+;;       (posframe-show
+;;        flycheck-posframe-buffer
+;;        :string (flycheck-posframe-format-errors errors)
+;;        :background-color (face-background 'flycheck-posframe-background-face nil t)
+;;        :override-parameters '((internal-border-width . 10))
+;;        :position (point))
+;;       (dolist (hook flycheck-posframe-hide-posframe-hooks)
+;;         (add-hook hook #'flycheck-posframe-hide-posframe nil t))))
+;;   (defun *flycheck-posframe-delete-posframe ()
+;;     "Delete messages currently being shown if any."
+;;     (posframe-hide flycheck-posframe-buffer)
+;;     (dolist (hook flycheck-posframe-delete-posframe-hooks)
+;;       (remove-hook hook #'flycheck-posframe-hide-posframe t)))
+;;   (advice-add 'flycheck-posframe-delete-posframe :override #'*flycheck-posframe-delete-posframe)
+;;   (advice-add 'flycheck-posframe-show-posframe :override #'*flycheck-posframe-show-posframe))
 
 ;; *** Company
 (after! company
-  (setq company-tooltip-limit 10
-        company-tooltip-minimum-width 60
+  (setq company-box-max-candidates 100
+        company-tooltip-limit 10
+        company-box-minimum-width 60
         company-backends
         '(company-capf company-dabbrev company-files company-yasnippet)
         company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode inferior-python-mode)))
@@ -661,6 +665,28 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         (funcall cmd source target 1))))
   (defun +ivy/confirm-delete-file (x)
     (dired-delete-file x 'confirm-each-subdirectory))
+  (defun *ivy--switch-buffer-action (buffer)
+    "Switch to BUFFER.
+BUFFER may be a string or nil."
+    (with-ivy-window
+      (if (zerop (length buffer))
+          (display-buffer
+           ivy-text nil 'force-same-window)
+        (let ((virtual (assoc buffer ivy--virtual-buffers))
+              (view (assoc buffer ivy-views)))
+          (cond ((and virtual
+                      (not (get-buffer buffer)))
+                 (find-file (cdr virtual)))
+                (view
+                 (delete-other-windows)
+                 (let (
+                       ;; silence "Directory has changed on disk"
+                       (inhibit-message t))
+                   (ivy-set-view-recur (cadr view))))
+                (t
+                 (display-buffer
+                  buffer nil 'force-same-window)))))))
+  (advice-add 'ivy--switch-buffer-action :override #'*ivy--switch-buffer-action)
   (ivy-add-actions
    'ivy-switch-buffer
    '(("d" (lambda (buf) (display-buffer buf)) "Display")))
@@ -801,6 +827,7 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
         :desc "Find file in project"          :nv "SPC" #'execute-extended-command
         :desc "Browse files"                  :n "/"   #'find-file
         :desc "Goto Line"                     :n "l"   #'avy-goto-line
+        :desc "Display Buffer"                :n "m"   #'ivy-switch-buffer
         :desc "Find project files"            :n "."   #'counsel-projectile-find-file
         :desc "Toggle last popup"             :n "`"   #'+popup/toggle
         (:desc "search" :prefix "s"
