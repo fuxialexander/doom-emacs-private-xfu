@@ -109,21 +109,21 @@
 :Created: %U
 :Linked: %a
 :END:
-%?"  )
+%?" :time-prompt t)
    ("wr" "Week Review" entry
     (file+olp+datetree "~/Dropbox/org/review.org")
     "* %^{Review for...|Mood|Research|Learn|Entertainment|Life} :review:week:%\\1:
 :PROPERTIES:
 :Created: %U
 :END:
-%?"  )
+%?" :time-prompt t)
    ("mr" "Month Review" entry
     (file+olp+datetree "~/Dropbox/org/review.org")
     "* %^{Review for...|Mood|Research|Learn|Entertainment|Life} :review:month:%\\1:
 :PROPERTIES:
 :Created: %U
 :END:
-%?"  ))
+%?" :time-prompt t))
  +org-capture-window-params
  `((name . "org-capture")
    (fullscreen . fullwidth)

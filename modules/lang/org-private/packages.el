@@ -13,7 +13,7 @@
   (package! org-download))
 
 (when (featurep! +babel)
-  (package! ob-ipython))
+  (package! ob-ipython :recipe (:fetcher github :repo "fuxialexander/ob-ipython" :files ("*"))))
 
 (when (featurep! +latex)
   (package! cdlatex))

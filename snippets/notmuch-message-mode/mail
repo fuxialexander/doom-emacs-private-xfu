@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: mail
-# key: ml_
+# key: dear_
 # --
 Dear $1,
 

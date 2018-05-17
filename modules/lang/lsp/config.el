@@ -43,20 +43,20 @@
   :after lsp-mode)
 
 ;; * JS
-(def-package! lsp-javascript-typescript
-  :hook ((js-mode . lsp-javascript-typescript-enable)
-         (typescript-mode . lsp-javascript-typescript-enable)
-         (rjsx-mode . lsp-javascript-typescript-enable))
-  :config
-  (set! :company-backend '(js-mode
-                           rjsx-mode
-                           typescript-mode)
-    '(company-lsp company-files company-yasnippet))
-  (set! :lookup '(typescript-mode
-                  rjsx-mode
-                  js-mode)
-    :definition #'lsp-ui-peek-find-definitions
-    :references #'lsp-ui-peek-find-references))
+;; (def-package! lsp-javascript-typescript
+;;   :hook ((js-mode . lsp-javascript-typescript-enable)
+;;          (typescript-mode . lsp-javascript-typescript-enable)
+;;          (rjsx-mode . lsp-javascript-typescript-enable))
+;;   :config
+;;   (set! :company-backend '(js-mode
+;;                            rjsx-mode
+;;                            typescript-mode)
+;;     '(company-lsp company-files company-yasnippet))
+;;   (set! :lookup '(typescript-mode
+;;                   rjsx-mode
+;;                   js-mode)
+;;     :definition #'lsp-ui-peek-find-definitions
+;;     :references #'lsp-ui-peek-find-references))
 
 ;; * CSS
 (def-package! lsp-css :load-path "~/.doom.d/local"

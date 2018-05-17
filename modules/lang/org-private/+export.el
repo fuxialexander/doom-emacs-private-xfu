@@ -24,8 +24,7 @@
       (push '(self-contained . t) org-pandoc-options))
   (setq org-pandoc-options
         '((standalone . t)
-          (mathjax . t)
-          (parse-raw . t))))
+          (mathjax . t))))
 
 ;;
 (defun +org|init-export ()

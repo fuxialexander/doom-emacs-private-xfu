@@ -39,7 +39,8 @@
 
   ;; Don't interfere with leader key
   (define-key dired-mode-map (kbd doom-leader-key) nil)
-  (push 'dired-mode evil-snipe-disabled-modes)
+  (after! evil-snipe
+    (push 'dired-mode evil-snipe-disabled-modes))
   (set! :evil-state 'dired-mode 'normal)
   (map! (:after wdired
           :map wdired-mode-map

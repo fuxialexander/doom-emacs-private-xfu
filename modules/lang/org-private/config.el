@@ -26,7 +26,8 @@
   :after org
   :init
   (setq org-brain-path "~/Dropbox/org")
-  (push 'org-brain-visualize-mode evil-snipe-disabled-modes)
+  (after! evil-snipe
+    (push 'org-brain-visualize-mode evil-snipe-disabled-modes))
   ;; (add-hook 'org-agenda-mode-hook #'(lambda () (evil-vimish-fold-mode -1)))
   (set! :evil-state 'org-brain-visualize-mode 'normal)
   :config
@@ -363,7 +364,7 @@ If run interactively, get ENTRY from context."
 
 (defun +org-private|setup-keybinds ()
   (remove-hook 'org-tab-first-hook #'+org|toggle-only-current-fold)
-  (add-hook 'org-tab-first-hook #'+org-private|toggle-only-current-fold)
+  (add-hook 'org-tab-first-hook #'+org-private|toggle-only-current-fold t)
   (after! evil-org
     (setq evil-org-want-hybrid-shift t
           evil-org-use-additional-insert nil)
@@ -518,14 +519,8 @@ INFO is a plist containing export options."
   (defun +org-private/org-add-ids-to-headlines-in-file ()
     "Add CUSTOM_ID properties to all headlines in the current file"
     (interactive)
-    (unless
-        (or
-         (string-equal (buffer-name) "cal.org")
-         (string-equal default-directory "/Users/xfu/Source/playground/gatsby-orga/src/pages/")
-         (string-match "doom-emacs" default-directory)
-         (string-equal default-directory "/Users/xfu/Source/playground/fuxialexander.github.io/src/pages/")
-         (string-equal (buffer-name) "cal_kevin.org"))
-      (save-excursion
+    (if (string-equal default-directory "/Users/xfu/Dropbox/org/")
+        (save-excursion
         (widen)
         (goto-char (point-min))
         (org-map-entries 'org-id-get-create))))
@@ -575,7 +570,7 @@ This holds only for inactive timestamps."
                                (+reference/append-org-id-to-skim (org-id-get-create))))))
   ;; (after! elfeed-show
   ;;   (map! (:map elfeed-show-mode-map
-  ;;           :n "b" #'org-ref-add-bibtex-entry-from-elfeed-entry)))
+  ;;           :n "b" #'+reference/elfeed-add)))
   (after! org-mac-link
     (org-link-set-parameters "skim"
                              :face 'default

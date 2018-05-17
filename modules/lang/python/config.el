@@ -35,7 +35,7 @@ is loaded.")
         (:map inferior-python-mode-map
           :nv "C-d" #'evil-scroll-down))
   (when (executable-find "ipython")
-    (setq python-shell-interpreter "ipython"
+    (setq python-shell-interpreter "jupyter"
           python-shell-prompt-detect-enabled nil
           python-shell-completion-native-disabled-interpreters '("pypy" "jupyter" "ipython")
           python-shell-interpreter-args "console --simple-prompt"
