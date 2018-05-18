@@ -1,5 +1,4 @@
 ;; * Modules
-(add-to-list 'load-path doom-modules-dir)
 (doom! :feature
        eval
        (evil

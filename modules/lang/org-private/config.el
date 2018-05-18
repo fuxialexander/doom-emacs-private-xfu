@@ -82,6 +82,22 @@ If run interactively, get ENTRY from context."
 (def-package! org-web-tools
   :after org)
 
+(def-package! evil-org
+  :when (featurep! :feature evil)
+  :hook (org-mode . evil-org-mode)
+  :hook (org-load . evil-org-set-key-theme)
+  :init
+  (setq evil-org-want-hybrid-shift t
+        evil-org-use-additional-insert nil
+        evil-org-key-theme '(navigation
+                             shift
+                             todo
+                             additional
+                             operators
+                             insert
+                             textobjects))
+  (add-hook 'org-load-hook #'+org|setup-evil))
+
 ;;
 ;; Bootstrap
 ;;
@@ -284,8 +300,6 @@ If run interactively, get ENTRY from context."
         org-export-babel-evaluate nil
         org-blank-before-new-entry '((heading . t) (plain-list-item . nil))
         org-clock-clocktable-default-properties (quote (:maxlevel 3 :scope agenda :tags "-COMMENT"))
-        org-clock-persist t
-        org-clock-persist-file (expand-file-name ".org-clock-persist-data.el" +org-dir)
         org-clocktable-defaults (quote (:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 t :fileskip0 t :tags "-COMMENT" :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil))
         org-columns-default-format "%45ITEM %TODO %SCHEDULED %DEADLINE %3PRIORITY %TAGS %CLOCKSUM %EFFORT %BUDGET_WEEK %BUDGET_MONTH %BUDGET_QUARTER %BUDGET_YEAR"
         org-complete-tags-always-offer-all-agenda-tags t
@@ -363,18 +377,9 @@ If run interactively, get ENTRY from context."
   (org-clock-persistence-insinuate))
 
 (defun +org-private|setup-keybinds ()
-  (remove-hook 'org-tab-first-hook #'+org|toggle-only-current-fold)
-  (add-hook 'org-tab-first-hook #'+org-private|toggle-only-current-fold t)
+  ;; (remove-hook 'org-tab-first-hook #'+org|toggle-only-current-fold)
+  ;; (add-hook 'org-tab-first-hook #'+org-private|toggle-only-current-fold t)
   (after! evil-org
-    (setq evil-org-want-hybrid-shift t
-          evil-org-use-additional-insert nil)
-    (evil-org-set-key-theme '(navigation
-                              shift
-                              todo
-                              additional
-                              operators
-                              insert
-                              textobjects))
     (map! :map evil-org-mode-map
           :i "<S-tab>" #'+org/dedent
           "s-o" #'org-open-at-point
@@ -435,64 +440,62 @@ If run interactively, get ENTRY from context."
             :n "$"   #'wordnut-lookup-current-word
             :n "h"   #'org-toggle-heading
             :n "A"   #'org-archive-subtree
-            :n "a"   #'org-toggle-archive-tag)))
-  (map!
-   (:after org-agenda
-     (:map org-agenda-mode-map
-       :nm "<escape>" #'org-agenda-Quit
-
-       :nm "J"        #'org-clock-convenience-timestamp-down
-       :nm "K"        #'org-clock-convenience-timestamp-up
-       :nm "M-j"      #'org-agenda-later
-       :nm "M-k"      #'org-agenda-earlier
-       :nm "M-o"      #'org-clock-convenience-fill-gap
-       :nm "M-e"      #'org-clock-convenience-fill-gap-both
-       :nm "\\"       #'ace-window
-       :nm "t"        #'org-agenda-todo
-       :nm "p"        #'org-set-property
-       :nm "r"        #'org-agenda-redo
-       :nm "e"        #'org-agenda-set-effort
-       :nm "H"        #'org-habit-toggle-habits
-       :nm "L"        #'org-agenda-log-mode
-       :nm "D"        #'org-agenda-toggle-diary
-       :nm "G"        #'org-agenda-toggle-time-grid
-       :nm ";"        #'counsel-org-tag-agenda
-       :nm "M-j"      #'counsel-org-goto-all
-       :nm "i"        #'org-agenda-clock-in
-       :nm "o"        #'org-agenda-clock-out
-       :nm "<tab>"    #'org-agenda-goto
-       :nm "C"        #'org-agenda-capture
-       :nm "m"        #'org-agenda-bulk-mark
-       :nm "u"        #'org-agenda-bulk-unmark
-       :nm "U"        #'org-agenda-bulk-unmark-all
-       :nm "f"        #'+org@org-agenda-filter/body
-       :nm "-"        #'org-agenda-manipulate-query-subtract
-       :nm "="        #'org-agenda-manipulate-query-add
-       :nm "_"        #'org-agenda-manipulate-query-subtract-re
-       :nm "$"        #'org-agenda-manipulate-query-add-re
-       :nm "d"        #'org-agenda-deadline
-       :nm "s"        #'org-agenda-schedule
-       :nm "z"        #'org-agenda-view-mode-dispatch
-       :nm "S"        #'org-save-all-org-buffers))
-   (:after org-src
-     (:map org-src-mode-map
-       "C-c C-c" nil
-       "C-c C-k" nil
-       (:localleader
-         :desc "Finish" :nm ","  #'org-edit-src-exit
-         :desc "Abort"  :nm "k"  #'org-edit-src-abort
-         )))
-   (:after org-capture
-     (:map org-capture-mode-map
-       "C-c C-c" nil
-       "C-c C-k" nil
-       "C-c C-w" nil
-       (:localleader
-         :desc "Finish" :nm "," #'org-capture-finalize
-         :desc "Refile" :nm "r" #'org-capture-refile
-         :desc "Abort"  :nm "k" #'org-capture-kill
-         ))))
-  )
+            :n "a"   #'org-toggle-archive-tag)
+          (:after org-agenda
+            (:map org-agenda-mode-map
+              :nm "<escape>" #'org-agenda-Quit
+              :nm "J"        #'org-clock-convenience-timestamp-down
+              :nm "K"        #'org-clock-convenience-timestamp-up
+              :nm "M-j"      #'org-agenda-later
+              :nm "M-k"      #'org-agenda-earlier
+              :nm "M-o"      #'org-clock-convenience-fill-gap
+              :nm "M-e"      #'org-clock-convenience-fill-gap-both
+              :nm "\\"       #'ace-window
+              :nm "t"        #'org-agenda-todo
+              :nm "p"        #'org-set-property
+              :nm "r"        #'org-agenda-redo
+              :nm "e"        #'org-agenda-set-effort
+              :nm "H"        #'org-habit-toggle-habits
+              :nm "L"        #'org-agenda-log-mode
+              :nm "D"        #'org-agenda-toggle-diary
+              :nm "G"        #'org-agenda-toggle-time-grid
+              :nm ";"        #'counsel-org-tag-agenda
+              :nm "M-j"      #'counsel-org-goto-all
+              :nm "i"        #'org-agenda-clock-in
+              :nm "o"        #'org-agenda-clock-out
+              :nm "<tab>"    #'org-agenda-goto
+              :nm "C"        #'org-agenda-capture
+              :nm "m"        #'org-agenda-bulk-mark
+              :nm "u"        #'org-agenda-bulk-unmark
+              :nm "U"        #'org-agenda-bulk-unmark-all
+              :nm "f"        #'+org@org-agenda-filter/body
+              :nm "-"        #'org-agenda-manipulate-query-subtract
+              :nm "="        #'org-agenda-manipulate-query-add
+              :nm "_"        #'org-agenda-manipulate-query-subtract-re
+              :nm "$"        #'org-agenda-manipulate-query-add-re
+              :nm "d"        #'org-agenda-deadline
+              :nm "q"        #'org-agenda-quit
+              :nm "s"        #'org-agenda-schedule
+              :nm "z"        #'org-agenda-view-mode-dispatch
+              :nm "S"        #'org-save-all-org-buffers))
+          (:after org-src
+            (:map org-src-mode-map
+              "C-c C-c" nil
+              "C-c C-k" nil
+              (:localleader
+                :desc "Finish" :nm ","  #'org-edit-src-exit
+                :desc "Abort"  :nm "k"  #'org-edit-src-abort
+                )))
+          (:after org-capture
+            (:map org-capture-mode-map
+              "C-c C-c" nil
+              "C-c C-k" nil
+              "C-c C-w" nil
+              (:localleader
+                :desc "Finish" :nm "," #'org-capture-finalize
+                :desc "Refile" :nm "r" #'org-capture-refile
+                :desc "Abort"  :nm "k" #'org-capture-kill
+                ))))))
 
 (defun +org-private|setup-overrides ()
   (after! org-html
@@ -779,3 +782,12 @@ This holds only for inactive timestamps."
       (sp-local-pair "\\[" "\\]"
                      :post-handlers '(sp-latex-insert-spaces-inside-pair)
                      :unless '(sp-latex-point-after-backslash)))))
+
+
+(def-package! org-clock
+  :commands org-clock-save
+  :hook (org-mode . org-clock-load)
+  :config
+  (setq org-clock-persist t
+        org-clock-persist-file (expand-file-name ".org-clock-persist-data.el" +org-dir))
+  (add-hook 'kill-emacs-hook 'org-clock-save))
