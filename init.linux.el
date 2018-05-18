@@ -147,6 +147,7 @@
 
 ;; * Config
 (setq
+ insert-directory-program "ls"
  user-mail-address "fuxialexander@gmail.com"
  user-full-name "Alexander Fu Xi"
  max-specpdl-size 10000
