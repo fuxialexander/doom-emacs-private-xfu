@@ -23,7 +23,7 @@
 
 ;; <https://github.com/hlissner/emacs-doom-theme>
 ;; def-package! doom-themes :load-path "/Users/xfu/Source/playground/emacs-doom-themes"
-(def-package! doom-themes :load-path "/Users/xfu/.doom.d/local/emacs-doom-themes"
+(def-package! doom-themes :load-path "~/.doom.d/local/emacs-doom-themes"
   :config
   (unless doom-theme
     (setq doom-theme 'doom-one))
