@@ -40,22 +40,11 @@
       +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin)
 
 ;; ** UI
-(defun doom|no-fringes-in-whichkey (&optional args)
-  "Disable fringes in the whichkey window."
-  (set-window-fringes (minibuffer-window) 0 0 nil)
-  (set-window-fringes (get-buffer-window which-key--buffer) 0 0 nil)
-  t)
-(defun doom|no-fringes-in-posframe (&optional frame force)
-  "Disable fringes in the minibuffer window."
-  (set-window-fringes (minibuffer-window (frame-parent frame)) 0 0 nil))
-(advice-add 'which-key--show-buffer-side-window :after #'doom|no-fringes-in-whichkey)
-(advice-add 'make-frame-invisible :after #'doom|no-fringes-in-posframe)
-(add-hook 'persp-before-switch-functions '+my-workspace/goto-main-window)
 (remove-hook 'text-mode-hook #'hl-line-mode)
-(remove-hook 'prog-mode-hook #'hl-line-mode)
+;; (remove-hook 'prog-mode-hook #'hl-line-mode)
 (remove-hook 'conf-mode-hook #'hl-line-mode)
 (menu-bar-mode 1)
-(toggle-frame-fullscreen)
+;; (toggle-frame-fullscreen)
 (set! :popup "^\\*Customize.*" '((slot . 2) (side . right)) '((modeline . nil) (select . t) (quit . t)))
 (set! :popup " \\*undo-tree\\*" '((slot . 2) (side . left) (size . 20)) '((modeline . nil) (select . t) (quit . t)))
 (def-package! ace-link
@@ -386,7 +375,7 @@ control which repositories are displayed."
         company-box-minimum-width 60
         company-backends
         '(company-capf company-dabbrev company-files company-yasnippet)
-        company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode inferior-python-mode)))
+        company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode inferior-python-mode eshell-mode)))
 ;; (set! :company-backend 'python-mode 'company-anaconda)
 (after! elisp-mode
   (set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point))
@@ -775,7 +764,7 @@ BUFFER may be a string or nil."
       "s-0" #'+workspace/display
       "s-d" #'evil-window-vsplit
       "s-D" #'evil-window-split
-      "s-w" #'+my-workspace/close-window-or-workspace
+      "s-w" #'+workspace/close-window-or-workspace
       "s-W" #'+workspace/close-workspace-or-frame
       "s-n" #'evil-buffer-new
       "s-N" #'make-frame-command
@@ -997,3 +986,24 @@ BUFFER may be a string or nil."
                               (require 'org-ref)
                               (require 'elfeed)
                               (elfeed-update)))
+
+(after! whitespace
+  (advice-remove #'company-box--make-frame #'doom*fix-whitespace-mode-in-childframes)
+  (advice-remove #'posframe--create-posframe #'doom*fix-whitespace-mode-in-childframes))
+
+;; (after! eshell
+;;   (defun +eshell/protect-eshell-prompt ()
+;;     "Protect Eshell's prompt like Comint's prompts.
+;; E.g. `evil-change-whole-line' won't wipe the prompt. This
+;; is achieved by adding the relevant text properties."
+;;     (let ((inhibit-field-text-motion t))
+;;       (add-text-properties
+;;        (point-at-bol)
+;;        (point)
+;;        '(rear-nonsticky t
+;;                         inhibit-line-move-field-capture t
+;;                         field output
+;;                         read-only t
+;;                         front-sticky (field inhibit-line-move-field-capture)))))
+
+;;   (add-hook 'eshell-after-prompt-hook '+eshell/protect-eshell-prompt))

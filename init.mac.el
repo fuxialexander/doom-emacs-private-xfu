@@ -1,12 +1,10 @@
 ;; * Modules
 (doom! :feature
        eval
-       (evil
-        ;; +everywhere
-        )
+       (evil +everywhere)
        file-templates
        lookup
-       ;; +devdocs
+       +devdocs
        snippets
        spellcheck
        (syntax-checker +childframe)
