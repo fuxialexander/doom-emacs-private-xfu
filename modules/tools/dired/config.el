@@ -8,7 +8,6 @@
    dired-recursive-deletes 'top
    ;; Auto refresh dired, but be quiet about it
    global-auto-revert-non-file-buffers t
-   insert-directory-program "gls"
    dired-use-ls-dired t
    auto-revert-verbose nil
    dired-dwim-target t

@@ -155,8 +155,9 @@
 ;; * Mac-specific
 (if (string-match-p "NS" (emacs-version))
     (progn
-      (setq ns-alternate-modifier 'meta
-            ns-command-modifier 'super)
+      (setq
+       ns-alternate-modifier 'meta
+       ns-command-modifier 'super)
       (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
       (add-to-list 'default-frame-alist '(ns-appearance . light)))
   (setq mac-command-modifier 'super
@@ -165,6 +166,7 @@
 
 ;; * Config
 (setq
+ insert-directory-program "gls"
  user-mail-address "fuxialexander@gmail.com"
  user-full-name "Alexander Fu Xi"
  max-specpdl-size 10000
