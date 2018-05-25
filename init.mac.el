@@ -1,7 +1,8 @@
 ;; * Modules
 (doom! :feature
        eval
-       (evil +everywhere)
+       (evil
+        +everywhere)
        file-templates
        lookup
        +devdocs
@@ -29,7 +30,7 @@
 
        :tools
        dired
-       ein
+     ; ein
        electric-indent
        eshell
        gist
@@ -49,8 +50,8 @@
        cc-private
        ess
        (latex
-        +latexmk
-        +skim)
+       +latexmk
+       +skim)
        (org
         +attach
         +babel
@@ -127,6 +128,7 @@
                               (assq 'truncation fringe-indicator-alist)
                               (delq (assq 'continuation fringe-indicator-alist)
                                     fringe-indicator-alist)))
+
 (defun *doom-dashboard-widget-banner ()
   (mapc (lambda (line)
           (insert (propertize (+doom-dashboard--center +doom-dashboard--width line)
@@ -183,3 +185,7 @@
  evil-snipe-override-evil-repeat-keys nil
  evil-collection-company-use-tng nil
  evil-respect-visual-line-mode t)
+
+(def-package-hook! ivy-rich
+  :pre-init nil
+  :pre-config nil)

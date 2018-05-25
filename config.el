@@ -980,30 +980,17 @@ BUFFER may be a string or nil."
   (do-repeat! git-gutter:previous-hunk git-gutter:next-hunk git-gutter:previous-hunk))
 
 ;; load time consuming stuff when idle
-(run-with-idle-timer 30 t (lambda! (org-agenda-show-daily)
-                              (require 'org-clock)
+(run-with-idle-timer 30 t (lambda! (require 'org-clock)
+                              (require 'org-agenda)
                               (require 'org-capture)
-                              (require 'org-ref)
-                              (require 'elfeed)
-                              (elfeed-update)))
+                              (require 'org-ref)))
 
-(after! whitespace
-  (advice-remove #'company-box--make-frame #'doom*fix-whitespace-mode-in-childframes)
-  (advice-remove #'posframe--create-posframe #'doom*fix-whitespace-mode-in-childframes))
 
-;; (after! eshell
-;;   (defun +eshell/protect-eshell-prompt ()
-;;     "Protect Eshell's prompt like Comint's prompts.
-;; E.g. `evil-change-whole-line' won't wipe the prompt. This
-;; is achieved by adding the relevant text properties."
-;;     (let ((inhibit-field-text-motion t))
-;;       (add-text-properties
-;;        (point-at-bol)
-;;        (point)
-;;        '(rear-nonsticky t
-;;                         inhibit-line-move-field-capture t
-;;                         field output
-;;                         read-only t
-;;                         front-sticky (field inhibit-line-move-field-capture)))))
-
-;;   (add-hook 'eshell-after-prompt-hook '+eshell/protect-eshell-prompt))
+(defun +syntax-checker*cleanup-popup ()
+  "TODO"
+  (if (and EMACS26+
+           (display-graphic-p))
+      (flycheck-posframe-hide-posframe)
+    (if (display-graphic-p)
+        (flycheck-popup-tip-delete-popup))))
+(advice-add '+syntax-checker-cleanup-popup :override #'+syntax-checker*cleanup-popup)

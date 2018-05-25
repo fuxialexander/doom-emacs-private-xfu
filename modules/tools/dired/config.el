@@ -4,7 +4,7 @@
   :defer t
   :init
   (setq ;; Always copy/delete recursively
-   dired-recursive-copies  'always
+   dired-recursive-copies 'always
    dired-recursive-deletes 'top
    ;; Auto refresh dired, but be quiet about it
    global-auto-revert-non-file-buffers t
@@ -36,8 +36,6 @@
         (make-directory parent-directory t))))
   (push #'+dired|create-non-existent-directory find-file-not-found-functions)
 
-  ;; Don't interfere with leader key
-  (define-key dired-mode-map (kbd doom-leader-key) nil)
   (after! evil-snipe
     (push 'dired-mode evil-snipe-disabled-modes))
   (set! :evil-state 'dired-mode 'normal)
@@ -45,7 +43,7 @@
           :map wdired-mode-map
           (:localleader
             :desc "Finish" :n "," #'wdired-finish-edit
-            :desc "Abort"  :n "k" #'wdired-abort-changes))
+            :desc "Abort" :n "k" #'wdired-abort-changes))
         (:after dired
           :map dired-mode-map
           :n "RET" #'dired

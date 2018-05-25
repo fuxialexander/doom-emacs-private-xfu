@@ -173,8 +173,7 @@ prefix ARG is used, which uses `org-ref-default-bibliography'."
 
 ;; * advice
   (advice-add 'org-ref-bib-citation :override #'+reference*org-ref-bib-citation)
-  (advice-add 'org-ref-email-bibtex-entry :override #'+reference*org-ref-email-bibtex-entry)
-  )
+  (advice-add 'org-ref-email-bibtex-entry :override #'+reference*org-ref-email-bibtex-entry))
 
 
 
