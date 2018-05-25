@@ -3,9 +3,4 @@
 # key: ob_
 # --
 #+NAME: $1
-#+BEGIN_SRC ipython :session $3-kernel-$2-ssh.json :ipyfile /Users/xfu/Dropbox/org/.attach/$1_`(format-time-string "%Y-%m-%d")`.png :dir /ssh:xfu@${3:$$(yas-choose-value '( "hpc7" "hpc8" "hpc9" "hpc10" "hpc11" "hpc12" "hpc13" "hpc14" "hpc15" "gpu8"))}:/research/kevinyip10/xfu/$4 :exports both :async t :results raw drawer :tangle /ssh:xfu@$3/$4/$1.py
-%cd /research/kevinyip10/xfu/$4
-%matplotlib inline
-$0
-#+END_SRC
-#+RESULTS: $1
+:header-args:ipython: :session remote-$3-kernel-$2-ssh.json :ipyfile /Users/xfu/Dropbox/org/.attach/$1_`(format-time-string "%Y-%m-%d")`.png :pydir /ssh:xfu@${3:$$(yas-choose-value '( "hpc7" "hpc8" "hpc9" "hpc10" "hpc11" "hpc12" "hpc13" "hpc14" "hpc15" "gpu8"))}:/research/kevinyip10/xfu/$4 :exports both :async t :results raw drawer :tangle /ssh:xfu@$3/$4/$1.py$0
