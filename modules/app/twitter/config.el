@@ -55,7 +55,7 @@
           :n "j" #'twittering-goto-next-status
           :n "k" #'twittering-goto-previous-status))
 
-  (def-hydra! +twitter@panel (:color pink :hint nil)
+  (defhydra +twitter@panel (:color pink :hint nil)
     "
  Tweets^^^^^^                                   User^^^^                Other^^
  ──────^^^^^^────────────────────────────────── ────^^^^─────────────── ─────^^───────────────────

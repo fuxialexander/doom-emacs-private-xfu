@@ -539,7 +539,7 @@ control which repositories are displayed."
           (select-window ori)))))
   (advice-add 'lv-window :override #'*lv-window))
 (after! ivy-hydra
-  (def-hydra! +ivy@coo (:hint nil :color pink)
+  (defhydra +ivy@coo (:hint nil :color pink)
     "
  Move     ^^^^^^^^^^ | Call         ^^^^ | Cancel^^ | Options^^ | Action _w_/_s_/_a_: %s(ivy-action-name)
 ----------^^^^^^^^^^-+--------------^^^^-+-------^^-+--------^^-+---------------------------------
@@ -765,7 +765,7 @@ BUFFER may be a string or nil."
       "s-d" #'evil-window-vsplit
       "s-D" #'evil-window-split
       "s-w" #'+workspace/close-window-or-workspace
-      "s-W" #'+workspace/close-workspace-or-frame
+      "s-W" #'kill-this-buffer
       "s-n" #'evil-buffer-new
       "s-N" #'make-frame-command
       "s-1" (λ! (+workspace/switch-to 0))

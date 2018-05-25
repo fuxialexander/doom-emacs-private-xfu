@@ -108,3 +108,4 @@ This function is called by `org-babel-execute-src-block'."
       (if dir (with-current-buffer buf
                 (setq-local default-directory dir)))
       (format "*%s*" proc))))
+

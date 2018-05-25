@@ -36,7 +36,7 @@
                 #'my-ob-ipython-write-base64-string-retina)))
 
 (defun +org-private|init-babel ()
-  (def-hydra! +org-private@org-babel-hydra (:color pink :hint nil)
+  (defhydra +org-private@org-babel-hydra (:color pink :hint nil)
     "
 Org-Babel: _j_/_k_ next/prev   _g_oto     _TAB_/_i_/_I_ show/hide
            _'_ edit   _c_lear result      _e_xecute     _s_plit"

@@ -58,7 +58,7 @@
 
 (after! org-agenda
   (org-super-agenda-mode)
-  (def-hydra! +org@org-agenda-filter (:color pink :hint nil)
+  (defhydra +org@org-agenda-filter (:color pink :hint nil)
     "
 _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
     (";" org-agenda-filter-by-tag)

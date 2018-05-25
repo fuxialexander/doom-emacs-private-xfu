@@ -36,7 +36,7 @@
   (advice-add 'sx-question-list--create-question-window :override #'*sx-question-list--create-question-window)
   (advice-add 'sx-question-list-view-previous :before #'*goto-sx-question-list)
   (advice-add 'sx-question-list-view-next :before #'*goto-sx-question-list)
-  (def-hydra! sx-hydra (:color red :hint nil)
+  (defhydra sx-hydra (:color red :hint nil)
     "
 ┌^^───────────────┐
 │ _a_: questions  │
