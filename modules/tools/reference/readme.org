@@ -1,5 +1,10 @@
 #+TITLE: Reference Module
 
+This is a ~doom-emacs~ module mde for managing and reading academic papers.
+Under the hood it use ~org-ref~ and ~ivy-bibtex~ for managing bibtex, and a
+bunch of applescripts to work with the ~macos~ PDF reader ~Skim.app~ to add
+notes in ~org-mode~.
+
 * Collect
 I got the paper from two sources. 
 
@@ -10,7 +15,8 @@ interesting, I press [[https://github.com/fuxialexander/doom-emacs-private-xfu/b
 and PDF (if it can handle the journal) and add it to the ivy-bibtex libraray.
 
 2. Second source is manually searching, after searching I will copy the doi of
-   that paper and use [[https://github.com/fuxialexander/doom-emacs-private-xfu/blob/a817539e4296146bb010c2900d3277fcd3e362c7/modules/tools/reference/config.el#L16][doi-utils-add-bibtex-entry-from-doi]] to save the bibtex and PDF of that paper.
+   that paper and use [[https://github.com/fuxialexander/doom-emacs-private-xfu/blob/a817539e4296146bb010c2900d3277fcd3e362c7/modules/tools/reference/config.el#L16][doi-utils-add-bibtex-entry-from-doi]] to save the bibtex and
+   PDF of that paper. 
    
 * Read and note taking
 After I download a paper's PDF file locally to my ~reference folder~, I can find
