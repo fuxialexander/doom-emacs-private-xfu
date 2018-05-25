@@ -22,7 +22,11 @@ is loaded.")
         python-indent-guess-indent-offset-verbose nil
         python-shell-interpreter "python")
   :config
-  (add-hook! 'python-mode-hook #'(highlight-numbers-mode))
+  (add-hook! 'python-mode-hook #'(flycheck-mode highlight-numbers-mode))
+
+  (set! :env "PYTHONPATH" "PYENV_ROOT")
+  (set! :company-backend 'python-mode '(company-anaconda))
+  (set! :electric 'python-mode :chars '(?:))
   (set! :repl 'python-mode #'+python/repl)
   (set! :electric 'python-mode :chars '(?:))
   (set! :popup "^\\*Python" '((slot . 0) (side . right) (size . 100)) '((select) (quit) (transient)))
@@ -35,10 +39,10 @@ is loaded.")
         (:map inferior-python-mode-map
           :nv "C-d" #'evil-scroll-down))
   (when (executable-find "ipython")
-    (setq python-shell-interpreter "jupyter"
+    (setq python-shell-interpreter "ipython"
           python-shell-prompt-detect-enabled nil
           python-shell-completion-native-disabled-interpreters '("pypy" "jupyter" "ipython")
-          python-shell-interpreter-args "console --simple-prompt"
+          python-shell-interpreter-args "--simple-prompt --pylab"
           python-shell-prompt-regexp "In \\[[0-9]+\\]: "
           python-shell-prompt-block-regexp "\\.\\.\\.\\.: "
           python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
@@ -88,7 +92,13 @@ is loaded.")
   :hook python-mode
   :init
   (setq anaconda-mode-installation-directory (concat doom-etc-dir "anaconda/")
-        anaconda-mode-eldoc-as-single-line t)
+        anaconda-mode-eldoc-as-single-line t
+        anaconda-mode-server-command "
+import sys, site
+site.addsitedir('.')
+import anaconda_mode
+anaconda_mode.main(sys.argv[-2:])
+")
   :config
   (add-hook 'anaconda-mode-hook #'anaconda-eldoc-mode)
 
@@ -112,6 +122,7 @@ is loaded.")
 
 
 (def-package! company-anaconda
+  :when (featurep! :completion company)
   :after anaconda-mode
   :config
   (set! :company-backend 'python-mode '(company-anaconda company-files company-yasnippet company-dabbrev-code))
@@ -151,7 +162,7 @@ is loaded.")
   :preface
   (defvar nose-mode-map (make-sparse-keymap))
   :init
-  (associate! nose-mode :match "/test_.+\\.py$" :modes (python-mode))
+  ;; (associate! nose-mode :match "/test_.+\\.py$" :modes (python-mode))
   :config
 
   (set! :popup "^\\*nosetests" '((size . 0.4)) '((select)))
