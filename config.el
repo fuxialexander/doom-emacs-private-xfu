@@ -907,8 +907,8 @@ BUFFER may be a string or nil."
         (:map comint-mode-map
           :i "C-k" #'comint-previous-input
           :i "C-j" #'comint-next-input
-          :n "]p" #'comint-next-prompt
-          :n "[p" #'comint-previous-prompt))
+          :m "]p" #'comint-next-prompt
+          :m "[p" #'comint-previous-prompt))
 
       (:after company
         (:map company-active-map
