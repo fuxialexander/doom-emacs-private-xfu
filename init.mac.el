@@ -4,8 +4,8 @@
        (evil
         +everywhere)
        file-templates
-       lookup
-       +devdocs
+       (lookup
+        +devdocs)
        snippets
        spellcheck
        (syntax-checker +childframe)
@@ -20,33 +20,38 @@
        doom
        doom-dashboard
        doom-modeline
+       evil-goggles
        hl-todo
        nav-flash
-       window-select
-       (popup
-        ;; +all
-        +defaults)
        neotree
+       (popup
+        +all
+        +defaults)
+       window-select
 
        :tools
        dired
-     ; ein
+       editorconfig
        electric-indent
+     ; ein
        eshell
        gist
        imenu
        macos
-       make
+       ;; make
        magit
        rgb
        term
        reference
+       rotate-text
        upload
+       tmux
        (password-store +auth)
 
        :lang
        lsp
-       python
+       data
+       (python +lpy +conda)
        cc-private
        ess
        (latex
@@ -60,6 +65,7 @@
        (org-private
         +todo
         +babel
+        +ob-ipython
         +capture
         +latex
         +export +style)
