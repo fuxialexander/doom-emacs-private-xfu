@@ -7,6 +7,11 @@ is loaded.")
 (defvar +python-pyenv-versions nil
   "Available versions of python in pyenv.")
 
+(defvar +python-conda-home nil
+  "A list of host pattern and corresponding anaconda home.")
+
+(defvar +python/set-conda-home--history nil)
+
 (defvar-local +python-current-version nil
   "The currently active pyenv version.")
 
@@ -52,30 +57,30 @@ is loaded.")
           ;; "';'.join(get_ipython().Completer.all_completions('''%s'''))\n"
           ))
 
-(def-package! conda
-  :commands (conda-env-activate-for-buffer)
-  :config
-  (setq conda-anaconda-home "/usr/local/anaconda3")
-  (conda-env-autoactivate-mode -1)
-  ;; (add-hook 'python-mode-hook #'conda-env-activate-for-buffer)
-  (conda-env-initialize-interactive-shells)
-  (conda-env-initialize-eshell)
-    ;; Version management with pyenv
-  (defun +python|add-version-to-modeline ()
-    "Add version string to the major mode in the modeline."
-    (setq mode-name
-          (if conda-env-current-name
-              (format "Py:conda:%s" conda-env-current-name)
-            "Python")))
-  (add-hook 'conda-postactivate-hook #'+python|add-version-to-modeline)
-  (add-hook 'conda-postdeactivate-hook #'+python|add-version-to-modeline))
-
   (define-key python-mode-map (kbd "DEL") nil) ; interferes with smartparens
   (sp-with-modes 'python-mode
     (sp-local-pair "'" nil :unless '(sp-point-before-word-p sp-point-after-word-p sp-point-before-same-p))))
 
+(def-package! conda
+  :when (featurep! +conda)
+  :after (python)
+  :config
+  (setq conda-anaconda-home "/usr/local/anaconda3")
+  (setq +python-conda-home
+        '("/usr/local/anaconda3"
+          "/ssh:xfu@hpc10.cse.cuhk.edu.hk:/research/kevinyip10/xfu/miniconda3"
+          "/ssh:xfu@hpc11.cse.cuhk.edu.hk:/research/kevinyip10/xfu/miniconda3"))
+  (advice-add 'anaconda-mode-bootstrap :override #'*anaconda-mode-bootstrap)
+  (conda-env-autoactivate-mode -1)
+  ;; (add-hook 'python-mode-hook #'conda-env-activate-for-buffer)
+  (conda-env-initialize-interactive-shells)
+  (conda-env-initialize-eshell)
+  ;; Version management with pyenv
+  (add-hook 'conda-postactivate-hook #'+python|add-version-to-modeline)
+  (add-hook 'conda-postdeactivate-hook #'+python|add-version-to-modeline))
 
 (def-package! lpy
+  :when (featurep! +lpy)
   :hook ((python-mode . lpy-mode))
   :config
   (require 'le-python)
@@ -120,7 +125,6 @@ anaconda_mode.main(sys.argv[-2:])
   (add-hook! 'python-mode-hook
     (add-hook 'kill-buffer-hook #'+python|auto-kill-anaconda-processes nil t)))
 
-
 (def-package! company-anaconda
   :when (featurep! :completion company)
   :after anaconda-mode
@@ -136,10 +140,6 @@ anaconda_mode.main(sys.argv[-2:])
         :nv "u" #'anaconda-mode-find-references
         :map anaconda-view-mode-map
         :nv "q" #'quit-window))
-
-
-(def-package! pip-requirements
-  :mode ("/requirements.txt$" . pip-requirements-mode))
 
 (def-package! py-isort
   :after python
