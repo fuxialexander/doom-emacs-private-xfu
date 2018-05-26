@@ -344,36 +344,37 @@ control which repositories are displayed."
 (def-package! realgud
   :commands (realgud:gdb realgud:trepanjs realgud:ipdb realgud:bashdb realgud:zshdb))
 
-;; (def-package! flycheck-posframe
-;;   :hook (flycheck-mode . flycheck-posframe-mode)
-;;   :config
-;;   (setq flycheck-posframe-warning-prefix "⚠ "
-;;         flycheck-posframe-info-prefix "··· "
-;;         flycheck-posframe-error-prefix " ")
-;;   (defun *flycheck-posframe-show-posframe (errors)
-;;     "Display ERRORS, using posframe.el library."
-;;     (when errors
-;;       (posframe-show
-;;        flycheck-posframe-buffer
-;;        :string (flycheck-posframe-format-errors errors)
-;;        :background-color (face-background 'flycheck-posframe-background-face nil t)
-;;        :override-parameters '((internal-border-width . 10))
-;;        :position (point))
-;;       (dolist (hook flycheck-posframe-hide-posframe-hooks)
-;;         (add-hook hook #'flycheck-posframe-hide-posframe nil t))))
-;;   (defun *flycheck-posframe-delete-posframe ()
-;;     "Delete messages currently being shown if any."
-;;     (posframe-hide flycheck-posframe-buffer)
-;;     (dolist (hook flycheck-posframe-delete-posframe-hooks)
-;;       (remove-hook hook #'flycheck-posframe-hide-posframe t)))
-;;   (advice-add 'flycheck-posframe-delete-posframe :override #'*flycheck-posframe-delete-posframe)
-;;   (advice-add 'flycheck-posframe-show-posframe :override #'*flycheck-posframe-show-posframe))
+(def-package! flycheck-posframe
+  :hook (flycheck-mode . flycheck-posframe-mode)
+  :config
+  (setq flycheck-posframe-warning-prefix "⚠ "
+        flycheck-posframe-info-prefix "··· "
+        flycheck-posframe-error-prefix " ")
+  (defun *flycheck-posframe-show-posframe (errors)
+    "Display ERRORS, using posframe.el library."
+    (when errors
+      (posframe-show
+       flycheck-posframe-buffer
+       :string (flycheck-posframe-format-errors errors)
+       :background-color (face-background 'flycheck-posframe-background-face nil t)
+       :override-parameters '((internal-border-width . 10))
+       :position (point))
+      (dolist (hook flycheck-posframe-hide-posframe-hooks)
+        (add-hook hook #'flycheck-posframe-hide-posframe nil t))))
+  (defun *flycheck-posframe-delete-posframe ()
+    "Delete messages currently being shown if any."
+    (posframe-hide flycheck-posframe-buffer)
+    (dolist (hook flycheck-posframe-delete-posframe-hooks)
+      (remove-hook hook #'flycheck-posframe-hide-posframe t)))
+  (advice-add 'flycheck-posframe-delete-posframe :override #'*flycheck-posframe-delete-posframe)
+  (advice-add 'flycheck-posframe-show-posframe :override #'*flycheck-posframe-show-posframe))
 
 ;; *** Company
 (after! company
-  (setq company-box-max-candidates 100
+  (setq company-box-max-candidates 50
         company-tooltip-limit 10
-        company-box-minimum-width 60
+        company-tooltip-minimum-width 80
+        company-tooltip-minimum 10
         company-backends
         '(company-capf company-dabbrev company-files company-yasnippet)
         company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode inferior-python-mode eshell-mode)))
@@ -383,39 +384,39 @@ control which repositories are displayed."
 (after! company-box
   (remove-hook 'company-box-selection-hook 'company-box-doc)
   (remove-hook 'company-box-hide-hook 'company-box-doc--hide)
-  (setq company-box-icons-yasnippet (all-the-icons-material "short_text" :height 0.8 :face 'all-the-icons-green)
-        company-box-icons-unknown (all-the-icons-material "find_in_page" :height 0.8 :face 'all-the-icons-purple)
-        company-box-icons-lsp '((1 . (all-the-icons-material "text_fields" :height 0.8 :face 'all-the-icons-green)) ;; Text
-                                (2 . (all-the-icons-material "functions" :height 0.8 :face 'all-the-icons-red)) ;; Method
-                                (3 . (all-the-icons-material "functions" :height 0.8 :face 'all-the-icons-red)) ;; Function
-                                (4 . (all-the-icons-material "functions" :height 0.8 :face 'all-the-icons-red)) ;; Constructor
-                                (5 . (all-the-icons-material "functions" :height 0.8 :face 'all-the-icons-red)) ;; Field
-                                (6 . (all-the-icons-material "adjust" :height 0.8 :face 'all-the-icons-blue)) ;; Variable
-                                (7 . (all-the-icons-material "class" :height 0.8 :face 'all-the-icons-red)) ;; Class
-                                (8 . (all-the-icons-material "settings_input_component" :height 0.8 :face 'all-the-icons-red)) ;; Interface
-                                (9 . (all-the-icons-material "view_module" :height 0.8 :face 'all-the-icons-red)) ;; Module
-                                (10 . (all-the-icons-material "settings" :height 0.8 :face 'all-the-icons-red)) ;; Property
-                                (11 . (all-the-icons-material "straighten" :height 0.8 :face 'all-the-icons-red)) ;; Unit
-                                (12 . (all-the-icons-material "filter_1" :height 0.8 :face 'all-the-icons-red)) ;; Value
-                                (13 . (all-the-icons-material "plus_one" :height 0.8 :face 'all-the-icons-red)) ;; Enum
-                                (14 . (all-the-icons-material "filter_center_focus" :height 0.8 :face 'all-the-icons-red)) ;; Keyword
-                                (15 . (all-the-icons-material "short_text" :height 0.8 :face 'all-the-icons-red)) ;; Snippet
-                                (16 . (all-the-icons-material "color_lens" :height 0.8 :face 'all-the-icons-red)) ;; Color
-                                (17 . (all-the-icons-material "insert_drive_file" :height 0.8 :face 'all-the-icons-red)) ;; File
-                                (18 . (all-the-icons-material "collections_bookmark" :height 0.8 :face 'all-the-icons-red)) ;; Reference
-                                (19 . (all-the-icons-material "folder" :height 0.8 :face 'all-the-icons-red)) ;; Folder
-                                (20 . (all-the-icons-material "people" :height 0.8 :face 'all-the-icons-red)) ;; EnumMember
-                                (21 . (all-the-icons-material "pause_circle_filled" :height 0.8 :face 'all-the-icons-red)) ;; Constant
-                                (22 . (all-the-icons-material "streetview" :height 0.8 :face 'all-the-icons-red)) ;; Struct
-                                (23 . (all-the-icons-material "event" :height 0.8 :face 'all-the-icons-red)) ;; Event
-                                (24 . (all-the-icons-material "control_point" :height 0.8 :face 'all-the-icons-red)) ;; Operator
-                                (25 . (all-the-icons-material "class" :height 0.8 :face 'all-the-icons-red)))
+  (setq company-box-icons-yasnippet (all-the-icons-material "short_text" :height 0.7 :face 'all-the-icons-green)
+        company-box-icons-unknown (all-the-icons-material "find_in_page" :height 0.7 :face 'all-the-icons-purple)
+        company-box-icons-lsp '((1 . (all-the-icons-material "text_fields" :height 0.7 :face 'all-the-icons-green)) ;; Text
+                                (2 . (all-the-icons-material "functions" :height 0.7 :face 'all-the-icons-red)) ;; Method
+                                (3 . (all-the-icons-material "functions" :height 0.7 :face 'all-the-icons-red)) ;; Function
+                                (4 . (all-the-icons-material "functions" :height 0.7 :face 'all-the-icons-red)) ;; Constructor
+                                (5 . (all-the-icons-material "functions" :height 0.7 :face 'all-the-icons-red)) ;; Field
+                                (6 . (all-the-icons-material "adjust" :height 0.7 :face 'all-the-icons-blue)) ;; Variable
+                                (7 . (all-the-icons-material "class" :height 0.7 :face 'all-the-icons-red)) ;; Class
+                                (8 . (all-the-icons-material "settings_input_component" :height 0.7 :face 'all-the-icons-red)) ;; Interface
+                                (9 . (all-the-icons-material "view_module" :height 0.7 :face 'all-the-icons-red)) ;; Module
+                                (10 . (all-the-icons-material "settings" :height 0.7 :face 'all-the-icons-red)) ;; Property
+                                (11 . (all-the-icons-material "straighten" :height 0.7 :face 'all-the-icons-red)) ;; Unit
+                                (12 . (all-the-icons-material "filter_1" :height 0.7 :face 'all-the-icons-red)) ;; Value
+                                (13 . (all-the-icons-material "plus_one" :height 0.7 :face 'all-the-icons-red)) ;; Enum
+                                (14 . (all-the-icons-material "filter_center_focus" :height 0.7 :face 'all-the-icons-red)) ;; Keyword
+                                (15 . (all-the-icons-material "short_text" :height 0.7 :face 'all-the-icons-red)) ;; Snippet
+                                (16 . (all-the-icons-material "color_lens" :height 0.7 :face 'all-the-icons-red)) ;; Color
+                                (17 . (all-the-icons-material "insert_drive_file" :height 0.7 :face 'all-the-icons-red)) ;; File
+                                (18 . (all-the-icons-material "collections_bookmark" :height 0.7 :face 'all-the-icons-red)) ;; Reference
+                                (19 . (all-the-icons-material "folder" :height 0.7 :face 'all-the-icons-red)) ;; Folder
+                                (20 . (all-the-icons-material "people" :height 0.7 :face 'all-the-icons-red)) ;; EnumMember
+                                (21 . (all-the-icons-material "pause_circle_filled" :height 0.7 :face 'all-the-icons-red)) ;; Constant
+                                (22 . (all-the-icons-material "streetview" :height 0.7 :face 'all-the-icons-red)) ;; Struct
+                                (23 . (all-the-icons-material "event" :height 0.7 :face 'all-the-icons-red)) ;; Event
+                                (24 . (all-the-icons-material "control_point" :height 0.7 :face 'all-the-icons-red)) ;; Operator
+                                (25 . (all-the-icons-material "class" :height 0.7 :face 'all-the-icons-red)))
         company-box-icons-elisp
         (list
-         (all-the-icons-material "functions" :height 0.8 :face 'all-the-icons-red)
-         (all-the-icons-material "check_circle" :height 0.8 :face 'all-the-icons-blue)
-         (all-the-icons-material "stars" :height 0.8 :face 'all-the-icons-orange)
-         (all-the-icons-material "format_paint" :height 0.8 :face 'all-the-icons-pink))))
+         (all-the-icons-material "functions" :height 0.7 :face 'all-the-icons-red)
+         (all-the-icons-material "check_circle" :height 0.7 :face 'all-the-icons-blue)
+         (all-the-icons-material "stars" :height 0.7 :face 'all-the-icons-orange)
+         (all-the-icons-material "format_paint" :height 0.7 :face 'all-the-icons-pink))))
 ;; *** Edit
 (def-package! lispy
   :hook (emacs-lisp-mode . lispy-mode)
