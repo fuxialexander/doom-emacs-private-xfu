@@ -8,6 +8,7 @@
       recentf-auto-cleanup 60
       trash-directory "/Users/xfu/.Trash/"
       delete-by-moving-to-trash t
+      enable-remote-dir-locals t
       avy-keys '(?a ?s ?d ?f ?j ?k ?l ?\;)
       ivy-use-selectable-prompt t
       ivy-auto-select-single-candidate t
