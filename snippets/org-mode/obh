@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: hpc ob-ipython kernel header
+# key: obh_
+# --
+:header-args:ipython: :session remote-$3-kernel-$2-ssh.json :pydir /ssh:xfu@${3:$$(yas-choose-value '( "hpc7" "hpc8" "hpc9" "hpc10" "hpc11" "hpc12" "hpc13" "hpc14" "hpc15" "gpu8"))}:/research/kevinyip10/xfu/$4 :exports both :async t :results raw drawer
