@@ -10,6 +10,7 @@
 (package! ob-translate :disable t)
 (package! ob-translate :disable t)
 (package! org-bullets :disable t)
+(package! ivy-rich :disable t)
 ;; * UI
 (package! prettify-utils :recipe (:fetcher github :repo "Ilazki/prettify-utils.el" :files ("*")))
 (package! flycheck-posframe)
@@ -29,8 +30,8 @@
 (package! tldr)
 (package! ess)
 (package! electric-operator)
-(package! lispy)
 (package! emacs-snippets :recipe (:fetcher github :repo "hlissner/emacs-snippets" :files ("*")))
+(package! lispy)
 (package! lispyville)
 (package! sed-mode)
 (package! worf)
