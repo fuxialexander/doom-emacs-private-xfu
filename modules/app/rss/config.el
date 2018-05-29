@@ -34,7 +34,8 @@
   (add-hook 'elfeed-show-mode-hook #'+rss|elfeed-wrap)
 
   (after! elfeed-search
-    (push 'elfeed-search-mode evil-snipe-disabled-modes)
+    (after! evil-snipe
+      (push 'elfeed-search-mode evil-snipe-disabled-modes))
     (set! :evil-state 'elfeed-search-mode 'normal)
     ;; avoid ligature hang
     (advice-add #'elfeed-search--header-1         :override #'+rss/elfeed-search--header-1)
@@ -42,7 +43,8 @@
     (advice-add #'elfeed-show-prev                :override #'+rss/elfeed-show-prev))
 
   (after! elfeed-show
-    (push 'elfeed-show-mode evil-snipe-disabled-modes)
+    (after! evil-snipe
+      (push 'elfeed-show-mode evil-snipe-disabled-modes))
     (set! :evil-state 'elfeed-show-mode 'normal)
     (advice-add #'elfeed-show-entry        :override #'+rss/elfeed-show-entry))
 

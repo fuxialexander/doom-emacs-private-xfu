@@ -69,5 +69,6 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
     ("q" nil "cancel" :color blue))
 
   (set! :popup "^\\*Org Agenda.*" '((slot . -1) (size . 120) (side . left)) '((select . t) (modeline . nil)))
-  (push 'org-agenda-mode evil-snipe-disabled-modes)
+  (after! evil-snipe
+    (push 'org-agenda-mode evil-snipe-disabled-modes))
   (set! :evil-state 'org-agenda-mode 'normal))
