@@ -6,30 +6,6 @@
         ("bash" . shell)
         ("sh" . shell)))
 
-(defvar +ob-ipython-local-runtime-dir
-  (substring
-   (shell-command-to-string (concat "jupyter --runtime-dir")) 0 -1))
-
-(def-package! ob-ipython
-  :when (featurep! +ob-ipython)
-  :after (org ob)
-  :config (setq ob-ipython-resources-dir ".ob-ipython-resrc/")
-  ;; popup
-  (set! :popup "\\*ob-ipython.*"
-    '((slot . 2) (side . right) (size . 100) (window-height . 0.2))
-    '((select) (quit) (transient)))
-  (set! :popup "\\*Python:.*"
-    '((slot . 0) (side . right) (size . 100))
-    '((select) (quit) (transient)))
-  ;; advices for remote kernel and org-src-edit
-  (advice-add 'org-babel-edit-prep:ipython :override #'*org-babel-edit-prep:ipython)
-  (advice-add 'org-babel-ipython-initiate-session :override #'*org-babel-ipython-initiate-session)
-  (advice-add 'ob-ipython--create-repl :override #'*ob-ipython--create-repl)
-  (advice-add 'org-babel-execute:ipython :override #'*org-babel-execute:ipython)
-  (when (eq window-system 'ns)
-    (advice-add 'ob-ipython--write-base64-string :around
-                #'*ob-ipython--write-base64-string)))
-
 (defun +org-private|init-babel ()
   (defhydra +org-private@org-babel-hydra (:color pink :hint nil)
     "
@@ -49,5 +25,6 @@ Org-Babel: _j_/_k_ next/prev   _g_oto     _TAB_/_i_/_I_ show/hide
   (setq org-src-preserve-indentation nil
         org-list-description-max-indent 5
         org-edit-src-content-indentation 0)
-  (ivy-add-actions '+org-private/get-name-src-block
-                   '(("g" org-babel-goto-named-src-block "Goto"))))
+  (after! ivy
+    (ivy-add-actions '+org-private/get-name-src-block
+                     '(("g" org-babel-goto-named-src-block "Goto")))))

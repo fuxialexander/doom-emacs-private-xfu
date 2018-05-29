@@ -67,7 +67,7 @@
        (org-private
         +todo
         +babel
-        +ob-ipython
+        +ipython
         +capture
         +latex
         +export +style)

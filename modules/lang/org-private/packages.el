@@ -12,7 +12,7 @@
 (when (featurep! +attach)
   (package! org-download))
 
-(when (featurep! +babel)
+(when (featurep! +ipython)
   (package! ob-ipython :recipe (:fetcher github :repo "fuxialexander/ob-ipython" :files ("*"))))
 
 (when (featurep! +latex)

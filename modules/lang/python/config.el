@@ -21,7 +21,7 @@ is loaded.")
 ;;
 
 (def-package! python
-  :commands python-mode
+  :defer t
   :init
   (setq python-environment-directory doom-cache-dir
         python-indent-guess-indent-offset-verbose nil
@@ -33,8 +33,7 @@ is loaded.")
   (set! :company-backend 'python-mode '(company-anaconda))
   (set! :electric 'python-mode :chars '(?:))
   (set! :repl 'python-mode #'+python/repl)
-  (set! :electric 'python-mode :chars '(?:))
-  (set! :popup "^\\*Python" '((slot . 0) (side . right) (size . 100)) '((select) (quit) (transient)))
+
   (map! (:map python-mode-map
           (:localleader
             :desc "Conda Enable" :n "c" #'conda-env-activate-for-buffer
@@ -50,40 +49,51 @@ is loaded.")
           python-shell-interpreter-args "--simple-prompt --pylab"
           python-shell-prompt-regexp "In \\[[0-9]+\\]: "
           python-shell-prompt-block-regexp "\\.\\.\\.\\.: "
-          python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
-          ;; python-shell-completion-setup-code
-          ;; "from IPython.core.completerlib import module_completion"
-          ;; python-shell-completion-string-code
-          ;; "';'.join(get_ipython().Completer.all_completions('''%s'''))\n"
-          ))
+          python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "))
 
   (define-key python-mode-map (kbd "DEL") nil) ; interferes with smartparens
   (sp-with-modes 'python-mode
-    (sp-local-pair "'" nil :unless '(sp-point-before-word-p sp-point-after-word-p sp-point-before-same-p))))
+    (sp-local-pair "'" nil :unless '(sp-point-before-word-p sp-point-after-word-p sp-point-before-same-p)))
 
-(def-package! conda
-  :when (featurep! +conda)
-  :after (python)
-  :config
-  (setq conda-anaconda-home "/usr/local/anaconda3")
-  (setq +python-conda-home
-        '("/usr/local/anaconda3"
-          "/ssh:xfu@hpc10.cse.cuhk.edu.hk:/research/kevinyip10/xfu/miniconda3"
-          "/ssh:xfu@hpc11.cse.cuhk.edu.hk:/research/kevinyip10/xfu/miniconda3"))
-  (advice-add 'anaconda-mode-bootstrap :override #'*anaconda-mode-bootstrap)
-  (conda-env-autoactivate-mode -1)
-  ;; (add-hook 'python-mode-hook #'conda-env-activate-for-buffer)
-  (conda-env-initialize-interactive-shells)
-  (conda-env-initialize-eshell)
-  ;; Version management with pyenv
-  (add-hook 'conda-postactivate-hook #'+python|add-version-to-modeline)
-  (add-hook 'conda-postdeactivate-hook #'+python|add-version-to-modeline))
+  (def-package! conda
+    :when (featurep! +conda)
+    :config
+    (setq conda-anaconda-home "/usr/local/anaconda3")
+    (setq +python-conda-home
+          '("/usr/local/anaconda3"
+            "/ssh:xfu@hpc10.cse.cuhk.edu.hk:/research/kevinyip10/xfu/miniconda3"
+            "/ssh:xfu@hpc11.cse.cuhk.edu.hk:/research/kevinyip10/xfu/miniconda3"))
+    (advice-add 'anaconda-mode-bootstrap :override #'*anaconda-mode-bootstrap)
+    (conda-env-autoactivate-mode -1)
+    ;; (add-hook 'python-mode-hook #'conda-env-activate-for-buffer)
+    (conda-env-initialize-interactive-shells)
+    (conda-env-initialize-eshell)
+    ;; Version management with pyenv
+    (add-hook 'conda-postactivate-hook #'+python|add-version-to-modeline)
+    (add-hook 'conda-postdeactivate-hook #'+python|add-version-to-modeline)))
 
 (def-package! lpy
   :when (featurep! +lpy)
   :hook ((python-mode . lpy-mode))
   :config
   (require 'le-python)
+  (require 'zoutline)
+  (define-minor-mode lpy-mode "Minor mode for navigating Python code similarly to LISP."
+    :keymap lpy-mode-map
+    :lighter " LPY"
+    (if lpy-mode
+        (progn
+          (setq lispy-outline-header "# ")
+          (setq-local outline-regexp "# \\*+")
+          (setq-local lispy-outline (concat "^" outline-regexp))
+          (setq-local outline-heading-end-regexp "\n")
+          (setq-local outline-level 'lpy-outline-level)
+          (setq-local fill-paragraph-function 'lpy-fill-paragraph)
+          (setq-local fill-forward-paragraph-function 'lpy-fill-forward-paragraph-function)
+          (setq-local completion-at-point-functions '(lispy-python-completion-at-point t))
+          ;; (setq-local forward-sexp-function 'lpy-forward-sexp-function)
+          )
+      (setq-local forward-sexp-function nil)))
   (map! :map lpy-mode-map
         "n" nil
         :i "C-p" #'previous-line
@@ -93,7 +103,6 @@ is loaded.")
   (advice-add 'lispy-set-python-process-action :override #'*lispy-set-python-process-action))
 
 (def-package! anaconda-mode
-  :after python
   :hook python-mode
   :init
   (setq anaconda-mode-installation-directory (concat doom-etc-dir "anaconda/")
