@@ -39,8 +39,9 @@
         ess-expression-offset 2
         ess-r-smart-operators t
         ess-eval-visibly 'nowait
+        ess-use-ido nil
         ess-nuke-trailing-whitespace-p t
-        ess-default-style 'RStudio)
+        inferior-ess-r-program "R")
   (ess-toggle-underscore t)
   (set! :repl 'ess-mode #'+r/repl)
   (set! :evil-state 'ess-help-mode 'normal)
@@ -103,3 +104,6 @@
 (def-package! ess-smart-equals
   :hook ((ess-mode . ess-smart-equals-mode)
          (inferior-ess-mode . ess-smart-equals-mode)))
+
+(def-package! lsp-r
+  :hook (R-mode . lsp-R-enable))
