@@ -164,6 +164,7 @@
 
 (def-package! dired-subtree
   :after dired
+  :config
   (map! :map dired-mode-map
         :n "H" #'dired-subtree-remove
         :n "L" #'dired-subtree-insert
