@@ -44,7 +44,7 @@
   (start-process-shell-command
    "notmuch update"
    nil
-   "cd ~/.mail/account.gmail && /usr/local/anaconda3/bin/gmi push && /usr/local/anaconda3/bin/gmi pull && notmuch new && /usr/local/anaconda3/bin/afew -a -t"))
+   "cd ~/.mail/account.gmail && gmi push && gmi pull && notmuch new && afew -n -t"))
 
 
 
