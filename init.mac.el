@@ -20,28 +20,30 @@
        doom
        doom-dashboard
        doom-modeline
-       evil-goggles
+       ;; evil-goggles
        hl-todo
-       nav-flash
+       ;; nav-flash
        neotree
        (popup
         +all
         +defaults)
        window-select
 
-       :tools
+       :emacs
        dired
-       editorconfig
        electric-indent
-     ; ein
        eshell
-       gist
+       term
        imenu
+
+       :tools
+       editorconfig
+     ; ein
+       gist
        macos
        ;; make
        magit
        rgb
-       term
        reference
        rotate-text
        upload
@@ -190,8 +192,13 @@
  evil-shift-width 2
  evil-snipe-override-evil-repeat-keys nil
  evil-collection-company-use-tng nil
- evil-respect-visual-line-mode t)
+ evil-respect-visual-line-mode t
+ +evil-collection-disabled-list '(kotlin-mode
+                                  simple
+                                  notmuch
+                                  dired))
 
 (def-package-hook! ivy-rich
   :pre-init nil
   :pre-config nil)
+

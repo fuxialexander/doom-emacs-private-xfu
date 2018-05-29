@@ -1,4 +1,4 @@
-;;; tools/dired/config.el -*- lexical-binding: t; -*-
+;;; emacs/dired/config.el -*- lexical-binding: t; -*-
 
 (def-package! dired
   :defer t
@@ -92,21 +92,6 @@
               :n "Z" #'dired-do-compress-to
               :n "!" #'dired-do-shell-command
               :n "&" #'dired-do-async-shell-command)
-            (:desc "subtree" :prefix "i"
-              :n "i" #'dired-subtree-insert
-              :n "r" #'dired-subtree-remove
-              :n "j" #'dired-subtree-down
-              :n "k" #'dired-subtree-up
-              :n "n" #'dired-subtree-next-sibling
-              :n "p" #'dired-subtree-previous-sibling
-              :n "f" #'dired-subtree-apply-filter
-              :n "a" #'dired-subtree-narrow
-              :n "_" #'dired-subtree-beginning
-              :n "$" #'dired-subtree-end
-              :n "m" #'dired-subtree-mark-subtree
-              :n "m" #'dired-subtree-unmark-subtree
-              :n "f" #'dired-subtree-only-this-file
-              :n "d" #'dired-subtree-only-this-directory)
             ;; encryption and decryption (epa-dired)
             (:desc "crypt" :prefix "x"
               :n "d" #'epa-dired-do-decrypt
@@ -117,12 +102,9 @@
           :n "v" #'evil-visual-char
           :nv "j" #'dired-next-line
           :nv "k" #'dired-previous-line
-          :n "H" #'dired-subtree-remove
           :n "h" #'dired-up-directory
           :n "l" #'dired-find-file
-          :n "s" #'hydra-dired-quick-sort/body
-          :n "L" #'dired-subtree-insert
-          :n "i" #'dired-subtree-insert
+
           :n "#" #'dired-flag-auto-save-files
           :n "." #'evil-repeat
           :n "~" #'dired-flag-backup-files
@@ -169,7 +151,9 @@
 (def-package! dired-quick-sort
   :after dired
   :config
-  (dired-quick-sort-setup))
+  (dired-quick-sort-setup)
+  (map! :map dired-mode-map
+        :n "s" #'hydra-dired-quick-sort/body))
 
 (def-package! dired-filter
   :after dired
@@ -179,7 +163,27 @@
         :n "f" dired-filter-map))
 
 (def-package! dired-subtree
-  :after dired)
+  :after dired
+  (map! :map dired-mode-map
+        :n "H" #'dired-subtree-remove
+        :n "L" #'dired-subtree-insert
+        :n "i" #'dired-subtree-insert
+        (:localleader
+          (:desc "subtree" :prefix "i"
+            :n "i" #'dired-subtree-insert
+            :n "r" #'dired-subtree-remove
+            :n "j" #'dired-subtree-down
+            :n "k" #'dired-subtree-up
+            :n "n" #'dired-subtree-next-sibling
+            :n "p" #'dired-subtree-previous-sibling
+            :n "f" #'dired-subtree-apply-filter
+            :n "a" #'dired-subtree-narrow
+            :n "_" #'dired-subtree-beginning
+            :n "$" #'dired-subtree-end
+            :n "m" #'dired-subtree-mark-subtree
+            :n "m" #'dired-subtree-unmark-subtree
+            :n "f" #'dired-subtree-only-this-file
+            :n "d" #'dired-subtree-only-this-directory))))
 
 (def-package! dired-narrow
   :after dired
