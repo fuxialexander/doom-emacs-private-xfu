@@ -500,6 +500,7 @@ control which repositories are displayed."
 
 ;; *** Outline
 (add-hook 'emacs-lisp-mode-hook #'outline-minor-mode)
+(add-hook 'python-mode-hook #'outline-minor-mode)
 (def-package! outshine :load-path "~/.doom.d/local/"
   :hook (outline-minor-mode . outshine-hook-function)
   :config
