@@ -71,7 +71,7 @@
             [remap kill-this-buffer]      "q"
             [remap kill-buffer]           "q"
             :n doom-leader-key nil
-            :nm "q"   #'+rss/delete-pane
+            :nm "q"   #'quit-window
             :nm "o"   #'ace-link-elfeed
             :nm "RET" #'+reference/elfeed-add
             :nm "n"   #'elfeed-show-next
