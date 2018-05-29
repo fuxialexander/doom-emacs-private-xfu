@@ -996,3 +996,13 @@ BUFFER may be a string or nil."
     (if (display-graphic-p)
         (flycheck-popup-tip-delete-popup))))
 (advice-add '+syntax-checker-cleanup-popup :override #'+syntax-checker*cleanup-popup)
+
+(add-hook! minibuffer-setup (setq-local show-trailing-whitespace nil))
+
+(after! evil-mc
+  ;; Make evil-mc resume its cursors when I switch to insert mode
+  (add-hook! 'evil-mc-before-cursors-created
+    (add-hook 'evil-insert-state-entry-hook #'evil-mc-resume-cursors nil t))
+  (add-hook! 'evil-mc-after-cursors-deleted
+    (remove-hook 'evil-insert-state-entry-hook #'evil-mc-resume-cursors t)))
+
