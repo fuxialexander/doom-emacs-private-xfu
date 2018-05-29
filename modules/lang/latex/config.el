@@ -30,7 +30,7 @@
   :config
   (set! :latex-bibtex-dir "~/Dropbox/org/reference/pdf")
   (set! :latex-bibtex-file "~/Dropbox/org/reference/Bibliography.bib")
-  (load! +fontification)
+  (load! "+fontification")
   (setq
         ;; Enable parse on load.
         TeX-parse-self t
