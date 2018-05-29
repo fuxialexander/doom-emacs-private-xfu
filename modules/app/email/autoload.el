@@ -34,9 +34,9 @@
 (defun +mail/buffer-face-mode-notmuch ()
   "Sets a fixed width (monospace) font in current buffer"
   (interactive)
-  (setq buffer-face-mode-face '(:family "SF Mono" :height 1.0))
-  (buffer-face-mode)
-  (setq-local line-spacing 0.2))
+  (let ((buffer-face-mode-face '(:family "Sarasa Mono SC" :height 1.0)))
+    (buffer-face-mode)
+    (setq-local line-spacing 0.2)))
 
 ;;;###autoload
 (defun +mail/notmuch-update ()
