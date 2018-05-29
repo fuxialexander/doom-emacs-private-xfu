@@ -280,7 +280,7 @@ control which repositories are displayed."
   :commands (alert)
   :config
   (setq alert-default-style 'notifier))
-(after! tramp
+(after! tramp-sh
   (setq tramp-default-method "ssh"
         tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=600"
         tramp-remote-process-environment
@@ -288,8 +288,9 @@ control which repositories are displayed."
                 '("http_proxy=http://proxy.cse.cuhk.edu.hk:8000"
                   "https_proxy=http://proxy.cse.cuhk.edu.hk:8000"
                   "ftp_proxy=http://proxy.cse.cuhk.edu.hk:8000")))
-  (add-to-list 'tramp-remote-path "/research/kevinyip10/xfu/miniconda3/bin")
-  (add-to-list 'tramp-remote-path "/uac/gds/xfu/bin"))
+  (setq tramp-remote-path
+     (append '("/research/kevinyip10/xfu/miniconda3/bin"
+               "/uac/gds/xfu/bin") tramp-remote-path)))
 
 (def-package! pinentry
   :config (pinentry-start))
