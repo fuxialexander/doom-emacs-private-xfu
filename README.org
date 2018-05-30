@@ -1,16 +1,24 @@
 #+TITLE: fuxialexander's doom-emacs based Emacs config
-I've been quite into Emasc since 2017. Previously I use a spacemacs-based config, later I found that I'm not the type of person who tend to keep a long-running Emacs session. I the kind of person who consistently fiddle in the Emacs rabbit hole. Thus I move my config to use ~doom-emacs~ which gives me faster startup time and a lean, mean environment for me to play with ~Emacs-lisp~.
+I've been quite into Emasc since 2017. Previously I use a spacemacs-based
+config, later I found that I'm not the type of person who tend to keep a
+long-running Emacs session. I the kind of person who consistently fiddle in the
+Emacs rabbit hole. Thus I move my config to use ~doom-emacs~ which gives me
+faster startup time and a lean, mean environment for me to play with
+~Emacs-lisp~. 
 * Good stuff
 :PROPERTIES:
 :ID:       92E3B456-0358-4557-90F4-4B8A802F033D
 :END:
-- An integrated literature management system based on ~org-ref~: use org mode for PDF annotation, get literature from ~elfeed~, etc.
+- An integrated literature management system based on ~org-ref~: use org mode
+  for PDF annotation, get literature from ~elfeed~, etc. 
 - A usable ~notmuch~ email client
 - ~org-gcal~ & ~calfw~ based calendar with beautiful theme
 - Cool ~twittering.el~ UI mods (have been integrated to ~doom-emacs~)
 - Uses as many ~child-frame~ as I can
-- A hand-crafted org-html export theme with searchable table, link to ~Skim.app~ annotation, table of contents, foldable code blocks and clean interface.
-- ~ob-ipython~ and ~org~ based data science notebook with support of remote kernel.
+- A hand-crafted org-html export theme with searchable table, link to ~Skim.app~
+  annotation, table of contents, foldable code blocks and clean interface. 
+- ~ob-ipython~ and ~org~ based data science notebook with support of remote
+  kernel. 
 * Getting start
 :PROPERTIES:
 :ID:       D3947C92-6876-4B52-8A8C-98846A2D466E
