@@ -10,24 +10,20 @@ I've been quite into Emasc since 2017. Previously I use a spacemacs-based config
 - Cool ~twittering.el~ UI mods (have been integrated to ~doom-emacs~)
 - Uses as many ~child-frame~ as I can
 - A hand-crafted org-html export theme with searchable table, link to ~Skim.app~ annotation, table of contents, foldable code blocks and clean interface.
+- ~ob-ipython~ and ~org~ based data science notebook with support of remote kernel.
 * Getting start
 :PROPERTIES:
 :ID:       D3947C92-6876-4B52-8A8C-98846A2D466E
 :END:
-Simply clone both ~doom-emacs~ and my config, and modify ~.emacs.d/init.el~:
+Simply clone both ~doom-emacs~ and my config
 #+BEGIN_SRC bash
 git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
+cd ~/.emacs.d && git checkout develop
 git clone https://github.com/fuxialexander/doom-emacs-private-xfu ~/.doom.d
-vim ~/.emacs.d/init.el
+cd ~/.doom.d && git submodule update --init .
 #+END_SRC
-~~/.emacs.d/init.el~:
-#+BEGIN_SRC elisp
-(require 'core (concat user-emacs-directory "core/core"))
-(doom! :config
-       private)
-#+END_SRC
+
 And use ~make~ to install the packages, etc.
 #+BEGIN_SRC bash
-cd .emacs.d
-make
+cd ~/.emacs.d && make
 #+END_SRC
