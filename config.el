@@ -230,6 +230,8 @@ control which repositories are displayed."
   (set! :popup "^\\(?: ?\\*\\)?magit-diff:.*"
     '((slot . 2) (side . right) (window-height . 0.6))
     '((select . nil))))
+
+
 ;; ** Web
 (after! eww
   (set! :popup "^\\*eww.*"
@@ -738,6 +740,13 @@ BUFFER may be a string or nil."
      ("_" counsel-projectile-switch-project-action-org-capture
       "org-capture into project"))))
 
+(defun evil-mc-mouse-click (event)
+  "multi-cursor"
+  (interactive "e")
+  (let* ((es (event-start event)))
+    (goto-char (posn-point es))
+    (evil-mc-make-cursor-here)))
+
 ;; * Binding
 (map! :i "<M-return>" nil
       :gnvime "M-x" #'execute-extended-command
@@ -759,6 +768,9 @@ BUFFER may be a string or nil."
       :v    "<escape>"    #'evil-escape
       :gnvime "s-;" #'eval-expression
       :gnvime "s-:" #'doom/open-scratch-buffer
+      "s-<mouse-1>" #'evil-mc-mouse-click
+      "<s-return>" #'evil-mc-make-and-goto-next-match
+      "<C-s-return>" #'+evil/mc-make-cursor-here
       "s-+"       (λ! (text-scale-set 0))
       "s-="         #'text-scale-increase
       "s--"         #'text-scale-decrease
