@@ -14,7 +14,7 @@
    dired-listing-switches "-alh"
    ;; files
    image-dired-dir (concat doom-cache-dir "image-dired/")
-   image-dired-db-file (concat image-dired-dir "image-dired/db.el")
+        image-dired-db-file (concat image-dired-dir "db.el")
    image-dired-gallery-dir (concat image-dired-dir "gallery/")
    image-dired-temp-image-file (concat image-dired-dir "temp-image")
    image-dired-temp-rotate-image-file (concat image-dired-dir "temp-rotate-image"))
@@ -25,6 +25,9 @@
       (let (buffer-read-only)
         (forward-line 2) ;; beyond dir. header
         (sort-regexp-fields t "^.*$" "[ ]*." (point) (point-max))))
+    (and (featurep 'xemacs)
+         (fboundp 'dired-insert-set-properties)
+         (dired-insert-set-properties (point-min) (point-max)))
     (set-buffer-modified-p nil))
   (add-hook 'dired-after-readin-hook #'+dired|sort-directories-first)
 
