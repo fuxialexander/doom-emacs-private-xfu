@@ -1,8 +1,10 @@
 ;; ** ESS
+(defvar R-remote-host "your-remote-server")
+(defvar R-remote-session "R-session-name")
+(defvar R-remote-directory "/path/to/your/project/directory")
 
-;; (setq ess-path (car (file-expand-wildcards "~/.emacs.d/.local/packages/elpa/ess*/lisp")))
 (def-package! ess-site
-  :commands (R stata julia SAS)
+  :commands (R stata julia SAS ess-remote)
   :mode (("\\.sp\\'"           . S-mode)
          ("/R/.*\\.q\\'"       . R-mode)
          ("\\.[qsS]\\'"        . S-mode)
@@ -20,7 +22,6 @@
          ("\\.do\\'"           . STA-mode)
          ("\\.ado\\'"          . STA-mode)
          ("\\.[Ss][Aa][Ss]\\'" . SAS-mode)
-         ("\\.jl\\'"           . ess-julia-mode)
          ("\\.[Ss]t\\'"        . S-transcript-mode)
          ("\\.Sout"            . S-transcript-mode)
          ("\\.[Rr]out"         . R-transcript-mode)
@@ -33,7 +34,7 @@
          ("\\.[Jj][Mm][Dd]\\'" . ess-jags-mode))
   :init
   (unless (featurep! :lang julia)
-    (push (cons "\\.jl\\'" 'ess-julia-mode) auto-mode-alist))
+    (map-put auto-mode-alist "\\.jl\'" 'ess-julia-mode))
   :config
   (setq ess-offset-continued 'straight
         ess-expression-offset 2
@@ -47,7 +48,7 @@
   (set! :evil-state 'ess-help-mode 'normal)
   (set! :lookup 'ess-mode :documentation #'ess-display-help-on-object)
   (set! :popup "^\\*R.*" '((slot . 1) (side . right) (size . 80)) '((select) (quit) (transient) (modeline)))
-  (set! :popup "^\\*help.R.*" '((slot . 2) (side . right) (size . 80)) '((select . t) (quit . t) (transient . t) (modeline)))
+  (set! :popup "^\\*help.R.*" '((slot . 2) (side . right) (size . 80) (window-height . 0.4)) '((select . t) (quit . t) (transient . t) (modeline)))
   ;; (push (lambda (buf)
   ;;         (string-match-p "inferior-ess-mode" (symbol-name (buffer-local-value 'major-mode buf))))
   ;;       doom-real-buffer-functions)
@@ -66,6 +67,8 @@
    (:map ess-help-mode-map
           :n "q" #'quit-window
           :v "RET" #'ess-eval-region-and-go
+          :n "C-j" #'ess-skip-to-next-section
+          :n "C-k" #'ess-skip-to-previous-section
           :n "J" #'ess-skip-to-next-section
           :n "K" #'ess-skip-to-previous-section)
    (:map ess-mode-map
