@@ -2,6 +2,9 @@
 
 ;; ** Prodigy
 (def-package! prodigy
+  :commands (prodigy
+             prodigy-find-service
+             prodigy-start-service)
   :config
   (prodigy-define-tag
     :name 'email
@@ -11,8 +14,15 @@
     :command "imapnotify"
     :args (list "-c" (expand-file-name "imapnotify.js" (getenv "HOME")))
     :tags '(email)
-    :kill-signal 'sigkill)
-  (prodigy-start-service (prodigy-find-service "imapnotify-gmail")))
+    :kill-signal 'sigkill))
+
+(run-with-idle-timer
+ 10
+ nil
+ (lambda!
+  (prodigy-start-service
+   (prodigy-find-service
+    "imapnotify-gmail"))))
 
 ;;;; Notmuch
 (def-package! notmuch

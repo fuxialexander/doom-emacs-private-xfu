@@ -25,6 +25,7 @@
 
 (def-package! org-brain
   :after org
+  :commands (org-brain-visualize)
   :init
   (setq org-brain-path "~/Dropbox/org")
   (after! evil-snipe

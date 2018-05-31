@@ -82,3 +82,25 @@ high (if possible)."
     (if (and (not (eq (buffer-name (current-buffer)) "*sx-search-result*"))
              window)
         (select-window (get-buffer-window "*sx-search-result*")))))
+
+;;;###autoload (autoload 'sx-hydra/body "~/.doom.d/modules/app/sx/autoload.el" nil t)
+(defhydra sx-hydra (:color red :hint nil)
+    "
+┌^^───────────────┐
+│ _a_: questions  │
+│ _i_: inbox      │
+│ _o_: open-link  │
+│ _u_: unanswered │
+│ _n_: ask        │
+│ _s_: search     │
+│ _r_: sort       │
+└^^───────────────┘
+"
+    ("a" sx-tab-newest)
+    ("A" sx-tab-all-questions)
+    ("i" sx-inbox)
+    ("o" sx-open-link)
+    ("u" sx-tab-unanswered-my-tags)
+    ("n" sx-ask)
+    ("s" sx-search)
+    ("r" sx-question-list-order-by))

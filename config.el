@@ -44,7 +44,7 @@
 (remove-hook 'text-mode-hook #'hl-line-mode)
 ;; (remove-hook 'prog-mode-hook #'hl-line-mode)
 (remove-hook 'conf-mode-hook #'hl-line-mode)
-(menu-bar-mode 1)
+;; (menu-bar-mode 1)
 ;; (toggle-frame-fullscreen)
 (set! :popup "^\\*Customize.*" '((slot . 2) (side . right)) '((modeline . nil) (select . t) (quit . t)))
 (set! :popup " \\*undo-tree\\*" '((slot . 2) (side . left) (size . 20)) '((modeline . nil) (select . t) (quit . t)))
@@ -87,60 +87,8 @@
   (set! :evil-state 'vc-git-region-history-mode 'normal)
   (set! :popup "\\*VC-history\\*" '((slot . 2) (side . right) (size . 80)) '((modeline . nil) (select . t) (quit . t))))
 (after! colir
-  (defun colir--blend-background (start next prevn face object)
-    (let ((background-prev (face-background prevn)))
-      (progn
-        (put-text-property
-         start next
-         (if background-prev
-             (cons `(background-color
-                     . ,(colir-blend
-                         (colir-color-parse background-prev)
-                         (colir-color-parse (face-background face nil t))))
-                   prevn)
-           (list face prevn))
-         object))))
-  (defun colir-blend-face-background (start end face &optional object)
-    "Append to the face property of the text from START to END the face FACE.
-When the text already has a face with a non-plain background,
-blend it with the background of FACE.
-Optional argument OBJECT is the string or buffer containing the text.
-See also `font-lock-append-text-property'."
-    (let (next prev prevn)
-      (while (/= start end)
-        (setq next (next-single-property-change start 'face object end))
-        (setq prev (get-text-property start 'face object))
-        (setq prevn (if (listp prev)
-                        (cl-find-if #'atom prev)
-                      prev))
-        (cond
-         ((or (keywordp (car-safe prev)) (consp (car-safe prev)))
-          (put-text-property start next 'face (cons face prev) nil object))
-         ((facep prevn)
-          (colir--blend-background start next prevn face object))
-         (t
-          (put-text-property start next 'face face nil object)))
-        (setq start next)))))
-
-(defun +xfu/set--transparency (inc)
-  "Increase or decrease the selected frame transparency"
-  (let* ((alpha (frame-parameter (selected-frame) 'alpha))
-         (next-alpha (cond ((not alpha) 100)
-                           ((> (- alpha inc) 100) 100)
-                           ((< (- alpha inc) 0) 0)
-                           (t (- alpha inc)))))
-    (set-frame-parameter (selected-frame) 'alpha next-alpha)))
-
-(defhydra +xfu/set-transparency (:columns 2)
-  "
-ALPHA : [ %(frame-parameter nil 'alpha) ]
-"
-  ("j" (lambda () (interactive) (+xfu/set--transparency 1)) "+ more")
-  ("k" (lambda () (interactive) (+xfu/set--transparency -1)) "- less")
-  ("J" (lambda () (interactive) (+xfu/set--transparency 10)) "++ more")
-  ("K" (lambda () (interactive) (+xfu/set--transparency -10)) "-- less")
-  ("=" (lambda (value) (interactive "nTransparency Value 0 - 100 opaque:")
-         (set-frame-parameter (selected-frame) 'alpha value)) "Set to ?" :color blue))
+  (advice-add 'colir--blend-background :override #'*colir--blend-background)
+  (advice-add 'colir-blend-face-background :override #'*colir-blend-face-background))
 
 ;; ** File
 (after! recentf
@@ -153,15 +101,8 @@ ALPHA : [ %(frame-parameter nil 'alpha) ]
           (or (file-remote-p root)
               (string-match ".*Trash.*" root)
               (string-match ".*Cellar.*" root)))))
-
-;; ** Evil
-
-(def-package! evil-magit :after magit
-  :init
-  (setq evil-magit-state 'normal))
-(def-package! evil-ediff :load-path "~/.doom.d/local/"
-  :after ediff)
-
+(after! evil-collection
+  (add-to-list '+evil-collection-disabled-list 'notmuch))
 ;; ** Magit
 (def-package! orgit :after magit)
 (after! magithub
@@ -180,24 +121,9 @@ ALPHA : [ %(frame-parameter nil 'alpha) ]
     (pretty-magit "origin" ? '(:box nil :height 1.0 :family "github-octicons") t))
   (magit-wip-after-save-mode 1)
   (magit-wip-after-apply-mode 1)
-  (magithub-feature-autoinject t)
   (setq magit-save-repository-buffers 'dontask
         magit-repository-directories '("/Users/xfu/Source/"))
-  (defun *magit-list-repositories ()
-    "Display a list of repositories.
 
-Use the options `magit-repository-directories'
-and `magit-repository-directories-depth' to
-control which repositories are displayed."
-    (interactive)
-    (if magit-repository-directories
-        (with-current-buffer (get-buffer-create "*Magit Repositories*")
-          (magit-repolist-mode)
-          (magit-repolist-refresh)
-          (tabulated-list-print)
-          (pop-to-buffer (current-buffer)))
-      (message "You need to customize `magit-repository-directories' %s"
-               "before you can list repositories")))
   (advice-add 'magit-list-repositories :override #'*magit-list-repositories)
   (set! :evil-state 'magit-repolist-mode 'normal)
   (map! :map magit-repolist-mode-map
@@ -206,11 +132,6 @@ control which repositories are displayed."
         (:localleader
           :desc "Finish" :n "," #'with-editor-finish
           :desc "Abort" :n "k" #'with-editor-cancel))
-
-  (defun +magit/quit (&optional _kill-buffer)
-    (interactive)
-    (magit-restore-window-configuration)
-    (mapc #'kill-buffer (doom-buffers-in-mode 'magit-mode nil t)))
 
   (setq magit-bury-buffer-function #'+magit/quit
         magit-popup-display-buffer-action nil
@@ -245,39 +166,14 @@ control which repositories are displayed."
                '(pre . shr-tag-pre-highlight)))
 (after! xwidget
   (set! :popup "\\*xwidget" '((side . right) (size . 100)) '((select . t) (transient) (quit)))
-  (defun xwidget-webkit-goto-url (url)
-    "Goto URL."
-    (if (xwidget-webkit-current-session)
-        (progn
-          (xwidget-webkit-goto-uri (xwidget-webkit-current-session) url)
-          (display-buffer xwidget-webkit-last-session-buffer))
-      (xwidget-webkit-new-session url)))
-  (defun xwidget-webkit-new-session (url)
-    "Create a new webkit session buffer with URL."
-    (let*
-        ((bufname (generate-new-buffer-name "xwidget-webkit"))
-         xw)
-      (setq xwidget-webkit-last-session-buffer (get-buffer-create bufname))
-      (setq xwidget-webkit-created-window (display-buffer xwidget-webkit-last-session-buffer))
-      ;; The xwidget id is stored in a text property, so we need to have
-      ;; at least character in this buffer.
-      ;; Insert invisible url, good default for next `g' to browse url.
-      (with-selected-window xwidget-webkit-created-window
-        (insert url)
-        (put-text-property 1 (+ 1 (length url)) 'invisible t)
-        (setq xw (xwidget-insert 1 'webkit bufname
-                                 (xwidget-window-inside-pixel-width (selected-window))
-                                 (xwidget-window-inside-pixel-height (selected-window))))
-        (xwidget-put xw 'callback 'xwidget-webkit-callback)
-        (xwidget-webkit-mode)
-        (xwidget-webkit-goto-uri (xwidget-webkit-last-session) url))))
+  (advice-add 'xwidget-webkit-new-session :override #'*xwidget-webkit-new-session)
+  (advice-add 'xwidget-webkit-goto-url :override #'*xwidget-webkit-goto-url)
   (setq xwidget-webkit-enable-plugins t))
 
 
 ;; ** Tools
 (def-package! esup
   :commands (esup))
-(def-package! prettify-utils)
 (def-package! alert
   :commands (alert)
   :config
@@ -294,8 +190,8 @@ control which repositories are displayed."
      (append '("/research/kevinyip10/xfu/miniconda3/bin"
                "/uac/gds/xfu/bin") tramp-remote-path)))
 
-(def-package! pinentry
-  :config (pinentry-start))
+;; (def-package! pinentry
+;;   :config (pinentry-start))
 (def-package! academic-phrases
   :commands (academic-phrases
              academic-phrases-by-section))
@@ -308,13 +204,8 @@ control which repositories are displayed."
 
 ;; ** Term
 
-(defun dirtrack-filter-out-pwd-prompt (string)
-  "Remove the PWD match from the prompt."
-  (if (and (stringp string) (string-match "^.*AnSiT.*\n.*\n.*AnSiT.*$" string))
-      (replace-match "" t t string 0)
-    string))
-
-(add-hook 'comint-preoutput-filter-functions #'dirtrack-filter-out-pwd-prompt)
+(after! comint
+  (add-hook 'comint-preoutput-filter-functions #'dirtrack-filter-out-pwd-prompt))
 
 (def-package! iterm :load-path "~/.doom.d/local"
   :commands (iterm-cd
@@ -347,30 +238,13 @@ control which repositories are displayed."
 (def-package! realgud
   :commands (realgud:gdb realgud:trepanjs realgud:ipdb realgud:bashdb realgud:zshdb))
 
-(def-package! flycheck-posframe
-  :hook (flycheck-mode . flycheck-posframe-mode)
-  :config
+(after! flycheck-posframe
   (setq flycheck-posframe-warning-prefix "⚠ "
         flycheck-posframe-info-prefix "··· "
         flycheck-posframe-error-prefix " ")
-  (defun *flycheck-posframe-show-posframe (errors)
-    "Display ERRORS, using posframe.el library."
-    (when errors
-      (posframe-show
-       flycheck-posframe-buffer
-       :string (flycheck-posframe-format-errors errors)
-       :background-color (face-background 'flycheck-posframe-background-face nil t)
-       :override-parameters '((internal-border-width . 10))
-       :position (point))
-      (dolist (hook flycheck-posframe-hide-posframe-hooks)
-        (add-hook hook #'flycheck-posframe-hide-posframe nil t))))
-  (defun *flycheck-posframe-delete-posframe ()
-    "Delete messages currently being shown if any."
-    (posframe-hide flycheck-posframe-buffer)
-    (dolist (hook flycheck-posframe-delete-posframe-hooks)
-      (remove-hook hook #'flycheck-posframe-hide-posframe t)))
   (advice-add 'flycheck-posframe-delete-posframe :override #'*flycheck-posframe-delete-posframe)
-  (advice-add 'flycheck-posframe-show-posframe :override #'*flycheck-posframe-show-posframe))
+  (advice-add 'flycheck-posframe-show-posframe :override #'*flycheck-posframe-show-posframe)
+  (advice-add '+syntax-checker-cleanup-popup :override #'+syntax-checker*cleanup-popup))
 
 ;; *** Company
 (after! company
@@ -420,6 +294,7 @@ control which repositories are displayed."
          (all-the-icons-material "check_circle" :height 0.7 :face 'all-the-icons-blue)
          (all-the-icons-material "stars" :height 0.7 :face 'all-the-icons-orange)
          (all-the-icons-material "format_paint" :height 0.7 :face 'all-the-icons-pink))))
+
 ;; *** Edit
 (def-package! lispy
   :hook (emacs-lisp-mode . lispy-mode)
@@ -521,28 +396,6 @@ control which repositories are displayed."
 (def-package! counsel-tramp :load-path "~/.doom.d/local/"
   :commands (counsel-tramp))
 (after! lv
-  (defun *lv-window ()
-    "Ensure that LV window is live and return it."
-    (if (window-live-p lv-wnd)
-        lv-wnd
-      (let ((ori (selected-window))
-            buf)
-        (prog1 (setq lv-wnd
-                     (select-window
-                      (let ((ignore-window-parameters t))
-                        (split-window
-                         (frame-root-window) -1 'below))))
-          (if (setq buf (get-buffer " *LV*"))
-              (switch-to-buffer buf)
-            (switch-to-buffer " *LV*")
-            (set-window-hscroll lv-wnd 0)
-            (setq window-size-fixed t)
-            (setq mode-line-format nil)
-            (setq cursor-type nil)
-            (set-window-dedicated-p lv-wnd t)
-            (set-window-fringes lv-wnd 0 0 nil)
-            (set-window-parameter lv-wnd 'no-other-window t))
-          (select-window ori)))))
   (advice-add 'lv-window :override #'*lv-window))
 (after! ivy-hydra
   (defhydra +ivy@coo (:hint nil :color pink)
@@ -599,35 +452,8 @@ control which repositories are displayed."
           (swiper)
           (counsel-irony . ivy-display-function-overlay)
           (ivy-completion-in-region . ivy-display-function-overlay)
-          (t . ivy-posframe-display-at-frame-center)))
-  (ivy-posframe-enable))
+          (t . ivy-posframe-display-at-frame-center))))
 (after! counsel
-  (defun counsel-faces ()
-    "Show a list of all defined faces.
-
-You can describe, customize, insert or kill the name or selected
-candidate."
-    (interactive)
-    (let* ((minibuffer-allow-text-properties t)
-           (max-length
-            (apply #'max
-                   (mapcar
-                    (lambda (x)
-                      (length (symbol-name x)))
-                    (face-list))))
-           (counsel--faces-fmt (format "%%-%ds  " max-length))
-           (ivy-format-function #'counsel--faces-format-function))
-      (ivy-read "%d Face: " (face-list)
-                :require-match t
-                :action #'counsel-faces-action-describe
-                :preselect (symbol-name (face-at-point t))
-                :history 'counsel-faces-history
-                :caller 'counsel-faces
-                :sort t)))
-  (defun +ivy-recentf-transformer (str)
-    "Dim recentf entries that are not in the current project of the buffer you
-started `counsel-recentf' from. Also uses `abbreviate-file-name'."
-    (abbreviate-file-name str))
   ;; reset fringe after change theme
   (advice-add #'counsel-load-theme :after #'solaire-mode-reset)
 
@@ -635,52 +461,6 @@ started `counsel-recentf' from. Also uses `abbreviate-file-name'."
     "top -stats pid,command,user,cpu,mem,pstate,time -l 1"
     "Top command for `+ivy-top'."
     :group '+ivy)
-
-  (defun +ivy-top ()
-    (interactive)
-    (let* ((output (shell-command-to-string ivy-top-command))
-           (lines (progn
-                    (string-match "TIME" output)
-                    (split-string (substring output (+ 1 (match-end 0))) "\n")))
-           (candidates (mapcar (lambda (line)
-                                 (list line (split-string line " " t)))
-                               lines)))
-      (ivy-read "process: " candidates)))
-
-  (defun +ivy/reloading (cmd)
-    (lambda (x)
-      (funcall cmd x)
-      (ivy--reset-state ivy-last)))
-  (defun +ivy/given-file (cmd prompt)   ; needs lexical-binding
-    (lambda (source)
-      (let ((target
-             (let ((enable-recursive-minibuffers t))
-               (read-file-name
-                (format "%s %s to:" prompt source)))))
-        (funcall cmd source target 1))))
-  (defun +ivy/confirm-delete-file (x)
-    (dired-delete-file x 'confirm-each-subdirectory))
-  (defun *ivy--switch-buffer-action (buffer)
-    "Switch to BUFFER.
-BUFFER may be a string or nil."
-    (with-ivy-window
-      (if (zerop (length buffer))
-          (display-buffer
-           ivy-text nil 'force-same-window)
-        (let ((virtual (assoc buffer ivy--virtual-buffers))
-              (view (assoc buffer ivy-views)))
-          (cond ((and virtual
-                      (not (get-buffer buffer)))
-                 (find-file (cdr virtual)))
-                (view
-                 (delete-other-windows)
-                 (let (
-                       ;; silence "Directory has changed on disk"
-                       (inhibit-message t))
-                   (ivy-set-view-recur (cadr view))))
-                (t
-                 (display-buffer
-                  buffer nil 'force-same-window)))))))
   (advice-add 'ivy--switch-buffer-action :override #'*ivy--switch-buffer-action)
   (ivy-add-actions
    'ivy-switch-buffer
@@ -698,12 +478,10 @@ BUFFER may be a string or nil."
             (with-ivy-window (insert (format "[[./%s]]" (f-relative path))))) "Insert org-link (rel. path)")
      ("L" (lambda (path) "Insert org-link with absolute path"
             (with-ivy-window (insert (format "[[%s]]" path)))) "Insert org-link (abs. path)")))
-
-  (defun +ivy/helpful-function (prompt)
-    (helpful-function (intern prompt)))
   (ivy-add-actions
    'counsel-M-x
    `(("h" +ivy/helpful-function "Helpful"))))
+
 (after! counsel-projectile
   (ivy-add-actions
    'counsel-projectile-switch-project
@@ -740,12 +518,7 @@ BUFFER may be a string or nil."
      ("_" counsel-projectile-switch-project-action-org-capture
       "org-capture into project"))))
 
-(defun evil-mc-mouse-click (event)
-  "multi-cursor"
-  (interactive "e")
-  (let* ((es (event-start event)))
-    (goto-char (posn-point es))
-    (evil-mc-make-cursor-here)))
+
 
 ;; * Binding
 (map! :i "<M-return>" nil
@@ -969,31 +742,31 @@ BUFFER may be a string or nil."
           :n "q"    #'quit-window
           :n "Q"    #'ivy-resume)))
 
-;; org
-(after! org
-  (do-repeat! org-forward-heading-same-level org-forward-heading-same-level org-backward-heading-same-level)
-  (do-repeat! org-next-item org-next-item org-previous-item)
-  (do-repeat! org-next-link org-next-link org-previous-link)
-  (do-repeat! org-next-block org-next-block org-previous-block)
-  (do-repeat! org-next-visible-heading org-next-visible-heading org-previous-visible-heading)
-  (do-repeat! org-backward-heading-same-level org-forward-heading-same-level org-backward-heading-same-level)
-  (do-repeat! org-previous-item org-next-item org-previous-item)
-  (do-repeat! org-previous-link org-next-link org-previous-link)
-  (do-repeat! org-previous-block org-next-block org-previous-block)
-  (do-repeat! org-previous-visible-heading org-next-visible-heading org-previous-visible-heading))
+;; ;; org
+;; (after! org
+;;   (do-repeat! org-forward-heading-same-level org-forward-heading-same-level org-backward-heading-same-level)
+;;   (do-repeat! org-next-item org-next-item org-previous-item)
+;;   (do-repeat! org-next-link org-next-link org-previous-link)
+;;   (do-repeat! org-next-block org-next-block org-previous-block)
+;;   (do-repeat! org-next-visible-heading org-next-visible-heading org-previous-visible-heading)
+;;   (do-repeat! org-backward-heading-same-level org-forward-heading-same-level org-backward-heading-same-level)
+;;   (do-repeat! org-previous-item org-next-item org-previous-item)
+;;   (do-repeat! org-previous-link org-next-link org-previous-link)
+;;   (do-repeat! org-previous-block org-next-block org-previous-block)
+;;   (do-repeat! org-previous-visible-heading org-next-visible-heading org-previous-visible-heading))
 
-;; buffer
-(do-repeat! previous-buffer next-buffer previous-buffer)
-(do-repeat! next-buffer next-buffer previous-buffer)
-;; workspace
-(after! persp
-  (do-repeat! +workspace/switch-left +workspace/switch-left +workspace/switch-right)
-  (do-repeat! +workspace/switch-right +workspace/switch-left +workspace/switch-right))
+;; ;; buffer
+;; (do-repeat! previous-buffer next-buffer previous-buffer)
+;; (do-repeat! next-buffer next-buffer previous-buffer)
+;; ;; workspace
+;; (after! persp
+;;   (do-repeat! +workspace/switch-left +workspace/switch-left +workspace/switch-right)
+;;   (do-repeat! +workspace/switch-right +workspace/switch-left +workspace/switch-right))
 
-;; git-gutter
-(after! git-gutter
-  (do-repeat! git-gutter:next-hunk git-gutter:next-hunk git-gutter:previous-hunk)
-  (do-repeat! git-gutter:previous-hunk git-gutter:next-hunk git-gutter:previous-hunk))
+;; ;; git-gutter
+;; (after! git-gutter
+;;   (do-repeat! git-gutter:next-hunk git-gutter:next-hunk git-gutter:previous-hunk)
+;;   (do-repeat! git-gutter:previous-hunk git-gutter:next-hunk git-gutter:previous-hunk))
 
 ;; load time consuming stuff when idle
 (run-with-idle-timer 30 t (lambda! (require 'org-clock)
@@ -1002,14 +775,6 @@ BUFFER may be a string or nil."
                               (require 'org-ref)))
 
 
-(defun +syntax-checker*cleanup-popup ()
-  "TODO"
-  (if (and EMACS26+
-           (display-graphic-p))
-      (flycheck-posframe-hide-posframe)
-    (if (display-graphic-p)
-        (flycheck-popup-tip-delete-popup))))
-(advice-add '+syntax-checker-cleanup-popup :override #'+syntax-checker*cleanup-popup)
 
 (add-hook! minibuffer-setup (setq-local show-trailing-whitespace nil))
 

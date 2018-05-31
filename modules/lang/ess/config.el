@@ -104,6 +104,3 @@
 (def-package! ess-smart-equals
   :hook ((ess-mode . ess-smart-equals-mode)
          (inferior-ess-mode . ess-smart-equals-mode)))
-
-(def-package! lsp-r
-  :hook (R-mode . lsp-R-enable))

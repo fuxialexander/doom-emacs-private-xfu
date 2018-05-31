@@ -1,8 +1,8 @@
 ;;; app/sx/config.el -*- lexical-binding: t; -*-
 
 (def-package! sx
+  :commands (sx-search)
   :config
-  (load "sx-autoloads.el" nil t t)
   (setq sx-tab-default-order 'creation
         sx-search-default-order 'creation
         sx-question-mode-display-buffer-function 'display-buffer
@@ -35,24 +35,4 @@
   (advice-add 'sx-search :override #'*sx-search)
   (advice-add 'sx-question-list--create-question-window :override #'*sx-question-list--create-question-window)
   (advice-add 'sx-question-list-view-previous :before #'*goto-sx-question-list)
-  (advice-add 'sx-question-list-view-next :before #'*goto-sx-question-list)
-  (defhydra sx-hydra (:color red :hint nil)
-    "
-┌^^───────────────┐
-│ _a_: questions  │
-│ _i_: inbox      │
-│ _o_: open-link  │
-│ _u_: unanswered │
-│ _n_: ask        │
-│ _s_: search     │
-│ _r_: sort       │
-└^^───────────────┘
-"
-    ("a" sx-tab-newest)
-    ("A" sx-tab-all-questions)
-    ("i" sx-inbox)
-    ("o" sx-open-link)
-    ("u" sx-tab-unanswered-my-tags)
-    ("n" sx-ask)
-    ("s" sx-search)
-    ("r" sx-question-list-order-by)))
+  (advice-add 'sx-question-list-view-next :before #'*goto-sx-question-list))

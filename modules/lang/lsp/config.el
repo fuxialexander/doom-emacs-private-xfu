@@ -86,3 +86,7 @@
   (set! :lookup 'python-mode
     :definition #'lsp-ui-peek-find-definitions
     :references #'lsp-ui-peek-find-references))
+
+;; * R
+(def-package! lsp-r
+  :hook (R-mode . lsp-R-enable))
