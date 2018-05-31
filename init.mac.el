@@ -20,9 +20,9 @@
        doom
        doom-dashboard
        doom-modeline
-       ;; evil-goggles
+       evil-goggles
        hl-todo
-       ;; nav-flash
+       nav-flash
        neotree
        (popup
         +all
@@ -34,11 +34,12 @@
        electric-indent
        eshell
        term
+       ediff
        imenu
 
        :tools
        editorconfig
-     ; ein
+       ein
        gist
        macos
        ;; make
@@ -54,7 +55,7 @@
        lsp
        data
        (python +lpy +conda)
-       cc-private
+       ;; cc-private
        ess
        (latex
        +latexmk
@@ -62,16 +63,15 @@
        (org
         +attach
         +babel
+        +ipython +right-popup
         +capture
         +present)
        (org-private
         +todo
         +babel
-        +ipython
         +capture
         +latex
         +export +style)
-       ;; data
        emacs-lisp
        javascript
        markdown
@@ -81,7 +81,7 @@
        :app
        sx
        rss
-       twitter
+       ;; twitter
        email
        (write
         +wordnut
