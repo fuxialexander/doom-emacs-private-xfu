@@ -81,8 +81,8 @@ If run interactively, get ENTRY from context."
      :n "}" #'org-brain-visualize-remove-grandparent
      )))
 
-(def-package! org-web-tools
-  :after org)
+;; (def-package! org-web-tools
+;;   :after org)
 
 (def-package! evil-org
   :when (featurep! :feature evil)
