@@ -263,11 +263,11 @@ name of the sub-editing buffer."
       t)))
 (advice-add #'org-edit-src-code #'+org-private|org-edit-src-code)
 #+END_SRC
-
 * org-wild-notifier
 :PROPERTIES:
 :ID:       C8C6E74C-5936-4C00-AF8F-4F68BBDD77F1
 :END:
+Pretty buggy beast...
 #+begin_src emacs-lisp :tangle yes
 (def-package! org-wild-notifier
   :commands (org-wild-notifier-mode
@@ -281,3 +281,27 @@ name of the sub-editing buffer."
     (message "Org wild notifier, naughty naughty fire!")))
 (start-org-wild-notifier)
 #+end_src
+
+* Set transparency
+#+BEGIN_SRC elisp
+(defun +xfu/set--transparency (inc)
+  "Increase or decrease the selected frame transparency"
+  (let* ((alpha (frame-parameter (selected-frame) 'alpha))
+         (next-alpha (cond ((not alpha) 100)
+                           ((> (- alpha inc) 100) 100)
+                           ((< (- alpha inc) 0) 0)
+                           (t (- alpha inc)))))
+    (set-frame-parameter (selected-frame) 'alpha next-alpha)))
+
+(defhydra +xfu/set-transparency (:columns 2)
+  "
+ALPHA : [ %(frame-parameter nil 'alpha) ]
+"
+  ("j" (lambda () (interactive) (+xfu/set--transparency 1)) "+ more")
+  ("k" (lambda () (interactive) (+xfu/set--transparency -1)) "- less")
+  ("J" (lambda () (interactive) (+xfu/set--transparency 10)) "++ more")
+  ("K" (lambda () (interactive) (+xfu/set--transparency -10)) "-- less")
+  ("=" (lambda (value) (interactive "nTransparency Value 0 - 100 opaque:")
+         (set-frame-parameter (selected-frame) 'alpha value)) "Set to ?" :color blue))
+#+END_SRC
+Well I didn't actually used that...
