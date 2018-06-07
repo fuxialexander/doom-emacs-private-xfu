@@ -17,8 +17,7 @@
     (setq langtool-default-language +langtool-default-lang
           langtool-mother-tongue +langtool-mother-tongue
           langtool-language-tool-jar +langtool-jar-path)))
-(when (featurep! +wordnut)
-  (def-package! wordnut
+(def-package! wordnut
     :commands (wordnut-search
                wordnut-lookup-current-word)
     :config
@@ -47,17 +46,16 @@
           :nm "H"       #'wordnut-history-backward
           :nm "L"       #'wordnut-history-forward
           :nm "gk"      #'outline-backward-same-level
-          :nm "gj"      #'outline-forward-same-level)))
-(when (featurep! +synosaurus)
-  (def-package! synosaurus
+          :nm "gj"      #'outline-forward-same-level))
+(def-package! synosaurus
     :commands (synosaurus-mode
                synosaurus-lookup
                synosaurus-choose-and-replace)
     :init
     (require 'synosaurus-wordnet)
     :config
-    (setq synosaurus-choose-method 'default)))
-(when (featurep! +osxdict)
+    (setq synosaurus-choose-method 'default))
+(when IS-MAC
   (def-package! osx-dictionary
     :commands (osx-dictionary-search-word-at-point
                osx-dictionary-search-input)
@@ -72,10 +70,13 @@
     (set! :popup "\\*osx-dictionary"
       '((size . 80) (side . right))
       '((select . t) (quit . t)))))
+(def-package! powerthesaurus
+  :commands (powerthesaurus-lookup-word))
 (def-package! org-variable-pitch :load-path "~/.doom.d/local"
   :commands (org-variable-pitch-minor-mode)
   :init
   (setq ovp-font "Operator Mono"))
+
 ;; (def-package! mixed-pitch
 ;;   :config
 ;;   ;; (define-minor-mode mixed-pitch-mode

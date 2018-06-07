@@ -3,11 +3,9 @@
 
 (when (featurep! +langtool)
   (package! langtool))
-(when (featurep! +wordnut)
-  (package! wordnut))
-(when (featurep! +osxdict)
+(when IS-MAC
   (package! osx-dictionary))
-(when (featurep! +synosaurus)
-  (package! synosaurus))
-
+(package! wordnut)
+(package! synosaurus)
+(package! powerthesaurus)
 (package! mixed-pitch)
