@@ -2,11 +2,10 @@
 (doom! :feature
        eval
        (evil
-        ;; +everywhere
-        )
+        +everywhere)
        file-templates
-       lookup
-       ;; +devdocs
+       (lookup
+        +devdocs)
        snippets
        spellcheck
        (syntax-checker)
@@ -21,38 +20,33 @@
        doom
        doom-dashboard
        doom-modeline
+       evil-goggles
        hl-todo
        nav-flash
-       window-select
-       (popup
-        ;; +all
-        +defaults)
        neotree
+       (popup
+        +all
+        +defaults)
+       window-select
 
-       :tools
+       :emacs
        dired
-       ein
        electric-indent
        eshell
-       gist
-       imenu
-       ;; macos
-       make
-       magit
-       ;; rgb
        term
-       ;; reference
-       ;; upload
-       ;; (password-store +auth)
+       ediff
+       imenu
+
+       :tools
+       editorconfig
+       ein
+       gist
+       magit
 
        :lang
        lsp
-       python
-       ;; cc-private
+       (python +lpy +conda)
        ess
-       ;; (latex
-       ;;  +latexmk
-       ;;  +skim)
        (org
         ;; +attach
         +babel
@@ -68,12 +62,8 @@
         )
        ;; data
        emacs-lisp
-       javascript
        markdown
        sh
-       (web +html)
-
-
        :config
        (default +snippets +evil-commands +bindings))
 
@@ -97,7 +87,7 @@
  doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 11)
  doom-big-font (font-spec :family "SF Mono" :size 16)
  ovp-font "Iosevka"
- doom-theme 'doom-nord-light
+ doom-theme 'doom-city-lights
  doom-line-numbers-style nil
  +doom-modeline-buffer-file-name-style 'truncate-upto-project
  doom-neotree-enable-variable-pitch t
@@ -120,29 +110,6 @@
                               (assq 'truncation fringe-indicator-alist)
                               (delq (assq 'continuation fringe-indicator-alist)
                                     fringe-indicator-alist)))
-(defun *doom-dashboard-widget-banner ()
-  (mapc (lambda (line)
-          (insert (propertize (+doom-dashboard--center +doom-dashboard--width line)
-                              'face 'font-lock-comment-face) " ")
-          (insert "\n"))
-        '(" ,ggg,        gg    ,ggggggg,        ,gggg,        ,a8a,  ,ggg,          ,gg"
-          "dP''Y8b       88  ,dP''''''Y8b      d8' '8I       ,8' '8,dP'''Y8,      ,dP' "
-          "Yb, `88       88  d8'    a  Y8      88  ,dP       d8   8bYb,_  '8b,   d8'   "
-          " `'  88       88  88     'Y8P'   8888888P'        88   88 `''    Y8,,8P'    "
-          "     88aaaaaaa88  `8baaaa           88            88   88         Y88'      "
-          "     88'''''''88 ,d8P''''           88            Y8   8P        ,888b      "
-          "     88       88 d8'           ,aa,_88            `8, ,8'       d8' '8b,    "
-          "     88       88 Y8,          dP' '88P       8888  '8,8'      ,8P'    Y8,   "
-          "     88       Y8,`Yba,,_____, Yb,_,d88b,,_   `8b,  ,d8b,     d8'       'Yb, "
-          "     88       `Y8  `'Y8888888  'Y8P'  'Y88888  'Y88P' 'Y8  ,8P'          'Y8"
-          "                                                                            "
-          "                                                                            "
-          "                                 E M A C S                                  "
-          "                                                                            "
-          "                                                                            "
-          "                                                                            ")))
-
-(advice-add 'doom-dashboard-widget-banner :override #'*doom-dashboard-widget-banner)
 
 
 ;; * Config
@@ -163,4 +130,11 @@
  evil-shift-width 2
  evil-snipe-override-evil-repeat-keys nil
  evil-collection-company-use-tng nil
- evil-respect-visual-line-mode t)
+ evil-respect-visual-line-mode t
+ +magit-hub-features t
+ +evil-collection-disabled-list '(notmuch kotlin-mode simple dired helm ivy anaconda-mode))
+
+(def-package-hook! ivy-rich
+  :pre-init nil
+  :pre-config nil)
+
