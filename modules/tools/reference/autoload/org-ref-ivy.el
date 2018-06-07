@@ -718,7 +718,35 @@ end tell
     (unless (file-exists-p pdf-file)
       (url-copy-file pdf pdf-file))))
 
-
+;; * Hydra
+;;;###autoload (autoload '+reference@org-ref-cite-hydra/body "~/.doom.d/modules/tools/reference/autoload/org-ref-ivy" nil t)
+(defhydra +reference@org-ref-cite-hydra (:color blue :hint nil)
+    "
+_p_: Open pdf     _w_: WOS          _g_: Google Scholar _K_: Copy citation to clipboard
+_u_: Open url     _r_: WOS related  _P_: Pubmed         _k_: Copy key to clipboard
+_n_: Open notes   _c_: WOS citing   _C_: Crossref       _f_: Copy formatted entry
+_o_: Open entry   _e_: Email entry  ^ ^                 _q_: quit
+"
+    ("o" org-ref-open-citation-at-point)
+    ("p" org-ref-open-pdf-at-point)
+    ("n" org-ref-open-notes-at-point)
+    ("u" org-ref-open-url-at-point)
+    ("w" org-ref-wos-at-point)
+    ("r" org-ref-wos-related-at-point)
+    ("c" org-ref-wos-citing-at-point)
+    ("g" org-ref-google-scholar-at-point)
+    ("P" org-ref-pubmed-at-point)
+    ("C" org-ref-crossref-at-point)
+    ("K" org-ref-copy-entry-as-summary)
+    ("k" (progn
+           (kill-new
+            (car (org-ref-get-bibtex-key-and-file)))))
+    ("f" (kill-new
+          (bibtex-completion-apa-format-reference (org-ref-get-bibtex-key-under-cursor))))
+    ("e" (kill-new (save-excursion
+                     (org-ref-open-citation-at-point)
+                     (org-ref-email-bibtex-entry))))
+    ("q" nil))
 ;; * advices for org-ref
 ;;;###autoload
 (defun +reference*org-ref-key ()
@@ -867,6 +895,23 @@ checked."
 	(when (and doi-utils-open-pdf-after-download (file-exists-p pdf-file))
 	  (org-open-file pdf-file))))))
 
+;;;###autoload
+(defun +reference*org-ref-ivy-insert-cite-link (&optional arg)
+    "Ivy function for interacting with bibtex.
+Uses `org-ref-find-bibliography' for bibtex sources, unless a
+prefix ARG is used, which uses `org-ref-default-bibliography'."
+    (interactive "P")
+    ;; (setq org-ref-bibtex-files (if arg org-ref-default-bibliography (org-ref-find-bibliography)))
+    (when arg (bibtex-completion-clear-cache))
+    (bibtex-completion-init)
+    ;; (setq org-ref-ivy-cite-marked-candidates '())
+    (ivy-read "Open: " (bibtex-completion-candidates)
+              :require-match t
+              :keymap org-ref-ivy-cite-keymap
+              :re-builder org-ref-ivy-cite-re-builder
+              :action 'or-ivy-bibtex-insert-cite
+              :caller 'org-ref-ivy-insert-cite-link))
+
 ;; * advice of org-ref-ivy-actions
 ;;;###autoload
 (defun org-ref-ivy-bibtex-get-pdf-for-entry (entry)
@@ -963,3 +1008,5 @@ Create email unless called from an email."
 ;;            )
 ;;       (start-process "Open URI" nil "/usr/bin/open" uri)
 ;;       )))
+
+
