@@ -113,7 +113,7 @@
  doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 11)
  doom-big-font (font-spec :family "SF Mono" :size 16)
  ovp-font "Iosevka"
- doom-theme 'doom-nord-light
+ doom-theme 'doom-city-lights
  doom-line-numbers-style nil
  +doom-modeline-buffer-file-name-style 'truncate-upto-project
  doom-neotree-enable-variable-pitch t
@@ -144,7 +144,7 @@
        ns-alternate-modifier 'meta
        ns-command-modifier 'super)
       (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-      (add-to-list 'default-frame-alist '(ns-appearance . light)))
+      (add-to-list 'default-frame-alist '(ns-appearance . dark)))
   (setq mac-command-modifier 'super
         mac-option-modifier 'meta
         mac-pass-command-to-system nil))
