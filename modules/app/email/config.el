@@ -135,6 +135,7 @@
             :nmv "R"   #'notmuch-search-reply-to-thread-sender
             :nmv "r"   #'notmuch-search-reply-to-thread
             :nmv "s"   #'counsel-notmuch
+            :nmv "S"   #'notmuch-search
             :nmv "x"   #'+mail/notmuch-search-spam)
           (:map notmuch-tree-mode-map
             :nmv "j"   #'notmuch-tree-next-message
