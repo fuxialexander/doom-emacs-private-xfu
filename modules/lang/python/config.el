@@ -106,12 +106,13 @@ is loaded.")
   :init
   (setq anaconda-mode-installation-directory (concat doom-etc-dir "anaconda/")
         anaconda-mode-eldoc-as-single-line t
-        anaconda-mode-server-command "
-import sys, site
-site.addsitedir('.')
-import anaconda_mode
-anaconda_mode.main(sys.argv[-2:])
-")
+        ;; anaconda-mode-server-command "
+;; import sys, site
+;; site.addsitedir('.')
+;; import anaconda_mode
+;; anaconda_mode.main(sys.argv[-2:])
+;; "
+        )
   :config
   (add-hook 'anaconda-mode-hook #'anaconda-eldoc-mode)
   (set! :company-backend 'python-mode '(company-anaconda))
@@ -139,9 +140,7 @@ anaconda_mode.main(sys.argv[-2:])
         :nv "h" #'anaconda-mode-show-doc
         :nv "a" #'anaconda-mode-find-assignments
         :nv "f" #'anaconda-mode-find-file
-        :nv "u" #'anaconda-mode-find-references
-        :map anaconda-view-mode-map
-        :nv "q" #'quit-window))
+        :nv "u" #'anaconda-mode-find-references))
 
 (def-package! py-isort
   :after python
@@ -164,9 +163,8 @@ anaconda_mode.main(sys.argv[-2:])
   :preface
   (defvar nose-mode-map (make-sparse-keymap))
   :init
-  ;; (associate! nose-mode :match "/test_.+\\.py$" :modes (python-mode))
+  (associate! nose-mode :match "/test_.+\\.py$" :modes (python-mode))
   :config
-
   (set! :popup "^\\*nosetests" '((size . 0.4)) '((select)))
   (set! :yas-minor-mode 'nose-mode)
   (map! :map nose-mode-map
@@ -186,9 +184,5 @@ anaconda_mode.main(sys.argv[-2:])
 ;;
 
 (when (featurep! :feature evil +everywhere)
-  (add-hook 'anaconda-mode-hook #'evil-normalize-keymaps)
-  (map! :after anaconda-mode
-        :map anaconda-view-mode-map
-        :m "]]" #'anaconda-view-mode-next-definition
-        :m "[[" #'anaconda-view-mode-previous-definition
-        :n "q"  #'quit-window))
+  (add-hook! '(anaconda-mode-hook nose-mode-hook)
+    #'evil-normalize-keymaps))

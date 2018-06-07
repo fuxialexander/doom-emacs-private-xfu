@@ -20,15 +20,15 @@
   "Run `anaconda-mode' server.
 CALLBACK function will be called when `anaconda-mode-port' will
 be bound."
+  (require 'pythonic)
   (setq anaconda-mode-process
         (start-pythonic :process anaconda-mode-process-name
                         :buffer anaconda-mode-process-buffer
-                        :cwd (anaconda-mode-server-directory)
-                        :filter (lambda (process output) (anaconda-mode-bootstrap-filter process output))
-                        :sentinel 'anaconda-mode-bootstrap-sentinel
+                        :filter (lambda (process output) (anaconda-mode-bootstrap-filter process output callback))
                         :query-on-exit nil
                         :args (list "-c"
                                     anaconda-mode-server-command
+                                    (anaconda-mode-server-directory)
                                     (if (pythonic-remote-p)
                                         "0.0.0.0" "127.0.0.1")
                                     (or (pythonic-file-name pythonic-environment) ""))))
