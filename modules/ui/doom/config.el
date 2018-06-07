@@ -23,12 +23,11 @@
 
 ;; <https://github.com/hlissner/emacs-doom-theme>
 ;; def-package! doom-themes :load-path "/Users/xfu/Source/playground/emacs-doom-themes"
-(def-package! doom-themes
+(def-package! doom-themes :load-path "~/.doom.d/local/emacs-doom-themes"
   :defer t
-  :init
+  :config
   (unless doom-theme
     (setq doom-theme 'doom-one))
-  :config
   ;; Reload common faces when reloading doom-themes live
   (defun +doom*reload-common (&rest _) (load "doom-themes-common.el" nil t))
   (advice-add #'doom//reload-theme :before #'+doom*reload-common)
