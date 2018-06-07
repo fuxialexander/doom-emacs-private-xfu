@@ -190,8 +190,14 @@
      (append '("/research/kevinyip10/xfu/miniconda3/bin"
                "/uac/gds/xfu/bin") tramp-remote-path)))
 
-;; (def-package! pinentry
-;;   :config (pinentry-start))
+(def-package! pinentry
+  :commands (pinentry-start))
+(run-with-idle-timer
+ 10
+ nil
+ (lambda!
+  (require 'pass)
+  (pinentry-start)))
 (def-package! academic-phrases
   :commands (academic-phrases
              academic-phrases-by-section))

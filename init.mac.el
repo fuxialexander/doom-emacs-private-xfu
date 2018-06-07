@@ -49,7 +49,7 @@
        rotate-text
        upload
        tmux
-       (password-store +auth)
+       password-store
 
        :lang
        lsp
