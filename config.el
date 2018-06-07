@@ -262,14 +262,14 @@
      (append '("/research/kevinyip10/xfu/miniconda3/bin"
                "/uac/gds/xfu/bin") tramp-remote-path)))
 
-(def-package! pinentry
-  :commands (pinentry-start))
-(run-with-idle-timer
- 10
- nil
- (lambda!
-  (require 'pass)
-  (pinentry-start)))
+;; (def-package! pinentry
+;;   :commands (pinentry-start))
+;; (run-with-idle-timer
+;;  10
+;;  nil
+;;  (lambda!
+;;   (require 'pass)
+;;   (pinentry-start)))
 (def-package! academic-phrases
   :commands (academic-phrases
              academic-phrases-by-section))
@@ -424,7 +424,6 @@
                                         (cons "->" " -> ") ; function return types
                                         )
   (electric-operator-add-rules-for-mode 'sh-mode
-                                        (cons "=" " = ")
                                         (cons "<=" " <= ")
                                         (cons ">=" " >= ")
                                         (cons ">" " > ")
@@ -534,7 +533,6 @@
 (after! counsel
   ;; reset fringe after change theme
   (advice-add #'counsel-load-theme :after #'solaire-mode-reset)
-
   (defcustom ivy-top-command
     "top -stats pid,command,user,cpu,mem,pstate,time -l 1"
     "Top command for `+ivy-top'."
@@ -694,11 +692,11 @@
           :desc "Symbols across buffers"      :nv "I" #'imenu-anywhere
           :desc "Online providers"            :nv "o" #'+lookup/online-select)
         (:desc "iTerm" :prefix "_"
-          :desc "cd"                          :nv "d" #'mac-iTerm-cd
-          :desc "send command"                :nv "_" #'iterm-send-text
-          :desc "send command"                :nv "p" #'iterm-send-text-ipy
-          :desc "send command"                :nv "P" #'iterm-send-text-ipy
-          :desc "send command"                :nv "R" #'iterm-send-file-R)
+          :desc "cd"                   :nv "d" #'mac-iTerm-cd
+          :desc "send text"            :nv "_" #'iterm-send-text
+          :desc "send ipython command" :nv "p" #'iterm-send-text-ipy
+          :desc "send ipython text"    :nv "P" #'iterm-send-text-ipy
+          :desc "send file to R"       :nv "R" #'iterm-send-file-R)
         (:desc "file" :prefix "f"
           :desc "Find file on TRAMP"          :n "t" #'counsel-tramp)
         (:desc "git" :prefix "g"
