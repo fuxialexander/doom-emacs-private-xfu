@@ -777,14 +777,7 @@ This holds only for inactive timestamps."
 ;;
 
 (defun +org-private|setup-editing ()
-  (after! smartparens
-    (sp-with-modes 'org-mode
-      (sp-local-pair "\\(" "\\)"
-                     :post-handlers '(sp-latex-insert-spaces-inside-pair)
-                     :unless '(sp-latex-point-after-backslash))
-      (sp-local-pair "\\[" "\\]"
-                     :post-handlers '(sp-latex-insert-spaces-inside-pair)
-                     :unless '(sp-latex-point-after-backslash)))))
+  )
 
 
 (def-package! org-clock
