@@ -101,24 +101,24 @@
           (or (file-remote-p root)
               (string-match ".*Trash.*" root)
               (string-match ".*Cellar.*" root)))))
-(after! evil-collection
-  (add-to-list '+evil-collection-disabled-list 'notmuch))
+
 ;; ** Magit
 (def-package! orgit :after magit)
 (after! magithub
   (setq magithub-clone-default-directory "/Users/xfu/Source/playground/"))
-
+;; (def-package! pretty-magit
+;;     :load-path "~/.doom.d/local/"
+;;     :commands (pretty-magit))
 (after! magit
-  (def-package! pretty-magit
-    :load-path "~/.doom.d/local/"
-    :config
-    (pretty-magit "Feature" ? '(:foreground "slate gray" :height 1.0 :family "FontAwesome"))
-    (pretty-magit "Add" ? '(:foreground "#375E97" :height 1.0 :family "FontAwesome"))
-    (pretty-magit "Fix" ? '(:foreground "#FB6542" :height 1.0 :family "FontAwesome"))
-    (pretty-magit "Clean" ? '(:foreground "#FFBB00" :height 1.0 :family "FontAwesome"))
-    (pretty-magit "Docs" ? '(:foreground "#3F681C" :height 1.0 :family "FontAwesome"))
-    (pretty-magit "master" ? '(:box nil :height 1.0 :family "github-octicons") t)
-    (pretty-magit "origin" ? '(:box nil :height 1.0 :family "github-octicons") t))
+  (after! solaire-mode
+    (add-hook 'magit-mode-hook #'solaire-mode))
+  ;; (pretty-magit "Feature" ? '(:foreground "slate gray" :height 1.0 :family "FontAwesome"))
+  ;; (pretty-magit "Add" ? '(:foreground "#375E97" :height 1.0 :family "FontAwesome"))
+  ;; (pretty-magit "Fix" ? '(:foreground "#FB6542" :height 1.0 :family "FontAwesome"))
+  ;; (pretty-magit "Clean" ? '(:foreground "#FFBB00" :height 1.0 :family "FontAwesome"))
+  ;; (pretty-magit "Docs" ? '(:foreground "#3F681C" :height 1.0 :family "FontAwesome"))
+  ;; (pretty-magit "master" ? '(:box nil :height 1.0 :family "github-octicons") t)
+  ;; (pretty-magit "origin" ? '(:box nil :height 1.0 :family "github-octicons") t)
   (magit-wip-after-save-mode 1)
   (magit-wip-after-apply-mode 1)
   (setq magit-save-repository-buffers 'dontask
@@ -133,15 +133,86 @@
           :desc "Finish" :n "," #'with-editor-finish
           :desc "Abort" :n "k" #'with-editor-cancel))
 
+  ;; hlissner's config
+  ;; (setq magit-display-buffer-function #'+magit-display-buffer-fullscreen)
+  ;; (defun +magit-display-buffer-fullscreen (buffer)
+  ;;   (display-buffer
+  ;;    buffer (cond ((derived-mode-p 'magit-mode)
+  ;;                  (when (eq major-mode 'magit-status-mode)
+  ;;                    (display-buffer-in-side-window
+  ;;                     (current-buffer) '((side . left) (window-width . 0.35))))
+  ;;                  '(display-buffer-same-window))
+  ;;                 ((bound-and-true-p git-commit-mode)
+  ;;                  '(display-buffer-below-selected))
+  ;;                 ((buffer-local-value 'git-commit-mode buffer)
+  ;;                  '(magit--display-buffer-fullframe))
+  ;;                 ((memq (buffer-local-value 'major-mode buffer)
+  ;;                        '(magit-process-mode
+  ;;                          magit-revision-mode
+  ;;                          magit-log-mode
+  ;;                          magit-diff-mode
+  ;;                          magit-stash-mode))
+  ;;                  '(display-buffer-in-side-window))
+  ;;                 ('(magit--display-buffer-fullframe)))))
+
   (setq magit-bury-buffer-function #'+magit/quit
         magit-popup-display-buffer-action nil
         magit-display-file-buffer-function 'switch-to-buffer-other-window)
+
   (map! :map magit-mode-map
         [remap quit-window] #'+magit/quit
         :n "\\" nil)
   (set! :popup "^\\(?: ?\\*\\)?magit.*: "
     '((slot . -1) (side . right) (size . 80))
     '((select . t) (quit . nil)))
+
+  (set! :popup "^\\*magithub-dash\\*"
+    '((slot . -3) (side . right) (window-height . 20))
+    '((select . t)))
+  (def-modeline-segment! magithub-buffer-info-simple
+    "striped magithub buffer name"
+    (substring (buffer-name) 11 -1))
+  (def-modeline-segment! magit-title
+    "striped magithub buffer name"
+    (let* ((str "M A G I T")
+           (num (max 0 (/ (- (window-width
+                              (selected-window)) (string-width str)) 2))))
+      (concat +doom-modeline--bar-inactive (propertize (concat (make-string num ? ) str) 'face 'bold))))
+
+  (def-modeline-segment! magithub-title
+    "striped magithub buffer name"
+    (let* ((str "D A S H B O A R D")
+           (num (max 0 (/ (- (window-width
+                              (selected-window)) (string-width str)) 2))))
+      (concat +doom-modeline--bar-inactive (propertize (concat (make-string num ? ) str) 'face 'bold))))
+
+  (def-modeline! magit-title
+    (magit-title))
+
+  (def-modeline! magithub-title
+    (magithub-title))
+
+  (def-modeline! magithub
+    (bar matches " " magithub-buffer-info-simple))
+  (set! :popup "^\\*magithub: .*\\*"
+    '((slot . -2) (side . right) (window-height . 0.6))
+    '((select . t)))
+
+  (defun +magithub|switch-mode-and-header-line ()
+    (setq header-line-format (or (doom-modeline 'magithub) mode-line-format)
+          mode-line-format nil))
+  (add-hook 'magithub-issue-view-mode-hook #'+magithub|switch-mode-and-header-line)
+
+  (defun +magit|switch-mode-and-header-line ()
+    (setq header-line-format (or (doom-modeline 'magit-title) mode-line-format)
+          mode-line-format nil))
+  (add-hook 'magit-status-mode-hook #'+magit|switch-mode-and-header-line)
+
+  (defun +magithub-dash|switch-mode-and-header-line ()
+    (setq header-line-format (or (doom-modeline 'magithub-title) mode-line-format)
+          mode-line-format nil))
+  (add-hook 'magithub-dash-mode-hook #'+magithub-dash|switch-mode-and-header-line)
+
   (set! :popup "^\\*magit.*popup\\*"
     '((slot . 0) (side . right))
     '((select . t)))
@@ -150,7 +221,8 @@
     '((select . t)))
   (set! :popup "^\\(?: ?\\*\\)?magit-diff:.*"
     '((slot . 2) (side . right) (window-height . 0.6))
-    '((select . nil))))
+    '((select . nil)))
+  )
 
 
 ;; ** Web
