@@ -657,6 +657,13 @@
       ;; --- Personal vim-esque bindings ------------------
       :m  "gh" #'+lookup/documentation
       :m  "gs" #'+default/easymotion
+      :m  "gj" #'outline-next-heading
+      :m  "gk" #'outline-previous-heading
+      :nm  "gJ" #'outline-move-subtree-down
+      :nm  "gK" #'outline-move-subtree-up
+      :nm  "gH" #'outline-promote
+      :nm  "gL" #'outline-demote
+      :m  "g SPC" #'outline-toggle-children
 
       ;; :nv "+" #'evil-numbers/inc-at-pt
       ;; :nv "-" #'evil-numbers/dec-at-pt
