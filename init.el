@@ -1,1 +1,0 @@
-/Users/xfu/.doom.d/init.mac.el
