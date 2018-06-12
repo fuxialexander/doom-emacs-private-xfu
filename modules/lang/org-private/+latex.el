@@ -32,11 +32,20 @@
                   '(("" "color" t)
                     ("" "minted" t)
                     ("" "parskip" t)
+                    ("" "koma-script" t)
                     ("" "tikz" t))
                   org-latex-pdf-process '("latexmk -pdflatex='lualatex -shell-escape -interaction nonstopmode' -pdf -f  %f")
                   org-preview-latex-default-process 'dvisvgm
                   org-preview-latex-image-directory (concat doom-cache-dir "org-latex/")))
    ((eq window-system 'ns)
+    (add-to-list 'org-latex-classes
+             '("scrreprt"
+               "\\documentclass{scrreprt}"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
     (setq-default org-format-latex-options
                   `(:background ,(doom-color 'bg)
                                 :foreground ,(doom-color 'fg)

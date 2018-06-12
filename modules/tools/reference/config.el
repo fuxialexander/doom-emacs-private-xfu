@@ -80,13 +80,14 @@ The default action being to insert a citation.")
     (ivy-add-actions 'ivy-bibtex '(("SPC" ivy-bibtex-quicklook "Quick look")))
     (setq bibtex-completion-format-citation-functions
           '((org-mode . bibtex-completion-format-citation-pandoc-citeproc)
+            (latex-mode    . bibtex-completion-format-citation-cite)
             (default . bibtex-completion-format-citation-default))
           bibtex-completion-bibliography "~/Dropbox/org/reference/Bibliography.bib"
           bibtex-completion-library-path "~/Dropbox/org/reference/pdf/"
           bibtex-completion-notes-path "~/Dropbox/org/ref.org"
           bibtex-completion-pdf-field "file"
           bibtex-completion-pdf-open-function (lambda (fpath) (start-process "open" "*open*" "open" fpath))))
-  (setq bibtex-dialect 'BibTeX
+  (setq bibtex-dialect 'biblatex
         org-ref-clean-bibtex-entry-hook '(org-ref-bibtex-format-url-if-doi
                                           orcb-key-comma
                                           org-ref-replace-nonascii
