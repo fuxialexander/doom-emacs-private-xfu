@@ -106,19 +106,11 @@
 (def-package! orgit :after magit)
 (after! magithub
   (setq magithub-clone-default-directory "/Users/xfu/Source/playground/"))
-;; (def-package! pretty-magit
-;;     :load-path "~/.doom.d/local/"
-;;     :commands (pretty-magit))
+
 (after! magit
   (after! solaire-mode
     (add-hook 'magit-mode-hook #'solaire-mode))
-  ;; (pretty-magit "Feature" ? '(:foreground "slate gray" :height 1.0 :family "FontAwesome"))
-  ;; (pretty-magit "Add" ? '(:foreground "#375E97" :height 1.0 :family "FontAwesome"))
-  ;; (pretty-magit "Fix" ? '(:foreground "#FB6542" :height 1.0 :family "FontAwesome"))
-  ;; (pretty-magit "Clean" ? '(:foreground "#FFBB00" :height 1.0 :family "FontAwesome"))
-  ;; (pretty-magit "Docs" ? '(:foreground "#3F681C" :height 1.0 :family "FontAwesome"))
-  ;; (pretty-magit "master" ? '(:box nil :height 1.0 :family "github-octicons") t)
-  ;; (pretty-magit "origin" ? '(:box nil :height 1.0 :family "github-octicons") t)
+
   (magit-wip-after-save-mode 1)
   (magit-wip-after-apply-mode 1)
   (setq magit-save-repository-buffers 'dontask
@@ -131,98 +123,7 @@
         :map with-editor-mode-map
         (:localleader
           :desc "Finish" :n "," #'with-editor-finish
-          :desc "Abort" :n "k" #'with-editor-cancel))
-
-  ;; hlissner's config
-  ;; (setq magit-display-buffer-function #'+magit-display-buffer-fullscreen)
-  ;; (defun +magit-display-buffer-fullscreen (buffer)
-  ;;   (display-buffer
-  ;;    buffer (cond ((derived-mode-p 'magit-mode)
-  ;;                  (when (eq major-mode 'magit-status-mode)
-  ;;                    (display-buffer-in-side-window
-  ;;                     (current-buffer) '((side . left) (window-width . 0.35))))
-  ;;                  '(display-buffer-same-window))
-  ;;                 ((bound-and-true-p git-commit-mode)
-  ;;                  '(display-buffer-below-selected))
-  ;;                 ((buffer-local-value 'git-commit-mode buffer)
-  ;;                  '(magit--display-buffer-fullframe))
-  ;;                 ((memq (buffer-local-value 'major-mode buffer)
-  ;;                        '(magit-process-mode
-  ;;                          magit-revision-mode
-  ;;                          magit-log-mode
-  ;;                          magit-diff-mode
-  ;;                          magit-stash-mode))
-  ;;                  '(display-buffer-in-side-window))
-  ;;                 ('(magit--display-buffer-fullframe)))))
-
-  (setq magit-bury-buffer-function #'+magit/quit
-        magit-popup-display-buffer-action nil
-        magit-display-file-buffer-function 'switch-to-buffer-other-window)
-
-  (map! :map magit-mode-map
-        [remap quit-window] #'+magit/quit
-        :n "\\" nil)
-  (set! :popup "^\\(?: ?\\*\\)?magit.*: "
-    '((slot . -1) (side . right) (size . 80))
-    '((select . t) (quit . nil)))
-
-  (set! :popup "^\\*magithub-dash\\*"
-    '((slot . -3) (side . right) (window-height . 20))
-    '((select . t)))
-  (def-modeline-segment! magithub-buffer-info-simple
-    "striped magithub buffer name"
-    (substring (buffer-name) 11 -1))
-  (def-modeline-segment! magit-title
-    "striped magithub buffer name"
-    (let* ((str "M A G I T")
-           (num (max 0 (/ (- (window-width
-                              (selected-window)) (string-width str)) 2))))
-      (concat +doom-modeline--bar-inactive (propertize (concat (make-string num ? ) str) 'face 'bold))))
-
-  (def-modeline-segment! magithub-title
-    "striped magithub buffer name"
-    (let* ((str "D A S H B O A R D")
-           (num (max 0 (/ (- (window-width
-                              (selected-window)) (string-width str)) 2))))
-      (concat +doom-modeline--bar-inactive (propertize (concat (make-string num ? ) str) 'face 'bold))))
-
-  (def-modeline! magit-title
-    (magit-title))
-
-  (def-modeline! magithub-title
-    (magithub-title))
-
-  (def-modeline! magithub
-    (bar matches " " magithub-buffer-info-simple))
-  (set! :popup "^\\*magithub: .*\\*"
-    '((slot . -2) (side . right) (window-height . 0.6))
-    '((select . t)))
-
-  (defun +magithub|switch-mode-and-header-line ()
-    (setq header-line-format (or (doom-modeline 'magithub) mode-line-format)
-          mode-line-format nil))
-  (add-hook 'magithub-issue-view-mode-hook #'+magithub|switch-mode-and-header-line)
-
-  (defun +magit|switch-mode-and-header-line ()
-    (setq header-line-format (or (doom-modeline 'magit-title) mode-line-format)
-          mode-line-format nil))
-  (add-hook 'magit-status-mode-hook #'+magit|switch-mode-and-header-line)
-
-  (defun +magithub-dash|switch-mode-and-header-line ()
-    (setq header-line-format (or (doom-modeline 'magithub-title) mode-line-format)
-          mode-line-format nil))
-  (add-hook 'magithub-dash-mode-hook #'+magithub-dash|switch-mode-and-header-line)
-
-  (set! :popup "^\\*magit.*popup\\*"
-    '((slot . 0) (side . right))
-    '((select . t)))
-  (set! :popup "^\\(?: ?\\*\\)?magit-revision:.*"
-    '((slot . 2) (side . right) (window-height . 0.6))
-    '((select . t)))
-  (set! :popup "^\\(?: ?\\*\\)?magit-diff:.*"
-    '((slot . 2) (side . right) (window-height . 0.6))
-    '((select . nil)))
-  )
+          :desc "Abort" :n "k" #'with-editor-cancel)))
 
 
 ;; ** Web
@@ -281,15 +182,6 @@
   (setq tramp-remote-path
      (append '("/research/kevinyip10/xfu/miniconda3/bin"
                "/uac/gds/xfu/bin") tramp-remote-path)))
-
-;; (def-package! pinentry
-;;   :commands (pinentry-start))
-;; (run-with-idle-timer
-;;  10
-;;  nil
-;;  (lambda!
-;;   (require 'pass)
-;;   (pinentry-start)))
 (def-package! academic-phrases
   :commands (academic-phrases
              academic-phrases-by-section))
@@ -357,8 +249,8 @@
 (after! elisp-mode
   (set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point))
 (after! company-box
-  (remove-hook 'company-box-selection-hook 'company-box-doc)
-  (remove-hook 'company-box-hide-hook 'company-box-doc--hide)
+  ;; (remove-hook 'company-box-selection-hook 'company-box-doc)
+  ;; (remove-hook 'company-box-hide-hook 'company-box-doc--hide)
   (setq company-box-icons-yasnippet (all-the-icons-material "short_text" :height 0.7 :face 'all-the-icons-green)
         company-box-icons-unknown (all-the-icons-material "find_in_page" :height 0.7 :face 'all-the-icons-purple)
         company-box-icons-lsp '((1 . (all-the-icons-material "text_fields" :height 0.7 :face 'all-the-icons-green)) ;; Text
@@ -475,19 +367,21 @@
 ;; *** Outline
 (add-hook 'emacs-lisp-mode-hook #'outline-minor-mode)
 (add-hook 'python-mode-hook #'outline-minor-mode)
-(def-package! outshine :load-path "~/.doom.d/local/"
-  :hook (outline-minor-mode . outshine-hook-function)
-  :config
-  (map! :map outline-minor-mode-map
-        :nmv "C-j" #'outline-next-heading
-        :nmv "C-k" #'outline-previous-heading
-        :nmv "\]o" #'outline-next-heading
-        :nmv "\[o" #'outline-previous-heading
-        :nm [tab] #'outline-cycle
-        :nm [backtab] #'outshine-cycle-buffer))
-(def-package! counsel-oi :load-path "~/.doom.d/local/"
-  :after (outshine)
-  :commands (counsel-oi))
+
+;; (def-package! outshine :load-path "~/.doom.d/local/"
+;;   :hook (outline-minor-mode . outshine-hook-function)
+;;   :config
+;;   (map! :map outline-minor-mode-map
+;;         :nmv "C-j" #'outline-next-heading
+;;         :nmv "C-k" #'outline-previous-heading
+;;         :nmv "\]o" #'outline-next-heading
+;;         :nmv "\[o" #'outline-previous-heading
+;;         :nm [tab] #'outline-cycle
+;;         :nm [backtab] #'outshine-cycle-buffer))
+
+;; (def-package! counsel-oi :load-path "~/.doom.d/local/"
+;;   :after (outshine)
+;;   :commands (counsel-oi))
 
 ;; ** Ivy
 (def-package! counsel-tramp :load-path "~/.doom.d/local/"
@@ -728,6 +622,7 @@
           :desc "Describe key"                :n  "k" #'helpful-key
           :desc "Describe variable"           :n  "v" #'counsel-describe-variable
           :desc "Describe face"               :n  "t" #'counsel-faces)
+
         (:desc "open" :prefix "o"
           :desc "Twitter"                     :n "2" #'=twitter
           :desc "RSS"                         :n "e" #'=rss
