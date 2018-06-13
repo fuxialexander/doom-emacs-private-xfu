@@ -43,7 +43,7 @@
         ess-use-ido nil
         ess-nuke-trailing-whitespace-p t
         inferior-ess-r-program "R")
-  (ess-toggle-underscore t)
+  ;; (ess-toggle-S-assign)
   (set! :repl 'ess-mode #'+r/repl)
   (set! :evil-state 'ess-help-mode 'normal)
   (set! :lookup 'ess-mode :documentation #'ess-display-help-on-object)
@@ -104,6 +104,6 @@
       :n "cp"        #'ess-noweb-previous-chunk
       :n "cn"        #'ess-noweb-next-chunk))))
 
-(def-package! ess-smart-equals
-  :hook ((ess-mode . ess-smart-equals-mode)
-         (inferior-ess-mode . ess-smart-equals-mode)))
+;; (def-package! ess-smart-equals
+;;   :hook ((ess-mode . ess-smart-equals-mode)
+;;          (inferior-ess-mode . ess-smart-equals-mode)))
