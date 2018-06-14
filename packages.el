@@ -13,6 +13,8 @@
 (package! ivy-rich :disable t)
 ;; * UI
 (package! prettify-utils :recipe (:fetcher github :repo "Ilazki/prettify-utils.el" :files ("*")))
+(package! prescient)
+(package! company-prescient)
 (package! flycheck-posframe)
 (package! ov)
 (package! evil-collection)

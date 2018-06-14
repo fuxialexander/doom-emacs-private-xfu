@@ -238,10 +238,17 @@
 
 ;; *** Company
 (after! company
+  (def-package! prescient)
+  (def-package! company-prescient
+    :hook (company-mode . company-prescient-mode))
+  (setq-default company-frontends '(company-box-frontend
+                                    company-preview-if-just-one-frontend
+                                    company-echo-metadata-frontend))
   (setq company-box-max-candidates 50
         company-tooltip-limit 10
         company-tooltip-minimum-width 80
         company-tooltip-minimum 10
+
         company-backends
         '(company-capf company-dabbrev company-files company-yasnippet)
         company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode inferior-python-mode eshell-mode)))
