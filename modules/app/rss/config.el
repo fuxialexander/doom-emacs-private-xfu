@@ -32,8 +32,22 @@
   (set-popup-rule! "\\*elfeed-xwidget-webkit*" :side 'bottom :height 40 :select t)
   ;; Enhance readability of a post
   (add-hook 'elfeed-show-mode-hook #'+rss|elfeed-wrap)
-
   (after! elfeed-search
+    (map! :map elfeed-search-mode-map
+          [remap kill-this-buffer] "q"
+          [remap kill-buffer] "q"
+          :n doom-leader-key nil
+          :n "q" #'+rss/quit
+          :n "e" #'elfeed-update
+          :n "r" #'elfeed-search-untag-all-unread
+          :n "u" #'elfeed-search-tag-all-unread
+          :n "s" #'elfeed-search-live-filter
+          :n "RET" #'elfeed-search-show-entry
+          :n "+" #'elfeed-search-tag-all
+          :n "-" #'elfeed-search-untag-all
+          :n "S" #'elfeed-search-set-filter
+          :n "o" #'elfeed-search-browse-url
+          :n "y" #'elfeed-search-yank)
     (after! evil-snipe
       (push 'elfeed-search-mode evil-snipe-disabled-modes))
     (set-evil-initial-state! 'elfeed-search-mode 'normal)
@@ -43,43 +57,26 @@
     (advice-add #'elfeed-show-prev                :override #'+rss/elfeed-show-prev))
 
   (after! elfeed-show
+    (map! :map elfeed-show-mode-map
+          [remap kill-this-buffer] "q"
+          [remap kill-buffer] "q"
+          :n doom-leader-key nil
+          :nm "q" #'+rss/delete-pane
+          :nm "o" #'ace-link-elfeed
+          :nm "RET" #'+reference/elfeed-add
+          :nm "n" #'elfeed-show-next
+          :nm "p" #'elfeed-show-prev
+          :nm "+" #'elfeed-show-tag
+          :nm "-" #'elfeed-show-untag
+          :nm "s" #'elfeed-show-new-live-search
+          :nm "y" #'elfeed-show-yank)
     (after! evil-snipe
       (push 'elfeed-show-mode evil-snipe-disabled-modes))
     (set-evil-initial-state! 'elfeed-show-mode 'normal)
     (advice-add #'elfeed-show-entry        :override #'+rss/elfeed-show-entry))
 
   (elfeed-org)
-  (def-package! elfeed-link)
-  (map! (:after elfeed-search
-          (:map elfeed-search-mode-map
-            [remap kill-this-buffer]      "q"
-            [remap kill-buffer]           "q"
-            :n doom-leader-key nil
-            :n "q"   #'+rss/quit
-            :n "e"   #'elfeed-update
-            :n "r"   #'elfeed-search-untag-all-unread
-            :n "u"   #'elfeed-search-tag-all-unread
-            :n "s"   #'elfeed-search-live-filter
-            :n "RET" #'elfeed-search-show-entry
-            :n "+"   #'elfeed-search-tag-all
-            :n "-"   #'elfeed-search-untag-all
-            :n "S"   #'elfeed-search-set-filter
-            :n "o"   #'elfeed-search-browse-url
-            :n "y"   #'elfeed-search-yank))
-        (:after elfeed-show
-          (:map elfeed-show-mode-map
-            [remap kill-this-buffer]      "q"
-            [remap kill-buffer]           "q"
-            :n doom-leader-key nil
-            :nm "q"   #'quit-window
-            :nm "o"   #'ace-link-elfeed
-            :nm "RET" #'+reference/elfeed-add
-            :nm "n"   #'elfeed-show-next
-            :nm "p"   #'elfeed-show-prev
-            :nm "+"   #'elfeed-show-tag
-            :nm "-"   #'elfeed-show-untag
-            :nm "s"   #'elfeed-show-new-live-search
-            :nm "y" #'elfeed-show-yank))))
+  (def-package! elfeed-link))
 
 ;;;; Elfeed-org
 (def-package! elfeed-org

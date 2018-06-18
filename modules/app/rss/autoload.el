@@ -18,8 +18,8 @@
 ;;;###autoload
 (defun +rss/quit ()
   (interactive)
-  ;; (doom-kill-matching-buffers "^\\*elfeed")
-  ;; (dolist (file rmh-elfeed-org-files) (when-let* ((buf (get-file-buffer file))) (kill-buffer buf)))
+  (doom-kill-matching-buffers "^\\*elfeed")
+  (dolist (file rmh-elfeed-org-files) (when-let* ((buf (get-file-buffer file))) (kill-buffer buf)))
   (+workspace/delete "rss"))
 
 
@@ -30,11 +30,12 @@
   (let ((inhibit-read-only t)
         (inhibit-modification-hooks t))
     (setq-local truncate-lines nil)
-    (setq-local shr-width 85)
+    (setq-local shr-width 120)
     (setq-local line-spacing 0.3)
     (setq-local shr-current-font '(:family "charter" :height 1.2))
     (set-buffer-modified-p nil))
-  (visual-fill-column-mode))
+  (let ((visual-fill-column-width 120))
+    (visual-fill-column-mode)))
 
 ;;;###autoload
 (defun +rss/delete-pane ()
@@ -119,8 +120,7 @@
 ;;;###autoload
 (defun +rss/elfeed-search-print-entry (entry)
   "Print ENTRY to the buffer."
-  (let* ((elfeed-goodies/wide-threshold 0.5)
-         (elfeed-goodies/tag-column-width 40)
+  (let* ((elfeed-goodies/tag-column-width 40)
          (elfeed-goodies/feed-source-column-width 30)
          (title (or (elfeed-meta entry :title) (elfeed-entry-title entry) ""))
          (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
@@ -144,12 +144,9 @@
                                                 elfeed-goodies/feed-source-column-width)
                        :left)))
 
-    (if (>= (window-width) (* (frame-width) elfeed-goodies/wide-threshold))
-        (progn
-          (insert (propertize feed-column 'face 'elfeed-search-feed-face) " ")
-          (insert (propertize tag-column 'face 'elfeed-search-tag-face) " ")
-          (insert (propertize title 'face title-faces 'kbd-help title)))
-      (insert (propertize title 'face title-faces 'kbd-help title)))))
+    (insert (propertize feed-column 'face 'elfeed-search-feed-face) " ")
+    (insert (propertize tag-column 'face 'elfeed-search-tag-face) " ")
+    (insert (propertize title 'face title-faces 'kbd-help title))))
 
 ;;;###autoload
 (defun +rss/elfeed-search--header-1 ()
