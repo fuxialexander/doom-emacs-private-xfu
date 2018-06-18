@@ -42,9 +42,11 @@
        ein
        gist
        magit
+       rotate-text
 
        :lang
        lsp
+       data
        (python +lpy +conda)
        ess
        (org
