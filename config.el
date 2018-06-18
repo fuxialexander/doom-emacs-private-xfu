@@ -508,183 +508,136 @@
 
 ;; * Binding
 (map! :i "<M-return>" nil
-      :gnvime "M-x" #'execute-extended-command
-      :gnvime "s-x" #'execute-extended-command
-      :gnvime "s-r" #'counsel-org-capture
-      :gnvime "s-g" #'org-agenda-show-daily
-      :gnvime "s-'" #'dwim-jump
-      :gnvime "s-u" #'org-store-link
-      :gnvime "s-o" #'org-open-at-point-global
-      :gnvime "s-i" #'org-insert-last-stored-link
-      :gnvime "M-s-i" (lambda! (find-file "~/Dropbox/org/inbox.org"))
-      :gnvime "M-s-r" (lambda! (find-file "~/Dropbox/org/review.org"))
+      ;; :gnvime "M-r" #'counsel-org-capture
+      ;; :gnvime "M-g" #'org-agenda-show-daily
+      ;; :gnvime "M-u" #'org-store-link
+      ;; :gnvime "M-o" #'org-open-at-point-global
+      ;; :gnvime "M-i" #'org-insert-last-stored-link
+      ;; :gnvime "M-s-i" (lambda! (find-file "~/Dropbox/org/inbox.org"))
+      ;; :gnvime "M-s-r" (lambda! (find-file "~/Dropbox/org/review.org"))
 
       :m "C-u" #'evil-scroll-up
       :i "C-k" #'kill-line
       (:map evil-ex-completion-map
         "C-k" #'kill-line)
-      :n    "\\"    #'ace-window
-      :v    "<escape>"    #'evil-escape
+      :n "\\" #'ace-window
+      :v "<escape>" #'evil-escape
       :gnvime "s-;" #'eval-expression
       :gnvime "s-:" #'doom/open-scratch-buffer
       "s-<mouse-1>" #'evil-mc-mouse-click
       "<s-return>" #'evil-mc-make-and-goto-next-match
       "<C-s-return>" #'+evil/mc-make-cursor-here
-      "s-+"       (λ! (text-scale-set 0))
-      "s-="         #'text-scale-increase
-      "s--"         #'text-scale-decrease
-      "C-`" #'+popup/toggle
-      "C-~" #'+popup/raise
-      "s-t" #'+workspace/new
-      "s-0" #'+workspace/display
-      "s-d" #'evil-window-vsplit
-      "s-D" #'evil-window-split
-      "s-w" #'+workspace/close-window-or-workspace
-      "s-W" #'kill-this-buffer
-      "s-n" #'evil-buffer-new
-      "s-N" #'make-frame-command
-      "s-1" (λ! (+workspace/switch-to 0))
-      "s-2" (λ! (+workspace/switch-to 1))
-      "s-3" (λ! (+workspace/switch-to 2))
-      "s-4" (λ! (+workspace/switch-to 3))
-      "s-5" (λ! (+workspace/switch-to 4))
-      "s-6" (λ! (+workspace/switch-to 5))
-      "s-7" (λ! (+workspace/switch-to 6))
-      "s-8" (λ! (+workspace/switch-to 7))
-      "s-9" (λ! (+workspace/switch-to 8))
-      "s-~" #'+workspace/switch-to-last
-      :ne "s-e"                 #'+eval/buffer
-      :ne "s-E"                 #'+eval/region-and-replace
-      :ne "s-b"                 #'+org/open-brain-here
-      :ne "s-B"                 #'+default/compile
-      :ne "s-a"                 #'mark-whole-buffer
-      :ne "s-q"   (if (daemonp) #'delete-frame #'save-buffers-kill-emacs)
-      :nie "s-f"                 #'+ivy:swiper
-      :nie "s-F"               (lambda! (swiper
-                                    (if (symbol-at-point)
-                                        (format "\\_<%s\\_> " (symbol-at-point)) nil)))
-      :nie "s-/"                 #'evil-commentary-line
-      ;; :ne "C-M-f"            #'doom/toggle-fullscreen
-      :n  "s-s"                 #'save-buffer
-      :n  "s-k"                 #'kill-this-buffer
-      :n  "s-K"                 #'delete-frame
-      :nv "C-SPC"               #'+evil:fold-toggle
-      :gnvimer "s-v"            #'clipboard-yank
-      ;; Easier window navigation
-      :gnvime "s-h"      #'evil-window-left
-      :gnvime "s-j"      #'evil-window-down
-      :gnvime "s-k"      #'evil-window-up
-      :gnvime "s-l"      #'evil-window-right
-      :ne "C-h"  nil
-      :ne "C-j"  nil
-      :ne "C-k"  nil
-      :ne "C-l"  nil
-
-
-      "C-x p"     #'+popup/other
+      ;; "C-`" #'+popup/toggle
+      ;; "C-~" #'+popup/raise
+      ;; "s-w" #'+workspace/close-window-or-workspace
+      "M-W" #'kill-this-buffer
+      :nie "M-F" (lambda! (swiper
+                           (if (symbol-at-point)
+                               (format "\\_<%s\\_> " (symbol-at-point)) nil)))
+      "C-x p" #'+popup/other
       (:map universal-argument-map
         "C-u" nil
         (:leader
           :n "u" #'universal-argument-more))
       (:leader
-        :desc "ivy-resume"                    :nv "$"  #'ivy-resume
-        :desc "Find file in project"          :nv "SPC" #'execute-extended-command
-        :desc "Browse files"                  :n "/"   #'find-file
-        :desc "Goto Line"                     :n "l"   #'avy-goto-line
-        :desc "Display Buffer"                :n "m"   #'ivy-switch-buffer
-        :desc "Find project files"            :n "."   #'counsel-projectile-find-file
-        :desc "Toggle last popup"             :n "`"   #'+popup/toggle
+        :desc "ivy-resume" :nv "$" #'ivy-resume
+        :desc "Find file in project" :nv "SPC" #'execute-extended-command
+        :desc "Browse files" :n "/" #'find-file
+        :desc "Display Buffer" :n "m" #'ivy-switch-buffer
+        :desc "Find project files" :n "." #'counsel-projectile-find-file
+        :desc "Toggle last popup" :n "`" #'+popup/toggle
         (:desc "search" :prefix "s"
-          :desc "Project"                     :nv "p" #'+ivy/project-search
-          :desc "Directory"                   :nv "d" (λ! (+ivy/project-search t))
-          :desc "Buffer"                      :nv "b" #'swiper
-          :desc "Symbols"                     :nv "i" #'imenu
-          :desc "Symbols across buffers"      :nv "I" #'imenu-anywhere
-          :desc "Online providers"            :nv "o" #'+lookup/online-select)
+          :desc "Project" :nv "p" #'+ivy/project-search
+          :desc "Directory" :nv "d" (λ! (+ivy/project-search t))
+          :desc "Buffer" :nv "b" #'swiper
+          :desc "Symbols" :nv "i" #'imenu
+          :desc "Symbols across buffers" :nv "I" #'imenu-anywhere
+          :desc "Online providers" :nv "o" #'+lookup/online-select)
         (:desc "iTerm" :prefix "_"
-          :desc "cd"                   :nv "d" #'mac-iTerm-cd
-          :desc "send text"            :nv "_" #'iterm-send-text
+          :desc "cd" :nv "d" #'mac-iTerm-cd
+          :desc "send text" :nv "_" #'iterm-send-text
           :desc "send ipython command" :nv "p" #'iterm-send-text-ipy
-          :desc "send ipython text"    :nv "P" #'iterm-send-text-ipy
-          :desc "send file to R"       :nv "R" #'iterm-send-file-R)
+          :desc "send ipython text" :nv "P" #'iterm-send-text-ipy
+          :desc "send file to R" :nv "R" #'iterm-send-file-R)
         (:desc "file" :prefix "f"
-          :desc "Find file on TRAMP"          :n "t" #'counsel-tramp)
+          :desc "Find file on TRAMP" :n "t" #'counsel-tramp)
         (:desc "git" :prefix "g"
-          :desc "Git Hydra"                   :n  "." #'+version-control@git-gutter/body)
+          :desc "Git Hydra" :n "." #'+version-control@git-gutter/body)
         (:desc "help" :prefix "h"
           :n "h" help-map
-          :desc "Reload theme"                :n  "r" #'doom//reload-theme
-          :desc "Describe function"           :n  "f" #'counsel-describe-function
-          :desc "Describe key"                :n  "k" #'helpful-key
-          :desc "Describe variable"           :n  "v" #'counsel-describe-variable
-          :desc "Describe face"               :n  "t" #'counsel-faces)
+          :desc "Reload theme" :n "r" #'doom//reload-theme
+          :desc "Describe function" :n "f" #'counsel-describe-function
+          :desc "Describe key" :n "k" #'helpful-key
+          :desc "Describe variable" :n "v" #'counsel-describe-variable
+          :desc "Describe face" :n "t" #'counsel-faces)
 
         (:desc "open" :prefix "o"
-          :desc "Twitter"                     :n "2" #'=twitter
-          :desc "RSS"                         :n "e" #'=rss
-          :desc "Calendar"                    :n "c" #'=calendar
-          :desc "Eshell"                      :n "s" #'+eshell/open-popup
-          :desc "Mail"                        :n "m" #'=mail
+          :desc "Twitter" :n "2" #'=twitter
+          :desc "RSS" :n "e" #'=rss
+          :desc "Calendar" :n "c" #'=calendar
+          :desc "Eshell" :n "s" #'+eshell/open-popup
+          :desc "Mail" :n "m" #'=mail
+          :desc "Treemacs" :n "n" #'+treemacs/toggle
           :n "E" nil
           :n "M" nil
           :n "T" nil
           :n "X" nil
           ;; macos
           (:when IS-MAC
-            :desc "Reveal in Finder"          :n "f" #'+macos/reveal-in-finder
-            :desc "Reveal project in Finder"  :n "F" #'+macos/reveal-project-in-finder))
+            :desc "Reveal in Finder" :n "f" #'+macos/reveal-in-finder
+            :desc "Reveal project in Finder" :n "F" #'+macos/reveal-project-in-finder))
         (:desc "project" :prefix "p"
-          :desc "Browse project"              :n  "." #'+xfu/browse-project)
+          :desc "Browse project" :n "." #'+xfu/browse-project)
 
         (:desc "snippets" :prefix "y"
-          :desc "Find snippet for mode"       :n  "y" #'yas-visit-snippet-file
-          :desc "Find file in templates"      :n  "t" #'+default/browse-templates
-          :desc "Find snippet"                :n  "f" #'+xfu/find-in-snippets
-          :desc "Find snippet"                :n  "b" #'+xfu/browse-snippets)
+          :desc "Find snippet for mode" :n "y" #'yas-visit-snippet-file
+          :desc "Find file in templates" :n "t" #'+default/browse-templates
+          :desc "Find snippet" :n "f" #'+xfu/find-in-snippets
+          :desc "Find snippet" :n "b" #'+xfu/browse-snippets)
         (:desc "toggle" :prefix "t"
-          :desc "Company"                     :n "c" #'company-mode
-          :desc "Line numbers"                :n "n" #'doom/toggle-line-numbers
-          :desc "Truncate Lines"              :n "l" #'toggle-truncate-lines
-          :desc "Highlight Lines"             :n "h" #'hl-line-mode
-          :desc "Visual Lines"                :n "v" #'visual-line-mode
-          :desc "Fullscreen"                  :n "f" #'doom/toggle-fullscreen
-          :desc "Theme"                       :n "t" #'counsel-load-theme
-          :desc "Evil goggles"                :n "g" #'+evil-goggles/toggle))
+          :desc "Company" :n "c" #'company-mode
+          :desc "Line numbers" :n "n" #'doom/toggle-line-numbers
+          :desc "Truncate Lines" :n "l" #'toggle-truncate-lines
+          :desc "Highlight Lines" :n "h" #'hl-line-mode
+          :desc "Visual Lines" :n "v" #'visual-line-mode
+          :desc "Fullscreen" :n "f" #'doom/toggle-fullscreen
+          :desc "Theme" :n "t" #'counsel-load-theme
+          :desc "Evil goggles" :n "g" #'+evil-goggles/toggle))
       ;; --- Personal vim-esque bindings ------------------
-      :m  "gh" #'+lookup/documentation
-      :m  "gs" #'+default/easymotion
-      :m  "gj" #'outline-next-heading
-      :m  "gk" #'outline-previous-heading
-      :nm  "gJ" #'outline-move-subtree-down
-      :nm  "gK" #'outline-move-subtree-up
-      :nm  "gH" #'outline-promote
-      :nm  "gL" #'outline-demote
-      :m  "g SPC" #'outline-toggle-children
+      :m "gh" #'+lookup/documentation
+      :m "gs" #'+default/easymotion
+      :m "gj" #'outline-next-heading
+      :m "gk" #'outline-previous-heading
+      :nm "gJ" #'outline-move-subtree-down
+      :nm "gK" #'outline-move-subtree-up
+      :nm "gH" #'outline-promote
+      :nm "gL" #'outline-demote
+      :m "g SPC" #'outline-toggle-children
 
       ;; :nv "+" #'evil-numbers/inc-at-pt
       ;; :nv "-" #'evil-numbers/dec-at-pt
-      :nv "\""  #'counsel-evil-registers
+      :nv "\"" #'counsel-evil-registers
 
       (:after bibtex
         :map bibtex-mode-map
         "s-." #'org-ref-bibtex-hydra/body)
       (:after xwidget
         :map xwidget-webkit-mode-map
-        :n "q"         #'quit-window
-        :n "r"         #'xwidget-webkit-reload
-        :n "y"         #'xwidget-webkit-copy-selection-as-kill
-        :n "s-c"       #'xwidget-webkit-copy-selection-as-kill
-        :n "t"         #'xwidget-webkit-browse-url
-        :n "n"         #'xwidget-webkit-forward
-        :n "p"         #'xwidget-webkit-back
-        :n "G"         #'xwidget-webkit-scroll-bottom
-        :n "gg"        #'xwidget-webkit-scroll-top
-        :n "C-d"       #'xwidget-webkit-scroll-down
-        :n "C-u"       #'xwidget-webkit-scroll-up
-        :n "M-="       #'xwidget-webkit-zoom-in
-        :n "M--"       #'xwidget-webkit-zoom-out
-        :n "j"         #'xwidget-webkit-scroll-up-line
-        :n "k"         #'xwidget-webkit-scroll-down-line)
+        :n "q" #'quit-window
+        :n "r" #'xwidget-webkit-reload
+        :n "y" #'xwidget-webkit-copy-selection-as-kill
+        :n "s-c" #'xwidget-webkit-copy-selection-as-kill
+        :n "t" #'xwidget-webkit-browse-url
+        :n "n" #'xwidget-webkit-forward
+        :n "p" #'xwidget-webkit-back
+        :n "G" #'xwidget-webkit-scroll-bottom
+        :n "gg" #'xwidget-webkit-scroll-top
+        :n "C-d" #'xwidget-webkit-scroll-down
+        :n "C-u" #'xwidget-webkit-scroll-up
+        :n "M-=" #'xwidget-webkit-zoom-in
+        :n "M--" #'xwidget-webkit-zoom-out
+        :n "j" #'xwidget-webkit-scroll-up-line
+        :n "k" #'xwidget-webkit-scroll-down-line)
 
       (:after comint
         (:map comint-mode-map
@@ -696,27 +649,27 @@
       (:after company
         (:map company-active-map
           ;; Don't interfere with `evil-delete-backward-word' in insert mode
-          "TAB"     nil
-          [tab]     nil
-          "S-TAB"   nil
+          "TAB" nil
+          [tab] nil
+          "S-TAB" nil
           [backtab] nil
-          "s-o"        #'company-search-kill-others
-          "C-f"        #'counsel-company
-          "<f1>"       #'company-show-doc-buffer
-          "C-s-f"      #'company-search-candidates
-          "s-f"        #'company-filter-candidates)
+          "s-o" #'company-search-kill-others
+          "C-f" #'counsel-company
+          "<f1>" #'company-show-doc-buffer
+          "C-s-f" #'company-search-candidates
+          "s-f" #'company-filter-candidates)
         ;; Automatically applies to `company-filter-map'
         (:map company-search-map
-          "C-n"        #'company-search-repeat-forward
-          "C-p"        #'company-search-repeat-backward))
+          "C-n" #'company-search-repeat-forward
+          "C-p" #'company-search-repeat-backward))
 
       (:after yasnippet
         (:map yas-minor-mode-map
-          :v  "<tab>" nil
-          :v  "TAB" nil))
+          :v "<tab>" nil
+          :v "TAB" nil))
 
-      :m  "]C" #'flyspell-correct-word-generic
-      :m  "[c" #'flyspell-correct-previous-word-generic
+      :m "]C" #'flyspell-correct-word-generic
+      :m "[c" #'flyspell-correct-previous-word-generic
 
       (:after ivy
         :map ivy-minibuffer-map
@@ -728,45 +681,47 @@
         :map wgrep-mode-map
         (:localleader
           :desc "Finish" :n "," #'wgrep-finish-edit
-          :desc "Abort"  :n "k" #'wgrep-abort-changes))
+          :desc "Abort" :n "k" #'wgrep-abort-changes))
       (:after helpful
         (:map helpful-mode-map
-          :n "RET"  #'helpful-visit-reference
-          :n "o"    #'ace-link-help
-          :n "q"    #'quit-window
-          :n "Q"    #'ivy-resume)))
+          :n "RET" #'helpful-visit-reference
+          :n "o" #'ace-link-help
+          :n "q" #'quit-window
+          :n "Q" #'ivy-resume)))
 
-;; ;; org
-;; (after! org
-;;   (do-repeat! org-forward-heading-same-level org-forward-heading-same-level org-backward-heading-same-level)
-;;   (do-repeat! org-next-item org-next-item org-previous-item)
-;;   (do-repeat! org-next-link org-next-link org-previous-link)
-;;   (do-repeat! org-next-block org-next-block org-previous-block)
-;;   (do-repeat! org-next-visible-heading org-next-visible-heading org-previous-visible-heading)
-;;   (do-repeat! org-backward-heading-same-level org-forward-heading-same-level org-backward-heading-same-level)
-;;   (do-repeat! org-previous-item org-next-item org-previous-item)
-;;   (do-repeat! org-previous-link org-next-link org-previous-link)
-;;   (do-repeat! org-previous-block org-next-block org-previous-block)
-;;   (do-repeat! org-previous-visible-heading org-next-visible-heading org-previous-visible-heading))
+;; org
+(after! org
+  (do-repeat! org-forward-heading-same-level org-forward-heading-same-level org-backward-heading-same-level)
+  (do-repeat! org-next-item org-next-item org-previous-item)
+  (do-repeat! org-next-link org-next-link org-previous-link)
+  (do-repeat! org-next-block org-next-block org-previous-block)
+  (do-repeat! org-next-visible-heading org-next-visible-heading org-previous-visible-heading)
+  (do-repeat! org-backward-heading-same-level org-forward-heading-same-level org-backward-heading-same-level)
+  (do-repeat! org-previous-item org-next-item org-previous-item)
+  (do-repeat! org-previous-link org-next-link org-previous-link)
+  (do-repeat! org-previous-block org-next-block org-previous-block)
+  (do-repeat! org-previous-visible-heading org-next-visible-heading org-previous-visible-heading))
 
-;; ;; buffer
-;; (do-repeat! previous-buffer next-buffer previous-buffer)
-;; (do-repeat! next-buffer next-buffer previous-buffer)
-;; ;; workspace
-;; (after! persp
-;;   (do-repeat! +workspace/switch-left +workspace/switch-left +workspace/switch-right)
-;;   (do-repeat! +workspace/switch-right +workspace/switch-left +workspace/switch-right))
+;; buffer
+(do-repeat! previous-buffer next-buffer previous-buffer)
+(do-repeat! next-buffer next-buffer previous-buffer)
+;; workspace
+(after! persp
+  (do-repeat! +workspace/switch-left +workspace/switch-left +workspace/switch-right)
+  (do-repeat! +workspace/switch-right +workspace/switch-left +workspace/switch-right))
 
-;; ;; git-gutter
-;; (after! git-gutter
-;;   (do-repeat! git-gutter:next-hunk git-gutter:next-hunk git-gutter:previous-hunk)
-;;   (do-repeat! git-gutter:previous-hunk git-gutter:next-hunk git-gutter:previous-hunk))
+;; git-gutter
+(after! git-gutter
+  (do-repeat! git-gutter:next-hunk git-gutter:next-hunk git-gutter:previous-hunk)
+  (do-repeat! git-gutter:previous-hunk git-gutter:next-hunk git-gutter:previous-hunk))
 
 ;; load time consuming stuff when idle
-(run-with-idle-timer 30 t (lambda! (require 'org-clock)
-                              (require 'org-agenda)
-                              (require 'org-capture)
-                              (require 'org-ref)))
+(run-with-idle-timer 30 t (lambda!
+                           (require 'org-clock)
+                           (require 'ob-ipython)
+                           (require 'org-agenda)
+                           (require 'org-capture)
+                           (require 'org-ref)))
 
 
 
@@ -779,3 +734,8 @@
   (add-hook! 'evil-mc-after-cursors-deleted
     (remove-hook 'evil-insert-state-entry-hook #'evil-mc-resume-cursors t)))
 
+(after! which-key
+  (push '((nil . "\\`+evil/window-\\(.+\\)\\'") . (nil . "\\1"))
+        which-key-replacement-alist)
+  (push '((nil . "\\`evil-window-\\(.+\\)\\'") . (nil . "\\1"))
+        which-key-replacement-alist))

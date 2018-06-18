@@ -143,7 +143,7 @@
     (progn
       (setq
        ns-alternate-modifier 'meta
-       ns-command-modifier 'super)
+       ns-command-modifier 'meta)
       (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
       (add-to-list 'default-frame-alist '(ns-appearance . dark)))
   (setq mac-command-modifier 'super
@@ -171,7 +171,7 @@
  evil-respect-visual-line-mode t
  trash-directory "/Users/xfu/.Trash/"
  +magit-hub-features t
- +evil-collection-disabled-list '(notmuch kotlin-mode simple dired helm ivy anaconda-mode))
+ +evil-collection-disabled-list '(elfeed notmuch kotlin-mode simple dired helm ivy anaconda-mode))
 
 (def-package-hook! ivy-rich
   :pre-init nil
