@@ -121,13 +121,15 @@
      ;; What to do in the child process
      `(lambda
         ()
-        (setq load-path ',load-path)
-        (require 'core)
-        (require! :lang org)
-        (require! :lang org-private)
-        (require! :tools reference)
-        ;; (require 'org-ref)
-        (require 'bibtex-completion)
+        (setq load-path ',load-path
+              doom-modules ',doom-modules)
+        (let ((noninteractive))
+          (require 'core)
+          (require! :lang org)
+          (require! :lang org-private)
+          (require! :tools reference)
+          ;; (require 'org-ref)
+          (require 'bibtex-completion))
         ,(async-inject-variables
           "\\`\\(org-ref\\)-")
         ,(async-inject-variables
@@ -174,13 +176,15 @@
      ;; What to do in the child process
      `(lambda
         ()
-        (setq load-path ',load-path)
-        (require 'core)
-        (require! :lang org)
-        (require! :lang org-private)
-        (require! :tools reference)
-        ;; (require 'org-ref)
-        (require 'bibtex-completion)
+        (setq load-path ',load-path
+              doom-modules ',doom-modules)
+        (let ((noninteractive))
+          (require 'core)
+          (require! :lang org)
+          (require! :lang org-private)
+          (require! :tools reference)
+          ;; (require 'org-ref)
+          (require 'bibtex-completion))
         ,(async-inject-variables
           "\\`\\(org-ref\\)-")
         ,(async-inject-variables
