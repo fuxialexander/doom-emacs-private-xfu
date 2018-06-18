@@ -364,22 +364,22 @@
 (add-hook 'emacs-lisp-mode-hook #'outline-minor-mode)
 (add-hook 'python-mode-hook #'outline-minor-mode)
 
-(def-package! outshine :load-path "~/.doom.d/local/"
-  :hook (outline-minor-mode . outshine-hook-function)
-  :config
-  (map! :map outline-minor-mode-map
-        :nmv "C-j" #'outline-next-heading
-        :nmv "C-k" #'outline-previous-heading
-        :nmv "\]o" #'outline-next-heading
-        :nmv "\[o" #'outline-previous-heading
-        :nm [tab] #'outline-cycle
-        :nm [backtab] #'outshine-cycle-buffer))
+;; (def-package! outshine ;; :load-path "~/.doom.d/local/"
+;;   :hook (outline-minor-mode . outshine-hook-function)
+;;   :config
+;;   (map! :map outline-minor-mode-map
+;;         :nmv "C-j" #'outline-next-heading
+;;         :nmv "C-k" #'outline-previous-heading
+;;         :nmv "\]o" #'outline-next-heading
+;;         :nmv "\[o" #'outline-previous-heading
+;;         :nm [tab] #'outline-cycle
+;;         :nm [backtab] #'outshine-cycle-buffer))
 
-(def-package! counsel-oi :load-path "~/.doom.d/local/"
-  :after (outshine)
-  :commands (counsel-oi))
+;; (def-package! counsel-oi :load-path "~/.doom.d/local/"
+;;   :after (outshine)
+;;   :commands (counsel-oi))
 
-;; ** Ivy
+;; ;; ** Ivy
 (def-package! counsel-tramp :load-path "~/.doom.d/local/"
   :commands (counsel-tramp))
 (after! lv
