@@ -128,8 +128,12 @@
  indicate-buffer-boundaries nil
  frame-alpha-lower-limit 0
  indicate-empty-lines nil
+ pdf-view-use-unicode-ligther nil
  which-key-idle-delay 0.3)
 
+(set-env! "PATH" "MANPATH"
+          "http_proxy" "https_proxy"
+          "all_proxy" "no_proxy")
 (or standard-display-table
     (setq standard-display-table (make-display-table)))
 (set-display-table-slot standard-display-table 0 ?\ )
