@@ -289,6 +289,9 @@ Also cleans entry using ‘org-ref’, and tries to download the corresponding p
    url)
   (backward-char)
   ;; set date added for the record
+  (bibtex-set-field
+     "journaltitle"
+     (bibtex-autokey-get-field "journal"))
   (when doi-utils-timestamp-format-function
     (bibtex-set-field
      doi-utils-timestamp-field
