@@ -44,8 +44,6 @@
 (remove-hook 'text-mode-hook #'hl-line-mode)
 ;; (remove-hook 'prog-mode-hook #'hl-line-mode)
 (remove-hook 'conf-mode-hook #'hl-line-mode)
-;; (menu-bar-mode 1)
-;; (toggle-frame-fullscreen)
 
 (set-popup-rule! "^\\*Customize.*" :slot 2 :side 'right :modeline nil :select t :quit t)
 (set-popup-rule! " \\*undo-tree\\*" :slot 2 :side 'left :size 20 :modeline nil :select t :quit t)
@@ -505,36 +503,44 @@
       "org-capture into project"))))
 
 
-
+(map! :map key-translation-map
+      "M-√" (kbd "<C-return>"))
 ;; * Binding
 (map! :i "<M-return>" nil
-      ;; :gnvime "M-r" #'counsel-org-capture
-      ;; :gnvime "M-g" #'org-agenda-show-daily
-      ;; :gnvime "M-u" #'org-store-link
-      ;; :gnvime "M-o" #'org-open-at-point-global
-      ;; :gnvime "M-i" #'org-insert-last-stored-link
+      :gnvime "M-j" #'evil-window-down
+      :gnvime "M-k" #'evil-window-up
+      :gnvime "M-h" #'evil-window-left
+      :gnvime "M-l" #'evil-window-right
+      :gnvime "M-d" #'evil-window-vsplit
+      :gnvime "M-D" #'evil-window-split
+      :nvime "C-h" #'outline-up-heading
+      :nvime "C-l" #'outline-toggle-children
+      :nvime "C-j" #'outline-next-heading
+      :nvime "C-k" #'outline-previous-heading
+      :nvime "<C-return>" (lambda! (evil-open-below 0) (outline-insert-heading))
+      :nvime "C-S-h" #'outline-promote
+      :nvime "C-S-l" #'outline-demote
+      :nvime "C-S-j" #'outline-move-subtree-down
+      :nvime "C-S-k" #'outline-move-subtree-up
+
+      :gnvime "M-r" (lambda! (revert-buffer nil t t))
+      :gnvime "M-g" #'org-agenda-show-daily
+
+      :nie "M-u" #'org-store-link
+      :nie "M-o" #'org-open-at-point-global
+      :nie "M-i" #'org-insert-last-stored-link
       ;; :gnvime "M-s-i" (lambda! (find-file "~/Dropbox/org/inbox.org"))
       ;; :gnvime "M-s-r" (lambda! (find-file "~/Dropbox/org/review.org"))
-
-      :m "C-u" #'evil-scroll-up
-      :i "C-k" #'kill-line
-      (:map evil-ex-completion-map
-        "C-k" #'kill-line)
+      ;; :m "C-u" #'evil-scroll-up
       :n "\\" #'ace-window
       :v "<escape>" #'evil-escape
-      :gnvime "s-;" #'eval-expression
-      :gnvime "s-:" #'doom/open-scratch-buffer
-      "s-<mouse-1>" #'evil-mc-mouse-click
-      "<s-return>" #'evil-mc-make-and-goto-next-match
-      "<C-s-return>" #'+evil/mc-make-cursor-here
-      ;; "C-`" #'+popup/toggle
-      ;; "C-~" #'+popup/raise
-      ;; "s-w" #'+workspace/close-window-or-workspace
+      "M-<mouse-1>" #'evil-mc-mouse-click
+      "<M-return>" #'evil-mc-make-and-goto-next-match
+      "<C-M-return>" #'+evil/mc-make-cursor-here
       "M-W" #'kill-this-buffer
       :nie "M-F" (lambda! (swiper
                            (if (symbol-at-point)
                                (format "\\_<%s\\_> " (symbol-at-point)) nil)))
-      "C-x p" #'+popup/other
       (:map universal-argument-map
         "C-u" nil
         (:leader
