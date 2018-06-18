@@ -13,8 +13,8 @@
         '(:completion (:detailedLabel t) :xref (:container t)
                       :diagnostics (:frequencyMs 5000)))
   ;; (evil-set-initial-state 'ccls-tree-mode 'emacs)
-  (set! :company-backend 'c-mode '(company-lsp))
-  (set! :company-backend 'c++-mode '(company-lsp)))
+  (set-company-backend! 'c-mode '(company-lsp))
+  (set-company-backend! 'c++-mode '(company-lsp)))
 
 (after! cc-mode
   ;; https://github.com/radare/radare2

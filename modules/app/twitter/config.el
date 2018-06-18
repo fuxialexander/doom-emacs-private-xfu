@@ -41,7 +41,7 @@
           "(#orgmode+#emacs)"
           "$research"))
 
-  (set! :evil-state 'twittering-mode 'normal)
+  (set-evil-initial-state! 'twittering-mode 'normal)
   (map! (:after twittering-mode
           :map twittering-mode-map
           [remap twittering-kill-buffer] #'+twitter/quit
@@ -105,7 +105,7 @@
 
   (when (featurep! :feature popup)
     (setq twittering-pop-to-buffer-function #'+twitter-display-buffer)
-    (set! :popup "^\\*twittering-edit" nil '((transient) (quit) (select . t) (modeline . minimal))))
+    (set-popup-rule! "^\\*twittering-edit" nil :select t :modeline 'minimal))
 
   (after! solaire-mode
     (add-hook 'twittering-mode-hook #'solaire-mode))

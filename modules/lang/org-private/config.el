@@ -31,9 +31,9 @@
   (after! evil-snipe
     (push 'org-brain-visualize-mode evil-snipe-disabled-modes))
   ;; (add-hook 'org-agenda-mode-hook #'(lambda () (evil-vimish-fold-mode -1)))
-  (set! :evil-state 'org-brain-visualize-mode 'normal)
+  (set-evil-initial-state! 'org-brain-visualize-mode 'normal)
   :config
-  (set! :popup "^\\*org-brain\\*$" '((vslot . -1) (size . 0.3) (side . left)) '((select . t) (quit) (transient)))
+  (set-popup-rule! "^\\*org-brain\\*$" :vslot -1 :size 0.3 :side 'left :select t)
   (defun org-brain-set-tags (entry)
     "Use `org-set-tags' on headline ENTRY.
 If run interactively, get ENTRY from context."
@@ -166,8 +166,8 @@ If run interactively, get ENTRY from context."
   (defface org-todo-keyword-done '((t ())) "org-done" :group 'org)
   (defface org-todo-keyword-habt '((t ())) "org-habt" :group 'org)
 
-  (set! :popup "^\\*Org Src" '((size . 100) (side . right) (slot . -1) (window-height . 0.6)) '((quit) (select . t) (modeline)))
-  (set! :popup "^CAPTURE.*\\.org$" '((side . bottom) (size . 0.4)) '((quit) (select . t)))
+  (set-popup-rule! "^\\*Org Src" :size 100 :side 'right :slot -1 :height 0.6 :select t)
+  (set-popup-rule! "^CAPTURE.*\\.org$" :side 'bottom :size 0.4 :select t)
 
   ;; setup customized font lock
   (setq org-ts-regexp-both-braket "\\([[<]\\)\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\} ?[^]\n>]*?\\)\\([]>]\\)")

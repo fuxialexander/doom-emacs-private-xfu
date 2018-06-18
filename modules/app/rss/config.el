@@ -29,7 +29,7 @@
   (push (lambda (buf) (string-match-p "^\\*elfeed" (buffer-name buf)))
         doom-real-buffer-functions)
 
-  (set! :popup "\\*elfeed-xwidget-webkit*" '((side . bottom) (window-height . 40)) '((select . t) (transient) (quit)))
+  (set-popup-rule! "\\*elfeed-xwidget-webkit*" :side 'bottom :height 40 :select t)
   ;; Enhance readability of a post
   (add-hook 'elfeed-show-mode-hook #'+rss|elfeed-wrap)
 
@@ -45,7 +45,7 @@
   (after! elfeed-show
     (after! evil-snipe
       (push 'elfeed-show-mode evil-snipe-disabled-modes))
-    (set! :evil-state 'elfeed-show-mode 'normal)
+    (set-evil-initial-state! 'elfeed-show-mode 'normal)
     (advice-add #'elfeed-show-entry        :override #'+rss/elfeed-show-entry))
 
   (elfeed-org)

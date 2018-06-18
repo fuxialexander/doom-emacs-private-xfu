@@ -22,9 +22,7 @@
                wordnut-lookup-current-word)
     :config
     (add-hook 'wordnut-mode-hook '+write/buffer-face-mode-dict)
-    (set! :popup "\\*WordNut"
-      '((size . 80) (side . right))
-      '((select . t) (quit . t)))
+    (set-popup-rule! "\\*WordNut" :size 80 :side 'right :select t :quit t)
     (map! :map wordnut-mode-map
           :nm "<C-return>"   (lambda! (osx-dictionary--view-result
                              (substring-no-properties (car wordnut-completion-hist))))
@@ -67,9 +65,7 @@
       :nm "q"   #'osx-dictionary-quit
       :nm "RET" #'osx-dictionary-search-word-at-point
       :nm "r"   #'osx-dictionary-read-word)
-    (set! :popup "\\*osx-dictionary"
-      '((size . 80) (side . right))
-      '((select . t) (quit . t)))))
+    (set-popup-rule! "\\*osx-dictionary" :size 80 :side 'right :select t :quit t)))
 (def-package! powerthesaurus
   :commands (powerthesaurus-lookup-word))
 (def-package! org-variable-pitch :load-path "~/.doom.d/local"

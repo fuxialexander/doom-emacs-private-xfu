@@ -41,7 +41,7 @@
 
   (after! evil-snipe
     (push 'dired-mode evil-snipe-disabled-modes))
-  (set! :evil-state 'dired-mode 'normal)
+  (set-evil-initial-state! 'dired-mode 'normal)
   (map! (:after wdired
           :map wdired-mode-map
           (:localleader

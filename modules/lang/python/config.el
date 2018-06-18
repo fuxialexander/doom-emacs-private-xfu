@@ -29,9 +29,9 @@ is loaded.")
   :config
   (add-hook! 'python-mode-hook #'(flycheck-mode highlight-numbers-mode))
 
-  (set! :env "PYTHONPATH" "PYENV_ROOT")
-  (set! :electric 'python-mode :chars '(?:))
-  (set! :repl 'python-mode #'+python/repl)
+  (set-env! "PYTHONPATH" "PYENV_ROOT")
+  (set-electric! 'python-mode :chars '(?:))
+  (set-repl-handler! 'python-mode #'+python/repl)
 
   (map! (:map python-mode-map
           (:localleader
@@ -115,11 +115,10 @@ is loaded.")
         )
   :config
   (add-hook 'anaconda-mode-hook #'anaconda-eldoc-mode)
-  (set! :company-backend 'python-mode '(company-anaconda))
-  (set! :popup "^\\*anaconda-mode" nil '((select)))
-  (set! :popup "^\\*Anaconda\\*" '((side . right) (size . 80)) '((select) (quit . t) (transient . t)))
+  (set-company-backend! 'python-mode '(company-anaconda))
+  (set-popup-rule! "^\\*Anaconda\\*" :side 'right :size 80 :quit t :transient t)
 
-  (set! :lookup 'python-mode
+  (set-lookup-handlers! 'python-mode
     :definition #'anaconda-mode-find-definitions
     :references #'anaconda-mode-find-references
     :documentation #'anaconda-mode-show-doc)
@@ -165,8 +164,7 @@ is loaded.")
   :init
   (associate! nose-mode :match "/test_.+\\.py$" :modes (python-mode))
   :config
-  (set! :popup "^\\*nosetests" '((size . 0.4)) '((select)))
-  (set! :yas-minor-mode 'nose-mode)
+  (set-yas-minor-mode! 'nose-mode)
   (map! :map nose-mode-map
         :localleader
         :prefix "t"

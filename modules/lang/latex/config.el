@@ -34,7 +34,7 @@
         font-latex-fontify-sectioning 1.15)
   (setq-default TeX-master nil)
   ;; Display the output of the latex commands in a popup.
-  (set! :popup " output\\*$" '((size . 15)))
+  (set-popup-rule! " output\\*$" :size 15)
 
   ;; TeX Font Styling
   ;; (def-package! tex-style :defer t)
@@ -242,9 +242,7 @@
     (setq reftex-default-bibliography (list (expand-file-name +latex-bibtex-file))))
 
   (after! reftex-toc
-    (set! :popup "\\*toc\\*"
-    '((size . 80) (side . left))
-    '((transient . nil) (select . t) (quit . nil)))
+    (set-popup-rule! "\\*toc\\*" :size 80 :side 'left :transient nil :select t :quit nil)
     (advice-add 'reftex-toc :override #'+latex*reftex-toc)
     (map! :map reftex-toc-mode-map
           :localleader

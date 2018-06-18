@@ -48,11 +48,11 @@
 ;;          (typescript-mode . lsp-javascript-typescript-enable)
 ;;          (rjsx-mode . lsp-javascript-typescript-enable))
 ;;   :config
-;;   (set! :company-backend '(js-mode
+;;   (set-company-backend! '(js-mode
 ;;                            rjsx-mode
 ;;                            typescript-mode)
 ;;     '(company-lsp company-files company-yasnippet))
-;;   (set! :lookup '(typescript-mode
+;;   (set-lookup-handlers! '(typescript-mode
 ;;                   rjsx-mode
 ;;                   js-mode)
 ;;     :definition #'lsp-ui-peek-find-definitions
@@ -65,12 +65,12 @@
          (less-mode . lsp-css-enable)
          (scss-mode . lsp-css-enable))
   :config
-   (set! :company-backend '(css-mode
+   (set-company-backend! '(css-mode
                            sass-mode
                            scss-mode
                            less-mode)
     '(company-lsp company-files company-yasnippet))
-   (set! :lookup '(css-mode
+   (set-lookup-handlers! '(css-mode
                    sass-mode
                    scss-mode
                    less-mode)
@@ -82,8 +82,8 @@
   :commands (lsp-python-enable)
   :config
   (setq python-indent-guess-indent-offset-verbose nil)
-  (set! :company-backend '(python-mode) '(company-lsp company-files company-yasnippet))
-  (set! :lookup 'python-mode
+  (set-company-backend! '(python-mode) '(company-lsp company-files company-yasnippet))
+  (set-lookup-handlers! 'python-mode
     :definition #'lsp-ui-peek-find-definitions
     :references #'lsp-ui-peek-find-references))
 

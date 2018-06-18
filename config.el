@@ -46,13 +46,14 @@
 (remove-hook 'conf-mode-hook #'hl-line-mode)
 ;; (menu-bar-mode 1)
 ;; (toggle-frame-fullscreen)
-(set! :popup "^\\*Customize.*" '((slot . 2) (side . right)) '((modeline . nil) (select . t) (quit . t)))
-(set! :popup " \\*undo-tree\\*" '((slot . 2) (side . left) (size . 20)) '((modeline . nil) (select . t) (quit . t)))
+
+(set-popup-rule! "^\\*Customize.*" :slot 2 :side 'right :modeline nil :select t :quit t)
+(set-popup-rule! " \\*undo-tree\\*" :slot 2 :side 'left :size 20 :modeline nil :select t :quit t)
 (def-package! ace-link
   :commands (ace-link))
 
 (after! ace-window
-  (setq aw-keys '(?f ?d ?s ?a ?r ?e ?w ?q)
+  (setq aw-keys '(?f ?d ?s ?r ?e ?w)
         aw-scope 'frame
         aw-ignore-current t
         aw-background nil))
@@ -66,26 +67,21 @@
                                    (evil-backward-char nil nil)
                                    (self-insert-command nil nil))))
 (after! pass
-  (set! :popup "^\\*Password-Store" '((side . left) (size . 0.25)) '((quit))))
+  (set-popup-rule! "^\\*Password-Store" :side 'left :size 0.25))
 (after! info
   (map! :map Info-mode-map
         :n "o" #'ace-link)
-  (set! :popup "^\\*info.*"
-    '((size . 80) (side . right))
-    '((transient . t) (select . t) (quit . t))))
+  (set-popup-rule! "^\\*info.*" :size 80 :side 'right :transient t :select t :quit t)
+  )
 (after! man
-  (set! :popup "^\\*Man.*"
-    '((size . 80) (side . right))
-    '((transient . t) (select . t) (quit . t))))
+  (set-popup-rule! "^\\*Man.*" :size 80 :side 'right :transient t :select t :quit t))
 
 (after! neotree
-  (set! :popup "^ ?\\*NeoTree"
-    `((side . ,neo-window-position) (window-width . ,neo-window-width))
-    '((quit . current) (select . t))))
+  (set-popup-rule! "^ ?\\*NeoTree" :side ,neo-window-position :width ,neo-window-width :quit 'current :select t))
 
 (after! vc
-  (set! :evil-state 'vc-git-region-history-mode 'normal)
-  (set! :popup "\\*VC-history\\*" '((slot . 2) (side . right) (size . 80)) '((modeline . nil) (select . t) (quit . t))))
+  (set-evil-initial-state! 'vc-git-region-history-mode 'normal)
+  (set-popup-rule! "\\*VC-history\\*" :slot 2 :side 'right :size 80 :modeline nil :select t :quit t))
 (after! colir
   (advice-add 'colir--blend-background :override #'*colir--blend-background)
   (advice-add 'colir-blend-face-background :override #'*colir-blend-face-background))
@@ -113,11 +109,10 @@
 
   (magit-wip-after-save-mode 1)
   (magit-wip-after-apply-mode 1)
-  (setq magit-save-repository-buffers 'dontask
-        magit-repository-directories '("/Users/xfu/Source/"))
+  (setq magit-save-repository-buffers 'dontask)
 
   (advice-add 'magit-list-repositories :override #'*magit-list-repositories)
-  (set! :evil-state 'magit-repolist-mode 'normal)
+  (set-evil-initial-state! 'magit-repolist-mode 'normal)
   (map! :map magit-repolist-mode-map
         :nmvo doom-leader-key nil
         :map with-editor-mode-map
@@ -128,9 +123,7 @@
 
 ;; ** Web
 (after! eww
-  (set! :popup "^\\*eww.*"
-    '((size . 80) (side . right))
-    '((select . t) (quit . t)))
+  (set-popup-rule! "^\\*eww.*" :size 80 :side 'right :select t :quit t)
   (advice-add 'eww-display-html :around
               'eww-display-html--override-shr-external-rendering-functions))
 (after! shr
@@ -138,7 +131,7 @@
   (add-to-list 'shr-external-rendering-functions
                '(pre . shr-tag-pre-highlight)))
 (after! xwidget
-  (set! :popup "\\*xwidget" '((side . right) (size . 100)) '((select . t) (transient) (quit)))
+  (set-popup-rule! "\\*xwidget" :side 'right :size 100 :select t)
   (advice-add 'xwidget-webkit-new-session :override #'*xwidget-webkit-new-session)
   (advice-add 'xwidget-webkit-goto-url :override #'*xwidget-webkit-goto-url)
   (setq xwidget-webkit-enable-plugins t))
@@ -210,17 +203,13 @@
 
 ;; ** Help
 (after! helpful
-  (set! :lookup 'helpful-mode :documentation #'helpful-at-point)
-  (set! :popup "^\\*helpful.*"
-    '((size . 80) (side . right))
-    '((select . t) (quit . t))))
+  (set-lookup-handlers! 'helpful-mode :documentation #'helpful-at-point)
+  (set-popup-rule! "^\\*helpful.*" :size 80 :side 'right :select t :quit t))
 (def-package! tldr
   :commands (tldr)
   :config
   (setq tldr-directory-path (concat doom-etc-dir "tldr/"))
-  (set! :popup "^\\*tldr\\*"
-    '((size . 80) (side . right))
-    '((select . t) (quit . t))))
+  (set-popup-rule! "^\\*tldr\\*" :size 80 :side 'right :select t :quit t))
 
 ;; ** Coding
 (def-package! ivy-yasnippet
@@ -252,9 +241,9 @@
         company-backends
         '(company-capf company-dabbrev company-files company-yasnippet)
         company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode inferior-python-mode eshell-mode)))
-;; (set! :company-backend 'python-mode 'company-anaconda)
+;; (set-company-backend! 'python-mode 'company-anaconda)
 (after! elisp-mode
-  (set! :lookup 'emacs-lisp-mode :documentation #'helpful-at-point))
+  (set-lookup-handlers! 'emacs-lisp-mode :documentation #'helpful-at-point))
 (after! company-box
   ;; (remove-hook 'company-box-selection-hook 'company-box-doc)
   ;; (remove-hook 'company-box-hide-hook 'company-box-doc--hide)
