@@ -7,9 +7,14 @@
         (sh . shell)))
 
 (defun +org-private|init-babel ()
+  (advice-add #'org-edit-src-code :override #'+org-private|org-edit-src-code)
   (setq org-src-preserve-indentation nil
         org-list-description-max-indent 5
         org-edit-src-content-indentation 0)
   (after! ivy
     (ivy-add-actions '+org-private/get-name-src-block
                      '(("g" org-babel-goto-named-src-block "Goto")))))
+
+
+
+

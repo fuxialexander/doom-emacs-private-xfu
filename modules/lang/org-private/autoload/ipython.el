@@ -89,10 +89,11 @@ This function is called by `org-babel-execute-src-block'."
 (defun +org/ob-ipython-generate-local-path-from-remote (session host params)
   "Given a remote SESSION with PARAMS and corresponding HOST, copy remote config to local, start a jupyter console to generate a new one."
   (let* ((runtime-dir
-          (substring (shell-command-to-string (concat "ssh " host " jupyter --runtime-dir")) 0 -1))
+          (substring (let ((default-directory (concat "/ssh:" "hpc9" ":")))
+                       (shell-command-to-string "jupyter --runtime-dir")) 0 -1))
          (runtime-file (concat runtime-dir "/" "kernel-" session ".json"))
          (tramp-path (concat "/ssh:" host ":" runtime-file))
-         (tramp-copy (concat +ob-ipython-local-runtime-dir "/remote-" host "-kernel-" session ".json"))
+         (tramp-copy (concat (substring (shell-command-to-string "jupyter --runtime-dir") 0 -1) "/remote-" host "-kernel-" session ".json"))
          (local-path
           (concat
            "Python:ob-ipython-"
@@ -117,8 +118,7 @@ This function is called by `org-babel-execute-src-block'."
            (dir (cdr (assoc :pydir params))))
       (sleep-for 3)
       (if dir
-          (with-current-buffer
-              buf
+          (with-current-buffer buf
             (setq-local default-directory dir)))
       (format "*%s*" proc))))
 
@@ -140,15 +140,15 @@ This function is called by `org-babel-execute-src-block'."
      (nth 2)
      (assoc :session)
      cdr ob-ipython--normalize-session)))
-  (setq-local
-   default-directory
-   (format
-    "%s"
-    (->>
-     info
-     (nth 2)
-     (assoc :pydir)
-     cdr ob-ipython--normalize-session)))
+  ;; (setq-local
+  ;;  default-directory
+  ;;  (format
+  ;;   "%s"
+  ;;   (->>
+  ;;    info
+  ;;    (nth 2)
+  ;;    (assoc :dir)
+  ;;    cdr ob-ipython--normalize-session)))
   (ob-ipython-mode 1)
   ;; hack on company mode to use company-capf rather than company-anaconda
   (when (featurep! :completion company)
