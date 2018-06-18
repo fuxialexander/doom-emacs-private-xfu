@@ -23,7 +23,7 @@
        evil-goggles
        hl-todo
        nav-flash
-       neotree
+       treemacs
        (popup
         +all
         +defaults)
@@ -31,7 +31,7 @@
 
        :emacs
        dired
-       electric-indent
+       electric
        eshell
        term
        ediff
@@ -133,7 +133,7 @@
  evil-respect-visual-line-mode t
  trash-directory "/research/kevinyip10/xfu/.Trash/"
  +magit-hub-features t
- +evil-collection-disabled-list '(notmuch kotlin-mode simple dired helm ivy anaconda-mode))
+ +evil-collection-disabled-list '(elfeed notmuch kotlin-mode simple dired helm ivy anaconda-mode))
 
 (def-package-hook! ivy-rich
   :pre-init nil

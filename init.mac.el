@@ -23,7 +23,8 @@
        evil-goggles
        hl-todo
        nav-flash
-       neotree
+       ;; neotree
+       treemacs                      ; a project drawer, like neotree but cooler
        (popup
         +all
         +defaults)
@@ -31,7 +32,7 @@
 
        :emacs
        dired
-       electric-indent
+       electric
        eshell
        term
        ediff
@@ -58,8 +59,8 @@
        ;; cc-private
        ess
        (latex
-       +latexmk
-       +skim)
+        +latexmk
+        +skim)
        (org
         +attach
         +babel
