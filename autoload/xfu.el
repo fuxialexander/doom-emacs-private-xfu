@@ -531,3 +531,31 @@ Version 2017-01-11"
                  (search-forward (aref $x 0) nil t)
                (replace-match (aref $x 1) "FIXEDCASE" "LITERAL")))
            $strPairs))))))
+
+;;;###autoload
+(defun +eshell|init-keymap ()
+    "Setup eshell keybindings. This must be done in a hook because eshell-mode
+redefines its keys every time `eshell-mode' is enabled."
+    (when (featurep 'evil)
+      (evil-define-key* 'normal eshell-mode-map
+        [return]   #'+eshell/goto-end-of-prompt
+        "c"        #'+eshell/evil-change
+        "C"        #'+eshell/evil-change-line
+        "d"        #'+eshell/evil-delete
+        "D"        #'+eshell/evil-delete-line)
+      (evil-define-key* 'insert eshell-mode-map
+        [tab]      #'+eshell/pcomplete
+        "\C-j"     #'eshell-next-input
+        "\C-k"     #'eshell-previous-input
+        "\C-h"     #'eshell-previous-matching-input
+        "\C-l"     #'eshell-next-matching-input
+        "\C-d"     #'+eshell/quit-or-delete-char
+        "\C-p"     #'eshell-previous-input
+        "\C-n"     #'eshell-next-input))
+    (define-key! eshell-mode-map
+      [remap split-window-below]  #'+eshell/split-below
+      [remap split-window-right]  #'+eshell/split-right
+      [remap doom/backward-to-bol-or-indent] #'eshell-bol
+      [remap doom/backward-kill-to-bol-and-indent] #'eshell-kill-input
+      [remap evil-window-split]   #'+eshell/split-below
+      [remap evil-window-vsplit]  #'+eshell/split-right))
