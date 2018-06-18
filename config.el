@@ -228,9 +228,10 @@
   (def-package! prescient)
   (def-package! company-prescient
     :hook (company-mode . company-prescient-mode))
-  (setq-default company-frontends '(company-box-frontend
-                                    company-preview-if-just-one-frontend
-                                    company-echo-metadata-frontend))
+  (when (featurep! :completion company +childframe)
+    (setq-default company-frontends '(company-box-frontend
+                                      company-preview-if-just-one-frontend
+                                      company-echo-metadata-frontend)))
   (setq company-box-max-candidates 50
         company-tooltip-limit 10
         company-tooltip-minimum-width 80
@@ -651,7 +652,6 @@
           :i "C-j" #'comint-next-input
           :m "]p" #'comint-next-prompt
           :m "[p" #'comint-previous-prompt))
-
       (:after company
         (:map company-active-map
           ;; Don't interfere with `evil-delete-backward-word' in insert mode
