@@ -33,6 +33,12 @@
       counsel-org-headline-display-style 'title
       counsel-org-headline-display-tags t
       counsel-org-headline-display-todo t
+      +reference-field 'bioinfo
+
+      bibtex-completion-bibliography "~/Dropbox/org/reference/Bibliography.bib"
+      bibtex-completion-library-path "~/Dropbox/org/reference/pdf/"
+      bibtex-completion-notes-path "~/Dropbox/org/ref.org"
+
       evil-shift-width 2
       +ivy-buffer-icons nil
       ivy-use-virtual-buffers t
@@ -750,3 +756,6 @@
         which-key-replacement-alist)
   (push '((nil . "\\`evil-window-\\(.+\\)\\'") . (nil . "\\1"))
         which-key-replacement-alist))
+
+
+
