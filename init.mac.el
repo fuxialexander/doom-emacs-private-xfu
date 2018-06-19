@@ -22,7 +22,7 @@
        doom-modeline
        evil-goggles
        hl-todo
-       nav-flash
+       ;; nav-flash
        ;; neotree
        treemacs                      ; a project drawer, like neotree but cooler
        (popup
@@ -64,12 +64,12 @@
        (org
         +attach
         +babel
-        +ipython +right-popup
         +capture
         +present)
        (org-private
         +todo
         +babel
+        +ipython +right-popup
         +capture
         +latex
         +export +style)
@@ -102,7 +102,7 @@
    (:eval (if (buffer-file-name)
               (abbreviate-file-name (buffer-file-name))
             "%b")))
- doom-font (font-spec :family "SF Mono" :size 12)
+ doom-font (font-spec :family "Sarasa Mono SC" :size 12)
  doom-variable-pitch-font
  (font-spec
   :family "SF Compact Display"
@@ -112,7 +112,7 @@
   :slant 'normal
   :registry "iso10646-1")
  doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 11)
- doom-big-font (font-spec :family "SF Mono" :size 16)
+ doom-big-font (font-spec :family "Sarasa Mono SC" :size 16)
  ovp-font "Iosevka"
  doom-theme 'doom-city-lights
  doom-line-numbers-style nil
@@ -175,7 +175,7 @@
  evil-respect-visual-line-mode t
  trash-directory "/Users/xfu/.Trash/"
  +magit-hub-features t
- +evil-collection-disabled-list '(elfeed notmuch kotlin-mode simple dired helm ivy anaconda-mode))
+ +evil-collection-disabled-list '(elfeed notmuch kotlin-mode simple dired helm ivy anaconda-mode outline))
 
 (def-package-hook! ivy-rich
   :pre-init nil

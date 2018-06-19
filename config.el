@@ -228,7 +228,7 @@
   (def-package! prescient)
   (def-package! company-prescient
     :hook (company-mode . company-prescient-mode))
-  (when (featurep! :completion company +childframe)
+  (when (and (display-graphic-p) (featurep! :completion company +childframe))
     (setq-default company-frontends '(company-box-frontend
                                       company-preview-if-just-one-frontend
                                       company-echo-metadata-frontend)))
@@ -501,30 +501,20 @@
      ("_" counsel-projectile-switch-project-action-org-capture
       "org-capture into project"))))
 
-
+(after! term
+  (add-hook 'term-mode-hook #'solaire-mode))
 (map! :map key-translation-map
       "M-√" (kbd "<C-return>"))
 ;; * Binding
 (map! :i "<M-return>" nil
-      :gnvime "M-j" #'evil-window-down
-      :gnvime "M-k" #'evil-window-up
-      :gnvime "M-h" #'evil-window-left
-      :gnvime "M-l" #'evil-window-right
-      :gnvime "M-d" #'evil-window-vsplit
-      :gnvime "M-D" #'evil-window-split
-      :nvime "C-h" #'outline-up-heading
-      :nvime "C-l" #'outline-toggle-children
-      :nvime "C-j" #'outline-next-heading
-      :nvime "C-k" #'outline-previous-heading
-      :nvime "<C-return>" (lambda! (evil-open-below 0) (outline-insert-heading))
-      :nvime "C-S-h" #'outline-promote
-      :nvime "C-S-l" #'outline-demote
-      :nvime "C-S-j" #'outline-move-subtree-down
-      :nvime "C-S-k" #'outline-move-subtree-up
-
       :gnvime "M-r" (lambda! (revert-buffer nil t t))
       :gnvime "M-g" #'org-agenda-show-daily
-
+      :nvime "M-j" #'evil-window-down
+      :nvime "M-k" #'evil-window-up
+      :nvime "M-h" #'evil-window-left
+      :nvime "M-l" #'evil-window-right
+      :nvime "M-d" #'evil-window-vsplit
+      :nvime "M-D" #'evil-window-split
       :nie "M-u" #'org-store-link
       :nie "M-o" #'org-open-at-point-global
       :nie "M-i" #'org-insert-last-stored-link

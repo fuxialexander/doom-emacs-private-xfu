@@ -9,25 +9,10 @@
   (setq ob-ipython-resources-dir +org-ob-ipython-resources-dir)
   ;; popup
   (when (featurep! +right-popup)
-    (set-popup-rule! "^\\*Org Src"
-      :size 100
-      :side 'right
-      :slot -1
-      :height 0.6
-      :select t)
-    (set-popup-rule! "^\\*Python"
-      :slot 0
-      :side 'right
-      :size 100)
-    (set-popup-rule! "\\*ob-ipython.*"
-      :slot 2
-      :side 'right
-      :size 100
-      :height 0.2)
-    (set-popup-rule! "\\*Python:.*"
-      :slot 0
-      :side 'right
-      :size 100))
+    (set-popup-rule! "^\\*Org Src" :size 100 :side 'right :slot -1 :height 0.6 :select t)
+    (set-popup-rule! "^\\*Python" :slot 0 :side 'right :size 100)
+    (set-popup-rule! "\\*ob-ipython.*" :slot 2 :side 'right :size 100 :height 0.2)
+    (set-popup-rule! "\\*Python:.*" :slot 0 :side 'right :size 100))
   ;; advices for remote kernel and org-src-edit
   (advice-add 'org-babel-edit-prep:ipython :override #'+org*org-babel-edit-prep:ipython)
   (advice-add 'org-babel-ipython-initiate-session :override #'+org*org-babel-ipython-initiate-session)

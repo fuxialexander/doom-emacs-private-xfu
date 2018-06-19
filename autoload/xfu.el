@@ -538,24 +538,50 @@ Version 2017-01-11"
 redefines its keys every time `eshell-mode' is enabled."
     (when (featurep 'evil)
       (evil-define-key* 'normal eshell-mode-map
-        [return]   #'+eshell/goto-end-of-prompt
-        "c"        #'+eshell/evil-change
-        "C"        #'+eshell/evil-change-line
-        "d"        #'+eshell/evil-delete
-        "D"        #'+eshell/evil-delete-line)
+        [return] #'+eshell/goto-end-of-prompt
+        "c" #'+eshell/evil-change
+        "C" #'+eshell/evil-change-line
+        "d" #'+eshell/evil-delete
+        "D" #'+eshell/evil-delete-line
+        "\M-j" #'evil-window-down
+        "\M-k" #'evil-window-up
+        "\M-h" #'evil-window-left
+        "\M-l" #'evil-window-right
+        "\M-d" #'evil-window-vsplit
+        "\M-D" #'evil-window-split)
+      (evil-define-key* 'visual eshell-mode-map
+        "\M-j" #'evil-window-down
+        "\M-k" #'evil-window-up
+        "\M-h" #'evil-window-left
+        "\M-l" #'evil-window-right
+        "\M-d" #'evil-window-vsplit
+        "\M-D" #'evil-window-split)
       (evil-define-key* 'insert eshell-mode-map
-        [tab]      #'+eshell/pcomplete
-        "\C-j"     #'eshell-next-input
-        "\C-k"     #'eshell-previous-input
-        "\C-h"     #'eshell-previous-matching-input
-        "\C-l"     #'eshell-next-matching-input
-        "\C-d"     #'+eshell/quit-or-delete-char
-        "\C-p"     #'eshell-previous-input
-        "\C-n"     #'eshell-next-input))
+        [tab] #'+eshell/pcomplete
+        "\C-r" #'counsel-esh-history
+        "\C-j" #'eshell-next-input
+        "\C-k" #'eshell-previous-input
+        "\C-h" #'eshell-previous-matching-input
+        "\C-l" #'eshell-next-matching-input
+        "\C-d" #'+eshell/quit-or-delete-char
+        "\C-p" #'eshell-previous-input
+        "\C-n" #'eshell-next-input
+        "\M-j" #'evil-window-down
+        "\M-k" #'evil-window-up
+        "\M-h" #'evil-window-left
+        "\M-l" #'evil-window-right
+        "\M-d" #'evil-window-vsplit
+        "\M-D" #'evil-window-split))
     (define-key! eshell-mode-map
-      [remap split-window-below]  #'+eshell/split-below
-      [remap split-window-right]  #'+eshell/split-right
+      [remap split-window-below] #'+eshell/split-below
+      [remap split-window-right] #'+eshell/split-right
       [remap doom/backward-to-bol-or-indent] #'eshell-bol
       [remap doom/backward-kill-to-bol-and-indent] #'eshell-kill-input
-      [remap evil-window-split]   #'+eshell/split-below
-      [remap evil-window-vsplit]  #'+eshell/split-right))
+      [remap evil-window-split] #'+eshell/split-below
+      [remap evil-window-vsplit] #'+eshell/split-right
+      "\M-j" #'evil-window-down
+      "\M-k" #'evil-window-up
+      "\M-h" #'evil-window-left
+      "\M-l" #'evil-window-right
+      "\M-d" #'evil-window-vsplit
+      "\M-D" #'evil-window-split))
