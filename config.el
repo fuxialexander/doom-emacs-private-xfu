@@ -361,22 +361,20 @@
 
 ;; *** Outline
 (add-hook 'emacs-lisp-mode-hook #'outline-minor-mode)
+(add-hook 'emacs-lisp-mode-hook #'outshine-hook-function)
 (add-hook 'python-mode-hook #'outline-minor-mode)
+(add-hook 'python-mode-hook #'outshine-hook-function)
 
-;; (def-package! outshine ;; :load-path "~/.doom.d/local/"
-;;   :hook (outline-minor-mode . outshine-hook-function)
-;;   :config
-;;   (map! :map outline-minor-mode-map
-;;         :nmv "C-j" #'outline-next-heading
-;;         :nmv "C-k" #'outline-previous-heading
-;;         :nmv "\]o" #'outline-next-heading
-;;         :nmv "\[o" #'outline-previous-heading
-;;         :nm [tab] #'outline-cycle
-;;         :nm [backtab] #'outshine-cycle-buffer))
+(def-package! outshine :load-path "~/.doom.d/local/"
+  :commands (outshine-hook-function)
+  :config
+  (map! :map outline-minor-mode-map
+        :nm [tab] #'outline-cycle
+        :nm [backtab] #'outshine-cycle-buffer))
 
-;; (def-package! counsel-oi :load-path "~/.doom.d/local/"
-;;   :after (outshine)
-;;   :commands (counsel-oi))
+(def-package! counsel-oi :load-path "~/.doom.d/local/"
+  :after (outshine)
+  :commands (counsel-oi))
 
 ;; ;; ** Ivy
 (def-package! counsel-tramp :load-path "~/.doom.d/local/"
@@ -546,6 +544,17 @@
         "C-u" nil
         (:leader
           :n "u" #'universal-argument-more))
+      (:after outline
+        :map (outline-mode-map outline-minor-mode-map)
+        :nvime "C-h" #'counsel-oi
+        :nvime "C-l" #'outline-toggle-children
+        :nvime "C-j" (lambda! (outline-next-heading) (recenter))
+        :nvime "C-k" (lambda! (outline-previous-heading) (recenter))
+        :nvime "<C-return>" (lambda! (evil-open-below 0) (outline-insert-heading))
+        :nvime "C-S-h" #'outline-promote
+        :nvime "C-S-l" #'outline-demote
+        :nvime "C-S-j" #'outline-move-subtree-down
+        :nvime "C-S-k" #'outline-move-subtree-up)
       (:leader
         :desc "ivy-resume" :nv "$" #'ivy-resume
         :desc "Find file in project" :nv "SPC" #'execute-extended-command
@@ -652,6 +661,12 @@
           :i "C-j" #'comint-next-input
           :m "]p" #'comint-next-prompt
           :m "[p" #'comint-previous-prompt))
+      (:after magit
+        (:map magit-mode-map
+          "C-h" #'magit-section-cycle-diffs
+          "C-j" #'magit-section-forward-sibling
+          "C-k" #'magit-section-backward-sibling
+          "C-l" #'magit-section-toggle))
       (:after company
         (:map company-active-map
           ;; Don't interfere with `evil-delete-backward-word' in insert mode

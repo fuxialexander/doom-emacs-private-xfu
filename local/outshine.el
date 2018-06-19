@@ -43,10 +43,10 @@ Used to override any major-mode specific file-local settings")
   "The tag that marks a subtree as comment.
 A comment subtree does not open during visibility cycling.")
 
-(defconst outshine-latex-documentclass-regexp
-  "^[[:space:]]*\\\\documentclass\\(?:\\[.+]\\)?{\\(.+\\)}"
-  "Regexp matching the document class in a latex doc (in submatch
-  1)")
+;; (defconst outshine-latex-documentclass-regexp
+;;   "^[[:space:]]*\\\\documentclass\\(?:\\[.+]\\)?{\\(.+\\)}"
+;;   "Regexp matching the document class in a latex doc (in submatch
+;;   1)")
 
 ;;;; Vars
 
@@ -285,40 +285,40 @@ This is configurable, because there is some impact on typing performance."
   :group 'outshine
   :type 'boolean)
 
-(defcustom outshine-latex-classes
-  '(("scrbook" . ((1 . "^[[:space:]]*\\\\part\\*?{\\(.+\\)}")
-		  (2 . "^[[:space:]]*\\\\chapter\\*?{\\(.+\\)}")
-		  (3 . "^[[:space:]]*\\\\section\\*?{\\(.+\\)}")
-		  (4 . "^[[:space:]]*\\\\subsection\\*?{\\(.+\\)}")
-		  (5 . "^[[:space:]]*\\\\subsubsection\\*?{\\(.+\\)}")
-		  (6 . "^[[:space:]]*\\\\paragraph\\*?{\\(.+\\)}")
-		  (7 . "^[[:space:]]*\\\\subparagraph\\*?{\\(.+\\)}")))
-    ("book" . ((1 . "^[[:space:]]*\\\\part\\*?{\\(.+\\)}")
-	       (2 . "^[[:space:]]*\\\\chapter\\*?{\\(.+\\)}")
-	       (3 . "^[[:space:]]*\\\\section\\*?{\\(.+\\)}")
-	       (4 . "^[[:space:]]*\\\\subsection\\*?{\\(.+\\)}")
-	       (5 . "^[[:space:]]*\\\\subsubsection\\*?{\\(.+\\)}")))
-    ("report" . ((1 . "^[[:space:]]*\\\\part\\*?{\\(.+\\)}")
-		 (2 . "^[[:space:]]*\\\\chapter\\*?{\\(.+\\)}")
-		 (3 . "^[[:space:]]*\\\\section\\*?{\\(.+\\)}")
-		 (4 . "^[[:space:]]*\\\\subsection\\*?{\\(.+\\)}")
-		 (5 . "^[[:space:]]*\\\\subsubsection\\*?{\\(.+\\)}")))
-    ("scrartcl" . ((1 . "^[[:space:]]*\\\\section\\*?{\\(.+\\)}")
-		   (2 . "^[[:space:]]*\\\\subsection\\*?{\\(.+\\)}")
-		   (3 . "^[[:space:]]*\\\\subsubsection\\*?{\\(.+\\)}")
-		   (4 . "^[[:space:]]*\\\\paragraph\\*?{\\(.+\\)}")
-		   (5 . "^[[:space:]]*\\\\subparagraph\\*?{\\(.+\\)}")))
-    ("article" . ((1 . "^[[:space:]]*\\\\section\\*?{\\(.+\\)}")
-		  (2 . "^[[:space:]]*\\\\subsection\\*?{\\(.+\\)}")
-		  (3 . "^[[:space:]]*\\\\subsubsection\\*?{\\(.+\\)}")
-		  (4 . "^[[:space:]]*\\\\paragraph\\*?{\\(.+\\)}")
-		  (5 . "^[[:space:]]*\\\\subparagraph\\*?{\\(.+\\)}"))))
-  "Sectioning structure of LaTeX classes.
-For each class, the outline level and a regexp matching the latex
-section are given (with section title in submatch 1)."
-  :group 'outshine
-  :type '(alist :key-type string
-                :value-type alist))
+;; (defcustom outshine-latex-classes
+;;   '(("scrbook" . ((1 . "^[[:space:]]*\\\\part\\*?{\\(.+\\)}")
+;; 		  (2 . "^[[:space:]]*\\\\chapter\\*?{\\(.+\\)}")
+;; 		  (3 . "^[[:space:]]*\\\\section\\*?{\\(.+\\)}")
+;; 		  (4 . "^[[:space:]]*\\\\subsection\\*?{\\(.+\\)}")
+;; 		  (5 . "^[[:space:]]*\\\\subsubsection\\*?{\\(.+\\)}")
+;; 		  (6 . "^[[:space:]]*\\\\paragraph\\*?{\\(.+\\)}")
+;; 		  (7 . "^[[:space:]]*\\\\subparagraph\\*?{\\(.+\\)}")))
+;;     ("book" . ((1 . "^[[:space:]]*\\\\part\\*?{\\(.+\\)}")
+;; 	       (2 . "^[[:space:]]*\\\\chapter\\*?{\\(.+\\)}")
+;; 	       (3 . "^[[:space:]]*\\\\section\\*?{\\(.+\\)}")
+;; 	       (4 . "^[[:space:]]*\\\\subsection\\*?{\\(.+\\)}")
+;; 	       (5 . "^[[:space:]]*\\\\subsubsection\\*?{\\(.+\\)}")))
+;;     ("report" . ((1 . "^[[:space:]]*\\\\part\\*?{\\(.+\\)}")
+;; 		 (2 . "^[[:space:]]*\\\\chapter\\*?{\\(.+\\)}")
+;; 		 (3 . "^[[:space:]]*\\\\section\\*?{\\(.+\\)}")
+;; 		 (4 . "^[[:space:]]*\\\\subsection\\*?{\\(.+\\)}")
+;; 		 (5 . "^[[:space:]]*\\\\subsubsection\\*?{\\(.+\\)}")))
+;;     ("scrartcl" . ((1 . "^[[:space:]]*\\\\section\\*?{\\(.+\\)}")
+;; 		   (2 . "^[[:space:]]*\\\\subsection\\*?{\\(.+\\)}")
+;; 		   (3 . "^[[:space:]]*\\\\subsubsection\\*?{\\(.+\\)}")
+;; 		   (4 . "^[[:space:]]*\\\\paragraph\\*?{\\(.+\\)}")
+;; 		   (5 . "^[[:space:]]*\\\\subparagraph\\*?{\\(.+\\)}")))
+;;     ("article" . ((1 . "^[[:space:]]*\\\\section\\*?{\\(.+\\)}")
+;; 		  (2 . "^[[:space:]]*\\\\subsection\\*?{\\(.+\\)}")
+;; 		  (3 . "^[[:space:]]*\\\\subsubsection\\*?{\\(.+\\)}")
+;; 		  (4 . "^[[:space:]]*\\\\paragraph\\*?{\\(.+\\)}")
+;; 		  (5 . "^[[:space:]]*\\\\subparagraph\\*?{\\(.+\\)}"))))
+;;   "Sectioning structure of LaTeX classes.
+;; For each class, the outline level and a regexp matching the latex
+;; section are given (with section title in submatch 1)."
+;;   :group 'outshine
+;;   :type '(alist :key-type string
+;;                 :value-type alist))
 
 (defcustom outshine-preserve-delimiter-whitespace nil
   "Non-nil means that whitespace present at the start or end of
