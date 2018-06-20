@@ -8,4 +8,5 @@
 (package! wordnut)
 (package! synosaurus)
 (package! powerthesaurus)
+(package! academic-phrases)
 (package! mixed-pitch)

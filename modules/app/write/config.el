@@ -72,7 +72,9 @@
   :commands (org-variable-pitch-minor-mode)
   :init
   (setq ovp-font "Operator Mono"))
-
+(def-package! academic-phrases
+  :commands (academic-phrases
+             academic-phrases-by-section))
 ;; (def-package! mixed-pitch
 ;;   :config
 ;;   ;; (define-minor-mode mixed-pitch-mode
