@@ -1,133 +1,32 @@
 ;;; config.el -*- lexical-binding: t; -*-
 ;; * Config
-;; ** General
-
+;; ** general
 (setq request-storage-directory (concat doom-etc-dir "request/")
-      projectile-ignored-projects '("~/"
-                                    "/tmp")
-      recentf-auto-cleanup 60
       trash-directory "/Users/xfu/.Trash/"
       delete-by-moving-to-trash t
       enable-remote-dir-locals t
-      avy-keys '(?a ?s ?d ?f ?j ?k ?l ?\;)
-      ivy-use-selectable-prompt t
-      ivy-auto-select-single-candidate t
-      ivy-rich-parse-remote-buffer nil
-      ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-cd-selected
-      ivy-height 20
-      ivy-rich-switch-buffer-name-max-length 50
-      counsel-evil-registers-height 20
-      counsel-yank-pop-height 20
-      visual-fill-column-center-text t
-      evil-escape-key-sequence nil
-      line-spacing nil
-      frame-resize-pixelwise t
       electric-pair-inhibit-predicate 'ignore
-
       persp-interactive-init-frame-behaviour-override -1
-      projectile-ignored-project-function 'file-remote-p
       +rss-elfeed-files '("elfeed.org")
       ;; browse-url-browser-function 'xwidget-webkit-browse-url
-      ;; mac-frame-tabbing nil
-      counsel-org-goto-face-style 'org
-      counsel-org-headline-display-style 'title
-      counsel-org-headline-display-tags t
-      counsel-org-headline-display-todo t
       +reference-field 'bioinfo
-
       bibtex-completion-bibliography "~/Dropbox/org/reference/Bibliography.bib"
       bibtex-completion-library-path "~/Dropbox/org/reference/pdf/"
       bibtex-completion-notes-path "~/Dropbox/org/ref.org"
-
-      evil-shift-width 2
-      +ivy-buffer-icons nil
-      ivy-use-virtual-buffers t
-      org-bullets-bullet-list '("#" "#" "#" "#" "#" "#" "#" "#")
       twittering-connection-type-order '(wget urllib-http native urllib-https)
-      +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin)
-
-;; ** UI
+      +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin
+      visual-fill-column-center-text t
+      evil-escape-key-sequence nil
+      ;; mac-frame-tabbing nil
+      line-spacing nil
+      frame-resize-pixelwise t
+      org-bullets-bullet-list '("#" "#" "#" "#" "#" "#" "#" "#"))
+(add-hook! minibuffer-setup (setq-local show-trailing-whitespace nil))
 (remove-hook 'text-mode-hook #'hl-line-mode)
-;; (remove-hook 'prog-mode-hook #'hl-line-mode)
 (remove-hook 'conf-mode-hook #'hl-line-mode)
 
-(set-popup-rule! "^\\*Customize.*" :slot 2 :side 'right :modeline nil :select t :quit t)
-(set-popup-rule! " \\*undo-tree\\*" :slot 2 :side 'left :size 20 :modeline nil :select t :quit t)
-(def-package! ace-link
-  :commands (ace-link))
-
-(after! ace-window
-  (setq aw-keys '(?f ?d ?s ?r ?e ?w)
-        aw-scope 'frame
-        aw-ignore-current t
-        aw-background nil))
-
-(def-package! keycast :load-path "~/.doom.d/local/"
-  :commands (keycast-mode)
-  :config
-  (setq keycast-substitute-alist '((evil-next-line nil nil)
-                                   (evil-previous-line nil nil)
-                                   (evil-forward-char nil nil)
-                                   (evil-backward-char nil nil)
-                                   (self-insert-command nil nil))))
-(after! pass
-  (set-popup-rule! "^\\*Password-Store" :side 'left :size 0.25))
-(after! info
-  (map! :map Info-mode-map
-        :n "o" #'ace-link)
-  (set-popup-rule! "^\\*info.*" :size 80 :side 'right :transient t :select t :quit t)
-  )
-(after! man
-  (set-popup-rule! "^\\*Man.*" :size 80 :side 'right :transient t :select t :quit t))
-
-(after! neotree
-  (set-popup-rule! "^ ?\\*NeoTree" :side ,neo-window-position :width ,neo-window-width :quit 'current :select t))
-
-(after! vc
-  (set-evil-initial-state! 'vc-git-region-history-mode 'normal)
-  (set-popup-rule! "\\*VC-history\\*" :slot 2 :side 'right :size 80 :modeline nil :select t :quit t))
-(after! colir
-  (advice-add 'colir--blend-background :override #'*colir--blend-background)
-  (advice-add 'colir-blend-face-background :override #'*colir-blend-face-background))
-
-;; ** File
-(after! recentf
-  (add-to-list 'recentf-exclude 'file-remote-p)
-  (add-to-list 'recentf-exclude ".*Cellar.*"))
-
-(after! projectile
-  (setq projectile-ignored-project-function
-        (lambda (root)
-          (or (file-remote-p root)
-              (string-match ".*Trash.*" root)
-              (string-match ".*Cellar.*" root)))))
-
-;; ** Magit
-(def-package! orgit :after magit)
-(after! magithub
-  (setq magithub-clone-default-directory "/Users/xfu/Source/playground/"))
-
-(after! magit
-  (after! solaire-mode
-    (add-hook 'magit-mode-hook #'solaire-mode))
-
-  (magit-wip-after-save-mode 1)
-  (magit-wip-after-apply-mode 1)
-  (setq magit-save-repository-buffers 'dontask)
-
-  (advice-add 'magit-list-repositories :override #'*magit-list-repositories)
-  (set-evil-initial-state! 'magit-repolist-mode 'normal)
-  (map! :map magit-repolist-mode-map
-        :nmvo doom-leader-key nil
-        :map with-editor-mode-map
-        (:localleader
-          :desc "Finish" :n "," #'with-editor-finish
-          :desc "Abort" :n "k" #'with-editor-cancel)))
-
-
-;; ** Web
+;; ** web
 (after! eww
-  (set-popup-rule! "^\\*eww.*" :size 80 :side 'right :select t :quit t)
   (advice-add 'eww-display-html :around
               'eww-display-html--override-shr-external-rendering-functions))
 (after! shr
@@ -135,237 +34,27 @@
   (add-to-list 'shr-external-rendering-functions
                '(pre . shr-tag-pre-highlight)))
 (after! xwidget
-  (set-popup-rule! "\\*xwidget" :side 'right :size 100 :select t)
   (advice-add 'xwidget-webkit-new-session :override #'*xwidget-webkit-new-session)
   (advice-add 'xwidget-webkit-goto-url :override #'*xwidget-webkit-goto-url)
   (setq xwidget-webkit-enable-plugins t))
 
 
-;; ** Tools
-(def-package! esup
-  :commands (esup))
-(def-package! alert
-  :commands (alert)
-  :config
-  (setq alert-default-style 'notifier))
-(after! tramp-sh
-  (setq tramp-default-method "ssh"
-        ;; this is critical
-        tramp-restricted-shell-hosts-alist '("gw")
-        tramp-default-proxies-alist '(("hpc7" nil "/ssh:gw:")
-                                      ("hpc8" nil "/ssh:gw:")
-                                      ("hpc9" nil "/ssh:gw:")
-                                      ("hpc10" nil "/ssh:gw:")
-                                      ("hpc11" nil "/ssh:gw:")
-                                      ("hpc12" nil "/ssh:gw:")
-                                      ("hpc13" nil "/ssh:gw:")
-                                      ("hpc14" nil "/ssh:gw:")
-                                      ("hpc15" nil "/ssh:gw:")
-                                      ("gpu7" nil "/ssh:gw:")
-                                      ("gpu8" nil "/ssh:gw:")
-                                      ("gpu9" nil "/ssh:gw:")
-                                      ("gpu10" nil "/ssh:gw:")
-                                      ("gpu11" nil "/ssh:gw:")
-                                      ("gpu12" nil "/ssh:gw:")
-                                      ("gpu13" nil "/ssh:gw:")
-                                      ("gpu14" nil "/ssh:gw:")
-                                      ("gpu15" nil "/ssh:gw:"))
-        tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=600"
-        tramp-remote-process-environment
-        (append tramp-remote-process-environment
-                '("http_proxy=http://proxy.cse.cuhk.edu.hk:8000"
-                  "https_proxy=http://proxy.cse.cuhk.edu.hk:8000"
-                  "ftp_proxy=http://proxy.cse.cuhk.edu.hk:8000")))
-  (setq tramp-remote-path
-     (append '("/research/kevinyip10/xfu/miniconda3/bin"
-               "/uac/gds/xfu/bin") tramp-remote-path)))
-(def-package! academic-phrases
-  :commands (academic-phrases
-             academic-phrases-by-section))
-(def-package! sed-mode
-  :commands (sed-mode))
-(def-package! webkit-color-picker :load-path "/Users/xfu/Source/playground/emacs-webkit-color-picker"
-  :commands (webkit-color-picker-show)
-  :config
-  (require 'xwidget))
+;; ** tools
+;; *** avy
+(def-package! ace-link
+  :commands (ace-link))
 
-;; ** Term
+(after! avy
+  (setq avy-keys '(?a ?s ?d ?f ?j ?k ?l ?\;)))
 
-(after! comint
-  (add-hook 'comint-preoutput-filter-functions #'dirtrack-filter-out-pwd-prompt))
+(after! ace-window
+  (setq aw-keys '(?f ?d ?s ?r ?e ?w)
+        aw-scope 'frame
+        aw-ignore-current t
+        aw-background nil))
 
-(def-package! iterm :load-path "~/.doom.d/local"
-  :commands (iterm-cd
-             iterm-send-text
-             iterm-send-text-ipy
-             iterm-send-file-ipy
-             iterm-cwd-ipy
-             iterm-send-file-R
-             iterm-cwd-R
-             iterm-send-file-julia
-             iterm-cwd-julia))
 
-;; ** Help
-(after! helpful
-  (set-lookup-handlers! 'helpful-mode :documentation #'helpful-at-point)
-  (set-popup-rule! "^\\*helpful.*" :size 80 :side 'right :select t :quit t))
-(def-package! tldr
-  :commands (tldr)
-  :config
-  (setq tldr-directory-path (concat doom-etc-dir "tldr/"))
-  (set-popup-rule! "^\\*tldr\\*" :size 80 :side 'right :select t :quit t))
-
-;; ** Coding
-(def-package! ivy-yasnippet
-  :commands (ivy-yasnippet))
-(def-package! realgud
-  :commands (realgud:gdb realgud:trepanjs realgud:ipdb realgud:bashdb realgud:zshdb))
-
-(after! flycheck-posframe
-  (setq flycheck-posframe-warning-prefix "⚠ "
-        flycheck-posframe-info-prefix "··· "
-        flycheck-posframe-error-prefix " ")
-  (advice-add 'flycheck-posframe-delete-posframe :override #'*flycheck-posframe-delete-posframe)
-  (advice-add 'flycheck-posframe-show-posframe :override #'*flycheck-posframe-show-posframe)
-  (advice-add '+syntax-checker-cleanup-popup :override #'+syntax-checker*cleanup-popup))
-
-;; *** Company
-(after! company
-  (def-package! prescient)
-  (def-package! company-prescient
-    :hook (company-mode . company-prescient-mode))
-  (when (and (display-graphic-p) (featurep! :completion company +childframe))
-    (setq-default company-frontends '(company-box-frontend
-                                      company-preview-if-just-one-frontend
-                                      company-echo-metadata-frontend)))
-  (setq company-box-max-candidates 50
-        company-tooltip-limit 10
-        company-tooltip-minimum-width 80
-        company-tooltip-minimum 10
-
-        company-backends
-        '(company-capf company-dabbrev company-files company-yasnippet)
-        company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode inferior-python-mode eshell-mode)))
-;; (set-company-backend! 'python-mode 'company-anaconda)
-(after! elisp-mode
-  (set-lookup-handlers! 'emacs-lisp-mode :documentation #'helpful-at-point))
-(after! company-box
-  ;; (remove-hook 'company-box-selection-hook 'company-box-doc)
-  ;; (remove-hook 'company-box-hide-hook 'company-box-doc--hide)
-  (setq company-box-icons-yasnippet (all-the-icons-material "short_text" :height 0.7 :face 'all-the-icons-green)
-        company-box-icons-unknown (all-the-icons-material "find_in_page" :height 0.7 :face 'all-the-icons-purple)
-        company-box-icons-lsp '((1 . (all-the-icons-material "text_fields" :height 0.7 :face 'all-the-icons-green)) ;; Text
-                                (2 . (all-the-icons-material "functions" :height 0.7 :face 'all-the-icons-red)) ;; Method
-                                (3 . (all-the-icons-material "functions" :height 0.7 :face 'all-the-icons-red)) ;; Function
-                                (4 . (all-the-icons-material "functions" :height 0.7 :face 'all-the-icons-red)) ;; Constructor
-                                (5 . (all-the-icons-material "functions" :height 0.7 :face 'all-the-icons-red)) ;; Field
-                                (6 . (all-the-icons-material "adjust" :height 0.7 :face 'all-the-icons-blue)) ;; Variable
-                                (7 . (all-the-icons-material "class" :height 0.7 :face 'all-the-icons-red)) ;; Class
-                                (8 . (all-the-icons-material "settings_input_component" :height 0.7 :face 'all-the-icons-red)) ;; Interface
-                                (9 . (all-the-icons-material "view_module" :height 0.7 :face 'all-the-icons-red)) ;; Module
-                                (10 . (all-the-icons-material "settings" :height 0.7 :face 'all-the-icons-red)) ;; Property
-                                (11 . (all-the-icons-material "straighten" :height 0.7 :face 'all-the-icons-red)) ;; Unit
-                                (12 . (all-the-icons-material "filter_1" :height 0.7 :face 'all-the-icons-red)) ;; Value
-                                (13 . (all-the-icons-material "plus_one" :height 0.7 :face 'all-the-icons-red)) ;; Enum
-                                (14 . (all-the-icons-material "filter_center_focus" :height 0.7 :face 'all-the-icons-red)) ;; Keyword
-                                (15 . (all-the-icons-material "short_text" :height 0.7 :face 'all-the-icons-red)) ;; Snippet
-                                (16 . (all-the-icons-material "color_lens" :height 0.7 :face 'all-the-icons-red)) ;; Color
-                                (17 . (all-the-icons-material "insert_drive_file" :height 0.7 :face 'all-the-icons-red)) ;; File
-                                (18 . (all-the-icons-material "collections_bookmark" :height 0.7 :face 'all-the-icons-red)) ;; Reference
-                                (19 . (all-the-icons-material "folder" :height 0.7 :face 'all-the-icons-red)) ;; Folder
-                                (20 . (all-the-icons-material "people" :height 0.7 :face 'all-the-icons-red)) ;; EnumMember
-                                (21 . (all-the-icons-material "pause_circle_filled" :height 0.7 :face 'all-the-icons-red)) ;; Constant
-                                (22 . (all-the-icons-material "streetview" :height 0.7 :face 'all-the-icons-red)) ;; Struct
-                                (23 . (all-the-icons-material "event" :height 0.7 :face 'all-the-icons-red)) ;; Event
-                                (24 . (all-the-icons-material "control_point" :height 0.7 :face 'all-the-icons-red)) ;; Operator
-                                (25 . (all-the-icons-material "class" :height 0.7 :face 'all-the-icons-red)))
-        company-box-icons-elisp
-        (list
-         (all-the-icons-material "functions" :height 0.7 :face 'all-the-icons-red)
-         (all-the-icons-material "check_circle" :height 0.7 :face 'all-the-icons-blue)
-         (all-the-icons-material "stars" :height 0.7 :face 'all-the-icons-orange)
-         (all-the-icons-material "format_paint" :height 0.7 :face 'all-the-icons-pink))))
-
-;; *** Edit
-(def-package! lispy
-  :hook (emacs-lisp-mode . lispy-mode)
-  :init
-  (setq-default lispy-outline "^;; \\(?:;[^#]\\|\\*+\\)"
-                lispy-outline-header ";; ")
-  :config
-  (map! :map lispy-mode-map
-        :i "_" #'special-lispy-different
-        :i "C-d" #'lispy-delete
-        :i "C-u" #'universal-argument
-        :i [remap delete-backward-char] #'lispy-delete-backward))
-
-(def-package! lispyville
-  :after (evil)
-  :hook (lispy-mode . lispyville-mode)
-  :config
-  (lispyville-set-key-theme
-   '(operators
-     c-w
-     prettify
-     escape
-     (slurp/barf-lispy))))
-
-(def-package! worf
-  :hook (org-mode . worf-mode)
-  :config
-  (map! :map worf-mode-map
-        :i "M-]" (lambda! (insert " \\\(  \\\) ") (backward-char 4))
-        :i "M-}" (lambda! (insert " \\[  \\] ") (backward-char 4))
-        :i "M-[" (lambda! (insert " [ ] "))))
-
-(def-package! electric-operator
-  :hook ((sh-mode . electric-operator-mode)
-         (ess-mode . electric-operator-mode)
-         (python-mode . electric-operator-mode)
-         (inferior-python-mode . electric-operator-mode)
-         (inferior-ess-mode . electric-operator-mode))
-  :config
-  (apply #'electric-operator-add-rules-for-mode 'inferior-python-mode
-         electric-operator-prog-mode-rules)
-  (electric-operator-add-rules-for-mode 'inferior-python-mode
-                                        (cons "**" #'electric-operator-python-mode-**)
-                                        (cons "*" #'electric-operator-python-mode-*)
-                                        (cons ":" #'electric-operator-python-mode-:)
-                                        (cons "//" " // ") ; integer division
-                                        (cons "=" #'electric-operator-python-mode-kwargs-=)
-                                        (cons "-" #'electric-operator-python-mode-negative-slices)
-                                        (cons "->" " -> ") ; function return types
-                                        )
-  (electric-operator-add-rules-for-mode 'sh-mode
-                                        (cons "<=" " <= ")
-                                        (cons ">=" " >= ")
-                                        (cons ">" " > ")
-                                        (cons "|" " | ")))
-(after! smartparens
-  (add-hook 'minibuffer-setup-hook #'smartparens-mode)
-  (add-hook 'eshell-mode-hook #'smartparens-mode)
-  ;; Auto-close more conservatively and expand braces on RET
-  (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
-
-  (let ((unless-list '(sp-point-before-word-p
-                       sp-point-after-word-p
-                       sp-point-before-same-p)))
-    (sp-pair "'" nil :unless unless-list)
-    (sp-pair "\"" nil :unless unless-list))
-  (sp-pair "{" nil :post-handlers '(("||\n[i]" "RET") ("| " " "))
-           :unless '(sp-point-before-word-p sp-point-before-same-p))
-  (sp-pair "(" nil :post-handlers '(("||\n[i]" "RET") ("| " " "))
-           :unless '(sp-point-before-word-p sp-point-before-same-p))
-  (sp-pair "[" nil :post-handlers '(("| " " "))
-           :unless '(sp-point-before-word-p sp-point-before-same-p)))
-(after! yasnippet
-  (push "~/.doom.d/snippets" yas-snippet-dirs)
-  (add-hook! (comint-mode
-              inferior-python-mode
-              inferior-ess-mode)
-    #'yas-minor-mode-on))
-
-;; *** Outline
+;; *** outline
 (add-hook 'emacs-lisp-mode-hook #'outline-minor-mode)
 (add-hook 'emacs-lisp-mode-hook #'outshine-hook-function)
 (add-hook 'python-mode-hook #'outline-minor-mode)
@@ -382,11 +71,49 @@
   :after (outshine)
   :commands (counsel-oi))
 
-;; ;; ** Ivy
-(def-package! counsel-tramp :load-path "~/.doom.d/local/"
-  :commands (counsel-tramp))
+;; *** magit
+(def-package! orgit :after magit)
+(after! magithub
+  (setq magithub-clone-default-directory "/Users/xfu/Source/playground/"))
+(after! magit
+  (after! solaire-mode
+    (add-hook 'magit-mode-hook #'solaire-mode))
+  (magit-wip-after-save-mode 1)
+  (magit-wip-after-apply-mode 1)
+  (setq magit-save-repository-buffers 'dontask)
+  (advice-add 'magit-list-repositories :override #'*magit-list-repositories))
+
+
+;; *** keycast
+(def-package! keycast :load-path "~/.doom.d/local/"
+  :commands (keycast-mode)
+  :config
+  (setq keycast-substitute-alist '((evil-next-line nil nil)
+                                   (evil-previous-line nil nil)
+                                   (evil-forward-char nil nil)
+                                   (evil-backward-char nil nil)
+                                   (self-insert-command nil nil))))
+
+;; *** tldr
+(def-package! tldr
+  :commands (tldr)
+  :config
+  (setq tldr-directory-path (concat doom-etc-dir "tldr/")))
+
+;; *** color-picker
+(def-package! webkit-color-picker :load-path "/Users/xfu/Source/playground/emacs-webkit-color-picker"
+  :commands (webkit-color-picker-show)
+  :config
+  (require 'xwidget))
+
+
+;; *** ivy
+;; **** ivy-advice
 (after! lv
   (advice-add 'lv-window :override #'*lv-window))
+(after! colir
+  (advice-add 'colir--blend-background :override #'*colir--blend-background)
+  (advice-add 'colir-blend-face-background :override #'*colir-blend-face-background))
 (after! ivy-hydra
   (defhydra +ivy@coo (:hint nil :color pink)
     "
@@ -428,6 +155,7 @@
     ("t" (setq truncate-lines (not truncate-lines)))
     ("C" ivy-toggle-case-fold)
     ("o" ivy-occur :exit t)))
+;; **** ivy-posframe
 (after! ivy-posframe
   (setq ivy-posframe-parameters
         `((min-width . 120)
@@ -443,17 +171,38 @@
           (counsel-irony . ivy-display-function-overlay)
           (ivy-completion-in-region . ivy-display-function-overlay)
           (t . ivy-posframe-display-at-frame-center))))
+;; **** ivy-config
+(after! ivy
+  (setq ivy-use-selectable-prompt t
+        ivy-auto-select-single-candidate t
+        ivy-rich-parse-remote-buffer nil
+        +ivy-buffer-icons nil
+        ivy-use-virtual-buffers t
+        ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-cd-selected
+        ivy-height 20
+        ivy-rich-switch-buffer-name-max-length 50))
+;; **** counsel-config
 (after! counsel
+  (setq counsel-evil-registers-height 20
+        counsel-yank-pop-height 20
+        counsel-org-goto-face-style 'org
+        counsel-org-headline-display-style 'title
+        counsel-org-headline-display-tags t
+        counsel-org-headline-display-todo t)
+;; **** counsel-load-theme
   ;; reset fringe after change theme
   (advice-add #'counsel-load-theme :after #'solaire-mode-reset)
+;; **** +ivy-top
   (defcustom ivy-top-command
     "top -stats pid,command,user,cpu,mem,pstate,time -l 1"
     "Top command for `+ivy-top'."
     :group '+ivy)
+;; **** ivy-switch-buffer
   (advice-add 'ivy--switch-buffer-action :override #'*ivy--switch-buffer-action)
   (ivy-add-actions
    'ivy-switch-buffer
    '(("d" (lambda (buf) (display-buffer buf)) "Display")))
+;; **** counsel-find-file
   (ivy-add-actions
    'counsel-find-file
    `(("c" ,(+ivy/given-file #'copy-file "Copy file") "copy file")
@@ -467,10 +216,16 @@
             (with-ivy-window (insert (format "[[./%s]]" (f-relative path))))) "Insert org-link (rel. path)")
      ("L" (lambda (path) "Insert org-link with absolute path"
             (with-ivy-window (insert (format "[[%s]]" path)))) "Insert org-link (abs. path)")))
+;; **** counsel-M-x
   (ivy-add-actions
    'counsel-M-x
    `(("h" +ivy/helpful-function "Helpful"))))
 
+;; **** counsel-tramp
+(def-package! counsel-tramp :load-path "~/.doom.d/local/"
+  :commands (counsel-tramp))
+
+;; **** counsel-projectile
 (after! counsel-projectile
   (ivy-add-actions
    'counsel-projectile-switch-project
@@ -506,232 +261,248 @@
       "invoke term from project root")
      ("_" counsel-projectile-switch-project-action-org-capture
       "org-capture into project"))))
+;; *** projectile
+(after! projectile
+  (setq projectile-ignored-projects '("~/" "/tmp")
+        projectile-ignored-project-function
+        (lambda (root)
+          (or (file-remote-p root)
+              (string-match ".*Trash.*" root)
+              (string-match ".*Cellar.*" root)))))
 
+;; *** iterm
+(def-package! iterm :load-path "~/.doom.d/local"
+  :commands (iterm-cd
+             iterm-send-text
+             iterm-send-text-ipy
+             iterm-send-file-ipy
+             iterm-cwd-ipy
+             iterm-send-file-R
+             iterm-cwd-R
+             iterm-send-file-julia
+             iterm-cwd-julia))
+;; ** emacs
+;; *** recentf
+(after! recentf
+  (setq recentf-auto-cleanup 60)
+  (add-to-list 'recentf-exclude 'file-remote-p)
+  (add-to-list 'recentf-exclude ".*Cellar.*"))
+
+;; *** term
 (after! term
   (add-hook 'term-mode-hook #'solaire-mode))
-(map! :map key-translation-map
-      "M-√" (kbd "<C-return>"))
-;; * Binding
-(map! :i "<M-return>" nil
-      :gnvime "M-r" (lambda! (revert-buffer nil t t))
-      :gnvime "M-g" #'org-agenda-show-daily
-      :nvime "M-j" #'evil-window-down
-      :nvime "M-k" #'evil-window-up
-      :nvime "M-h" #'evil-window-left
-      :nvime "M-l" #'evil-window-right
-      :nvime "M-d" #'evil-window-vsplit
-      :nvime "M-D" #'evil-window-split
-      :nie "M-u" #'org-store-link
-      :nie "M-o" #'org-open-at-point-global
-      :nie "M-i" #'org-insert-last-stored-link
-      ;; :gnvime "M-s-i" (lambda! (find-file "~/Dropbox/org/inbox.org"))
-      ;; :gnvime "M-s-r" (lambda! (find-file "~/Dropbox/org/review.org"))
-      ;; :m "C-u" #'evil-scroll-up
-      :n "\\" #'ace-window
-      :v "<escape>" #'evil-escape
-      "M-<mouse-1>" #'evil-mc-mouse-click
-      "<M-return>" #'evil-mc-make-and-goto-next-match
-      "<C-M-return>" #'+evil/mc-make-cursor-here
-      "M-W" #'kill-this-buffer
-      :nie "M-F" (lambda! (swiper
-                           (if (symbol-at-point)
-                               (format "\\_<%s\\_> " (symbol-at-point)) nil)))
-      (:map universal-argument-map
-        "C-u" nil
-        (:leader
-          :n "u" #'universal-argument-more))
-      (:after outline
-        :map (outline-mode-map outline-minor-mode-map)
-        :nvime "C-h" #'counsel-oi
-        :nvime "C-l" #'outline-toggle-children
-        :nvime "C-j" (lambda! (outline-next-heading) (recenter))
-        :nvime "C-k" (lambda! (outline-previous-heading) (recenter))
-        :nvime "<C-return>" (lambda! (evil-open-below 0) (outline-insert-heading))
-        :nvime "C-S-h" #'outline-promote
-        :nvime "C-S-l" #'outline-demote
-        :nvime "C-S-j" #'outline-move-subtree-down
-        :nvime "C-S-k" #'outline-move-subtree-up)
-      (:leader
-        :desc "ivy-resume" :nv "$" #'ivy-resume
-        :desc "Find file in project" :nv "SPC" #'execute-extended-command
-        :desc "Browse files" :n "/" #'find-file
-        :desc "Display Buffer" :n "m" #'ivy-switch-buffer
-        :desc "Find project files" :n "." #'counsel-projectile-find-file
-        :desc "Toggle last popup" :n "`" #'+popup/toggle
-        (:desc "search" :prefix "s"
-          :desc "Project" :nv "p" #'+ivy/project-search
-          :desc "Directory" :nv "d" (λ! (+ivy/project-search t))
-          :desc "Buffer" :nv "b" #'swiper
-          :desc "Symbols" :nv "i" #'imenu
-          :desc "Symbols across buffers" :nv "I" #'imenu-anywhere
-          :desc "Online providers" :nv "o" #'+lookup/online-select)
-        (:desc "iTerm" :prefix "_"
-          :desc "cd" :nv "d" #'mac-iTerm-cd
-          :desc "send text" :nv "_" #'iterm-send-text
-          :desc "send ipython command" :nv "p" #'iterm-send-text-ipy
-          :desc "send ipython text" :nv "P" #'iterm-send-text-ipy
-          :desc "send file to R" :nv "R" #'iterm-send-file-R)
-        (:desc "file" :prefix "f"
-          :desc "Find file on TRAMP" :n "t" #'counsel-tramp)
-        (:desc "git" :prefix "g"
-          :desc "Git Hydra" :n "." #'+version-control@git-gutter/body)
-        (:desc "help" :prefix "h"
-          :n "h" help-map
-          :desc "Reload theme" :n "r" #'doom//reload-theme
-          :desc "Describe function" :n "f" #'counsel-describe-function
-          :desc "Describe key" :n "k" #'helpful-key
-          :desc "Describe variable" :n "v" #'counsel-describe-variable
-          :desc "Describe face" :n "t" #'counsel-faces)
+;; *** comint
+(after! comint
+  (add-hook 'comint-preoutput-filter-functions #'dirtrack-filter-out-pwd-prompt))
+;; *** tramp
+(after! tramp-sh
+  (setq tramp-default-method "ssh"
+        ;; this is critical
+        tramp-restricted-shell-hosts-alist '("gw")
+        tramp-default-proxies-alist '(("hpc7" nil "/ssh:gw:")
+                                      ("hpc8" nil "/ssh:gw:")
+                                      ("hpc9" nil "/ssh:gw:")
+                                      ("hpc10" nil "/ssh:gw:")
+                                      ("hpc11" nil "/ssh:gw:")
+                                      ("hpc12" nil "/ssh:gw:")
+                                      ("hpc13" nil "/ssh:gw:")
+                                      ("hpc14" nil "/ssh:gw:")
+                                      ("hpc15" nil "/ssh:gw:")
+                                      ("gpu7" nil "/ssh:gw:")
+                                      ("gpu8" nil "/ssh:gw:")
+                                      ("gpu9" nil "/ssh:gw:")
+                                      ("gpu10" nil "/ssh:gw:")
+                                      ("gpu11" nil "/ssh:gw:")
+                                      ("gpu12" nil "/ssh:gw:")
+                                      ("gpu13" nil "/ssh:gw:")
+                                      ("gpu14" nil "/ssh:gw:")
+                                      ("gpu15" nil "/ssh:gw:"))
+        tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=600"
+        tramp-remote-path (append '("/research/kevinyip10/xfu/miniconda3/bin"
+                                    "/uac/gds/xfu/bin") tramp-remote-path)
+        tramp-remote-process-environment
+        (append tramp-remote-process-environment
+                '("http_proxy=http://proxy.cse.cuhk.edu.hk:8000"
+                  "https_proxy=http://proxy.cse.cuhk.edu.hk:8000"
+                  "ftp_proxy=http://proxy.cse.cuhk.edu.hk:8000"))))
 
-        (:desc "open" :prefix "o"
-          :desc "Twitter" :n "2" #'=twitter
-          :desc "RSS" :n "e" #'=rss
-          :desc "Calendar" :n "c" #'=calendar
-          :desc "Eshell" :n "s" #'+eshell/open-popup
-          :desc "Mail" :n "m" #'=mail
-          :desc "Treemacs" :n "n" #'+treemacs/toggle
-          :n "E" nil
-          :n "M" nil
-          :n "T" nil
-          :n "X" nil
-          ;; macos
-          (:when IS-MAC
-            :desc "Reveal in Finder" :n "f" #'+macos/reveal-in-finder
-            :desc "Reveal project in Finder" :n "F" #'+macos/reveal-project-in-finder))
-        (:desc "project" :prefix "p"
-          :desc "Browse project" :n "." #'+xfu/browse-project)
 
-        (:desc "snippets" :prefix "y"
-          :desc "Find snippet for mode" :n "y" #'yas-visit-snippet-file
-          :desc "Find file in templates" :n "t" #'+default/browse-templates
-          :desc "Find snippet" :n "f" #'+xfu/find-in-snippets
-          :desc "Find snippet" :n "b" #'+xfu/browse-snippets)
-        (:desc "toggle" :prefix "t"
-          :desc "Company" :n "c" #'company-mode
-          :desc "Line numbers" :n "n" #'doom/toggle-line-numbers
-          :desc "Truncate Lines" :n "l" #'toggle-truncate-lines
-          :desc "Highlight Lines" :n "h" #'hl-line-mode
-          :desc "Visual Lines" :n "v" #'visual-line-mode
-          :desc "Fullscreen" :n "f" #'doom/toggle-fullscreen
-          :desc "Theme" :n "t" #'counsel-load-theme
-          :desc "Evil goggles" :n "g" #'+evil-goggles/toggle))
-      ;; --- Personal vim-esque bindings ------------------
-      :m "gh" #'+lookup/documentation
-      :m "gs" #'+default/easymotion
-      :m "gj" #'outline-next-heading
-      :m "gk" #'outline-previous-heading
-      :nm "gJ" #'outline-move-subtree-down
-      :nm "gK" #'outline-move-subtree-up
-      :nm "gH" #'outline-promote
-      :nm "gL" #'outline-demote
-      :m "g SPC" #'outline-toggle-children
 
-      ;; :nv "+" #'evil-numbers/inc-at-pt
-      ;; :nv "-" #'evil-numbers/dec-at-pt
-      :nv "\"" #'counsel-evil-registers
 
-      (:after bibtex
-        :map bibtex-mode-map
-        "s-." #'org-ref-bibtex-hydra/body)
-      (:after xwidget
-        :map xwidget-webkit-mode-map
-        :n "q" #'quit-window
-        :n "r" #'xwidget-webkit-reload
-        :n "y" #'xwidget-webkit-copy-selection-as-kill
-        :n "s-c" #'xwidget-webkit-copy-selection-as-kill
-        :n "t" #'xwidget-webkit-browse-url
-        :n "n" #'xwidget-webkit-forward
-        :n "p" #'xwidget-webkit-back
-        :n "G" #'xwidget-webkit-scroll-bottom
-        :n "gg" #'xwidget-webkit-scroll-top
-        :n "C-d" #'xwidget-webkit-scroll-down
-        :n "C-u" #'xwidget-webkit-scroll-up
-        :n "M-=" #'xwidget-webkit-zoom-in
-        :n "M--" #'xwidget-webkit-zoom-out
-        :n "j" #'xwidget-webkit-scroll-up-line
-        :n "k" #'xwidget-webkit-scroll-down-line)
+(after! flycheck-posframe
+  (setq flycheck-posframe-warning-prefix "⚠ "
+        flycheck-posframe-info-prefix "··· "
+        flycheck-posframe-error-prefix " ")
+  ;; (advice-add 'flycheck-posframe-delete-posframe :override #'*flycheck-posframe-delete-posframe)
+  (advice-add 'flycheck-posframe-show-posframe :override #'*flycheck-posframe-show-posframe)
+  ;; (advice-add '+syntax-checker-cleanup-popup :override #'+syntax-checker*cleanup-popup)
+  )
 
-      (:after comint
-        (:map comint-mode-map
-          :i "C-k" #'comint-previous-input
-          :i "C-j" #'comint-next-input
-          :m "]p" #'comint-next-prompt
-          :m "[p" #'comint-previous-prompt))
-      (:after magit
-        (:map magit-mode-map
-          "C-h" #'magit-section-cycle-diffs
-          "C-j" #'magit-section-forward-sibling
-          "C-k" #'magit-section-backward-sibling
-          "C-l" #'magit-section-toggle))
-      (:after company
-        (:map company-active-map
-          ;; Don't interfere with `evil-delete-backward-word' in insert mode
-          "TAB" nil
-          [tab] nil
-          "S-TAB" nil
-          [backtab] nil
-          "s-o" #'company-search-kill-others
-          "C-f" #'counsel-company
-          "<f1>" #'company-show-doc-buffer
-          "C-s-f" #'company-search-candidates
-          "s-f" #'company-filter-candidates)
-        ;; Automatically applies to `company-filter-map'
-        (:map company-search-map
-          "C-n" #'company-search-repeat-forward
-          "C-p" #'company-search-repeat-backward))
+;; ** edit
+;; *** company
+(after! company
+;; **** prescient
+  (def-package! prescient)
+  (def-package! company-prescient
+    :hook (company-mode . company-prescient-mode))
+;; **** company-ui
+  (setq company-tooltip-limit 10
+        company-tooltip-minimum-width 80
+        company-tooltip-minimum 10
+        company-backends
+        '(company-capf company-dabbrev company-files company-yasnippet)
+        company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode inferior-python-mode eshell-mode)))
 
-      (:after yasnippet
-        (:map yas-minor-mode-map
-          :v "<tab>" nil
-          :v "TAB" nil))
+;; **** company-box
+(after! company-box
+  (when (and (display-graphic-p) (featurep! :completion company +childframe))
+    (setq-default company-frontends '(company-box-frontend
+                                      company-preview-if-just-one-frontend
+                                      company-echo-metadata-frontend)))
+  (setq
+   company-box-max-candidates 50
+   company-box-icons-yasnippet (all-the-icons-material "short_text" :height 0.7 :face 'all-the-icons-green)
+   company-box-icons-unknown (all-the-icons-material "find_in_page" :height 0.7 :face 'all-the-icons-purple)
+   company-box-icons-lsp '((1 . (all-the-icons-material "text_fields" :height 0.7 :face 'all-the-icons-green)) ;; Text
+                           (2 . (all-the-icons-material "functions" :height 0.7 :face 'all-the-icons-red)) ;; Method
+                           (3 . (all-the-icons-material "functions" :height 0.7 :face 'all-the-icons-red)) ;; Function
+                           (4 . (all-the-icons-material "functions" :height 0.7 :face 'all-the-icons-red)) ;; Constructor
+                           (5 . (all-the-icons-material "functions" :height 0.7 :face 'all-the-icons-red)) ;; Field
+                           (6 . (all-the-icons-material "adjust" :height 0.7 :face 'all-the-icons-blue)) ;; Variable
+                           (7 . (all-the-icons-material "class" :height 0.7 :face 'all-the-icons-red)) ;; Class
+                           (8 . (all-the-icons-material "settings_input_component" :height 0.7 :face 'all-the-icons-red)) ;; Interface
+                           (9 . (all-the-icons-material "view_module" :height 0.7 :face 'all-the-icons-red)) ;; Module
+                           (10 . (all-the-icons-material "settings" :height 0.7 :face 'all-the-icons-red)) ;; Property
+                           (11 . (all-the-icons-material "straighten" :height 0.7 :face 'all-the-icons-red)) ;; Unit
+                           (12 . (all-the-icons-material "filter_1" :height 0.7 :face 'all-the-icons-red)) ;; Value
+                           (13 . (all-the-icons-material "plus_one" :height 0.7 :face 'all-the-icons-red)) ;; Enum
+                           (14 . (all-the-icons-material "filter_center_focus" :height 0.7 :face 'all-the-icons-red)) ;; Keyword
+                           (15 . (all-the-icons-material "short_text" :height 0.7 :face 'all-the-icons-red)) ;; Snippet
+                           (16 . (all-the-icons-material "color_lens" :height 0.7 :face 'all-the-icons-red)) ;; Color
+                           (17 . (all-the-icons-material "insert_drive_file" :height 0.7 :face 'all-the-icons-red)) ;; File
+                           (18 . (all-the-icons-material "collections_bookmark" :height 0.7 :face 'all-the-icons-red)) ;; Reference
+                           (19 . (all-the-icons-material "folder" :height 0.7 :face 'all-the-icons-red)) ;; Folder
+                           (20 . (all-the-icons-material "people" :height 0.7 :face 'all-the-icons-red)) ;; EnumMember
+                           (21 . (all-the-icons-material "pause_circle_filled" :height 0.7 :face 'all-the-icons-red)) ;; Constant
+                           (22 . (all-the-icons-material "streetview" :height 0.7 :face 'all-the-icons-red)) ;; Struct
+                           (23 . (all-the-icons-material "event" :height 0.7 :face 'all-the-icons-red)) ;; Event
+                           (24 . (all-the-icons-material "control_point" :height 0.7 :face 'all-the-icons-red)) ;; Operator
+                           (25 . (all-the-icons-material "class" :height 0.7 :face 'all-the-icons-red)))
+   company-box-icons-elisp
+   (list
+    (all-the-icons-material "functions" :height 0.7 :face 'all-the-icons-red)
+    (all-the-icons-material "check_circle" :height 0.7 :face 'all-the-icons-blue)
+    (all-the-icons-material "stars" :height 0.7 :face 'all-the-icons-orange)
+    (all-the-icons-material "format_paint" :height 0.7 :face 'all-the-icons-pink))))
 
-      :m "]C" #'flyspell-correct-word-generic
-      :m "[c" #'flyspell-correct-previous-word-generic
+;; *** language
+;; **** elisp
+(after! elisp-mode (set-lookup-handlers! 'emacs-lisp-mode :documentation #'helpful-at-point))
+(after! helpful
+  (set-lookup-handlers! 'helpful-mode :documentation #'helpful-at-point))
+;; **** python
+(after! python
+  (set-company-backend! 'python-mode 'company-anaconda)
+  (set-lookup-handlers! 'python-mode :documentation #'anaconda-mode-show-doc))
+;; **** sed
+(def-package! sed-mode
+  :commands (sed-mode))
 
-      (:after ivy
-        :map ivy-minibuffer-map
-        "TAB" #'ivy-alt-done
-        "<right>" #'ivy-alt-done
-        "s-o" #'ivy-posframe-dispatching-done
-        "C-l" #'ivy-partial)
-      (:after wgrep
-        :map wgrep-mode-map
-        (:localleader
-          :desc "Finish" :n "," #'wgrep-finish-edit
-          :desc "Abort" :n "k" #'wgrep-abort-changes))
-      (:after helpful
-        (:map helpful-mode-map
-          :n "RET" #'helpful-visit-reference
-          :n "o" #'ace-link-help
-          :n "q" #'quit-window
-          :n "Q" #'ivy-resume)))
+;; *** yasnippet
+(def-package! ivy-yasnippet
+  :commands (ivy-yasnippet))
 
-;; org
-(after! org
-  (do-repeat! org-forward-heading-same-level org-forward-heading-same-level org-backward-heading-same-level)
-  (do-repeat! org-next-item org-next-item org-previous-item)
-  (do-repeat! org-next-link org-next-link org-previous-link)
-  (do-repeat! org-next-block org-next-block org-previous-block)
-  (do-repeat! org-next-visible-heading org-next-visible-heading org-previous-visible-heading)
-  (do-repeat! org-backward-heading-same-level org-forward-heading-same-level org-backward-heading-same-level)
-  (do-repeat! org-previous-item org-next-item org-previous-item)
-  (do-repeat! org-previous-link org-next-link org-previous-link)
-  (do-repeat! org-previous-block org-next-block org-previous-block)
-  (do-repeat! org-previous-visible-heading org-next-visible-heading org-previous-visible-heading))
+;; *** evil
+(after! evil-mc
+  ;; Make evil-mc resume its cursors when I switch to insert mode
+  (add-hook! 'evil-mc-before-cursors-created
+    (add-hook 'evil-insert-state-entry-hook #'evil-mc-resume-cursors nil t))
+  (add-hook! 'evil-mc-after-cursors-deleted
+    (remove-hook 'evil-insert-state-entry-hook #'evil-mc-resume-cursors t)))
+;; *** lispy
+(def-package! lispy
+  :hook (emacs-lisp-mode . lispy-mode)
+  :init
+  (setq-default lispy-outline "^;; \\(?:;[^#]\\|\\*+\\)"
+                lispy-outline-header ";; ")
+  :config
+  (map! :map lispy-mode-map
+        :i "_" #'special-lispy-different
+        :i "C-d" #'lispy-delete
+        :i "C-u" #'universal-argument
+        :i [remap delete-backward-char] #'lispy-delete-backward))
 
-;; buffer
-(do-repeat! previous-buffer next-buffer previous-buffer)
-(do-repeat! next-buffer next-buffer previous-buffer)
-;; workspace
-(after! persp
-  (do-repeat! +workspace/switch-left +workspace/switch-left +workspace/switch-right)
-  (do-repeat! +workspace/switch-right +workspace/switch-left +workspace/switch-right))
+(def-package! lispyville
+  :after (evil)
+  :hook (lispy-mode . lispyville-mode)
+  :config
+  (lispyville-set-key-theme
+   '(operators
+     c-w
+     prettify
+     escape
+     (slurp/barf-lispy))))
 
-;; git-gutter
-(after! git-gutter
-  (do-repeat! git-gutter:next-hunk git-gutter:next-hunk git-gutter:previous-hunk)
-  (do-repeat! git-gutter:previous-hunk git-gutter:next-hunk git-gutter:previous-hunk))
+(def-package! worf
+  :hook (org-mode . worf-mode)
+  :config
+  (map! :map worf-mode-map
+        :i "M-]" (lambda! (insert " \\\(  \\\) ") (backward-char 4))
+        :i "M-}" (lambda! (insert " \\[  \\] ") (backward-char 4))
+        :i "M-[" (lambda! (insert " [ ] "))))
 
+;; *** electric
+(def-package! electric-operator
+  :hook ((sh-mode . electric-operator-mode)
+         (ess-mode . electric-operator-mode)
+         (python-mode . electric-operator-mode)
+         (inferior-python-mode . electric-operator-mode)
+         (inferior-ess-mode . electric-operator-mode))
+  :config
+  (apply #'electric-operator-add-rules-for-mode 'inferior-python-mode
+         electric-operator-prog-mode-rules)
+  (electric-operator-add-rules-for-mode 'inferior-python-mode
+                                        (cons "**" #'electric-operator-python-mode-**)
+                                        (cons "*" #'electric-operator-python-mode-*)
+                                        (cons ":" #'electric-operator-python-mode-:)
+                                        (cons "//" " // ") ; integer division
+                                        (cons "=" #'electric-operator-python-mode-kwargs-=)
+                                        (cons "-" #'electric-operator-python-mode-negative-slices)
+                                        (cons "->" " -> ") ; function return types
+                                        )
+  (electric-operator-add-rules-for-mode 'sh-mode
+                                        (cons "<=" " <= ")
+                                        (cons ">=" " >= ")
+                                        (cons ">" " > ")
+                                        (cons "|" " | ")))
+
+;; *** smartparens
+(after! smartparens
+  (add-hook 'minibuffer-setup-hook #'smartparens-mode)
+  (add-hook 'eshell-mode-hook #'smartparens-mode)
+  ;; Auto-close more conservatively and expand braces on RET
+  (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
+
+  (let ((unless-list '(sp-point-before-word-p
+                       sp-point-after-word-p
+                       sp-point-before-same-p)))
+    (sp-pair "'" nil :unless unless-list)
+    (sp-pair "\"" nil :unless unless-list))
+  (sp-pair "{" nil :post-handlers '(("||\n[i]" "RET") ("| " " "))
+           :unless '(sp-point-before-word-p sp-point-before-same-p))
+  (sp-pair "(" nil :post-handlers '(("||\n[i]" "RET") ("| " " "))
+           :unless '(sp-point-before-word-p sp-point-before-same-p))
+  (sp-pair "[" nil :post-handlers '(("| " " "))
+           :unless '(sp-point-before-word-p sp-point-before-same-p)))
+(after! yasnippet
+  (push "~/.doom.d/snippets" yas-snippet-dirs)
+  (add-hook! (comint-mode
+              inferior-python-mode
+              inferior-ess-mode)
+    #'yas-minor-mode-on))
+
+
+;; ** loading
 ;; load time consuming stuff when idle
 (run-with-idle-timer 30 t (lambda!
                            (require 'org-clock)
@@ -740,22 +511,5 @@
                            (require 'org-capture)
                            (require 'org-ref)))
 
-
-
-(add-hook! minibuffer-setup (setq-local show-trailing-whitespace nil))
-
-(after! evil-mc
-  ;; Make evil-mc resume its cursors when I switch to insert mode
-  (add-hook! 'evil-mc-before-cursors-created
-    (add-hook 'evil-insert-state-entry-hook #'evil-mc-resume-cursors nil t))
-  (add-hook! 'evil-mc-after-cursors-deleted
-    (remove-hook 'evil-insert-state-entry-hook #'evil-mc-resume-cursors t)))
-
-(after! which-key
-  (push '((nil . "\\`+evil/window-\\(.+\\)\\'") . (nil . "\\1"))
-        which-key-replacement-alist)
-  (push '((nil . "\\`evil-window-\\(.+\\)\\'") . (nil . "\\1"))
-        which-key-replacement-alist))
-
-
-
+(load! "+bindings")
+(load! "+popup")
