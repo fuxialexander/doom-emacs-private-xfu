@@ -34,6 +34,8 @@ is loaded.")
   (set-repl-handler! 'python-mode #'+python/repl)
 
   (map! (:map python-mode-map
+          :n "<" #'python-indent-shift-left
+          :n ">" #'python-indent-shift-right
           (:localleader
             :desc "Conda Enable" :n "c" #'conda-env-activate-for-buffer
             :desc "LSP Enable"   :n "l" #'lsp-python-enable)

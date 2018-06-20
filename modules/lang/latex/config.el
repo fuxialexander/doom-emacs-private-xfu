@@ -69,7 +69,7 @@
     (cdlatex-mode 1)
     (auto-fill-mode 1))
   (map! (:map (LaTeX-mode-map TeX-mode-map)
-          "s-p" #'ivy-bibtex-with-local-bibliography
+          "M-p" #'ivy-bibtex-with-local-bibliography
           "M-q" #'fill-paragraph
           "C-s-b" #'+latex/font-bold
           "C-s-c" #'+latex/font-code
