@@ -149,7 +149,8 @@
 (def-package! ivy-dired-history
   :after dired
   :config
-  (add-to-list 'savehist-additional-variables 'ivy-dired-history-variable))
+  (after! savehist
+    (add-to-list 'savehist-additional-variables 'ivy-dired-history-variable)))
 
 (def-package! dired-quick-sort
   :after dired
