@@ -9,7 +9,6 @@
        snippets
        spellcheck
        (syntax-checker +childframe)
-       version-control
        workspaces
 
        :completion
@@ -17,6 +16,7 @@
        (ivy +childframe)
 
        :ui
+       vc-gutter
        doom
        doom-dashboard
        doom-modeline
@@ -31,6 +31,7 @@
        window-select
 
        :emacs
+       vc
        dired
        electric
        eshell
@@ -47,11 +48,11 @@
        magit
        rgb
        reference
-       rotate-text
        upload
        tmux
        password-store
-
+       :editor
+       rotate-text
        :lang
        lsp
        data
@@ -95,6 +96,7 @@
        (default +snippets +evil-commands +bindings))
 
 ;; * UI
+(setq amx-save-file (concat doom-cache-dir "smex-items"))
 (setq
  frame-title-format
  '("emacs%@"
@@ -102,7 +104,7 @@
    (:eval (if (buffer-file-name)
               (abbreviate-file-name (buffer-file-name))
             "%b")))
- doom-font (font-spec :family "Sarasa Mono SC" :size 12)
+ doom-font (font-spec :family "SF Mono" :size 12)
  doom-variable-pitch-font
  (font-spec
   :family "SF Compact Display"
@@ -138,18 +140,18 @@
     (setq standard-display-table (make-display-table)))
 (set-display-table-slot standard-display-table 0 ?\ )
 (setq-default fringe-indicator-alist (delq
-                              (assq 'truncation fringe-indicator-alist)
-                              (delq (assq 'continuation fringe-indicator-alist)
-                                    fringe-indicator-alist)))
+                                      (assq 'truncation fringe-indicator-alist)
+                                      (delq (assq 'continuation fringe-indicator-alist)
+                                            fringe-indicator-alist)))
 
 ;; * Mac-specific
 (if (string-match-p "NS" (emacs-version))
     (progn
       (setq
-       ns-alternate-modifier 'meta
+       ns-alternate-modifier 'super
        ns-command-modifier 'meta)
       (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-      (add-to-list 'default-frame-alist '(ns-appearance . dark)))
+      (add-to-list 'default-frame-alist '(ns-appearance . light)))
   (setq mac-command-modifier 'super
         mac-option-modifier 'meta
         mac-pass-command-to-system nil))
@@ -177,7 +179,7 @@
  +magit-hub-features t
  +evil-collection-disabled-list '(elfeed notmuch kotlin-mode simple dired helm ivy anaconda-mode outline))
 
-(def-package-hook! ivy-rich
-  :pre-init nil
-  :pre-config nil)
-
+;; * Hacks
+;; (def-package-hook! ivy-rich
+;;   :pre-init nil
+;;   :pre-config nil)
