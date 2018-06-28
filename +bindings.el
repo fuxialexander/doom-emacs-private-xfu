@@ -6,6 +6,7 @@
 (map! :i "<M-return>" nil
       :gnvime "M-r" (lambda! (revert-buffer nil t t))
       :gnvime "M-g" #'org-agenda-show-daily
+      :nvime "M-s" #'save-buffer
       :nvime "M-j" #'evil-window-down
       :nvime "M-k" #'evil-window-up
       :nvime "M-h" #'evil-window-left
@@ -15,14 +16,15 @@
       :nie "M-u" #'org-store-link
       :nie "M-o" #'org-open-at-point-global
       :nie "M-i" #'org-insert-last-stored-link
+      :nvie "M-/" #'evil-commentary-line
       ;; :gnvime "M-s-i" (lambda! (find-file "~/Dropbox/org/inbox.org"))
       ;; :gnvime "M-s-r" (lambda! (find-file "~/Dropbox/org/review.org"))
       ;; :m "C-u" #'evil-scroll-up
       :n "\\" #'ace-window
       :v "<escape>" #'evil-escape
       "M-<mouse-1>" #'evil-mc-mouse-click
-      "<M-return>" #'evil-mc-make-and-goto-next-match
-      "<C-M-return>" #'+evil/mc-make-cursor-here
+      ;; "<M-return>" #'evil-mc-make-and-goto-next-match
+      ;; "<C-M-return>" #'+evil/mc-make-cursor-here
       "M-W" #'kill-this-buffer
       :nie "M-F" (lambda! (swiper
                            (if (symbol-at-point)
@@ -34,7 +36,7 @@
       (:after outline
         :map (outline-mode-map outline-minor-mode-map)
         :nvime "C-h" #'dwim-jump
-        :nvime "C-l" #'outline-toggle-children
+        :nvime "C-l" #'bicycle-cycle
         :nvime "C-j" (lambda! (outline-next-heading) (recenter))
         :nvime "C-k" (lambda! (outline-previous-heading) (recenter))
         :nvime "<C-return>" (lambda! (evil-open-below 0) (outline-insert-heading))
@@ -43,6 +45,8 @@
         :nvime "C-S-j" #'outline-move-subtree-down
         :nvime "C-S-k" #'outline-move-subtree-up)
       (:leader
+        :nv "X" nil
+        :desc "org-capture" :nv "X" #'counsel-org-capture
         :desc "ivy-resume" :nv "$" #'ivy-resume
         :desc "Find file in project" :nv "SPC" #'execute-extended-command
         :desc "Browse files" :n "/" #'find-file
@@ -182,14 +186,8 @@
       (:after ivy
         :map ivy-minibuffer-map
         "TAB" #'ivy-alt-done
-        "<right>" #'ivy-alt-done
-        "s-o" #'ivy-posframe-dispatching-done
+        "M-o" #'ivy-posframe-dispatching-done
         "C-l" #'ivy-partial)
-      (:after wgrep
-        :map wgrep-mode-map
-        (:localleader
-          :desc "Finish" :n "," #'wgrep-finish-edit
-          :desc "Abort" :n "k" #'wgrep-abort-changes))
       (:after info
         :map Info-mode-map
         :n "o" #'ace-link)
