@@ -20,7 +20,7 @@ I got the paper from two sources.
 1. ~Elfeed~. I subscribed some journal's (and also bioRxiv's) RSS. And I scan
    through the title, once I found something interesting I check it's abstract
    (usually in RSS content). If it's really interesting, I press <kbd>RET</kbd>
-   ~+reference/elfeed-add~. Which will automatically download that paper's
+   ~org-ref-elfeed-add~. Which will automatically download that paper's
    bibtex and PDF (if it can handle the journal) and add it to the ivy-bibtex libraray.
 2. Second source is manually searching, after searching I will copy the doi of
    that paper and use ~doi-utils-add-bibtex-entry-from-doi~ to save the bibtex
