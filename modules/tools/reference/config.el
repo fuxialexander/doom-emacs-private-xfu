@@ -18,45 +18,14 @@
              isbn-to-bibtex
              pubmed-insert-bibtex-from-pmid)
   :init
-  (defvar +reference-org-ref-ivy-cite-actions
-    '(("b" ivy-bibtex-show-entry "Open entry")
-      ("p" ivy-bibtex-open-pdf "Open pdf")
-      ("n" ivy-bibtex-edit-notes "Open notes")
-      ("u" ivy-bibtex-open-url-or-doi "Open url or doi")
-      ("U" org-ref-ivy-bibtex-get-update-for-entry "Update entry from doi")
-      ("P" org-ref-ivy-bibtex-get-pdf-for-entry "Update PDF for entry")
-      ("SPC" ivy-bibtex-quicklook "Quick look")
-      ("k" org-ref-ivy-set-keywords "Add keywords")
-      ("e" org-ref-ivy-bibtex-email-entry "Email entry")
-      ("f" org-ref-ivy-bibtex-insert-formatted-citation "Insert formatted citation")
-      ("F" org-ref-ivy-bibtex-copy-formatted-citation "Copy formatted citation"))
-    "+reference org ref ivy action")
-
   (when (featurep! :completion helm)
     (setq org-ref-completion-library 'org-ref-helm-bibtex))
   (when (featurep! :completion ivy)
     (setq org-ref-completion-library 'org-ref-ivy-cite))
 
   :config
-  `(setq
-    org-ref-default-bibliography (list bibtex-completion-bibliography)
-    org-ref-bibliography-notes ,bibtex-completion-notes-path
-    org-ref-pdf-directory ,bibtex-completion-library-path
+  (setq
     orhc-bibtex-cache-file (concat doom-cache-dir "org-ref.cache")
-    org-ref-clean-bibtex-entry-hook
-    '(org-ref-bibtex-format-url-if-doi
-      orcb-key-comma
-      org-ref-replace-nonascii
-      orcb-&
-      orcb-%
-      org-ref-title-case-article
-      orcb-clean-year
-      +reference*org-ref-key
-      ;; orcb-key
-      orcb-clean-doi
-      orcb-clean-pages
-      orcb-check-journal
-      org-ref-sort-bibtex-entry)
     org-ref-get-pdf-filename-function
     (lambda (key) (car (bibtex-completion-find-pdf key)))
     org-ref-notes-function
@@ -80,22 +49,14 @@
  :END:
 ")
   (when (eq +reference-field 'bioinfo)
+    (require 'org-ref-biorxiv)
     (add-to-list 'doi-utils-pdf-url-functions 'oup-pdf-url)
     (add-to-list 'doi-utils-pdf-url-functions 'bmc-pdf-url)
     (add-to-list 'doi-utils-pdf-url-functions 'biorxiv-pdf-url))
   (when IS-MAC
     (setq doi-utils-pdf-url-functions
           (delete 'generic-full-pdf-url doi-utils-pdf-url-functions))
-    (add-to-list 'doi-utils-pdf-url-functions 'generic-as-get-pdf-url t))
-  (when (featurep! :completion ivy)
-    (require 'ivy-bibtex)
-    (after! ivy-bibtex
-      (ivy-set-display-transformer 'org-ref-ivy-insert-cite-link 'ivy-bibtex-display-transformer)
-      (advice-add 'org-ref-ivy-insert-cite-link :override #'+reference*org-ref-ivy-insert-cite-link)
-      (ivy-set-actions 'org-ref-ivy-insert-cite-link +reference-org-ref-ivy-cite-actions)))
-  (when (featurep! :app email)
-    (advice-add 'org-ref-email-bibtex-entry :override #'+reference*org-ref-email-bibtex-entry))
-  (advice-add 'org-ref-bib-citation :override #'+reference*org-ref-bib-citation))
+    (add-to-list 'doi-utils-pdf-url-functions 'generic-as-get-pdf-url t)))
 
 
 (def-package! bibtex
@@ -124,7 +85,7 @@
    (IS-MAC
     (setq bibtex-completion-pdf-open-function
           (lambda (fpath)
-            (async-start-process "open" "*open*" "open" fpath))))
+            (async-start-process "open" "open" "open" fpath))))
    (IS-LINUX
     (setq bibtex-completion-pdf-open-function
           (lambda (fpath)
@@ -135,8 +96,10 @@
   :commands (ivy-bibtex)
   :config
   (setq ivy-bibtex-default-action 'ivy-bibtex-insert-key)
-  (ivy-bibtex-ivify-action bibtex-completion-quicklook ivy-bibtex-quicklook)
-  (ivy-add-actions 'ivy-bibtex '(("SPC" ivy-bibtex-quicklook "Quick look"))))
+  (add-to-list 'ivy-re-builders-alist '(ivy-bibtex . ivy--regex-plus))
+  (when IS-MAC
+    (ivy-bibtex-ivify-action bibtex-completion-quicklook ivy-bibtex-quicklook)
+    (ivy-add-actions 'ivy-bibtex '(("SPC" ivy-bibtex-quicklook "Quick look")))))
 
 
 (def-package! helm-bibtex
