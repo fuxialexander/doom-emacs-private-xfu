@@ -10,9 +10,12 @@
       +rss-elfeed-files '("elfeed.org")
       ;; browse-url-browser-function 'xwidget-webkit-browse-url
       +reference-field 'bioinfo
-      bibtex-completion-bibliography "~/Dropbox/org/reference/Bibliography.bib"
+      bibtex-completion-bibliography '( "~/Dropbox/org/reference/Bibliography.bib" )
       bibtex-completion-library-path "~/Dropbox/org/reference/pdf/"
       bibtex-completion-notes-path "~/Dropbox/org/ref.org"
+      org-ref-default-bibliography '( "~/Dropbox/org/reference/Bibliography.bib" )
+      org-ref-bibliography-notes "~/Dropbox/org/ref.org"
+      org-ref-pdf-directory "~/Dropbox/org/reference/pdf/"
       twittering-connection-type-order '(wget urllib-http native urllib-https)
       +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin
       visual-fill-column-center-text t
@@ -72,7 +75,7 @@
   :commands (counsel-oi))
 
 ;; *** magit
-(def-package! orgit :after magit)
+(def-package! orgit :after (magit org))
 (after! magithub
   (setq magithub-clone-default-directory "/Users/xfu/Source/playground/"))
 (after! magit
@@ -351,7 +354,7 @@
         company-tooltip-minimum 10
         company-backends
         '(company-capf company-dabbrev company-files company-yasnippet)
-        company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode inferior-python-mode eshell-mode)))
+        company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode)))
 
 ;; **** company-box
 (after! company-box
@@ -397,7 +400,8 @@
 
 ;; *** language
 ;; **** elisp
-(after! elisp-mode (set-lookup-handlers! 'emacs-lisp-mode :documentation #'helpful-at-point))
+(after! elisp-mode
+  (set-lookup-handlers! 'emacs-lisp-mode :documentation #'helpful-at-point))
 (after! helpful
   (set-lookup-handlers! 'helpful-mode :documentation #'helpful-at-point))
 ;; **** python
@@ -456,7 +460,6 @@
   :hook ((sh-mode . electric-operator-mode)
          (ess-mode . electric-operator-mode)
          (python-mode . electric-operator-mode)
-         (inferior-python-mode . electric-operator-mode)
          (inferior-ess-mode . electric-operator-mode))
   :config
   (apply #'electric-operator-add-rules-for-mode 'inferior-python-mode
@@ -513,3 +516,4 @@
 
 (load! "+bindings")
 (load! "+popup")
+
