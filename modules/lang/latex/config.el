@@ -14,6 +14,9 @@
 ;; Plugins
 ;;
 
+;; sp's default rules are obnoxious, so disable them
+(provide 'smartparens-latex)
+
 (after! tex
   ;; Set some varibles to fontify common LaTeX commands.
   (load! "+fontification")
@@ -55,10 +58,12 @@
 
   (define-key LaTeX-mode-map "\C-j" nil)
 
-  ;; Do not prompt for Master files, this allows auto-insert to add templates
-  ;; to .tex files
-  (add-hook! '(LaTeX-mode TeX-mode)
-    (remove-hook 'find-file-hook (car find-file-hook) 'local))
+  ;; Do not prompt for Master files, this allows auto-insert to add templates to
+  ;; .tex files
+  (add-hook! '(LaTeX-mode-hook TeX-mode-hook)
+    (remove-hook 'find-file-hook
+                 (cl-find-if #'byte-code-function-p find-file-hook)
+                 'local))
   ;; Adding useful things for latex
   (add-hook! LaTeX-mode
     (TeX-source-correlate-mode 1)
@@ -82,14 +87,14 @@
           "M-s-f s" #'+latex/font-sans-serif
           "M-s-f S" #'+latex/font-serif
           :localleader
-          :nv "\\" #'TeX-insert-macro         ;; C-c C-m
-          :nv "-" #'TeX-recenter-output-buffer ;; C-c C-l
+          :nv "\\" #'TeX-insert-macro                  ;; C-c C-m
+          :nv "-" #'TeX-recenter-output-buffer         ;; C-c C-l
           :nv "%" #'TeX-comment-or-uncomment-paragraph ;; C-c %
           :nv ";" #'TeX-comment-or-uncomment-region    ;; C-c ; or C-c :
           ;; TeX-command-run-all runs compile and open the viewer
           :nv "a" #'TeX-command-run-all ;; C-c C-a
           :nv "b" #'+latex/build
-          :nv "k" #'TeX-kill-job      ;; C-c C-k
+          :nv "k" #'TeX-kill-job               ;; C-c C-k
           :nv "l" #'TeX-recenter-output-buffer ;; C-c C-l
           :nv "m" #'TeX-insert-macro           ;; C-c C-m
           :nv "v" #'TeX-view                   ;; C-c C-v
@@ -126,8 +131,8 @@
           :nv "zr" #'TeX-fold-region
           :nv "zR" #'TeX-fold-clearout-region
           :nv "zz" #'TeX-fold-dwim
-          :nv "*" #'LaTeX-mark-section ;; C-c *
-          :nv "." #'LaTeX-mark-environment ;; C-c .
+          :nv "*" #'LaTeX-mark-section      ;; C-c *
+          :nv "." #'LaTeX-mark-environment  ;; C-c .
           :nv "c" #'LaTeX-close-environment ;; C-c ]
           :nv "e" #'LaTeX-environment       ;; C-c C-e
           :nv "i" #'LaTeX-insert-item       ;; C-c C-j
@@ -208,7 +213,6 @@
   (setq-default preview-scale 1.4
                 preview-scale-function
                 (lambda () (* (/ 10.0 (preview-document-pt)) preview-scale))))
-
 
 (def-package! latex-preview-pane
   :when (featurep! +preview-pane)
@@ -298,9 +302,9 @@
   :when (featurep! :completion company)
   :commands (company-auctex-init)
   :init
-  ;; We can't use the (set! :company-backend ...) because Auctex reports its
+  ;; We can't use the `set-company-backend!' because Auctex reports its
   ;; major-mode as `latex-mode', but uses LaTeX-mode-hook for its mode, which is
-  ;; not anticipated by :company-backend (and shouldn't have to!)
+  ;; not something `set-company-backend!' anticipates (and shouldn't have to!)
   (add-hook! LaTeX-mode
-    (make-variable-buffer-local 'company-backends)
+    (make-local-variable 'company-backends)
     (company-auctex-init)))
