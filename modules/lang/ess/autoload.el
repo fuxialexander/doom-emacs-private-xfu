@@ -6,23 +6,22 @@
   (inferior-ess nil nil t))
 
 ;;;###autoload
-(defun R-remote (&optional remote-host session directory)
+(defun R-remote (&optional host session dir)
   "Connect to the remote-host's dtach session running R."
   (require 'ess-site)
-  (interactive (list
-                (read-from-minibuffer "R remote host: " R-remote-host)
-                (read-from-minibuffer "R remote session: " R-remote-session)
-                (read-from-minibuffer "R remote directory: " R-remote-directory)))
+  (interactive (if (file-remote-p default-directory)
+                   (list
+                    (file-remote-p default-directory 'host)
+                    (read-from-minibuffer "R remote session: ")
+                    (file-remote-p default-directory 'localname))))
   (let ((comint-process-echoes t)
-        (buf (make-comint (concat "R:" session)
-                          "ssh" nil "-Y" "-C" "-t" remote-host
-                          "cd" directory ";"
-                          "dtach" "-A" (concat ".dtach-" session)
+        (buf (make-comint (concat "R:" host "-" session)
+                          "dtach" nil "-A" (concat ".dtach-" host "-" session)
                           "-z" "-E" "-r" "none"
                           inferior-R-program-name "--no-readline"
                           inferior-R-args)))
     (with-current-buffer buf
-      (cd (concat "/ssh:" remote-host ":" directory))
-      (ess-remote (concat "R:" session) "R"))
+      (cd (concat "/ssh:" host ":" dir))
+      (ess-remote (concat "R:" host "-" session) "R"))
     (pop-to-buffer buf)))
 
