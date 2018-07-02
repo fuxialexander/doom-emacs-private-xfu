@@ -71,15 +71,16 @@
   (map! (:map (LaTeX-mode-map TeX-mode-map)
           "M-p" #'ivy-bibtex-with-local-bibliography
           "M-q" #'fill-paragraph
-          "C-s-b" #'+latex/font-bold
-          "C-s-c" #'+latex/font-code
-          "C-s-e" #'+latex/font-emphasis
-          "C-s-i" #'+latex/font-italic
-          "C-s-r" #'+latex/font-clear
-          "C-s-o" #'+latex/font-oblique
-          "C-s-f p" #'+latex/font-small-caps
-          "C-s-f s" #'+latex/font-sans-serif
-          "C-s-f S" #'+latex/font-serif
+          "M-s-b" #'+latex/font-bold
+          "M-s-c" #'+latex/font-code
+          "M-s-e" #'+latex/font-emphasis
+          "M-s-i" #'+latex/font-italic
+          "M-s-r" #'+latex/font-clear
+          "M-s-o" #'+latex/font-oblique
+          "M-s-g" (lambda! (evil-append 0) (insert "\\graffito{}") (backward-char))
+          "M-s-f p" #'+latex/font-small-caps
+          "M-s-f s" #'+latex/font-sans-serif
+          "M-s-f S" #'+latex/font-serif
           :localleader
           :nv "\\" #'TeX-insert-macro         ;; C-c C-m
           :nv "-" #'TeX-recenter-output-buffer ;; C-c C-l
@@ -108,11 +109,11 @@
           :nv "," #'TeX-command-master
           :nv "b" #'TeX-command-buffer)
         (:map LaTeX-mode-map
-          "C-s-m" #'+latex/font-medium
-          "C-s-r" #'+latex/font-clear
-          "C-s-f a" #'+latex/font-calligraphic
-          "C-s-f n" #'+latex/font-normal
-          "C-s-f u" #'+latex/font-upright
+          "M-s-m" #'+latex/font-medium
+          "M-s-r" #'+latex/font-clear
+          "M-s-f a" #'+latex/font-calligraphic
+          "M-s-f n" #'+latex/font-normal
+          "M-s-f u" #'+latex/font-upright
           :localleader
           :nv "z=" #'TeX-fold-math
           :nv "zb" #'TeX-fold-buffer
