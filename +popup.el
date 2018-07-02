@@ -10,6 +10,9 @@
 (set-popup-rule! "^\\*Man.*" :size 80 :side 'right :transient t :select t :quit t)
 (set-popup-rule! "^\\*tldr\\*" :size 80 :side 'right :select t :quit t)
 (set-popup-rule! "^\\*helpful.*" :size 80 :side 'right :select t :quit t)
+(set-popup-rule! "^\\*Help.*" :size 80 :height 0.6 :side 'right :select t :quit t)
+(set-popup-rule! "^ \\*Metahelp.*" :size 80 :side 'right :select t :quit t)
+(set-popup-rule! "^\\*Apropos.*" :size 80 :height 0.6 :side 'right :select t :quit t)
 
 
 ;; (set-popup-rule! "^ ?\\*NeoTree" :side ,neo-window-position :width ,neo-window-width :quit 'current :select t)
