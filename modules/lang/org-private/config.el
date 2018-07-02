@@ -1,6 +1,5 @@
 ;;; lang/org-private/config.el -*- lexical-binding: t; -*-
 
-(setq +org-dir (expand-file-name "~/Dropbox/org/"))
 ;; (setq org-blank-before-new-entry nil
 ;;       org-modules (quote (org-bibtex org-habit org-info org-protocol org-mac-link org-notmuch))
 ;;       org-imenu-depth 8)
@@ -130,7 +129,7 @@ If run interactively, get ENTRY from context."
         org-agenda-dim-blocked-tasks nil
         org-agenda-files (append
                           (list "/Users/xfu/Dropbox/org/cal/cal.org")
-                          (ignore-errors (directory-files +org-dir t "\\.org$" t)))
+                          (ignore-errors (directory-files org-directory t "\\.org$" t)))
         org-agenda-follow-indirect t
         org-agenda-ignore-properties '(effort appt category)
         org-agenda-inhibit-startup t
