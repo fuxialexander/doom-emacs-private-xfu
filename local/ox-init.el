@@ -1,7 +1,7 @@
 (require 'ox)
 (require 'ox-beamer)
 
-(setq +org-dir "~/Dropbox/org"
+(setq org-directory "~/Dropbox/org"
       +org-attach-dir ".attach/"
       org-attach-directory (expand-file-name +org-attach-dir +org-dir))
 (setq org-highlight-latex-and-related '(latex)
