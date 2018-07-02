@@ -34,7 +34,7 @@
          ("\\.[Jj][Mm][Dd]\\'" . ess-jags-mode))
   :init
   (unless (featurep! :lang julia)
-    (map-put auto-mode-alist "\\.jl\'" 'ess-julia-mode))
+    (add-to-list 'auto-mode-alist '("\\.jl\\'" . ess-julia-mode)))
   :config
   (setq ess-offset-continued 'straight
         ess-expression-offset 2
