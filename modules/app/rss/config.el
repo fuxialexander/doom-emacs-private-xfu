@@ -63,7 +63,7 @@
           :n doom-leader-key nil
           :nm "q" #'+rss/delete-pane
           :nm "o" #'ace-link-elfeed
-          :nm "RET" #'+reference/elfeed-add
+          :nm "RET" #'org-ref-elfeed-add
           :nm "n" #'elfeed-show-next
           :nm "p" #'elfeed-show-prev
           :nm "+" #'elfeed-show-tag
@@ -83,3 +83,7 @@
   :commands (elfeed-org)
   :config
   (setq rmh-elfeed-org-files '("~/.doom.d/modules/app/rss/elfeed.org")))
+
+(def-package! org-ref-elfeed
+  :when (featurep! :tools reference)
+  :commands (org-ref-elfeed-add))
