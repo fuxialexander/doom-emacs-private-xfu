@@ -5,7 +5,7 @@
     "default language for langtool")
   (defvar +langtool-mother-tongue nil
     "mother tongue of user")
-  (defvar +langtool-jar-path "/usr/local/Cellar/languagetool/4.0/libexec/languagetool-commandline.jar"
+  (defvar +langtool-jar-path (file-expand-wildcards "/usr/local/Cellar/languagetool/*/libexec/languagetool-commandline.jar")
     "TODO")
   (def-package! langtool
     :commands (langtool-check
@@ -75,6 +75,8 @@
 (def-package! academic-phrases
   :commands (academic-phrases
              academic-phrases-by-section))
+(def-package! wordsmith-mode
+  :commands (wordsmitch-mode))
 ;; (def-package! mixed-pitch
 ;;   :config
 ;;   ;; (define-minor-mode mixed-pitch-mode

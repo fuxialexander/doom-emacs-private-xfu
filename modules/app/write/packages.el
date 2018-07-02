@@ -10,3 +10,4 @@
 (package! powerthesaurus)
 (package! academic-phrases)
 (package! mixed-pitch)
+(package! wordsmith-mode)
