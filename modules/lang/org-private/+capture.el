@@ -102,12 +102,19 @@
 :END:
 %i
 %?")
-   ("dr" "Daily Review" entry
+   ("drl" "Daily Review with link" entry
     (file+olp+datetree "~/Dropbox/org/review.org")
     "* %^{Review} :review:daily:
 :PROPERTIES:
 :Created: %U
 :Linked: %a
+:END:
+%?" :time-prompt t)
+   ("dr" "Daily Review" entry
+    (file+olp+datetree "~/Dropbox/org/review.org")
+    "* %^{Review} :review:daily:
+:PROPERTIES:
+:Created: %U
 :END:
 %?" :time-prompt t)
    ("wr" "Week Review" entry
