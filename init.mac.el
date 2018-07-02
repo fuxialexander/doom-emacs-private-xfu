@@ -22,14 +22,17 @@
        doom-modeline
        evil-goggles
        hl-todo
+       ;; fci                           ; a `fill-column' indicator
        ;; nav-flash
        ;; neotree
        treemacs                      ; a project drawer, like neotree but cooler
+       ;; pretty-code                   ; replace bits of code with pretty symbols
        (popup
         +all
         +defaults)
        window-select
-
+       :editor
+       rotate-text
        :emacs
        vc
        dired
@@ -51,8 +54,7 @@
        upload
        tmux
        password-store
-       :editor
-       rotate-text
+
        :lang
        lsp
        data
@@ -165,6 +167,7 @@
  +file-templates-dir "~/.doom.d/templates")
 
 ;; * Keys
+
 (setq
  doom-localleader-key ","
  +default-repeat-forward-key ";"
@@ -180,6 +183,6 @@
  +evil-collection-disabled-list '(elfeed notmuch kotlin-mode simple dired helm ivy anaconda-mode outline))
 
 ;; * Hacks
-;; (def-package-hook! ivy-rich
-;;   :pre-init nil
-;;   :pre-config nil)
+(def-package-hook! ivy-rich
+  :pre-init nil
+  :pre-config nil)
