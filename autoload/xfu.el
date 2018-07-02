@@ -95,7 +95,11 @@
 ;;;###autoload
 (defun highlight-grammar ()
   (interactive)
-  (highlight-regexp "\\\w+s[\\\., ;]" 'hi-yellow))
+  (highlight-regexp " \\\w+s[\\\., ;]" 'hi-yellow)
+  (highlight-regexp " \\\w+ed[\\\., ;]" 'hi-yellow)
+  (highlight-regexp " \\(could\\|can\\|may\\|might\\|would\\|won't\\|cannot\\|can't \\) " 'hi-pink)
+  (highlight-regexp " \\(have been\\|have being\\|has being\\|has been\\|had been\\|had being\\) " 'hi-pink)
+  (highlight-regexp " \\(is\\|are\\|were\\|was\\|being\\|am\\|been\\) " 'hi-blue))
 
 ;;;; Org
 ;;;###autoload
@@ -611,3 +615,5 @@ redefines its keys every time `eshell-mode' is enabled."
                                     (doom-project-name 'nocache))))
        (treemacs--init project-root))
      (set-window-fringes (selected-window) 0 0 nil)]))
+
+
