@@ -25,6 +25,7 @@ is loaded.")
   :init
   (setq python-environment-directory doom-cache-dir
         python-indent-guess-indent-offset-verbose nil
+        python-shell-prompt-detect-enabled nil
         python-shell-interpreter "python")
   :config
   (add-hook! 'python-mode-hook #'(flycheck-mode highlight-numbers-mode))
@@ -43,14 +44,14 @@ is loaded.")
           :ni "s-<return>" #'+python/repl-send-dwim)
         (:map inferior-python-mode-map
           :nv "C-d" #'evil-scroll-down))
-  (when (executable-find "ipython")
-    (setq python-shell-interpreter "ipython"
-          python-shell-prompt-detect-enabled nil
-          python-shell-completion-native-disabled-interpreters '("pypy" "jupyter" "ipython")
-          python-shell-interpreter-args "--simple-prompt --pylab"
-          python-shell-prompt-regexp "In \\[[0-9]+\\]: "
-          python-shell-prompt-block-regexp "\\.\\.\\.\\.: "
-          python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "))
+  ;; (when (executable-find "ipython")
+  ;;   (setq python-shell-interpreter "ipython"
+  ;;         python-shell-prompt-detect-enabled nil
+  ;;         python-shell-completion-native-disabled-interpreters '("pypy" "jupyter" "ipython")
+  ;;         python-shell-interpreter-args "--simple-prompt"
+  ;;         python-shell-prompt-regexp "In \\[[0-9]+\\]: "
+  ;;         python-shell-prompt-block-regexp "\\.\\.\\.\\.: "
+  ;;         python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "))
 
   (define-key python-mode-map (kbd "DEL") nil) ; interferes with smartparens
   (sp-with-modes 'python-mode
@@ -64,7 +65,7 @@ is loaded.")
           '("/usr/local/anaconda3"
             "/ssh:xfu@hpc10.cse.cuhk.edu.hk:/research/kevinyip10/xfu/miniconda3"
             "/ssh:xfu@hpc11.cse.cuhk.edu.hk:/research/kevinyip10/xfu/miniconda3"))
-    (advice-add 'anaconda-mode-bootstrap :override #'*anaconda-mode-bootstrap)
+    ;; (advice-add 'anaconda-mode-bootstrap :override #'*anaconda-mode-bootstrap)
     (conda-env-autoactivate-mode -1)
     ;; (add-hook 'python-mode-hook #'conda-env-activate-for-buffer)
     (conda-env-initialize-interactive-shells)
@@ -102,6 +103,15 @@ is loaded.")
   (advice-add 'lispy--python-proc :override #'*lispy--python-proc)
   (advice-add 'lispy-short-process-name :override #'*lispy-short-process-name)
   (advice-add 'lispy-set-python-process-action :override #'*lispy-set-python-process-action))
+
+(def-package! lsp-python
+  :commands (lsp-python-enable)
+  :config
+  (setq python-indent-guess-indent-offset-verbose nil)
+  (set-company-backend! '(python-mode) '(company-lsp company-files company-yasnippet))
+  (set-lookup-handlers! 'python-mode
+    :definition #'lsp-ui-peek-find-definitions
+    :references #'lsp-ui-peek-find-references))
 
 (def-package! anaconda-mode
   :hook python-mode

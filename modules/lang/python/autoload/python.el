@@ -22,7 +22,7 @@
          (python-nav-forward-statement))))
 
 ;;;###autoload
-(defun py-remote (&optional host session dir show internal)
+(defun run-python-remote (&optional host session dir show internal)
   "Connect to the remote-host's dtach session running py."
   (interactive (if (file-remote-p default-directory)
                    (list
