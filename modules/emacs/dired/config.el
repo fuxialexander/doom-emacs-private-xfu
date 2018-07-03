@@ -1,7 +1,7 @@
 ;;; emacs/dired/config.el -*- lexical-binding: t; -*-
 
 (def-package! dired
-  :defer t
+  :commands dired-jump
   :init
   (setq ;; Always copy/delete recursively
    dired-recursive-copies 'always
@@ -30,6 +30,9 @@
          (dired-insert-set-properties (point-min) (point-max)))
     (set-buffer-modified-p nil))
   (add-hook 'dired-after-readin-hook #'+dired|sort-directories-first)
+  (add-hook 'doom-real-buffer-functions #'doom-dired-buffer-p)
+  (after! solaire-mode
+    (add-hook 'dired-mode-hook #'solaire-mode))
 
   ;; Automatically create missing directories when creating new files
   (defun +dired|create-non-existent-directory ()
@@ -39,15 +42,13 @@
         (make-directory parent-directory t))))
   (push #'+dired|create-non-existent-directory find-file-not-found-functions)
 
+  ;; Kill buffer when quitting dired buffers
+  (define-key dired-mode-map [remap quit-window] (λ! (quit-window t)))
+
   (after! evil-snipe
     (push 'dired-mode evil-snipe-disabled-modes))
   (set-evil-initial-state! 'dired-mode 'normal)
-  (map! (:after wdired
-          :map wdired-mode-map
-          (:localleader
-            :desc "Finish" :n "," #'wdired-finish-edit
-            :desc "Abort" :n "k" #'wdired-abort-changes))
-        (:after dired
+  (map! (:after dired
           :map dired-mode-map
           :n "RET" #'dired
           :n "SPC" nil
