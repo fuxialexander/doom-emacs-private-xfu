@@ -97,7 +97,9 @@ If run interactively, get ENTRY from context."
                              operators
                              insert
                              textobjects))
-  (add-hook 'org-load-hook #'+org-private|setup-keybinds t))
+  (add-hook 'org-load-hook #'+org-private|setup-keybinds t)
+  (advice-add 'org-meta-return :override #'+org-private*org-meta-return)
+  (advice-add 'evil-org-open-below :override #'+org-private*evil-org-open-below))
 
 ;;
 ;; Bootstrap
@@ -797,10 +799,6 @@ This holds only for inactive timestamps."
 ;;
 ;; `org-mode' hooks
 ;;
-
-(defun +org-private|setup-editing ()
-  )
-
 
 (def-package! org-clock
   :commands org-clock-save
