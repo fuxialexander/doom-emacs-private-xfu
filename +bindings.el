@@ -37,8 +37,8 @@
         :map (outline-mode-map outline-minor-mode-map)
         :nvime "C-h" #'dwim-jump
         :nvime "C-l" #'outline-cycle
-        :nvime "C-j" (lambda! (outline-next-heading) (recenter))
-        :nvime "C-k" (lambda! (outline-previous-heading) (recenter))
+        :nvime "C-j" (lambda! (outline-next-visible-heading 1) (recenter))
+        :nvime "C-k" (lambda! (outline-previous-visible-heading 1) (recenter))
         :nvime "<C-return>" (lambda! (evil-open-below 0) (outline-insert-heading))
         :nvime "C-S-h" #'outline-promote
         :nvime "C-S-l" #'outline-demote
