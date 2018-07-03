@@ -98,7 +98,6 @@ If run interactively, get ENTRY from context."
                              insert
                              textobjects))
   (add-hook 'org-load-hook #'+org-private|setup-keybinds t)
-  (advice-add 'org-meta-return :override #'+org-private*org-meta-return)
   (advice-add 'evil-org-open-below :override #'+org-private*evil-org-open-below))
 
 ;;
@@ -301,6 +300,7 @@ If run interactively, get ENTRY from context."
   (defface org-scheduled-custom-braket '((t (:inherit 'default))) "org-schedule" :group 'org)
   (defface org-closed-custom-braket '((t (:inherit 'default))) "org-close" :group 'org)
   (setq org-adapt-indentation nil
+        org-M-RET-may-split-line '((default . nil))
         org-export-babel-evaluate nil
         org-blank-before-new-entry '((heading . t) (plain-list-item . nil))
         org-clock-clocktable-default-properties (quote (:maxlevel 3 :scope agenda :tags "-COMMENT"))
@@ -425,7 +425,8 @@ If run interactively, get ENTRY from context."
           "M-i" #'org-insert-last-stored-link
           "M-I" #'org-insert-link
           "M-p" #'org-ref-ivy-insert-cite-link
-
+          :nvime "C-j" (lambda! (org-next-visible-heading 1) (recenter))
+          :nvime "C-k" (lambda! (org-previous-visible-heading 1) (recenter))
           :nv "M-j" nil
           :nv "M-k" nil
           :nv "M-l" nil
