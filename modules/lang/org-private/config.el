@@ -154,8 +154,7 @@ If run interactively, get ENTRY from context."
         org-habit-following-days 0
         org-habit-graph-column 1
         org-habit-preceding-days 8
-        org-habit-show-habits t
-        ))
+        org-habit-show-habits t))
 
 (defun +org-private|setup-ui ()
   "Configures the UI for `org-mode'."

@@ -20,7 +20,6 @@
        doom
        doom-dashboard
        doom-modeline
-       evil-goggles
        hl-todo
        ;; fci                           ; a `fill-column' indicator
        ;; nav-flash
@@ -85,14 +84,13 @@
        :app
        sx
        rss
-       ;; twitter
+       twitter
        email
        (write
         +wordnut
         +osxdict
         +synosaurus
         +langtool)
-       ;; calendar
 
        :config
        (default +snippets +evil-commands +bindings))
@@ -106,7 +104,7 @@
    (:eval (if (buffer-file-name)
               (abbreviate-file-name (buffer-file-name))
             "%b")))
- doom-font (font-spec :family "SF Mono" :size 12)
+ doom-font (font-spec :family "SF Mono" :size 10)
  doom-variable-pitch-font
  (font-spec
   :family "SF Compact Display"
