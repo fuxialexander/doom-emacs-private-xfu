@@ -325,7 +325,7 @@ If run interactively, get ENTRY from context."
         org-highest-priority ?A
         org-insert-heading-respect-content t
         org-id-link-to-org-use-id t
-        org-id-locations-file (concat +org-dir ".org-id-locations")
+        org-id-locations-file (concat org-directory ".org-id-locations")
         org-id-track-globally t
         org-image-actual-width nil
         org-imenu-depth 8
@@ -349,7 +349,7 @@ If run interactively, get ENTRY from context."
         `((?a . ,(face-foreground 'error))
           (?b . ,(face-foreground 'warning))
           (?c . ,(face-foreground 'success)))
-        org-publish-timestamp-directory (concat +org-dir ".org-timestamps/")
+        org-publish-timestamp-directory (concat org-directory ".org-timestamps/")
         org-refile-targets '((nil :maxlevel . 9)
                              (org-agenda-files :maxlevel . 9))
         org-refile-use-outline-path 'file
@@ -807,5 +807,5 @@ This holds only for inactive timestamps."
   :hook (org-mode . org-clock-load)
   :config
   (setq org-clock-persist t
-        org-clock-persist-file (expand-file-name ".org-clock-persist-data.el" +org-dir))
+        org-clock-persist-file (expand-file-name ".org-clock-persist-data.el" org-directory))
   (add-hook 'kill-emacs-hook 'org-clock-save))

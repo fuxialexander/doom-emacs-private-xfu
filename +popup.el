@@ -23,5 +23,8 @@
 (set-popup-rule! "\\*xwidget" :side 'right :size 100 :select t)
 
 
+;; * lang
+;; ** python
+(set-popup-rule! "^\\*Anaconda\\*" :side 'right :size 80 :quit t :transient t)
 
 

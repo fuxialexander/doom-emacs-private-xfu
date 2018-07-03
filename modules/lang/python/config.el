@@ -61,11 +61,6 @@ is loaded.")
     :when (featurep! +conda)
     :config
     (setq conda-anaconda-home "/usr/local/anaconda3")
-    (setq +python-conda-home
-          '("/usr/local/anaconda3"
-            "/ssh:xfu@hpc10.cse.cuhk.edu.hk:/research/kevinyip10/xfu/miniconda3"
-            "/ssh:xfu@hpc11.cse.cuhk.edu.hk:/research/kevinyip10/xfu/miniconda3"))
-    ;; (advice-add 'anaconda-mode-bootstrap :override #'*anaconda-mode-bootstrap)
     (conda-env-autoactivate-mode -1)
     ;; (add-hook 'python-mode-hook #'conda-env-activate-for-buffer)
     (conda-env-initialize-interactive-shells)
@@ -119,16 +114,15 @@ is loaded.")
   (setq anaconda-mode-installation-directory (concat doom-etc-dir "anaconda/")
         anaconda-mode-eldoc-as-single-line t
         ;; anaconda-mode-server-command "
-;; import sys, site
-;; site.addsitedir('.')
-;; import anaconda_mode
-;; anaconda_mode.main(sys.argv[-2:])
-;; "
+        ;; import sys, site
+        ;; site.addsitedir('.')
+        ;; import anaconda_mode
+        ;; anaconda_mode.main(sys.argv[-2:])
+        ;; "
         )
   :config
   (add-hook 'anaconda-mode-hook #'anaconda-eldoc-mode)
   (set-company-backend! 'python-mode '(company-anaconda))
-  (set-popup-rule! "^\\*Anaconda\\*" :side 'right :size 80 :quit t :transient t)
 
   (set-lookup-handlers! 'python-mode
     :definition #'anaconda-mode-find-definitions
@@ -144,6 +138,7 @@ is loaded.")
   (add-hook! 'python-mode-hook
     (add-hook 'kill-buffer-hook #'+python|auto-kill-anaconda-processes nil t))
 
+  ;; (advice-add 'anaconda-mode-bootstrap :override #'*anaconda-mode-bootstrap)
   (map! :map anaconda-mode-map
         :localleader
         :prefix "f"
