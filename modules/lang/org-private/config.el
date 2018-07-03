@@ -116,7 +116,7 @@ If run interactively, get ENTRY from context."
                                 toc-org-enable
                                 org-bullets-mode))
 
-(add-hook 'org-mode-hook #'+org-private|setup-editing t)
+;; (add-hook 'org-mode-hook #'+org-private|setup-editing t)
 (add-hook 'org-mode-hook #'auto-fill-mode)
 (add-hook 'org-mode-hook #'eldoc-mode t)
 
