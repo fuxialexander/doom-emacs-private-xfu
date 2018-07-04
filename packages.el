@@ -15,6 +15,7 @@
 (package! prettify-utils :recipe (:fetcher github :repo "Ilazki/prettify-utils.el" :files ("*")))
 (package! prescient)
 (package! company-prescient)
+(package! ivy-prescient)
 (package! flycheck-posframe)
 (package! ov)
 (package! evil-collection)

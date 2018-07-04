@@ -176,6 +176,8 @@
           (t . ivy-posframe-display-at-frame-center))))
 ;; **** ivy-config
 (after! ivy
+  (def-package! ivy-prescient
+    :hook (ivy-mode . ivy-prescient-mode))
   (setq ivy-use-selectable-prompt t
         ivy-auto-select-single-candidate t
         ivy-rich-parse-remote-buffer nil
@@ -312,11 +314,10 @@
 ;; ** edit
 ;; *** company
 (after! company
-;; **** prescient
-  (def-package! prescient)
+  ;; **** prescient
   (def-package! company-prescient
     :hook (company-mode . company-prescient-mode))
-;; **** company-ui
+  ;; **** company-ui
   (setq company-tooltip-limit 10
         company-tooltip-minimum-width 80
         company-tooltip-minimum 10
