@@ -160,6 +160,7 @@
     ("o" ivy-occur :exit t)))
 ;; **** ivy-posframe
 (after! ivy-posframe
+  (advice-add #'ivy-posframe-enable :around #'doom*shut-up)
   (setq ivy-posframe-parameters
         `((min-width . 120)
           (min-height . ,ivy-height)
