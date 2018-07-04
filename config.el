@@ -197,11 +197,6 @@
 ;; **** counsel-load-theme
   ;; reset fringe after change theme
   (advice-add #'counsel-load-theme :after #'solaire-mode-reset)
-;; **** +ivy-top
-  (defcustom ivy-top-command
-    "top -stats pid,command,user,cpu,mem,pstate,time -l 1"
-    "Top command for `+ivy-top'."
-    :group '+ivy)
 ;; **** ivy-switch-buffer
   (advice-add 'ivy--switch-buffer-action :override #'*ivy--switch-buffer-action)
   (ivy-add-actions

@@ -312,17 +312,6 @@ candidate."
 started `counsel-recentf' from. Also uses `abbreviate-file-name'."
     (abbreviate-file-name str))
 
-;;;###autoload
-(defun +ivy-top ()
-    (interactive)
-    (let* ((output (shell-command-to-string ivy-top-command))
-           (lines (progn
-                    (string-match "TIME" output)
-                    (split-string (substring output (+ 1 (match-end 0))) "\n")))
-           (candidates (mapcar (lambda (line)
-                                 (list line (split-string line " " t)))
-                               lines)))
-      (ivy-read "process: " candidates)))
 
 ;;;###autoload
 (defun +ivy/reloading (cmd)
