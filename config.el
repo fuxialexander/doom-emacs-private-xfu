@@ -176,9 +176,22 @@
           (ivy-completion-in-region . ivy-display-function-overlay)
           (t . ivy-posframe-display-at-frame-center))))
 ;; **** ivy-config
+(def-package! ivy-prescient
+  :commands (ivy-prescient-mode)
+  :config
+  (setq ivy-prescient-excluded-commands
+        '(counsel-ag
+          counsel-expression-history
+          counsel-git-grep
+          counsel-grep
+          counsel-mark-ring
+          counsel-minibuffer-history
+          counsel-shell-command-history
+          counsel-yank-pop
+          swiper
+          +ivy/project-search)))
 (after! ivy
-  (def-package! ivy-prescient
-    :hook (ivy-mode . ivy-prescient-mode))
+  (ivy-prescient-mode 1)
   (setq ivy-use-selectable-prompt t
         ivy-auto-select-single-candidate t
         ivy-rich-parse-remote-buffer nil
