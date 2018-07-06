@@ -38,7 +38,7 @@ Org-Babel: _j_/_k_ next/prev   _g_oto     _TAB_/_i_/_I_ show/hide
 
 
 ;;;###autoload
-(defun +org-private|org-edit-src-code (&optional code edit-buffer-name)
+(defun +org-private*org-edit-src-code (&optional code edit-buffer-name)
   "Edit the source or example block at point.
 \\<org-src-mode-map>
 The code is copied to a separate buffer and the appropriate mode
@@ -85,8 +85,8 @@ name of the sub-editing buffer."
         (setq-local org-src--babel-info babel-info)
         (let* ((params (nth 2 babel-info))
               (dir (cdr (assq :dir params))))
-          (if (file-exists-p dir)
-              (cd (file-name-as-directory (expand-file-name dir)))))
+          (when (and dir (file-exists-p dir))
+            (cd (file-name-as-directory (expand-file-name dir)))))
         (let ((edit-prep-func (intern (concat "org-babel-edit-prep:" lang))))
           (when (fboundp edit-prep-func)
             (funcall edit-prep-func babel-info))))
