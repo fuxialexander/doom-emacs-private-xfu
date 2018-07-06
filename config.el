@@ -118,7 +118,7 @@
   (advice-add 'colir--blend-background :override #'*colir--blend-background)
   (advice-add 'colir-blend-face-background :override #'*colir-blend-face-background))
 (after! ivy-hydra
-  (defhydra +ivy@coo (:hint nil :color pink)
+  (defhydra +ivy-coo-hydra (:hint nil :color pink)
     "
  Move     ^^^^^^^^^^ | Call         ^^^^ | Cancel^^ | Options^^ | Action _w_/_s_/_a_: %s(ivy-action-name)
 ----------^^^^^^^^^^-+--------------^^^^-+-------^^-+--------^^-+---------------------------------
