@@ -158,6 +158,48 @@
     ("t" (setq truncate-lines (not truncate-lines)))
     ("C" ivy-toggle-case-fold)
     ("o" ivy-occur :exit t)))
+;; **** ivy-rich
+(after! ivy-rich
+  (defun ivy-rich-pad (str len &optional left)
+  "Use space to pad STR to LEN of length.
+
+When LEFT is not nil, pad from left side."
+  (let ((str-len (string-width str)))
+    (cond ((< str-len len)
+           (if left
+               (concat (make-string (- len str-len) ? ) str)
+             (concat str (make-string (- len str-len) ? ))))
+          ((<= len (- str-len)) "")
+          ((> str-len len)
+           (substring str 0 len))
+          (t str))))
+  (setq ivy-rich--display-transformers-list
+        '(ivy-switch-buffer
+          (:columns
+           ((ivy-rich-candidate (:width 30))
+            (ivy-rich-switch-buffer-size (:width 7 :face font-lock-doc-face))
+            (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right))
+            (ivy-rich-switch-buffer-major-mode (:width 18 :face doom-modeline-buffer-major-mode))
+            (ivy-rich-switch-buffer-path (:width 15)))
+           :predicate
+           (lambda (cand) (get-buffer cand)))
+          counsel-M-x
+          (:columns
+           ((counsel-M-x-transformer (:width 40))
+            (ivy-rich-counsel-function-docstring (:face font-lock-doc-face :width 80))))
+          counsel-describe-function
+          (:columns
+           ((counsel-describe-function-transformer (:width 40))
+            (ivy-rich-counsel-function-docstring (:face font-lock-doc-face :width 80))))
+          counsel-describe-variable
+          (:columns
+           ((counsel-describe-variable-transformer (:width 40))
+            (ivy-rich-counsel-variable-docstring (:face font-lock-doc-face :width 80))))
+          counsel-recentf
+          (:columns
+           ((ivy-rich-candidate (:width 100))
+            (ivy-rich-file-last-modified-time (:face font-lock-doc-face))))
+          )))
 ;; **** ivy-posframe
 (after! ivy-posframe
   (advice-add #'ivy-posframe-enable :around #'doom*shut-up)
@@ -176,27 +218,13 @@
           (ivy-completion-in-region . ivy-display-function-overlay)
           (t . ivy-posframe-display-at-frame-center))))
 ;; **** ivy-config
-(def-package! ivy-prescient
-  :commands (ivy-prescient-mode)
-  :config
-  (setq ivy-prescient-excluded-commands
-        '(counsel-ag
-          counsel-expression-history
-          counsel-git-grep
-          counsel-grep
-          counsel-mark-ring
-          counsel-minibuffer-history
-          counsel-shell-command-history
-          counsel-yank-pop
-          swiper
-          +ivy/project-search)))
 (after! ivy
-  (ivy-prescient-mode 1)
+  (ivy-rich-mode)
   (setq ivy-use-selectable-prompt t
         ivy-auto-select-single-candidate t
         ivy-rich-parse-remote-buffer nil
         +ivy-buffer-icons nil
-        ivy-use-virtual-buffers t
+        ivy-use-virtual-buffers nil
         ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-cd-selected
         ivy-height 20
         ivy-rich-switch-buffer-name-max-length 50))
@@ -215,21 +243,8 @@
   (advice-add 'ivy--switch-buffer-action :override #'*ivy--switch-buffer-action)
   (ivy-add-actions
    'ivy-switch-buffer
-   '(("d" (lambda (buf) (display-buffer buf)) "Display")))
-;; **** counsel-find-file
-  (ivy-add-actions
-   'counsel-find-file
-   `(("c" ,(+ivy/given-file #'copy-file "Copy file") "copy file")
-     ("d" ,(+ivy/reloading #'+ivy/confirm-delete-file) "delete")
-     ("r" (lambda (path) (rename-file path (read-string "New name: "))) "Rename")
-     ("m" ,(+ivy/reloading (+ivy/given-file #'rename-file "Move")) "move")
-     ("f" find-file-other-window "other window")
-     ("p" (lambda (path) (with-ivy-window (insert (f-relative path)))) "Insert relative path")
-     ("P" (lambda (path) (with-ivy-window (insert path))) "Insert absolute path")
-     ("l" (lambda (path) "Insert org-link with relative path"
-            (with-ivy-window (insert (format "[[./%s]]" (f-relative path))))) "Insert org-link (rel. path)")
-     ("L" (lambda (path) "Insert org-link with absolute path"
-            (with-ivy-window (insert (format "[[%s]]" path)))) "Insert org-link (abs. path)")))
+   '(("d" (lambda (buf) (display-buffer buf)) "display")))
+
 ;; **** counsel-M-x
   (ivy-add-actions
    'counsel-M-x
@@ -239,42 +254,6 @@
 (def-package! counsel-tramp :load-path "~/.doom.d/local/"
   :commands (counsel-tramp))
 
-;; **** counsel-projectile
-(after! counsel-projectile
-  (ivy-add-actions
-   'counsel-projectile-switch-project
-   `(("f" counsel-projectile-switch-project-action-find-file
-      "jump to a project file")
-     ("d" counsel-projectile-switch-project-action-find-dir
-      "jump to a project directory")
-     ("b" counsel-projectile-switch-project-action-switch-to-buffer
-      "jump to a project buffer")
-     ("m" counsel-projectile-switch-project-action-find-file-manually
-      "find file manually from project root")
-     ("s" counsel-projectile-switch-project-action-save-all-buffers
-      "save all project buffers")
-     ("k" counsel-projectile-switch-project-action-kill-buffers
-      "kill all project buffers")
-     ("r" counsel-projectile-switch-project-action-remove-known-project
-      "remove project from known projects")
-     ("c" counsel-projectile-switch-project-action-compile
-      "run project compilation command")
-     ("$" counsel-projectile-switch-project-action-configure
-      "run project configure command")
-     ("e" counsel-projectile-switch-project-action-edit-dir-locals
-      "edit project dir-locals")
-     ("v" counsel-projectile-switch-project-action-vc
-      "open project in vc-dir / magit / monky")
-     ("/" counsel-projectile-switch-project-action-rg
-      "search project with rg")
-     ("xs" counsel-projectile-switch-project-action-run-shell
-      "invoke shell from project root")
-     ("xe" counsel-projectile-switch-project-action-run-eshell
-      "invoke eshell from project root")
-     ("xt" counsel-projectile-switch-project-action-run-term
-      "invoke term from project root")
-     ("_" counsel-projectile-switch-project-action-org-capture
-      "org-capture into project"))))
 ;; *** projectile
 (after! projectile
   (setq projectile-ignored-projects '("~/" "/tmp")
