@@ -38,6 +38,6 @@
 (package! sed-mode)
 (package! worf)
 (package! function-args)
-(package! realgud)
+(package! snakemake-mode)
 ;; * Maintain
 (package! esup)

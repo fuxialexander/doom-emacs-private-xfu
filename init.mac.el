@@ -1,5 +1,6 @@
 ;; * Modules
 (doom! :feature
+       ;; debugger
        eval
        (evil
         +everywhere)
@@ -25,7 +26,7 @@
        ;; nav-flash
        ;; neotree
        treemacs                      ; a project drawer, like neotree but cooler
-       ;; pretty-code                   ; replace bits of code with pretty symbols
+       pretty-code                   ; replace bits of code with pretty symbols
        (popup
         +all
         +defaults)
@@ -84,7 +85,7 @@
        :app
        sx
        rss
-       twitter
+       ;; twitter
        email
        (write
         +wordnut
@@ -96,7 +97,6 @@
        (default +snippets +evil-commands +bindings))
 
 ;; * UI
-(setq amx-save-file (concat doom-cache-dir "smex-items"))
 (setq
  frame-title-format
  '("emacs%@"
@@ -108,13 +108,13 @@
  doom-variable-pitch-font
  (font-spec
   :family "SF Compact Display"
-  :size 14
+  :size 12
   :width 'extra-condensed
   :weight 'normal
   :slant 'normal
   :registry "iso10646-1")
- doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 11)
- doom-big-font (font-spec :family "Sarasa Mono SC" :size 16)
+ doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 10)
+ doom-big-font (font-spec :family "SF Mono" :size 14)
  ovp-font "Iosevka"
  doom-theme 'doom-city-lights
  doom-line-numbers-style nil
@@ -134,8 +134,9 @@
  which-key-idle-delay 0.3)
 
 (set-env! "PATH" "MANPATH"
-          "http_proxy" "https_proxy"
-          "all_proxy" "no_proxy")
+          ;; "http_proxy" "socks_proxy" "https_proxy"
+          ;; "all_proxy" "no_proxy"
+          )
 
 (or standard-display-table
     (setq standard-display-table (make-display-table)))
@@ -149,10 +150,11 @@
 (if (string-match-p "NS" (emacs-version))
     (progn
       (setq
+       ns-use-thin-smoothing t
        ns-alternate-modifier 'super
        ns-command-modifier 'meta)
       (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-      (add-to-list 'default-frame-alist '(ns-appearance . light)))
+      (add-to-list 'default-frame-alist '(ns-appearance . dark)))
   (setq mac-command-modifier 'super
         mac-option-modifier 'meta
         mac-pass-command-to-system nil))

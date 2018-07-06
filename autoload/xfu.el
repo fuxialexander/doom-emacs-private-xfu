@@ -283,28 +283,28 @@ the workspace and move to the next."
           (select-window ori)))))
 
 ;;;###autoload
-(defun counsel-faces ()
-    "Show a list of all defined faces.
+;; (defun counsel-faces ()
+;;     "Show a list of all defined faces.
 
-You can describe, customize, insert or kill the name or selected
-candidate."
-    (interactive)
-    (let* ((minibuffer-allow-text-properties t)
-           (max-length
-            (apply #'max
-                   (mapcar
-                    (lambda (x)
-                      (length (symbol-name x)))
-                    (face-list))))
-           (counsel--faces-fmt (format "%%-%ds  " max-length))
-           (ivy-format-function #'counsel--faces-format-function))
-      (ivy-read "%d Face: " (face-list)
-                :require-match t
-                :action #'counsel-faces-action-describe
-                :preselect (symbol-name (face-at-point t))
-                :history 'counsel-faces-history
-                :caller 'counsel-faces
-                :sort t)))
+;; You can describe, customize, insert or kill the name or selected
+;; candidate."
+;;     (interactive)
+;;     (let* ((minibuffer-allow-text-properties t)
+;;            (max-length
+;;             (apply #'max
+;;                    (mapcar
+;;                     (lambda (x)
+;;                       (length (symbol-name x)))
+;;                     (face-list))))
+;;            (counsel--faces-fmt (format "%%-%ds  " max-length))
+;;            (ivy-format-function #'counsel--faces-format-function))
+;;       (ivy-read "%d Face: " (face-list)
+;;                 :require-match t
+;;                 :action #'counsel-faces-action-describe
+;;                 :preselect (symbol-name (face-at-point t))
+;;                 :history 'counsel-faces-history
+;;                 :caller 'counsel-faces
+;;                 :sort t)))
 
 ;;;###autoload
 (defun +ivy-recentf-transformer (str)
