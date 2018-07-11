@@ -126,7 +126,6 @@
  doom-neotree-chevron-size 0.6
  ;; scroll-conservatively 0
  doom-line-numbers-visual-style t
- treemacs--icon-size 10
  browse-url-browser-function 'xwidget-webkit-browse-url
  indicate-buffer-boundaries nil
  frame-alpha-lower-limit 0
