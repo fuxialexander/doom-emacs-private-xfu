@@ -381,8 +381,8 @@ If run interactively, get ENTRY from context."
 
 (defun +org-private|setup-keybinds ()
   (require 'evil-org)
-  (add-hook 'org-tab-first-hook #'+org|toggle-only-current-fold t)
-  (advice-add #'org-return-indent :after #'+org*return-indent-in-src-blocks)
+  (add-hook 'org-tab-first-hook #'+org|cycle-only-current-subtree t)
+  (advice-add #'org-return-indent :after #'+org*fix-newline-and-indent-in-src-blocks)
   (evil-define-key* 'insert evil-org-mode-map
     ;; dedent with shift-tab in insert mode
     [backtab] #'+org/dedent)
