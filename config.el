@@ -472,3 +472,6 @@ PROJECT: `cl-struct-treemacs-project'"
                         '(magit org org-clock org-agenda org-capture ob ob-python org-notmuch))))
 (load! "+bindings")
 (load! "+popup")
+(after! doom-themes
+  (load! "+themes"))
+
