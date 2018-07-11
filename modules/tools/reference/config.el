@@ -1,6 +1,6 @@
 ;;; tools/reference/config.el -*- lexical-binding: t; -*-
 
-(def-package! org-ref :load-path "~/Source/playground/org-ref"
+(def-package! org-ref
   :commands (org-ref-bibtex-next-entry
              org-ref-bibtex-previous-entry
              doi-utils-get-bibtex-entry-pdf

@@ -105,7 +105,8 @@
 ;;;###autoload
 (defun org-agenda-show-daily (&optional arg)
   (interactive "P")
-  (org-agenda arg "a"))
+  (org-agenda arg "a")
+  (org-agenda-goto-today))
 
 ;;;###autoload
 (defun cfw:open-org-calendar-withoutkevin ()

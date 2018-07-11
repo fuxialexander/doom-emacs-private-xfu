@@ -22,11 +22,11 @@
        doom-dashboard
        doom-modeline
        hl-todo
-       ;; fci                           ; a `fill-column' indicator
+       ;; fci
        ;; nav-flash
        ;; neotree
-       treemacs                      ; a project drawer, like neotree but cooler
-       pretty-code                   ; replace bits of code with pretty symbols
+       treemacs
+       pretty-code
        (popup
         +all
         +defaults)
@@ -104,7 +104,7 @@
    (:eval (if (buffer-file-name)
               (abbreviate-file-name (buffer-file-name))
             "%b")))
- doom-font (font-spec :family "SF Mono" :size 10)
+ doom-font (font-spec :family "SF mono" :size 10)
  doom-variable-pitch-font
  (font-spec
   :family "SF Compact Display"
@@ -115,7 +115,7 @@
   :registry "iso10646-1")
  doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 10)
  doom-big-font (font-spec :family "SF Mono" :size 14)
- ovp-font "Iosevka"
+ ovp-font "Sarasa Mono SC"
  doom-theme 'doom-city-lights
  doom-line-numbers-style nil
  +doom-modeline-buffer-file-name-style 'truncate-upto-project
@@ -126,6 +126,7 @@
  doom-neotree-chevron-size 0.6
  ;; scroll-conservatively 0
  doom-line-numbers-visual-style t
+ treemacs--icon-size 10
  browse-url-browser-function 'xwidget-webkit-browse-url
  indicate-buffer-boundaries nil
  frame-alpha-lower-limit 0
@@ -134,9 +135,8 @@
  which-key-idle-delay 0.3)
 
 (set-env! "PATH" "MANPATH"
-          ;; "http_proxy" "socks_proxy" "https_proxy"
-          ;; "all_proxy" "no_proxy"
-          )
+          "http_proxy" "socks_proxy" "https_proxy"
+          "all_proxy" "no_proxy")
 
 (or standard-display-table
     (setq standard-display-table (make-display-table)))

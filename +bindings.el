@@ -29,10 +29,6 @@
       :nie "M-F" (lambda! (swiper
                            (if (symbol-at-point)
                                (format "\\_<%s\\_> " (symbol-at-point)) nil)))
-      (:map universal-argument-map
-        "C-u" nil
-        (:leader
-          :n "u" #'universal-argument-more))
       (:after outline
         :map (outline-mode-map outline-minor-mode-map)
         :nvime "C-h" #'dwim-jump

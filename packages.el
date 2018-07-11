@@ -39,5 +39,6 @@
 (package! worf)
 (package! function-args)
 (package! snakemake-mode)
+(package! deadgrep)
 ;; * Maintain
 (package! esup)

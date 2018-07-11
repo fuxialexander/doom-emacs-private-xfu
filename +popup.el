@@ -25,6 +25,5 @@
 
 ;; * lang
 ;; ** python
-(set-popup-rule! "^\\*Anaconda\\*" :side 'right :size 80 :quit t :transient t)
-
+(set-popup-rule! "^\\*Anaconda\\*" :side 'right :size 90 :quit t :transient t)
 

@@ -28,7 +28,6 @@
 (add-hook! minibuffer-setup (setq-local show-trailing-whitespace nil))
 (remove-hook 'text-mode-hook #'hl-line-mode)
 (remove-hook 'conf-mode-hook #'hl-line-mode)
-
 ;; ** web
 (after! eww
   (advice-add 'eww-display-html :around
@@ -41,7 +40,6 @@
   (advice-add 'xwidget-webkit-new-session :override #'*xwidget-webkit-new-session)
   (advice-add 'xwidget-webkit-goto-url :override #'*xwidget-webkit-goto-url)
   (setq xwidget-webkit-enable-plugins t))
-
 ;; ** tools
 ;; *** deadgrep
 (def-package! deadgrep
@@ -49,34 +47,24 @@
 ;; *** avy
 (def-package! ace-link
   :commands (ace-link))
-
 (after! avy
   (setq avy-keys '(?a ?s ?d ?f ?j ?k ?l ?\;)))
-
 (after! ace-window
   (setq aw-keys '(?f ?d ?s ?r ?e ?w)
         aw-scope 'frame
         aw-ignore-current t
         aw-background nil))
-
-
 ;; *** outline
-(add-hook 'emacs-lisp-mode-hook #'outline-minor-mode)
-(add-hook 'emacs-lisp-mode-hook #'outshine-hook-function)
-(add-hook 'python-mode-hook #'outline-minor-mode)
-(add-hook 'python-mode-hook #'outshine-hook-function)
-
 (def-package! outshine :load-path "~/.doom.d/local/"
-  :commands (outshine-hook-function)
+  :hook ((python-mode . outshine-hook-function)
+         (emacs-lisp-mode . outshine-hook-function))
   :config
   (map! :map outline-minor-mode-map
         :nm [tab] #'outline-cycle
         :nm [backtab] #'outshine-cycle-buffer))
-
 (def-package! counsel-oi :load-path "~/.doom.d/local/"
   :after (outshine)
   :commands (counsel-oi))
-
 ;; *** magit
 (def-package! orgit :after (magit org))
 (after! magithub
@@ -88,8 +76,6 @@
   (magit-wip-after-apply-mode 1)
   (setq magit-save-repository-buffers 'dontask)
   (advice-add 'magit-list-repositories :override #'*magit-list-repositories))
-
-
 ;; *** keycast
 (def-package! keycast :load-path "~/.doom.d/local/"
   :commands (keycast-mode)
@@ -99,20 +85,16 @@
                                    (evil-forward-char nil nil)
                                    (evil-backward-char nil nil)
                                    (self-insert-command nil nil))))
-
 ;; *** tldr
 (def-package! tldr
   :commands (tldr)
   :config
   (setq tldr-directory-path (concat doom-etc-dir "tldr/")))
-
 ;; *** color-picker
 (def-package! webkit-color-picker :load-path "/Users/xfu/Source/playground/emacs-webkit-color-picker"
   :commands (webkit-color-picker-show)
   :config
   (require 'xwidget))
-
-
 ;; *** ivy
 ;; **** ivy-advice
 (after! lv
@@ -165,7 +147,6 @@
 (after! ivy-rich
   (defun ivy-rich-pad (str len &optional left)
   "Use space to pad STR to LEN of length.
-
 When LEFT is not nil, pad from left side."
   (let ((str-len (string-width str)))
     (cond ((< str-len len)
@@ -247,16 +228,13 @@ When LEFT is not nil, pad from left side."
   (ivy-add-actions
    'ivy-switch-buffer
    '(("d" (lambda (buf) (display-buffer buf)) "display")))
-
 ;; **** counsel-M-x
   (ivy-add-actions
    'counsel-M-x
    `(("h" +ivy/helpful-function "Helpful"))))
-
 ;; **** counsel-tramp
 (def-package! counsel-tramp :load-path "~/.doom.d/local/"
   :commands (counsel-tramp))
-
 ;; *** projectile
 (after! projectile
   (setq projectile-ignored-projects '("~/" "/tmp")
@@ -265,7 +243,6 @@ When LEFT is not nil, pad from left side."
           (or (file-remote-p root)
               (string-match ".*Trash.*" root)
               (string-match ".*Cellar.*" root)))))
-
 ;; *** iterm
 (def-package! iterm :load-path "~/.doom.d/local"
   :commands (iterm-cd
@@ -283,16 +260,12 @@ When LEFT is not nil, pad from left side."
   (setq recentf-auto-cleanup 60)
   (add-to-list 'recentf-exclude 'file-remote-p)
   (add-to-list 'recentf-exclude ".*Cellar.*"))
-
 ;; *** term
 (after! term
   (add-hook 'term-mode-hook #'solaire-mode))
 ;; *** comint
 (after! comint
   (add-hook 'comint-preoutput-filter-functions #'dirtrack-filter-out-pwd-prompt))
-
-
-
 (after! flycheck-posframe
   (setq flycheck-posframe-warning-prefix "⚠ "
         flycheck-posframe-info-prefix "··· "
@@ -301,7 +274,6 @@ When LEFT is not nil, pad from left side."
   (advice-add 'flycheck-posframe-show-posframe :override #'*flycheck-posframe-show-posframe)
   ;; (advice-add '+syntax-checker-cleanup-popup :override #'+syntax-checker*cleanup-popup)
   )
-
 ;; ** edit
 ;; *** company
 (after! company
@@ -315,25 +287,24 @@ When LEFT is not nil, pad from left side."
         company-backends
         '(company-capf company-dabbrev company-files company-yasnippet)
         company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode)))
-
 ;; *** language
 ;; **** elisp
 (after! elisp-mode
+  (add-hook 'emacs-lisp-mode-hook #'outline-minor-mode)
   (set-lookup-handlers! 'emacs-lisp-mode :documentation #'helpful-at-point))
 (after! helpful
   (set-lookup-handlers! 'helpful-mode :documentation #'helpful-at-point))
 ;; **** python
 (after! python
-  (set-company-backend! 'python-mode 'company-anaconda)
+  (add-hook 'python-mode-hook #'outline-minor-mode)
+  (set-company-backend! 'python-mode '(company-anaconda :with company-yasnippet company-dabbrev company-files))
   (set-lookup-handlers! 'python-mode :documentation #'anaconda-mode-show-doc))
 ;; **** sed
 (def-package! sed-mode
   :commands (sed-mode))
-
 ;; *** yasnippet
 (def-package! ivy-yasnippet
   :commands (ivy-yasnippet))
-
 ;; *** evil
 (after! evil-mc
   ;; Make evil-mc resume its cursors when I switch to insert mode
@@ -353,7 +324,6 @@ When LEFT is not nil, pad from left side."
         :i "C-d" #'lispy-delete
         :i "C-u" #'universal-argument
         :i [remap delete-backward-char] #'lispy-delete-backward))
-
 (def-package! lispyville
   :after (evil)
   :hook (lispy-mode . lispyville-mode)
@@ -364,15 +334,13 @@ When LEFT is not nil, pad from left side."
      prettify
      escape
      (slurp/barf-lispy))))
-
 (def-package! worf
   :hook (org-mode . worf-mode)
   :config
   (map! :map worf-mode-map
-        :i "M-]" (lambda! (insert " \\\(  \\\) ") (backward-char 4))
-        :i "M-}" (lambda! (insert " \\[  \\] ") (backward-char 4))
-        :i "M-[" (lambda! (insert " [ ] "))))
-
+        :i "M-]" (lambda! (insert "\\\(  \\\) ") (backward-char 4))
+        :i "M-}" (lambda! (insert "\\[  \\] ") (backward-char 4))
+        :i "M-[" (lambda! (insert "[ ] "))))
 ;; *** electric
 (def-package! electric-operator
   :hook ((sh-mode . electric-operator-mode)
@@ -396,14 +364,12 @@ When LEFT is not nil, pad from left side."
                                         (cons ">=" " >= ")
                                         (cons ">" " > ")
                                         (cons "|" " | ")))
-
 ;; *** smartparens
 (after! smartparens
   (add-hook 'minibuffer-setup-hook #'smartparens-mode)
   (add-hook 'eshell-mode-hook #'smartparens-mode)
   ;; Auto-close more conservatively and expand braces on RET
   (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
-
   (let ((unless-list '(sp-point-before-word-p
                        sp-point-after-word-p
                        sp-point-before-same-p)))
@@ -424,7 +390,6 @@ When LEFT is not nil, pad from left side."
 (after! treemacs
    (defun treemacs--add-root-element (project)
     "Insert a new root node for the given PROJECT node.
-
 PROJECT: `cl-struct-treemacs-project'"
     (insert treemacs-icon-root)
     (treemacs--set-project-position project (point-marker))
@@ -437,7 +402,6 @@ PROJECT: `cl-struct-treemacs-project'"
                  :state 'root-node-closed
                  :path (treemacs-project->path project)
                  :depth 0))))
-
 ;; ** auths
 ;; *** conda
 (setq +python-conda-home
@@ -450,7 +414,6 @@ PROJECT: `cl-struct-treemacs-project'"
             "/ssh:xfu@hpc13.cse.cuhk.edu.hk:/research/kevinyip10/xfu/miniconda3"
             "/ssh:xfu@hpc14.cse.cuhk.edu.hk:/research/kevinyip10/xfu/miniconda3"
             "/ssh:xfu@hpc15.cse.cuhk.edu.hk:/research/kevinyip10/xfu/miniconda3"))
-
 ;; *** tramp
 (after! tramp-sh
   (setq tramp-default-method
