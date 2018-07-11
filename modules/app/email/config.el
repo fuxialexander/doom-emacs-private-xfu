@@ -45,6 +45,8 @@
         notmuch-search-oldest-first nil
         send-mail-function 'sendmail-send-it
         sendmail-program "msmtp"
+        notmuch-wash-original-regexp "^\\(On .*, .* wrote:\\|From: .*<.*@.*>\\)$"
+        notmuch-wash-signature-regexp "^\\(-- ?\\|--\\|_+\\|傅熙\\)$"
         notmuch-search-result-format '(("date" . "%12s ")
                                        ("count" . "%-7s ")
                                        ("authors" . "%-30s ")
@@ -99,6 +101,7 @@
 ;; ** advices
   (advice-add #'notmuch-start-notmuch-sentinel :override #'+mail/notmuch-start-notmuch-sentinel)
   (advice-add #'notmuch-show :override #'+mail/notmuch-show-reuse-buffer)
+  ;; (advice-remove #'notmuch-show  #'+mail/notmuch-show-reuse-buffer)
   (advice-add #'notmuch-hello-insert-searches :override #'+mail/notmuch-hello-insert-searches)
   (advice-add #'notmuch-hello-insert-saved-searches :override #'+mail/notmuch-hello-insert-saved-searches)
   (advice-add #'notmuch-hello-insert-buttons :override #'+mail/notmuch-hello-insert-buttons)

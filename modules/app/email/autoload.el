@@ -26,7 +26,7 @@
 (defun +mail/buffer-face-mode-notmuch-show ()
   "Sets a fixed width (monospace) font in current buffer"
   (interactive)
-  (setq buffer-face-mode-face '(:family "Sarasa Mono SC" :height 1.2))
+  (setq buffer-face-mode-face '(:family "SF Mono" :height 1.2))
   (buffer-face-mode)
   (setq-local line-spacing 0.5))
 
@@ -235,6 +235,8 @@ matched."
     (add-hook 'post-command-hook #'notmuch-show-command-hook nil t)
     (jit-lock-register #'notmuch-show-buttonise-links)
     (call-interactively #'+mail/buffer-face-mode-notmuch-show)
+    (hide-mode-line-mode 1)
+    (setq header-line-format nil)
     (notmuch-tag-clear-cache)
 
     (let ((inhibit-read-only t))
@@ -248,6 +250,53 @@ matched."
         (ding)
         (message "No messages matched the query!")
         nil))))
+
+;;;###autoload
+(defun notmuch-show--build-buffer (&optional state)
+  "Display messages matching the current buffer context.
+
+Apply the previously saved STATE if supplied, otherwise show the
+first relevant message.
+
+If no messages match the query return NIL."
+  (let* ((cli-args (cons "--exclude=false"
+			 (when notmuch-show-elide-non-matching-messages
+			   (list "--entire-thread=false"))))
+	 (queries (notmuch-show--build-queries
+		   notmuch-show-thread-id notmuch-show-query-context))
+	 (forest nil)
+	 ;; Must be reset every time we are going to start inserting
+	 ;; messages into the buffer.
+	 (notmuch-show-previous-subject ""))
+    ;; Use results from the first query that returns some.
+    (while (and (not forest) queries)
+      (setq forest (notmuch-query-get-threads
+		    (append cli-args (list "'") (car queries) (list "'"))))
+      (setq queries (cdr queries)))
+    (when forest
+      (notmuch-show-insert-forest forest)
+
+      ;; Store the original tags for each message so that we can
+      ;; display changes.
+      (notmuch-show-mapc
+       (lambda () (notmuch-show-set-prop :orig-tags (notmuch-show-get-tags))))
+
+      ;; Set the header line to the subject of the first message.
+      ;; (setq header-line-format
+	  ;;   (replace-regexp-in-string "%" "%%"
+	  ;;   		      (notmuch-sanitize
+	  ;;   		       (notmuch-show-strip-re
+	  ;;   			(notmuch-show-get-subject)))))
+
+      (run-hooks 'notmuch-show-hook)
+
+      (if state
+	  (notmuch-show-apply-state state)
+	;; With no state to apply, just go to the first message.
+	(notmuch-show-goto-first-wanted-message)))
+
+    ;; Report back to the caller whether any messages matched.
+    forest))
 
 ;;;###autoload
 (defun +mail/notmuch-hello-insert-searches (title query-list &rest options)
