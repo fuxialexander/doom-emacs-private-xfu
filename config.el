@@ -43,6 +43,9 @@
   (setq xwidget-webkit-enable-plugins t))
 
 ;; ** tools
+;; *** deadgrep
+(def-package! deadgrep
+  :commands (deadgrep))
 ;; *** avy
 (def-package! ace-link
   :commands (ace-link))
