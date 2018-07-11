@@ -6,24 +6,24 @@
 
 
 ;; * help
-(set-popup-rule! "^\\*info.*" :size 80 :side 'right :transient t :select t :quit t)
-(set-popup-rule! "^\\*Man.*" :size 80 :side 'right :transient t :select t :quit t)
-(set-popup-rule! "^\\*tldr\\*" :size 80 :side 'right :select t :quit t)
-(set-popup-rule! "^\\*helpful.*" :size 80 :side 'right :select t :quit t)
-(set-popup-rule! "^\\*Help.*" :size 80 :height 0.6 :side 'right :select t :quit t)
-(set-popup-rule! "^ \\*Metahelp.*" :size 80 :side 'right :select t :quit t)
-(set-popup-rule! "^\\*Apropos.*" :size 80 :height 0.6 :side 'right :select t :quit t)
+(set-popup-rule! "^\\*info.*" :size 82 :side 'right :transient t :select t :quit t)
+(set-popup-rule! "^\\*Man.*" :size 82 :side 'right :transient t :select t :quit t)
+(set-popup-rule! "^\\*tldr\\*" :size 82 :side 'right :select t :quit t)
+(set-popup-rule! "^\\*helpful.*" :size 82 :side 'right :select t :quit t)
+(set-popup-rule! "^\\*Help.*" :size 82 :height 0.6 :side 'right :select t :quit t)
+(set-popup-rule! "^ \\*Metahelp.*" :size 82 :side 'right :select t :quit t)
+(set-popup-rule! "^\\*Apropos.*" :size 82 :height 0.6 :side 'right :select t :quit t)
 
 
 ;; (set-popup-rule! "^ ?\\*NeoTree" :side ,neo-window-position :width ,neo-window-width :quit 'current :select t)
-(set-popup-rule! "\\*VC-history\\*" :slot 2 :side 'right :size 80 :modeline nil :select t :quit t)
+(set-popup-rule! "\\*VC-history\\*" :slot 2 :side 'right :size 82 :modeline nil :select t :quit t)
 
 ;; * web
-(set-popup-rule! "^\\*eww.*" :size 80 :side 'right :select t :quit t)
+(set-popup-rule! "^\\*eww.*" :size 82 :side 'right :select t :quit t)
 (set-popup-rule! "\\*xwidget" :side 'right :size 100 :select t)
 
 
 ;; * lang
 ;; ** python
-(set-popup-rule! "^\\*Anaconda\\*" :side 'right :size 90 :quit t :transient t)
+(set-popup-rule! "^\\*Anaconda\\*" :side 'right :size 82 :quit t :transient t)
 
