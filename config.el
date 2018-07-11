@@ -199,6 +199,7 @@ When LEFT is not nil, pad from left side."
           (counsel-pt)
           (counsel-ag)
           (counsel-rg)
+          (counsel-notmuch)
           (swiper)
           (counsel-irony . ivy-display-function-overlay)
           (ivy-completion-in-region . ivy-display-function-overlay)
