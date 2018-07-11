@@ -10,7 +10,7 @@
   (if-let* ((buf (cl-find-if (lambda (it) (string-match-p "^\\*notmuch" (buffer-name (window-buffer it))))
                              (doom-visible-windows))))
       (select-window (get-buffer-window buf))
-    (notmuch-search "tag:inbox")
+    (notmuch-search "tag:inbox not tag:trash")
     ;; (call-interactively 'notmuch-hello-sidebar)
     )
   (+workspace/display))
@@ -26,17 +26,25 @@
 (defun +mail/buffer-face-mode-notmuch-show ()
   "Sets a fixed width (monospace) font in current buffer"
   (interactive)
-  (setq buffer-face-mode-face '(:family "Charter" :height 1.2))
+  (setq buffer-face-mode-face '(:family "Sarasa Mono SC" :height 1.2))
   (buffer-face-mode)
   (setq-local line-spacing 0.5))
 
 ;;;###autoload
-(defun +mail/buffer-face-mode-notmuch ()
+(defun +mail/buffer-face-mode-notmuch-search ()
   "Sets a fixed width (monospace) font in current buffer"
   (interactive)
   (let ((buffer-face-mode-face '(:family "Sarasa Mono SC" :height 1.0)))
     (buffer-face-mode)
     (setq-local line-spacing 0.2)))
+
+;;;###autoload
+(defun +mail/buffer-face-mode-notmuch-tree ()
+  "Sets a fixed width (monospace) font in current buffer"
+  (interactive)
+  (let ((buffer-face-mode-face '(:family "Sarasa Mono SC" :height 1.0)))
+    (buffer-face-mode)
+    (setq-local line-spacing nil)))
 
 ;;;###autoload
 (defun +mail/notmuch-update ()
@@ -142,6 +150,33 @@
     (when err-file (ignore-errors (delete-file err-file)))))
 
 ;;;###autoload
+(defun notmuch-tree-show-message-in ()
+  "Show the current message (in split-pane)."
+  (interactive)
+  (let ((id (notmuch-tree-get-message-id))
+        (inhibit-read-only t)
+        buffer)
+    (when id
+      ;; We close and reopen the window to kill off un-needed buffers
+      ;; this might cause flickering but seems ok.
+      (notmuch-tree-close-message-window)
+      (setq notmuch-tree-message-window
+            (split-window-horizontally 60))
+      (with-selected-window notmuch-tree-message-window
+        ;; Since we are only displaying one message do not indent.
+        (let ((notmuch-show-indent-messages-width 0)
+              (notmuch-show-only-matching-messages t))
+          (setq buffer (notmuch-show id))))
+      ;; We need the `let' as notmuch-tree-message-window is buffer local.
+      (let ((window notmuch-tree-message-window))
+        (with-current-buffer buffer
+          (setq notmuch-tree-message-window window)
+          (add-hook 'kill-buffer-hook 'notmuch-tree-message-window-kill-hook)))
+      (when notmuch-show-mark-read-tags
+        (notmuch-tree-tag-update-display notmuch-show-mark-read-tags))
+      (setq notmuch-tree-message-buffer buffer))))
+
+;;;###autoload
 (defun +mail/notmuch-show-reuse-buffer (thread-id &optional elide-toggle parent-buffer query-context buffer-name)
   "Run \"notmuch show\" with the given thread ID and display results.
 
@@ -200,8 +235,6 @@ matched."
     (add-hook 'post-command-hook #'notmuch-show-command-hook nil t)
     (jit-lock-register #'notmuch-show-buttonise-links)
     (call-interactively #'+mail/buffer-face-mode-notmuch-show)
-    (let ((fill-column 120))
-      (visual-fill-column-mode))
     (notmuch-tag-clear-cache)
 
     (let ((inhibit-read-only t))
