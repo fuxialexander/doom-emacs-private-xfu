@@ -160,7 +160,7 @@ When LEFT is not nil, pad from left side."
   (setq ivy-rich--display-transformers-list
         '(ivy-switch-buffer
           (:columns
-           ((ivy-rich-candidate (:width 30))
+           ((ivy-rich-candidate (:width 30 :face bold))
             (ivy-rich-switch-buffer-size (:width 7 :face font-lock-doc-face))
             (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right))
             (ivy-rich-switch-buffer-major-mode (:width 18 :face doom-modeline-buffer-major-mode))
@@ -185,11 +185,13 @@ When LEFT is not nil, pad from left side."
             (ivy-rich-file-last-modified-time (:face font-lock-doc-face))))
           )))
 ;; **** ivy-posframe
-(after! ivy-posframe
+(after! ivy
   (advice-add #'ivy-posframe-enable :around #'doom*shut-up)
   (setq ivy-posframe-parameters
         `((min-width . 120)
           (min-height . ,ivy-height)
+          (left-fringe . 0)
+          (right-fringe . 0)
           (internal-border-width . 10))
         ivy-display-functions-alist
         '((counsel-git-grep)
