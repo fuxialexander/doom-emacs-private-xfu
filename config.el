@@ -389,21 +389,7 @@ When LEFT is not nil, pad from left side."
               inferior-python-mode
               inferior-ess-mode)
     #'yas-minor-mode-on))
-(after! treemacs
-   (defun treemacs--add-root-element (project)
-    "Insert a new root node for the given PROJECT node.
-PROJECT: `cl-struct-treemacs-project'"
-    (insert treemacs-icon-root)
-    (treemacs--set-project-position project (point-marker))
-    (insert
-     (propertize (concat "@" (treemacs-project->name project))
-                 'button '(t)
-                 'category 'default-button
-                 'face 'treemacs-root-face
-                 :project project
-                 :state 'root-node-closed
-                 :path (treemacs-project->path project)
-                 :depth 0))))
+
 ;; ** auths
 ;; *** conda
 (setq +python-conda-home
