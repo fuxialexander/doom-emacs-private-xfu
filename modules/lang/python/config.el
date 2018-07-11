@@ -64,8 +64,14 @@ is loaded.")
     :when (featurep! +conda)
     :config
     (setq conda-anaconda-home "/usr/local/anaconda3")
+    (defun conda--switch-buffer-auto-activate (&rest args)
+      "Add conda env activation if a buffer has a file, handling ARGS."
+      (when (eq major-mode 'python-mode)
+        (let ((filename (buffer-file-name)))
+          (when filename
+            (with-demoted-errors "Error: %S"
+              (conda-env-activate-for-buffer))))))
     (conda-env-autoactivate-mode 1)
-    ;; (add-hook 'python-mode-hook #'conda-env-activate-for-buffer)
     (conda-env-initialize-interactive-shells)
     (conda-env-initialize-eshell)
     ;; Version management with pyenv
