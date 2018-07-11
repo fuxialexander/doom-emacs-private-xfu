@@ -28,12 +28,15 @@ is loaded.")
         python-shell-prompt-detect-enabled nil
         python-shell-interpreter "python")
   :config
-  (add-hook! 'python-mode-hook #'(flycheck-mode highlight-numbers-mode))
+  (add-hook! 'python-mode-hook #'(highlight-numbers-mode))
+  (add-hook! 'python-mode-hook (lambda! (if (not (file-remote-p default-directory)) (flycheck-mode 1) (flycheck-mode -1))))
 
   (set-env! "PYTHONPATH" "PYENV_ROOT")
   (set-electric! 'python-mode :chars '(?:))
   (set-repl-handler! 'python-mode #'+python/repl)
-
+  (after! yasnippet
+    (add-hook 'python-mode-hook
+              '(lambda () (set (make-local-variable 'yas-indent-line) 'fixed))))
   (map! (:map python-mode-map
           :n "<" #'python-indent-shift-left
           :n ">" #'python-indent-shift-right
@@ -61,7 +64,7 @@ is loaded.")
     :when (featurep! +conda)
     :config
     (setq conda-anaconda-home "/usr/local/anaconda3")
-    (conda-env-autoactivate-mode -1)
+    (conda-env-autoactivate-mode 1)
     ;; (add-hook 'python-mode-hook #'conda-env-activate-for-buffer)
     (conda-env-initialize-interactive-shells)
     (conda-env-initialize-eshell)
@@ -69,35 +72,35 @@ is loaded.")
     (add-hook 'conda-postactivate-hook #'+python|add-version-to-modeline)
     (add-hook 'conda-postdeactivate-hook #'+python|add-version-to-modeline)))
 
-(def-package! lpy
-  :when (featurep! +lpy)
-  :hook ((python-mode . lpy-mode))
-  :config
-  (require 'le-python)
-  (require 'zoutline)
-  (define-minor-mode lpy-mode "Minor mode for navigating Python code similarly to LISP."
-    :keymap lpy-mode-map
-    :lighter " LPY"
-    (if lpy-mode
-        (progn
-          (setq lispy-outline-header "# ")
-          (setq-local outline-regexp "# \\*+")
-          (setq-local lispy-outline (concat "^" outline-regexp))
-          (setq-local outline-heading-end-regexp "\n")
-          (setq-local outline-level 'lpy-outline-level)
-          (setq-local fill-paragraph-function 'lpy-fill-paragraph)
-          (setq-local fill-forward-paragraph-function 'lpy-fill-forward-paragraph-function)
-          (setq-local completion-at-point-functions '(lispy-python-completion-at-point t))
-          ;; (setq-local forward-sexp-function 'lpy-forward-sexp-function)
-          )
-      (setq-local forward-sexp-function nil)))
-  (map! :map lpy-mode-map
-        "n" nil
-        :i "C-p" #'previous-line
-        :i "C-n" #'next-line)
-  (advice-add 'lispy--python-proc :override #'*lispy--python-proc)
-  (advice-add 'lispy-short-process-name :override #'*lispy-short-process-name)
-  (advice-add 'lispy-set-python-process-action :override #'*lispy-set-python-process-action))
+;; (def-package! lpy
+;;   :when (featurep! +lpy)
+;;   :hook ((python-mode . lpy-mode))
+;;   :config
+;;   (require 'le-python)
+;;   (require 'zoutline)
+;;   (define-minor-mode lpy-mode "Minor mode for navigating Python code similarly to LISP."
+;;     :keymap lpy-mode-map
+;;     :lighter " LPY"
+;;     (if lpy-mode
+;;         (progn
+;;           (setq lispy-outline-header "# ")
+;;           (setq-local outline-regexp "# \\*+")
+;;           (setq-local lispy-outline (concat "^" outline-regexp))
+;;           (setq-local outline-heading-end-regexp "\n")
+;;           (setq-local outline-level 'lpy-outline-level)
+;;           (setq-local fill-paragraph-function 'lpy-fill-paragraph)
+;;           (setq-local fill-forward-paragraph-function 'lpy-fill-forward-paragraph-function)
+;;           (setq-local completion-at-point-functions '(lispy-python-completion-at-point t))
+;;           ;; (setq-local forward-sexp-function 'lpy-forward-sexp-function)
+;;           )
+;;       (setq-local forward-sexp-function nil)))
+;;   (map! :map lpy-mode-map
+;;         "n" nil
+;;         :i "C-p" #'previous-line
+;;         :i "C-n" #'next-line)
+;;   (advice-add 'lispy--python-proc :override #'*lispy--python-proc)
+;;   (advice-add 'lispy-short-process-name :override #'*lispy-short-process-name)
+;;   (advice-add 'lispy-set-python-process-action :override #'*lispy-set-python-process-action))
 
 (def-package! lsp-python
   :commands (lsp-python-enable)

@@ -39,6 +39,7 @@
               show internal))))
     (when (eq major-mode 'python-mode)
       (setq-local python-shell-buffer-name (concat "Python:" host "-" session))
-      (setq-local lispy-python-proc
-                  (lispy--python-proc
-                   (concat "Python:" host "-" session))))))
+      ;; (setq-local lispy-python-proc
+      ;;             (lispy--python-proc
+      ;;              (concat "Python:" host "-" session)))
+      )))
