@@ -490,15 +490,20 @@ PROJECT: `cl-struct-treemacs-project'"
          '("http_proxy=http://proxy.cse.cuhk.edu.hk:8000"
            "https_proxy=http://proxy.cse.cuhk.edu.hk:8000"
            "ftp_proxy=http://proxy.cse.cuhk.edu.hk:8000"))))
-;; **** loading
+;; ** loading
 ;; load time consuming stuff when idle
-(run-with-idle-timer 30 t (lambda!
-                           (require 'org-clock)
-                           (require 'ob-ipython)
-                           (require 'org-agenda)
-                           (require 'org-capture)
-                           (require 'org-ref)))
-
+(defun auto-require-packages (packages)
+  (let* ((reqs (cl-remove-if #'featurep packages))
+         (req (pop reqs)))
+    (when req
+      (message "Loading %s" req)
+      (require req)
+      (when reqs
+        (run-with-idle-timer 1 nil #'auto-require-packages reqs)))))
+(make-thread
+ (lambda ()
+   ;; abuse idle timers in a thread to reduce blocking
+   (run-with-idle-timer 20 nil #'auto-require-packages
+                        '(magit org org-clock org-agenda org-capture ob ob-python org-notmuch))))
 (load! "+bindings")
 (load! "+popup")
-
