@@ -116,7 +116,7 @@
  doom-unicode-font (font-spec :family "SF Mono" :size 10)
  doom-big-font (font-spec :family "SF Mono" :size 14)
  ovp-font "Sarasa Mono SC"
- doom-theme 'doom-city-lights
+ doom-theme 'doom-nord
  doom-line-numbers-style nil
  +doom-modeline-buffer-file-name-style 'truncate-upto-project
  doom-neotree-enable-variable-pitch t
@@ -167,7 +167,6 @@
  +file-templates-dir "~/.doom.d/templates")
 
 ;; * Keys
-
 (setq
  doom-localleader-key ","
  +default-repeat-forward-key ";"
