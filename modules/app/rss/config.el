@@ -14,6 +14,23 @@
 
 (def-package! elfeed
   :commands elfeed
+  :init
+  (defface elfeed-show-title-face '((t (:weight ultrabold :slant italic :height 1.5)))
+    "title face in elfeed show buffer"
+    :group 'elfeed)
+  (defface elfeed-show-author-face `((t (:weight light)))
+    "title face in elfeed show buffer"
+    :group 'elfeed)
+  (defface elfeed-show-feed-face `((t (:weight bold)))
+    "title face in elfeed show buffer"
+    :group 'elfeed)
+  (defface elfeed-show-tag-face `((t (:weight extralight)))
+    "tag face in elfeed show buffer"
+    :group 'elfeed)
+  (defface elfeed-show-misc-face `((t (:weight extralight)))
+    "tag face in elfeed show buffer"
+    :group 'elfeed)
+
   :config
   (setq elfeed-search-filter "@1-week-ago +unread"
         elfeed-db-directory (concat doom-local-dir "elfeed/db/")
@@ -22,6 +39,7 @@
         elfeed-search-title-min-width 80
         elfeed-show-entry-switch #'pop-to-buffer
         elfeed-show-entry-delete #'+rss/delete-pane
+        elfeed-show-refresh-function #'+rss/elfeed-show-refresh--better-style
         shr-max-image-proportion 0.6)
   (make-directory elfeed-db-directory t)
 
@@ -31,7 +49,13 @@
 
   (set-popup-rule! "\\*elfeed-xwidget-webkit*" :side 'bottom :height 40 :select t)
   ;; Enhance readability of a post
-  (add-hook 'elfeed-show-mode-hook #'+rss|elfeed-wrap)
+  (add-hook! 'elfeed-show-mode-hook
+    (+rss|elfeed-wrap)
+    (solaire-mode 1)
+    (hide-mode-line-mode 1))
+  (add-hook! 'elfeed-search-update-hook #'(solaire-mode
+                                           hide-mode-line-mode))
+
   (after! elfeed-search
     (map! :map elfeed-search-mode-map
           [remap kill-this-buffer] "q"
@@ -52,9 +76,9 @@
       (push 'elfeed-search-mode evil-snipe-disabled-modes))
     (set-evil-initial-state! 'elfeed-search-mode 'normal)
     ;; avoid ligature hang
-    (advice-add #'elfeed-search--header-1         :override #'+rss/elfeed-search--header-1)
-    (advice-add #'elfeed-show-next                :override #'+rss/elfeed-show-next)
-    (advice-add #'elfeed-show-prev                :override #'+rss/elfeed-show-prev))
+    (advice-add #'elfeed-search--header-1 :override #'+rss/elfeed-search--header-1)
+    (advice-add #'elfeed-show-next :override #'+rss/elfeed-show-next)
+    (advice-add #'elfeed-show-prev :override #'+rss/elfeed-show-prev))
 
   (after! elfeed-show
     (map! :map elfeed-show-mode-map
@@ -73,7 +97,7 @@
     (after! evil-snipe
       (push 'elfeed-show-mode evil-snipe-disabled-modes))
     (set-evil-initial-state! 'elfeed-show-mode 'normal)
-    (advice-add #'elfeed-show-entry        :override #'+rss/elfeed-show-entry))
+    (advice-add #'elfeed-show-entry :override #'+rss/elfeed-show-entry))
 
   (elfeed-org)
   (def-package! elfeed-link))
