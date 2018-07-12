@@ -48,7 +48,3 @@ Here are some stuff that I plan to work on in my spare time:
 - [ ] An ~+dtach~ module which enhances different editing experience with
   multihops TRAMP connection
 
-* TODO 
-:LOGBOOK:
-- State "TODO"       from              [2018-07-12 Thu 20:17]
-:END:
