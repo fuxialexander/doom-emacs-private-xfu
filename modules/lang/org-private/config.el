@@ -128,7 +128,7 @@ If run interactively, get ENTRY from context."
         org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 3 :fileskip0 t :stepskip0 t :tags "-COMMENT"))
         org-agenda-compact-blocks t
         org-agenda-dim-blocked-tasks nil
-        org-agenda-files (ignore-errors (directory-files org-directory t "\\.org$" t))
+        org-agenda-files (ignore-errors (directory-files org-directory t "^\\(_.*\\|ref\\)\\.org$" t))
         org-agenda-follow-indirect t
         org-agenda-ignore-properties '(effort appt category)
         org-agenda-inhibit-startup t

@@ -49,6 +49,7 @@
 ;;;###autoload
 (defun +mail/notmuch-update ()
   (interactive)
+  (message "Updating mails...")
   (start-process-shell-command
    "notmuch update"
    nil

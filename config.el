@@ -431,75 +431,9 @@
            "https_proxy=http://proxy.cse.cuhk.edu.hk:8000"
            "ftp_proxy=http://proxy.cse.cuhk.edu.hk:8000"))))
 ;; ** loading
-;; load time consuming stuff when idle
-(defun auto-require-packages (packages)
-  (let* ((reqs (cl-remove-if #'featurep packages))
-         (req (pop reqs)))
-    (when req
-      (message "Loading %s" req)
-      (require req)
-      (when reqs
-        (run-with-idle-timer 2 nil #'auto-require-packages reqs)))))
-;; abuse idle timers in a thread to reduce blocking
-(make-thread
- (lambda ()
-   (run-with-idle-timer
-    10 nil #'auto-require-packages
-    '(magit
-      org
-      org-clock
-      org-agenda
-      org-capture
-      python
-      tramp-sh
-      outline
-      outshine
-      elisp-mode
-      lispy
-      avy
-      hydra
-      ess
-      ob
-      ob-python
-      ob-shell
-      ob-R
-      org-notmuch
-      mm-view
-      message
-      notmuch-lib
-      notmuch-tag
-      notmuch-show
-      notmuch-tree
-      notmuch-mua
-      notmuch-hello
-      notmuch-maildir-fcc
-      notmuch-message
-      notmuch-parser
-      notmuch
-      org-mime
-      cl-lib
-      xml
-      xml-query
-      url-parse
-      url-queue
-      elfeed-db
-      elfeed-lib
-      elfeed-log
-      elfeed-curl
-      elfeed-search
-      elfeed-org))
-   (run-with-idle-timer 15 nil #'org-clock-load)
-   (run-with-idle-timer 60 nil #'org-clock-save)
-   (run-with-idle-timer 30 100 #'+mail/notmuch-update)))
 
 (load! "+bindings")
 (load! "+popup")
 (after! doom-themes
   (load! "+themes"))
-
-;; ** temporary fixes
-
-(advice-remove #'treemacs-select-window #'+treemacs|no-fringes)
-(advice-add #'treemacs-select-window :after #'doom--treemacs-no-fringes)
-
-
+(load! "+idle")
