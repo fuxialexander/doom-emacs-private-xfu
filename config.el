@@ -145,18 +145,6 @@
     ("o" ivy-occur :exit t)))
 ;; **** ivy-rich
 (after! ivy-rich
-  (defun ivy-rich-pad (str len &optional left)
-  "Use space to pad STR to LEN of length.
-When LEFT is not nil, pad from left side."
-  (let ((str-len (string-width str)))
-    (cond ((< str-len len)
-           (if left
-               (concat (make-string (- len str-len) ? ) str)
-             (concat str (make-string (- len str-len) ? ))))
-          ((<= len (- str-len)) "")
-          ((> str-len len)
-           (substring str 0 len))
-          (t str))))
   (setq ivy-rich--display-transformers-list
         '(ivy-switch-buffer
           (:columns
@@ -164,7 +152,7 @@ When LEFT is not nil, pad from left side."
             (ivy-rich-switch-buffer-size (:width 7 :face font-lock-doc-face))
             (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right))
             (ivy-rich-switch-buffer-major-mode (:width 18 :face doom-modeline-buffer-major-mode))
-            (ivy-rich-switch-buffer-path (:width 15)))
+            (ivy-rich-switch-buffer-path (:width 50)))
            :predicate
            (lambda (cand) (get-buffer cand)))
           counsel-M-x

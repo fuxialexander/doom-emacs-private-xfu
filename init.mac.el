@@ -113,7 +113,7 @@
   :weight 'normal
   :slant 'normal
   :registry "iso10646-1")
- doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 10)
+ doom-unicode-font (font-spec :family "SF Mono" :size 10)
  doom-big-font (font-spec :family "SF Mono" :size 14)
  ovp-font "Sarasa Mono SC"
  doom-theme 'doom-city-lights
