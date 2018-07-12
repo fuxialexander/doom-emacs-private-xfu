@@ -70,6 +70,12 @@
 (after! magithub
   (setq magithub-clone-default-directory "/Users/xfu/Source/playground/"))
 (after! magit
+  (defun +magit|remove-fringes ()
+    (set-window-fringes nil 0 0)
+    (set-window-margins nil 1 nil))
+  (add-hook 'magit-mode-hook #'+magit|remove-fringes)
+  (add-hook 'magit-popup-mode-hook #'+magit|remove-fringes)
+
   (after! solaire-mode
     (add-hook 'magit-mode-hook #'solaire-mode))
   (magit-wip-after-save-mode 1)
