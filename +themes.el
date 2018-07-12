@@ -1,7 +1,8 @@
 ;;; ~/.doom.d/+themes.el -*- lexical-binding: t; -*-
 ;; * Faces
+(setq doom-themes-common-faces-backup doom-themes-common-faces)
 (setq doom-themes-common-faces
-      (append doom-themes-common-faces
+      (append doom-themes-common-faces-backup
               '(
 ;; ** font-lock
                 (font-lock-builtin-face              :foreground builtin :slant 'italic :weight 'light)
