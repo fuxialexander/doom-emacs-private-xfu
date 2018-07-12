@@ -19,6 +19,7 @@ faster startup time and a lean, mean environment for me to play with
   annotation, table of contents, foldable code blocks and clean interface. 
 - ~ob-ipython~ and ~org~ based data science notebook with support of remote
   kernel. 
+  
 * Getting start
 :PROPERTIES:
 :ID:       D3947C92-6876-4B52-8A8C-98846A2D466E
@@ -28,10 +29,26 @@ Simply clone both ~doom-emacs~ and my config
 git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
 cd ~/.emacs.d && git checkout develop
 git clone https://github.com/fuxialexander/doom-emacs-private-xfu ~/.doom.d
-cd ~/.doom.d && git submodule update --init .
 #+END_SRC
 
-And use ~make~ to install the packages, etc.
+And use ~doom~ to install the packages, etc.
 #+BEGIN_SRC bash
-cd ~/.emacs.d && make
+export PATH="~/.emacs.d/bin:$PATH" # You can add that to your ~/.*shrc
+doom install
 #+END_SRC
+
+* To-do list
+Here are some stuff that I plan to work on in my spare time:
+- [ ] An updated Elfeed UI
+  - [ ] Automatically parse the feed to get paper ~DOI~, and fetch the corresponding
+    abstract if avaliable (currently some feeds only show title).
+  - [ ] Ability to switch between different layout which have different information
+    density
+  - [ ] Make it beautiful and modern.
+- [ ] An ~+dtach~ module which enhances different editing experience with
+  multihops TRAMP connection
+
+* TODO 
+:LOGBOOK:
+- State "TODO"       from              [2018-07-12 Thu 20:17]
+:END:
