@@ -36,7 +36,6 @@
 (package! lispy)
 (package! lispyville)
 (package! sed-mode)
-(package! worf)
 (package! function-args)
 (package! snakemake-mode)
 (package! deadgrep)

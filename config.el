@@ -337,13 +337,7 @@ When LEFT is not nil, pad from left side."
      prettify
      escape
      (slurp/barf-lispy))))
-(def-package! worf
-  :hook (org-mode . worf-mode)
-  :config
-  (map! :map worf-mode-map
-        :i "M-]" (lambda! (insert "\\\(  \\\) ") (backward-char 4))
-        :i "M-}" (lambda! (insert "\\[  \\] ") (backward-char 4))
-        :i "M-[" (lambda! (insert "[ ] "))))
+
 ;; *** electric
 (def-package! electric-operator
   :hook ((sh-mode . electric-operator-mode)
