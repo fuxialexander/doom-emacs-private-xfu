@@ -161,11 +161,11 @@
           [tab] nil
           "S-TAB" nil
           [backtab] nil
-          "s-o" #'company-search-kill-others
+          "M-o" #'company-search-kill-others
           "C-f" #'counsel-company
           "<f1>" #'company-show-doc-buffer
-          "C-s-f" #'company-search-candidates
-          "s-f" #'company-filter-candidates)
+          "C-M-f" #'company-search-candidates
+          "M-f" #'company-filter-candidates)
         ;; Automatically applies to `company-filter-map'
         (:map company-search-map
           "C-n" #'company-search-repeat-forward
@@ -198,25 +198,12 @@
 
 ;; *** org
 (after! org
-  (do-repeat! org-forward-heading-same-level org-forward-heading-same-level org-backward-heading-same-level)
   (do-repeat! org-next-item org-next-item org-previous-item)
   (do-repeat! org-next-link org-next-link org-previous-link)
   (do-repeat! org-next-block org-next-block org-previous-block)
-  (do-repeat! org-next-visible-heading org-next-visible-heading org-previous-visible-heading)
-  (do-repeat! org-backward-heading-same-level org-forward-heading-same-level org-backward-heading-same-level)
   (do-repeat! org-previous-item org-next-item org-previous-item)
   (do-repeat! org-previous-link org-next-link org-previous-link)
-  (do-repeat! org-previous-block org-next-block org-previous-block)
-  (do-repeat! org-previous-visible-heading org-next-visible-heading org-previous-visible-heading))
-
-;; *** buffer
-(do-repeat! previous-buffer next-buffer previous-buffer)
-(do-repeat! next-buffer next-buffer previous-buffer)
-
-;; *** workspace
-(after! persp
-  (do-repeat! +workspace/switch-left +workspace/switch-left +workspace/switch-right)
-  (do-repeat! +workspace/switch-right +workspace/switch-left +workspace/switch-right))
+  (do-repeat! org-previous-block org-next-block org-previous-block))
 
 ;; *** git
 (after! git-gutter
