@@ -112,8 +112,7 @@ If run interactively, get ENTRY from context."
 
 
 (remove-hook! 'org-mode-hook #'(visual-line-mode
-                                toc-org-enable
-                                org-bullets-mode))
+                                toc-org-enable))
 
 ;; (add-hook 'org-mode-hook #'+org-private|setup-editing t)
 (add-hook 'org-mode-hook #'auto-fill-mode)

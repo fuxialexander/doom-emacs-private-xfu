@@ -23,8 +23,7 @@
       evil-escape-key-sequence nil
       ;; mac-frame-tabbing nil
       line-spacing nil
-      frame-resize-pixelwise t
-      org-bullets-bullet-list '("#" "#" "#" "#" "#" "#" "#" "#"))
+      frame-resize-pixelwise t)
 (add-hook! minibuffer-setup (setq-local show-trailing-whitespace nil))
 (remove-hook 'text-mode-hook #'hl-line-mode)
 (remove-hook 'conf-mode-hook #'hl-line-mode)

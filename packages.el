@@ -9,7 +9,7 @@
 (package! ob-sql-mode :disable t)
 (package! ob-translate :disable t)
 (package! ob-translate :disable t)
-(package! org-bullets :disable t)
+;; (package! org-bullets :disable t)
 (package! ivy-rich :recipe (:fetcher github :repo "Yevgnen/ivy-rich" :branch "customize" :files ("*")))
 ;; * UI
 (package! prettify-utils :recipe (:fetcher github :repo "Ilazki/prettify-utils.el" :files ("*")))
