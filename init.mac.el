@@ -127,6 +127,7 @@
  ;; scroll-conservatively 0
  doom-line-numbers-visual-style t
  browse-url-browser-function 'xwidget-webkit-browse-url
+ org-bullets-bullet-list '("◉")
  indicate-buffer-boundaries nil
  frame-alpha-lower-limit 0
  indicate-empty-lines nil
