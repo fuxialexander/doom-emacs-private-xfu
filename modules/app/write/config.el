@@ -18,33 +18,74 @@
           langtool-mother-tongue +langtool-mother-tongue
           langtool-language-tool-jar +langtool-jar-path)))
 (def-package! wordnut
-    :commands (wordnut-search
-               wordnut-lookup-current-word)
-    :config
-    (add-hook 'wordnut-mode-hook '+write/buffer-face-mode-dict)
-    (set-popup-rule! "\\*WordNut" :size 80 :side 'right :select t :quit t)
-    (map! :map wordnut-mode-map
-          :nm "<C-return>"   (lambda! (osx-dictionary--view-result
-                             (substring-no-properties (car wordnut-completion-hist))))
-          :nm "RET"     #'wordnut-lookup-current-word
-          :nm "gh"      #'wordnut-lookup-current-word
-          :nm "zB"      #'outline-hide-body ; Hide all bodies, Emacs has "C-c C-t".
-          :nm "zb"      #'outline-hide-entry ; Hide current body, Emacs has "C-c C-c".
-          :nm "ze"      #'outline-show-entry ; Show current body only, not subtree, reverse of outline-hide-entry, Emacs has "C-c C-e".
-          :nm "zl"      #'outline-hide-leaves ; Like `outline-hide-body#' but for current subtree only, Emacs has "C-c C-l".
-          :nm "zK"      #'outline-show-branches ; Show all children recursively but no body.  Emacs has "C-c C-k".
-          :nm "zk"      #'outline-show-children ; Direct children only unlike `outline-show-branches#', and no content unlike `outline-show-entry#' and `outline-toggle-children#'.  Emacs has "C-c TAB".
-          :nm "zp"      #'outline-hide-other ; Hide all nodes and bodies except current body.  Emacs has "C-c C-o".
-          :nm [tab]     #'org-cycle
-          :nm [backtab] #'org-shifttab
-          :nm "["       #'org-previous-visible-heading
-          :nm "]"       #'org-next-visible-heading
-          :nm "K"       #'outline-backward-same-level
-          :nm "J"       #'outline-forward-same-level
-          :nm "H"       #'wordnut-history-backward
-          :nm "L"       #'wordnut-history-forward
-          :nm "gk"      #'outline-backward-same-level
-          :nm "gj"      #'outline-forward-same-level))
+  :commands (wordnut-search
+             wordnut-lookup-current-word)
+  :config
+  (define-derived-mode wordnut-mode org-mode "WordNut"
+    "Major mode interface to WordNet lexical database.
+Turning on wordnut mode runs the normal hook `wordnut-mode-hook'.
+
+\\{wordnut-mode-map}"
+
+    (setq-local visual-line-fringe-indicators '(nil top-right-angle))
+    (visual-line-mode 1)
+
+    ;; we make a custom imenu index
+    (setq imenu-generic-expression nil)
+    (setq-local imenu-create-index-function 'wordnut--imenu-make-index)
+    (imenu-add-menubar-index)
+
+    ;; (setq font-lock-defaults '(wordnut-font-lock-keywords))
+
+    ;; if user has adaptive-wrap mode installed, use it
+    (if (and (fboundp 'adaptive-wrap-prefix-mode)
+             (boundp 'adaptive-wrap-extra-indent))
+        (progn
+          (setq adaptive-wrap-extra-indent 3)
+          (adaptive-wrap-prefix-mode 1))))
+  (defun wordnut--format-buffer ()
+    (let ((inhibit-read-only t)
+          (case-fold-search nil))
+      ;; delete the 1st empty line
+      (goto-char (point-min))
+      (delete-blank-lines)
+
+      ;; make headings
+      (delete-matching-lines "^ +$" (point-min) (point-max))
+      (while (re-search-forward
+              (concat "^" (regexp-opt wordnut-section-headings t) ".* \\(of \\)?\\(\\w+\\) \\(\\w+\\)\n\n.*\\([0-9]+\\) sense.*") nil t)
+        (replace-match "* \\1 :\\3:\n"))
+
+      (goto-char (point-min))
+      (while (re-search-forward
+              (concat "^" (regexp-opt wordnut-section-headings t) ".* \\(of \\)?\\(\\w+\\) \\(\\w+\\)") nil t)
+        (replace-match "* \\1 :\\3:"))
+
+      ;; remove empty entries
+      (goto-char (point-min))
+      (while (re-search-forward "^\\* .+\n\n\\*" nil t)
+        (replace-match "*" t t)
+        ;; back over the '*' to remove next matching lines
+        (backward-char))
+
+      ;; make sections
+      (goto-char (point-min))
+      (while (re-search-forward "^Sense \\([0-9]+\\)\n" nil t)
+        (replace-match "** \\1 "))
+
+      ;; remove the last empty entry
+      (goto-char (point-max))
+      (if (re-search-backward "^\\* .+\n\\'" nil t)
+          (replace-match "" t t))
+
+      (goto-char (point-min))))
+  (set-popup-rule! "\\*WordNut" :size 80 :side 'right :select t :quit t)
+  (map! :map wordnut-mode-map
+        :nm "<C-return>" (lambda! (osx-dictionary--view-result
+                                   (substring-no-properties (car wordnut-completion-hist))))
+        :nm "RET" #'wordnut-lookup-current-word
+        :nm "q" #'quit-window
+        :nm "gh" #'wordnut-lookup-current-word))
 (def-package! synosaurus
     :commands (synosaurus-mode
                synosaurus-lookup
