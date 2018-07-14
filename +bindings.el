@@ -183,6 +183,10 @@
         :map ivy-minibuffer-map
         "TAB" #'ivy-alt-done
         "M-o" #'ivy-posframe-dispatching-done
+        "M-j" #'ivy-next-line
+        "M-k" #'ivy-previous-line
+        "C-j" #'ivy-next-history-element
+        "C-k" #'ivy-previous-history-element
         "C-l" #'ivy-partial)
       (:after info
         :map Info-mode-map
