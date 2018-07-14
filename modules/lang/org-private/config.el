@@ -307,6 +307,7 @@ If run interactively, get ENTRY from context."
         org-cycle-separator-lines 1
         org-mac-Skim-highlight-selection-p t
         org-enforce-todo-dependencies t
+        org-ellipsis "⤵"
         org-entities-user
         '(("flat"  "\\flat" nil "" "" "266D" "♭")
           ("sharp" "\\sharp" nil "" "" "266F" "♯"))
