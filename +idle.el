@@ -70,7 +70,6 @@
       org-ref-citeproc
       org-ref-ivy-cite
       org-ref-biorxiv
-      org-ref-latex
       org-ref-scopus
       org-ref-wos
       org-ref
@@ -117,4 +116,5 @@
                           "/Users/xfu/Dropbox/org/reference/Bibliography.bib"))
    (run-with-idle-timer 30 nil #'org-clock-load)
    (run-with-timer 60 500 #'org-clock-save)
+   (run-with-timer 60 500 #'elfeed-update)
    (run-with-timer 60 500 #'+mail/notmuch-update)))
