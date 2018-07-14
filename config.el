@@ -149,7 +149,9 @@
     ("C" ivy-toggle-case-fold)
     ("o" ivy-occur :exit t)))
 ;; **** ivy-rich
-(after! ivy-rich
+(def-package! ivy-rich
+  :commands (ivy-rich-mode)
+  :init
   (setq ivy-rich--display-transformers-list
         '(ivy-switch-buffer
           (:columns
@@ -179,6 +181,7 @@
           )))
 ;; **** ivy-posframe
 (after! ivy
+  (ivy-rich-mode 1)
   (advice-add #'ivy-posframe-enable :around #'doom*shut-up)
   (setq ivy-posframe-parameters
         `((min-width . 120)
@@ -199,7 +202,6 @@
           (t . ivy-posframe-display-at-frame-center))))
 ;; **** ivy-config
 (after! ivy
-  (ivy-rich-mode)
   (setq ivy-use-selectable-prompt t
         ivy-auto-select-single-candidate t
         ivy-rich-parse-remote-buffer nil
