@@ -82,7 +82,7 @@
   (setq magit-save-repository-buffers 'dontask)
   (advice-add 'magit-list-repositories :override #'*magit-list-repositories))
 ;; *** keycast
-(def-package! keycast :load-path (concat doom-private-dir "local/")
+(def-package! keycast :load-path "~/.doom.d/local/keycast.el"
   :commands (keycast-mode)
   :config
   (setq keycast-substitute-alist '((evil-next-line nil nil)
