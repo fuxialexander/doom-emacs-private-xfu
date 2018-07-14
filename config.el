@@ -438,3 +438,8 @@
 (after! doom-themes
   (load! "+themes"))
 (load! "+idle")
+;; ** Hacks
+(after! ivy
+  (dolist (fn '(swiper counsel-rg counsel-ag counsel-pt counsel-grep counsel-git-grep))
+    (setf (alist-get fn ivy-display-functions-alist) #'ivy-display-function-fallback)))
+
