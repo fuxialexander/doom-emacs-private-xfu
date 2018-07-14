@@ -70,7 +70,7 @@
 %i
 %?"  :clock-in t  )
    ("M" "Meeting" entry
-    (file+olp+datetree "~/Dropbox/org/meeting.org")
+    (file+olp+datetree "~/Dropbox/org/_meeting.org")
     "* %^{Logging for...} :logs:communication:
 %^{Effort}p
 %i
@@ -94,7 +94,7 @@
 %i
 %?"  :clock-in t  )
    ("i" "Idea" entry
-    (file "~/Dropbox/org/idea.org")
+    (file "~/Dropbox/org/_idea.org")
     "* %A :idea:
 :PROPERTIES:
 :Created: %U
@@ -103,7 +103,7 @@
 %i
 %?")
    ("drl" "Daily Review with link" entry
-    (file+olp+datetree "~/Dropbox/org/review.org")
+    (file+olp+datetree "~/Dropbox/org/_review.org")
     "* %^{Review} :review:daily:
 :PROPERTIES:
 :Created: %U
@@ -111,21 +111,21 @@
 :END:
 %?" :time-prompt t)
    ("dr" "Daily Review" entry
-    (file+olp+datetree "~/Dropbox/org/review.org")
+    (file+olp+datetree "~/Dropbox/org/_review.org")
     "* %^{Review} :review:daily:
 :PROPERTIES:
 :Created: %U
 :END:
 %?" :time-prompt t)
    ("wr" "Week Review" entry
-    (file+olp+datetree "~/Dropbox/org/review.org")
+    (file+olp+datetree "~/Dropbox/org/_review.org")
     "* %^{Review for...|Mood|Research|Learn|Entertainment|Life} :review:week:%\\1:
 :PROPERTIES:
 :Created: %U
 :END:
 %?" :time-prompt t)
    ("mr" "Month Review" entry
-    (file+olp+datetree "~/Dropbox/org/review.org")
+    (file+olp+datetree "~/Dropbox/org/_review.org")
     "* %^{Review for...|Mood|Research|Learn|Entertainment|Life} :review:month:%\\1:
 :PROPERTIES:
 :Created: %U
