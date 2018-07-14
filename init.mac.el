@@ -178,7 +178,6 @@
  evil-snipe-override-evil-repeat-keys nil
  evil-collection-company-use-tng nil
  evil-respect-visual-line-mode t
- trash-directory "/Users/xfu/.Trash/"
  +magit-hub-features t
  +evil-collection-disabled-list '(elfeed notmuch kotlin-mode simple dired helm ivy anaconda-mode outline))
 

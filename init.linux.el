@@ -115,11 +115,15 @@
 
 
 ;; * Config
+(defvar  +research-dir "/research/kevinyip10/xfu/"
+  "remote dir for research projects")
 (setq
+ trash-directory (concat +reference-dir ".Trash/")
  insert-directory-program "ls"
  user-mail-address "fuxialexander@gmail.com"
  user-full-name "Alexander Fu Xi"
  max-specpdl-size 10000
+ +magit-hub-features t
  +file-templates-dir "~/.doom.d/templates")
 
 ;; * Keys
@@ -133,8 +137,6 @@
  evil-snipe-override-evil-repeat-keys nil
  evil-collection-company-use-tng nil
  evil-respect-visual-line-mode t
- trash-directory "/research/kevinyip10/xfu/.Trash/"
- +magit-hub-features t
  +evil-collection-disabled-list '(elfeed notmuch kotlin-mode simple dired helm ivy anaconda-mode))
 
 (def-package-hook! ivy-rich

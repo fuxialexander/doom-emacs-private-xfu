@@ -2,7 +2,7 @@
 ;; * Config
 ;; ** general
 (setq request-storage-directory (concat doom-etc-dir "request/")
-      trash-directory "/Users/xfu/.Trash/"
+      trash-directory "~/.Trash/"
       delete-by-moving-to-trash t
       enable-remote-dir-locals t
       electric-pair-inhibit-predicate 'ignore
@@ -82,7 +82,7 @@
   (setq magit-save-repository-buffers 'dontask)
   (advice-add 'magit-list-repositories :override #'*magit-list-repositories))
 ;; *** keycast
-(def-package! keycast :load-path "~/.doom.d/local/"
+(def-package! keycast :load-path (concat doom-private-dir "local/")
   :commands (keycast-mode)
   :config
   (setq keycast-substitute-alist '((evil-next-line nil nil)
