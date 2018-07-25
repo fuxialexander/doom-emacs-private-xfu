@@ -162,7 +162,9 @@ If run interactively, get ENTRY from context."
   (defface org-todo-keyword-done '((t ())) "org-done" :group 'org)
   (defface org-todo-keyword-habt '((t ())) "org-habt" :group 'org)
 
-  (set-popup-rule! "^\\*Org Src" :size 100 :side 'bottom :slot -1 :height 0.6 :select t)
+
+  ;; (advice-remove #'org-src-switch-to-buffer #'+popup*org-src-pop-to-buffer)
+  ;; (set-popup-rule! "^\\*Org Src" :size 100 :side 'bottom :slot -1 :height 0.6 :select t)
   (set-popup-rule! "^CAPTURE.*\\.org$" :side 'bottom :size 0.4 :select t)
 
   ;; setup customized font lock
