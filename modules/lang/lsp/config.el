@@ -88,5 +88,5 @@
     :references #'lsp-ui-peek-find-references))
 
 ;; * R
-(def-package! lsp-r
-  :hook (R-mode . lsp-R-enable))
+;; (def-package! lsp-r
+;;   :hook (R-mode . lsp-R-enable))
