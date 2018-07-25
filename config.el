@@ -409,6 +409,8 @@
           ("hpc13" nil "/ssh:gw:")
           ("hpc14" nil "/ssh:gw:")
           ("hpc15" nil "/ssh:gw:")
+          ("proj26" nil "/ssh:gw:")
+          ("proj35" nil "/ssh:gw:")
           ("gpu7" nil "/ssh:gw:")
           ("gpu8" nil "/ssh:gw:")
           ("gpu9" nil "/ssh:gw:")
