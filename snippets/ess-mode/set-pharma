@@ -1,0 +1,88 @@
+# name: pharma
+# key: pharma
+# --
+
+library(colorspace)
+library(lattice)
+library(grid)
+
+set.pharma <-  function(run = NULL){
+  pharma.strip <<- function(which.panel, factor.levels, ...) {
+    panel.rect(0, 0, 1, 1,
+               col = rgb(66,20,95,maxColorValue = 255),
+               border = 1)
+    panel.text(x = 0.5, y = 0.5,
+               font=2,
+               lab = factor.levels[which.panel],
+               col = "#ffffff")
+  }  
+  strip <-  trellis.par.get("strip.background")
+  base.col <- c(rgb(66,20,95,maxColorValue = 255), # Dark Purple
+                rgb(198,0,111,maxColorValue = 255), # Dark Pink-Red
+                rgb(0,68,124,maxColorValue = 255), # Dark Blue
+                rgb(99,97,154,maxColorValue = 255), # Medium Purple
+                rgb(59,110,143,maxColorValue = 255), # Teal Blue
+                rgb(241,111,145,maxColorValue = 255), # Pink
+                rgb(0,102,177,maxColorValue = 255),  # Medium Blue
+                rgb(97,99,101,maxColorValue = 255)) # Medium Gray
+  
+  base.names <- c("DarkPurple","DarkPink-Red","DarkBlue","MediumPurple","TealBlue","Pink","MediumBlue","MediumGray")
+  
+  luv <- as(hex2RGB(base.col),"polarLUV")@coords
+  cols <- c(t(apply(luv,1,function(x){sequential_hcl(11,x[3],c.=x[2],l=c(x[1],100))})[-11,]))
+  
+  names(cols) <- as.vector(sapply(c("",paste(".",1:9,sep="")),function(x){paste(base.names,x,sep="")}))
+  a.col <<- cols
+  
+  idx <- which(regexpr("[.]7",names(a.col)) != -1);
+  idx <- idx[-length(idx)];
+  strip$col <- a.col[idx]
+  trellis.par.set("strip.background",strip)
+  
+  strip <-  trellis.par.get("strip.shingle")
+  
+  idx <- which(regexpr("[.]4",names(a.col)) != -1);
+  idx <- idx[-length(idx)];
+  strip$col <- a.col[idx]
+  trellis.par.set("strip.shingle",strip)
+  
+  strip <- trellis.par.get("add.text");
+  strip$col = a.col[["MediumGray"]]
+  strip$font = 2
+  strip$cex = 0.9
+  trellis.par.set("add.text",strip)
+  
+  strip <- trellis.par.get()
+  
+  strip$par.sub.text$col <- a.col[["MediumGray"]]
+  strip$par.main.text$col <- a.col[["MediumGray"]]
+  strip$par.zlab.text$col <- a.col[["MediumGray"]]
+  strip$par.ylab.text$col <- a.col[["MediumGray"]]
+  strip$par.xlab.text$col <- a.col[["MediumGray"]]
+  
+  strip$par.zlab.text$font <- 2 
+  strip$par.ylab.text$font <- 2 
+  strip$par.xlab.text$font <- 2 
+  
+  
+  strip$box.3d$col <- a.col[["MediumGray"]]
+  strip$axis.text$col <- a.col[["MediumGray"]]
+  strip$axis.line$col <- a.col[["MediumGray"]]
+  
+  trellis.par.set(strip)
+  if (!is.null(run)){
+    r <- run;
+    r@Prefs@Graph.prefs$col <-  a.col[["TealBlue"]];
+    r@Prefs@Graph.prefs$smcol <- a.col[["DarkPink-Red"]];
+    r@Prefs@Graph.prefs$bwoutcol <-a.col[["DarkPurple"]];
+    r@Prefs@Graph.prefs$bwreccol <-a.col[["DarkPurple"]];
+    r@Prefs@Graph.prefs$bwumbcol <-a.col[["DarkPurple"]];
+    r@Prefs@Graph.prefs$hicol <- a.col[["Pink"]];
+    r@Prefs@Graph.prefs$hiborder <- a.col[["MediumGray"]];
+    r@Prefs@Graph.prefs$hidcol <- a.col[["DarkPurple"]];
+    return(r)
+  } else {
+    return(invisible())
+  }
+}
+set.pharma()

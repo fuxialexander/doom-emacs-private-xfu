@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# uuid: C7F83ABA-F539-4507-A2EF-E94C9597F46D
+# contributor: Translated from textmate snippet by textmate-import.el
+# contributor: Imported by Matthew L. Fidler
+# name: repeat
+# key: repeat
+# condition: (string= "S" ess-language)
+# --
+repeat {
+	${1:statement}
+	$0
+	  # ${2:comment break-condition}
+	if (${3:break-condition}) break
+}

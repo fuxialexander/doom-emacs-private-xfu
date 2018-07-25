@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# uuid: 8AEEA5C3-AFB6-4B57-9391-750CDCD8385D
+# contributor: Translated from textmate snippet by textmate-import.el
+# contributor: Imported by Matthew L. Fidler
+# name: switch
+# key: switch
+# condition: (string= "S" ess-language)
+# --
+switch( ${1:eval-expr},
+	${2:a} = ${3:expr},
+	${4:b} = ${5:expr},
+	$0,
+	stop( "'$1' not matched" )
+)

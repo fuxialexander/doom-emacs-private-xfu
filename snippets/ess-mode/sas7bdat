@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Load sas7bdat by assignment
+# key: sas
+# --
+${1:$(concat "dat." (replace-regexp-in-string "^[.]" "" (replace-regexp-in-string "[.]$" "" (replace-regexp-in-string "[^A-Za-z.0-9]+" "." (file-name-sans-extension (file-name-nondirectory yas/text)) t t))))} <- read.sas7bdat("${1:`yas/selected-text`}");

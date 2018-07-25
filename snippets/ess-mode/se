@@ -1,0 +1,52 @@
+# name: SE calculation
+# key: se
+# --
+summary.se <- function(data=NULL, var, groups=NULL, na.rm=TRUE,
+                       conf.interval=0.95, .drop=TRUE) {
+    require(plyr)
+    
+                                        # New version of length which can handle NA's: if na.rm==T, don't count them
+    length2 <- function (x, na.rm=FALSE) {
+        if (na.rm) sum(!is.na(x))
+        else       length(x)
+    }
+    datac <- ddply(data, groups, .drop=.drop,
+                   .fun= function(xx, col, na.rm) {
+                       c( N    = length2(xx[,col], na.rm=na.rm),
+                         mean = mean   (xx[,col], na.rm=na.rm),
+                         median = median(xx[,col],na.rm = na.rm),
+                         min = min(xx[,col],na.rm = na.rm),
+                         max = max(xx[,col],na.rm = na.rm),
+                         sd   = sd     (xx[,col], na.rm=na.rm),
+                         geomean  = exp(mean(log(xx[,col]), na.rm=  na.rm)),
+                         geosd    = sd(log(xx[,col]), na.rm = na.rm),
+                         geoN = length2(log(xx[,col]), na.rm =  na.rm)
+                         )
+                   },
+                   var,
+                   na.rm
+                   )
+    ## Rename the "mean" column    
+    datac <- rename(datac, c("mean"=var))
+
+    datac$se <- datac$sd / sqrt(datac$N)  # Calculate standard error of the mean
+                                        # Confidence interval multiplier for standard error
+                                        # Calculate t-statistic for confidence interval: 
+                                        # e.g., if conf.interval is .95, use .975 (above/below), and use df=N-1
+    ciMult <- qt(conf.interval/2 + .5, datac$N-1)
+
+    datac$ci.up <- datac[,var]+ datac$se * ciMult
+    datac$ci.down <- datac[,var]- datac$se * ciMult
+
+    ciMult <- qt(conf.interval/2 + .5, datac$geoN-1)
+
+    datac$geose <- datac$geosd / sqrt(datac$geoN)
+
+    datac$geo.ci.up <- exp(log(datac$geomean) + datac$geose * ciMult)
+    datac$geo.ci.down <- exp(log(datac$geomean) - datac$geose * ciMult)
+
+    datac$geo.se.up <- exp(log(datac$geomean) + datac$geose)
+    datac$geo.se.down <- exp(log(datac$geomean) - datac$geose)
+
+    return(datac)
+}

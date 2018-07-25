@@ -1,0 +1,36 @@
+# -*- mode: snippet -*-
+# name: log10.axis
+# key: log10.axis
+# --
+log10.axis <- function(side,lim=NULL,tcl.major=-0.8,tcl.minor=-0.5,at=NULL,labels=NULL,...){
+if (is.null(lim)){
+figxy <- par("usr")
+xaxl <- par("xlog")
+yaxl <- par("ylog")
+xlim <- figxy[1:2]
+ylim <- figxy[3:4]
+if (side == 1 | side == 3) {
+lim <- xlim;
+if (xaxl){
+lim <- 10^lim;
+} else {
+warning("The x axis is not log-scaled");
+}
+} else {
+lim <- ylim;
+if (yaxl){
+lim <- 10^lim;
+} else {
+warning("The y axis is not log-scaled");
+}
+}
+}
+logTicks <- function (lim, loc = c(1, 10), base=10) {
+ii <-floor(log(range(lim), base)) + c(-1, 2)
+main <- base^(ii[1]:ii[2])
+r <- as.numeric(outer(loc, main, "*"))
+r[lim[1] <= r & r <= lim[2]]
+}
+axis(side,at=logTicks(lim,loc=1),tcl=tcl.major,labels=TRUE,...);
+axis(side,at=logTicks(lim,loc=2:9),tcl=tcl.minor,labels=FALSE,...);
+}

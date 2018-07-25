@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: auc
+# key: auc
+# --
+auc <- function(y,x){
+## Use trapezoid method to calculate auc.
+if (length(y) != length(x)){
+error("Lengths of x and y differ")
+}
+ret <- 0
+for (i in 2:length(y)){
+ret <- ret + (y[i-1]+y[i])/2*(x[i]-x[i-1])
+}
+return(ret)
+}

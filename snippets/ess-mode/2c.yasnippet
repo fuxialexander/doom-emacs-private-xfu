@@ -1,0 +1,148 @@
+# name: 2 Compartment Model
+# key: 2c
+# contributor: Matthew L. Fidler
+# --
+cmt.2 <- function(t = NULL,tinf = NULL,
+                  ka=NULL,
+                  k12 = NULL,k21 = NULL,k = NULL,
+                  cl = NULL, v = NULL,q = NULL,vss = NULL,vp = NULL,
+                  alpha = NULL, beta = NULL, AOB = NULL,
+                  dose = 5, debug = FALSE,
+                  dose.times = NULL, freq = NULL, 
+                  f = 1, scale = 1, data = NULL
+                  ){
+  if (!is.null(data)){
+    ## Impute NONMEM data-set
+    if (any(names(data) == "ID")){
+      return(unlist(sapply(unique(data$ID),function(id){
+        d <-  data[data$ID == id,];
+        d <- d[,names(d) != "ID"];
+        return(cmt.2(t=t, data = d, dose = NULL, dose.times = NULL,
+                     tinf = tinf, ka = ka,
+                     k12 = k12,k21 = k21, k = k,
+                     cl = cl, v = v,q = q,vss = vss,vp = vp,
+                     alpha = alpha, beta = beta, AOB = AOB,
+                     debug = debug, freq = freq, f = f, scale = scale))
+      })))
+    } else {
+      dose.times <- data$TIME[!is.na(data$AMT)];
+      dose <- data$AMT[!is.na(data$AMT)];
+      t <- data$TIME
+      return(cmt.2(t=t, data = NULL, dose = dose, dose.times = dose.times,
+                   tinf = tinf, ka = ka,
+                   k12 = k12,k21 = k21, k = k,
+                   cl = cl, v = v,q = q,vss = vss,vp = vp,
+                   alpha = alpha, beta = beta, AOB = AOB,
+                   debug = debug, freq = freq, f = f, scale = scale))
+    }
+  } else if (!is.null(freq) | !is.null(dose.times)){
+    if (is.null(dose.times)){
+      dose.times <- seq(0,max(t),by=freq);
+    }
+    ret <- rep(0,length(t))
+    
+    if (length(dose) == 1){
+      doses <-  rep(dose,length.out = length(dose.times))
+    } else {
+      doses <- dose
+      if (length(doses) < length(dose.times)){
+        doses <-  c(doses,rep(0,length.out = length(dose.times)-length(doses)))
+      }
+    }
+    for (i in unique(dose.times)){
+      if (any(t >= i)){
+        w <- which(t >= i);
+        w2 <-  which(dose.times == i);
+        for (w3 in w2){
+          if (length(tinf) >= w3){
+            curr.tinf <- tinf[w3]
+            if (curr.tinf <= 0){
+              curr.tinf <- NULL
+            }
+          } else {
+            curr.tinf <-  NULL
+          }
+          ret[w] <- ret[w]+cmt.2(t[w]-i,dose = doses[w3],tinf = curr.tinf,
+                                 ka = ka, k12 = k12,k21 = k21, k = k,
+                                 cl = cl, v = v,q = q,vss = vss,vp = vp,
+                                 alpha = alpha, beta = beta, AOB = AOB,
+                                 debug = debug, f = f, scale = scale)
+        }
+      }
+    }
+    return(ret);
+  } else {
+    if (!is.null(cl)) {
+      if (is.null(v)){
+        stop("When cl is specified, v should be specified as well.")
+      } else if (is.null(q)){
+        stop("When cl is specified, q should be specified as well.")
+      }
+      k <- cl/v;
+      k12 <- q/v;
+      if (!is.null(vp)){
+        k21 <- q/vp;
+      } else if (!is.null(vss)) {
+        k21 <- q/(vss-v);
+      } else {
+        stop("Either vss or vp needs to be specified when using cl, v, and q parameterization.")
+      }
+    } else if (!is.null(alpha)){
+      if (is.null(beta)){
+        stop("When alpha is specified, beta must be specified")
+      }
+      if (!is.null(aob)){
+        k21 <- (aob*beta+alpha)/(aob+1);
+      } else if (is.null(k21)) {
+        stop("When alpha is specified, either aob or k21 must be specified.")
+      }
+      k <- alpha*beta/k21;
+      k12 <- alpha+beta-k21-k;
+    }
+    
+    alpha.p.beta <- k+k12+k21;
+    alpha.t.beta <- k*k21;
+    
+    alpha <- (alpha.p.beta+sqrt(alpha.p.beta^2-4*alpha.t.beta))/2;
+    beta <- (alpha.p.beta-sqrt(alpha.p.beta^2-4*alpha.t.beta))/2;
+    if (!is.null(ka)){
+      ## Oral Dose
+      A <- ka*dose*(k21-alpha)/(v*(ka-alpha)*(beta-alpha));
+      B <- ka*dose*(k21-beta)/(v*(ka-beta)*(alpha-beta));
+      C <- ka*dose*(k21-ka)/(v*(alpha-ka)*(beta-ka));
+      if (debug){
+        print(list(A=A,B=B,C=C,A.B.C=A+B+C))
+      }
+      ret <- A*exp(-alpha*t)+B*exp(-beta*t)+C*exp(-ka*t);
+    } else if (!is.null(tinf) && tinf != 0){
+      ## IV Infusion
+      inf.rate <- dose/tinf;
+      
+      ## R and S will be zero before the infusion ends.
+      ## (t >= tinf)*tinf = tinf after infusion ends and 0 otherwise
+      ## (1-exp(0)) = 0
+      R <- inf.rate*(alpha-k21)/(v*alpha*(alpha-beta))*(1-exp(-alpha*(t >= tinf)*tinf));
+      S <- inf.rate*(k21-beta)/(v*beta*(alpha-beta))*(1-exp(-beta*(t >= tinf)*tinf));
+      
+      if (debug){
+        print(list(R=max(R),S=max(S)))
+      }
+      
+      ret <- R*exp(-alpha*(t-tinf))+S*exp(-beta*(t-tinf))
+      ## The next portion is only added when the infusion is happening.
+      ret <- ret + (t < tinf)*inf.rate/(v*k)*(1+(beta-k)/(alpha-beta)*exp(-alpha*t)+
+                                              (k-alpha)/(alpha-beta)*exp(-beta*t))
+    } else {
+      A <- (alpha-k21)/(v*(alpha-beta));
+      B <- (k21-beta)/(v*(alpha-beta));
+      if (debug){
+        print(list(A=A,B=B,alpha=alpha,beta=beta,
+                   alpha.p.beta=alpha.p.beta,alpha.t.beta=alpha.t.beta))
+      }
+      ## Bolus dose
+      ret <- dose*(A*exp(-alpha*t)+B*exp(-beta*t))
+    }
+    ret <- f*scale*ret
+    return(ret);
+  }
+}

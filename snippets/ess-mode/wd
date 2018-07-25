@@ -1,0 +1,6 @@
+# name: Set Working Directory
+# key: wd
+# contributor: Matthew L. Fidler
+# --
+setwd("`(file-name-directory (buffer-file-name))`");
+

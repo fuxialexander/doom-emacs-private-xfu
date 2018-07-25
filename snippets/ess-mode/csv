@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Load CSV by assignment
+# key: csv
+# --
+${1:$(concat "dat." (replace-regexp-in-string "^[.]" "" (replace-regexp-in-string "[.]$" "" (replace-regexp-in-string "[^A-Za-z.0-9]+" "." (file-name-sans-extension (file-name-nondirectory yas/text)) t t))))} <- read.csv("${1:`yas/selected-text`}",na.strings=c(".","NA")${1:$(if (file-exists-p (concat (file-name-sans-extension yas/text) ".png")) ",skip=5" "")});

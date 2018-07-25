@@ -1,0 +1,48 @@
+# -*- mode: snippet -*-
+# name: Lattice x/y-log10 scale
+# key: log10
+# --
+${1:y}scale.components.log10 <- function(lim, ...) {
+  logTicks <- function (lim, loc = c(1, 10), base=10) {
+    ii <-floor(log(range(lim), base)) + c(-1, 2)
+    main <- base^(ii[1]:ii[2])
+    r <- as.numeric(outer(loc, main, "*"))
+    r[lim[1] <= r & r <= lim[2]]
+  }
+  ans <- $1scale.components.default(lim = lim, ...)
+  tick.at <- logTicks(10^lim, loc = 1:9)
+  tick.at.major <- logTicks(10^lim, loc = 1)
+  major <- tick.at %in% tick.at.major
+  if (length(tick.at) == 1){
+    ans <-  $1scale.components.default(lim,...);
+    ans$${1:$(if (string= yas/text "x") "bottom" "left")}$labels$labels <- parse(text=paste("10^",ans$${1:$(if (string= yas/text "x") "bottom" "left")}$ticks$at,sep=""));
+    ans$${1:$(if (string= yas/text "x") "bottom" "left")}$labels$check.overlap <- TRUE;
+    return(ans);
+  } else if (length(tick.at) <= 9){
+    ans$${1:$(if (string= yas/text "x") "bottom" "left")}$labels$labels <- gsub("e([+-])0?","0^",paste(tick.at));
+    ans$${1:$(if (string= yas/text "x") "bottom" "left")}$ticks$at <- log(tick.at, 10)
+    ans$${1:$(if (string= yas/text "x") "bottom" "left")}$ticks$tck <- rep(1,length(tick.at));
+    ans$${1:$(if (string= yas/text "x") "bottom" "left")}$labels$at <- log(tick.at, 10)
+    ans$${1:$(if (string= yas/text "x") "bottom" "left")}$labels$check.overlap <- TRUE;
+    return(ans);
+  } else {
+    if (sum(major*1) >= 9) {
+      ans$${1:$(if (string= yas/text "x") "bottom" "left")}$labels$labels <- paste("10^",log10(tick.at),sep="");
+    } else {
+      ans$${1:$(if (string= yas/text "x") "bottom" "left")}$labels$labels <- gsub("e([+-])0?","0^",paste(tick.at));
+    }
+    ans$${1:$(if (string= yas/text "x") "bottom" "left")}$ticks$at <- log(tick.at, 10)
+    ans$${1:$(if (string= yas/text "x") "bottom" "left")}$ticks$tck <- ifelse(major, 1.5, 0.75)
+    ans$${1:$(if (string= yas/text "x") "bottom" "left")}$labels$at <- log(tick.at, 10)
+    ans$${1:$(if (string= yas/text "x") "bottom" "left")}$labels$labels[!major] <- ""
+    while (sum(major*1) >= 15){
+      w <-  which(ans$${1:$(if (string= yas/text "x") "bottom" "left")}$labels$labels != "");
+      w <-  w[seq(2,length(w),by=2)];
+      ans$${1:$(if (string= yas/text "x") "bottom" "left")}$labels$labels[w] = "";
+      major[w] = FALSE;
+    }
+    ans$${1:$(if (string= yas/text "x") "bottom" "left")}$labels$labels[major] <- parse(text=ans$${1:$(if (string= yas/text "x") "bottom" "left")}$labels$labels[major]);
+    ans$${1:$(if (string= yas/text "x") "bottom" "left")}$labels$check.overlap <- FALSE
+    return(ans)
+  }
+}

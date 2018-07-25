@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# uuid: D8F85702-E792-4856-8D16-54E4EB2F9483
+# contributor: Translated from textmate snippet by textmate-import.el
+# contributor: Imported by Matthew L. Fidler
+# contributor: Original Author textmate (Package r from Github t, ver -fcad1b3)
+# name: Read From File
+# key: rea
+# condition: (string= "S" ess-language)
+# group: Input/Output
+# --
+read.table("${1:filename}"${2:, header = ${3:TRUE},  sep = "${4:\t}",  stringsAsFactors = ${5:FALSE}})

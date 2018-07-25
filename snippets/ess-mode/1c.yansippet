@@ -1,0 +1,82 @@
+# name: One Compartment
+# key: 1c
+# --
+cmt.1 <- function(t = NULL,
+                  data = NULL,
+                  dose=0.5,dose.times = NULL,
+                  cl = NULL,
+                  t.0.5 = 1,vd = 4,k=ifelse(is.null(cl),log(2)/t.0.5,cl/vd),mw = 1,use.nM = FALSE, f =1,
+                  ka = NULL, tinf = NULL,freq=NULL,scale=1e3){
+    if (!is.null(data)){
+        ## Impute NONMEM data-set
+        if (any(names(data) == "ID")){
+            return(unlist(sapply(unique(data$ID),function(id){
+                d <-  data[data$ID == id,];
+                d <- d[,names(d) != "ID"];
+                return(cmt.1(t=t, data = d, dose = NULL, dose.times = NULL, cl=cl,
+                             t.0.5 = t.0.5, k = k, vd = vd, mw = mw, use.nM = use.nM, f = f,
+                             ka = ka, tinf = tinf, freq = freq, scale = scale))
+            })))
+        } else {
+            dose.times <- data$TIME[!is.na(data$AMT)];
+            dose <- data$AMT[!is.na(data$AMT)];
+            t <- data$TIME
+            return(cmt.1(t=t, data= NULL, dose = dose, dose.times = dose.times,cl=cl,
+                         t.0.5 = t.0.5, k = k, vd = vd, mw = mw, use.nM = use.nM, f = f,
+                         ka = ka, tinf = tinf, freq = freq, scale = scale))
+        }
+        
+    } else if (!is.null(freq) | !is.null(dose.times)){
+        if (is.null(dose.times)){
+            dose.times <- seq(0,max(t),by=freq);
+        }
+        ret <- rep(0,length(t))
+        
+        if (length(dose) == 1){
+            doses <-  rep(dose,length.out = length(dose.times))
+        } else {
+            doses <- dose
+            if (length(doses) < length(dose.times)){
+                doses <-  c(doses,rep(0,length.out = length(dose.times)-length(doses)))
+            }
+        }
+        for (i in unique(dose.times)){
+            if (any(t >= i)){
+                w <- which(t >= i);
+                w2 <-  which(dose.times == i);
+                for (w3 in w2){
+                    if (length(tinf) >= w3){
+                        curr.tinf <- tinf[w3]
+                        if (curr.tinf <= 0){
+                            curr.tinf <- NULL
+                        }
+                    } else {
+                        curr.tinf <-  NULL
+                    }
+                    ret[w] <- ret[w]+cmt.1(t[w]-i,dose = doses[w3], k = k, vd = vd , mw = mw, use.nM = use.nM, f = f, ka = ka, t.0.5 = t.0.5, cl=cl,
+                                           tinf = curr.tinf, scale = scale)
+                }
+            }
+        }
+        return(ret);
+        
+    } else {
+        cp.mg.ml <- dose/vd*exp(-k*t)*f
+        if (length(ka) > 1){
+            w <- which(ka > 0)
+            cp.mg.ml[w] <- f[ifelse(length(f) == 1,1,w)]*dose*ka[w]/(vd[ifelse(length(vd) == 1,1,w)]*(ka[w]-k))*(exp(-k*t[w])-exp(-ka[w]*t[w]));
+        } else if (!is.null(ka)) {
+            cp.mg.ml <- f*dose*ka/(vd*(ka-k))*(exp(-k*t)-exp(-ka*t));
+            
+        } else if (!is.null(tinf)){
+            ## separate based on time of infusion
+            cp.mg.ml <- (dose/tinf)/(vd*k)*(1-exp(-k*sapply(t,min,tinf)))*exp(-k*(sapply(t,max,tinf)-tinf))
+        }
+        if (use.nM){
+            cp.nM <- cp.mg.ml/mw/10e-9 ## nMolar
+            return(cp.nM);
+        } else {
+            return(cp.mg.ml*scale);
+        }
+    } 
+}

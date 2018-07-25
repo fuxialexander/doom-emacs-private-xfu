@@ -1,0 +1,4 @@
+#+TITLE: ESS snippets
+This includes my ess-snippets, and those imported from
+[[here][https://github.com/textmate/r.tmbundle/downloads]].  These may require
+[[https://github.com/textmate/r.tmbundle/downloads][textmate-to-yas.el]].  You may also be interested in [[https://github.com/mlf176f2/r-autoyas.el][r-autoyas]].

@@ -1,0 +1,45 @@
+# -*- mode: snippet -*-
+# name: Insert Ruler x/yscale component
+# key: ruler
+# author: Matthew L. Fidler
+# --
+${1:x}scale.components.ruler <- function(lim,...,by=NULL,
+major.ticks=NULL,
+minor.ticks=NULL, 
+label.transform=paste){
+ans <- $1scale.components.default(lim = lim, ....,)
+if (is.null(major.ticks)){
+cs <- ans$${1:$(if (string= yas/text "x") "bottom" "left")}$labels$at
+major.ticks <- unique(cs[-1]-cs[-length(cs)])
+if (major.ticks %% 2 == 0){
+minor.ticks <- major.ticks/2
+by <-  minor.ticks/2
+} else if (major.ticks %% 5 == 0){
+minor.ticks <- major.ticks;
+by <- major.ticks/5;
+} else {
+minor.ticks <- major.ticks/2
+by <-  minor.ticks/2
+}
+}
+$1lim1 <- round(lim/by,0)*by
+$1lim2 <- round(lim/minor.ticks,0)*minor.ticks
+$1lim3 <- round(lim/major.ticks,0)*major.ticks
+while ($1lim3[2] >= lim[2]){
+$1lim3[2] <- $1lim3[2]-major.ticks;
+}
+s1 <- seq($1lim1[1],$1lim1[2],by=by);
+s2 <- seq($1lim2[1],$1lim2[2],by=minor.ticks)
+s3 <- seq($1lim3[1],$1lim3[2],by=major.ticks)
+s2 <-  s2[!(s2 %in% s3)]
+s1 <- s1[!(s1 %in% c(s2,s3))];
+s <- c(s3,s2,s1);
+ans$${1:$(if (string= yas/text "x") "bottom" "left")}$ticks$at <- s
+ans$${1:$(if (string= yas/text "x") "bottom" "left")}$ticks$tck <- c(rep(1.5,length(s3)),rep(1,length(s2)),rep(0.5,length(s1)));
+FUN <- match.fun(label.transform)
+s3 <- round(s3,-floor(log10(by)))
+ans$${1:$(if (string= yas/text "x") "bottom" "left")}$labels$labels <- c(sapply(s3,FUN),rep(" ",length(s2)+length(s1)));
+ans$${1:$(if (string= yas/text "x") "bottom" "left")}$labels$at <- s3
+ans$${1:$(if (string= yas/text "x") "bottom" "left")}$labels$check.overlap <- TRUE;
+return(ans);
+}
