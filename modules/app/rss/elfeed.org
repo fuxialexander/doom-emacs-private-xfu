@@ -14,10 +14,6 @@
     :PROPERTIES:
     :ID:       7A18DBE9-F56A-459E-9110-4AA1C054CAB9
     :END:
-*** [[http://irreal.org/blog/?feed=rss2][Irreal]]
-    :PROPERTIES:
-    :ID:       9930C3CB-D52C-495E-977D-F7D6784DD2FB
-    :END:
 *** [[https://www.reddit.com/r/emacs/.rss][r/M-x Emacs]]
     :PROPERTIES:
     :ID:       29C05341-9540-4D83-9EED-5127C4FD10FC
