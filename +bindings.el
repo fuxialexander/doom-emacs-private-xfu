@@ -13,6 +13,26 @@
       :nvime "M-l" #'evil-window-right
       :nvime "M-d" #'evil-window-vsplit
       :nvime "M-D" #'evil-window-split
+      :nvime "C-`" #'+popup/toggle
+      :nvime "C-~" #'+popup/raise
+      :nvime "M-t" #'+workspace/new
+      :nvime "M-T" #'+workspace/display
+      :nvime "M-w" #'delete-window
+      :nvime "M-W" #'delete-frame
+      :nvime "C-M-f" #'toggle-frame-fullscreen
+      :nvime "M-n" #'evil-buffer-new
+      :nvime "M-N" #'make-frame
+      :nvime "M-1" (λ! (+workspace/switch-to 0))
+      :nvime "M-2" (λ! (+workspace/switch-to 1))
+      :nvime "M-3" (λ! (+workspace/switch-to 2))
+      :nvime "M-4" (λ! (+workspace/switch-to 3))
+      :nvime "M-5" (λ! (+workspace/switch-to 4))
+      :nvime "M-6" (λ! (+workspace/switch-to 5))
+      :nvime "M-7" (λ! (+workspace/switch-to 6))
+      :nvime "M-8" (λ! (+workspace/switch-to 7))
+      :nvime "M-9" (λ! (+workspace/switch-to 8))
+      :nvime "M-0" #'+workspace/switch-to-last
+
       :nie "M-u" #'org-store-link
       :nie "M-o" #'org-open-at-point-global
       :nie "M-i" #'org-insert-last-stored-link
