@@ -218,8 +218,60 @@
           :n "q" #'quit-window
           :n "Q" #'ivy-resume)))
 
-;; ** do-repeat
+;; ** ESS
+(map!
+ (:after ess-r-mode
+   (:map inferior-ess-mode-map
+     :n "gh" #'ess-display-help-on-object))
+ (:after ess
+   (:map ess-mode-map
+     :niv "<s-return>" #'ess-eval-region-or-line-and-step
+     "<up>" #'comint-next-input
+     "<down>" #'comint-previous-input
+     :n "gh" #'ess-display-help-on-object
+     (:localleader
+       :nv "RET" #'ess-eval-region-or-function-or-paragraph-and-step
+       :n "'" #'R
+       :n "<tab>" #'ess-switch-to-inferior-or-script-buffer
+       :n "<backtab>" #'ess-switch-process
+       :n ;; REPL
+       :n "B" #'ess-eval-buffer-and-go
+       :n "b" #'ess-eval-buffer
+       :nv "d" #'ess-eval-region-or-line-and-step
+       :n "D" #'ess-eval-function-or-paragraph-and-step
+       :n "L" #'ess-eval-line-and-go
+       :n "l" #'ess-eval-line
+       :nv "R" #'ess-eval-region-and-go
+       :nv "r" #'ess-eval-region
+       :n "F" #'ess-eval-function-and-go
+       :n "f" #'ess-eval-function
+       ;; predefined keymaps
+       :n "h" #'ess-doc-map
+       :n "x" #'ess-extra-map
+       :n "p" #'ess-r-package-dev-map
+       :n "v" #'ess-dev-map
+       ;; noweb
+       :n "cC" #'ess-eval-chunk-and-go
+       :n "cc" #'ess-eval-chunk
+       :n "cd" #'ess-eval-chunk-and-step
+       :n "cm" #'ess-noweb-mark-chunk
+       :n "cp" #'ess-noweb-previous-chunk
+       :n "cn" #'ess-noweb-next-chunk)))
+ (:after ess-help
+   (:map ess-doc-map
+     "h" #'ess-display-help-on-object
+     "p" #'ess-R-dv-pprint
+     "t" #'ess-R-dv-ctable)
+   (:map ess-help-mode-map
+     :n "q" #'quit-window
+     :n "gh" #'ess-display-help-on-object
+     :v "RET" #'ess-eval-region-and-go
+     :n "C-j" #'ess-skip-to-next-section
+     :n "C-k" #'ess-skip-to-previous-section
+     :n "J" #'ess-skip-to-next-section
+     :n "K" #'ess-skip-to-previous-section)))
 
+;; ** do-repeat
 ;; *** org
 (after! org
   (do-repeat! org-next-item org-next-item org-previous-item)
