@@ -48,7 +48,7 @@
     (save-excursion
       (with-current-buffer
           (python-shell-make-comint
-           (concat "dtach -A ~/.dtach-session/" session " -z -E -r none python -i\n\n")
+           (concat "dtach -A ~/.dtach-session/" session " -z -E -r none python -i")
            (concat "Python:" session)
            show internal)
         (comint-send-input)
