@@ -6,6 +6,7 @@
               '(
 ;; ** font-lock
                 (font-lock-builtin-face              :foreground builtin :slant 'italic :weight 'light)
+                ;; (font-lock-variable-name-face        :foreground variable :weight 'semi-bold)
                 (font-lock-function-name-face        :foreground functions :weight 'semi-bold)
                 (font-lock-keyword-face              :foreground keywords :weight 'semi-bold)
                 (font-lock-string-face               :foreground strings :weight 'semi-bold)

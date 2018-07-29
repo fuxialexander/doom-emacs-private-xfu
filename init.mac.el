@@ -23,7 +23,8 @@
        doom-modeline
        hl-todo
        ;; fci
-       ;; nav-flash
+       nav-flash
+       evil-goggles
        ;; neotree
        treemacs
        pretty-code
@@ -114,7 +115,7 @@
   :slant 'normal
   :registry "iso10646-1")
  doom-unicode-font (font-spec :family "SF Mono" :size 10)
- doom-big-font (font-spec :family "SF Mono" :size 14)
+ doom-big-font (font-spec :family "SF Mono" :size 12)
  ovp-font "Sarasa Mono SC"
  doom-theme 'doom-nord
  doom-line-numbers-style nil
