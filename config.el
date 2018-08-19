@@ -95,11 +95,7 @@
   :commands (tldr)
   :config
   (setq tldr-directory-path (concat doom-etc-dir "tldr/")))
-;; *** color-picker
-(def-package! webkit-color-picker :load-path "/Users/xfu/Source/playground/emacs-webkit-color-picker"
-  :commands (webkit-color-picker-show)
-  :config
-  (require 'xwidget))
+
 ;; *** ivy
 ;; **** ivy-advice
 (after! lv
