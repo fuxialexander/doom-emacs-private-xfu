@@ -3,8 +3,7 @@
 (defvar R-remote-session "R-session-name")
 (defvar R-remote-directory "/path/to/your/project/directory")
 
-(def-package! ess-site
-  :ensure ess
+(def-package! ess-mode
   :commands (R stata julia SAS ess-remote)
   :init
   (setq ess-offset-continued 'straight
