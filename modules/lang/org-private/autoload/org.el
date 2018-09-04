@@ -3,7 +3,7 @@
 ;;;###autoload
 (defun export-diary-from-cal ()
   (interactive)
-  (start-process-shell-command "export diary" nil "/Users/xfu/.emacs.d-backup/private/local/calendardiary 30 > /Users/xfu/Dropbox/org/cal.diary"))
+  (start-process-shell-command "export diary" nil "~/.emacs.d-backup/private/local/calendardiary 30 > ~/Dropbox/org/cal.diary"))
 
 ;;;###autoload
 (defun +org/open-brain-here ()

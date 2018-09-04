@@ -105,15 +105,15 @@
       elfeed-search
       elfeed-org))
    (run-with-idle-timer 30 nil #'auto-load-files
-                        '("/Users/xfu/Dropbox/org/ref.org"
-                          "/Users/xfu/Dropbox/org/_idea.org"
-                          "/Users/xfu/Dropbox/org/_inbox.org"
-                          "/Users/xfu/Dropbox/org/_workflow.org"
-                          "/Users/xfu/Dropbox/org/_learn.org"
-                          "/Users/xfu/Dropbox/org/_review.org"
-                          "/Users/xfu/Dropbox/org/_meeting.org"
-                          "/Users/xfu/Dropbox/org/_life.org"
-                          "/Users/xfu/Dropbox/org/reference/Bibliography.bib"))
+                        '("~/Dropbox/org/ref.org"
+                          "~/Dropbox/org/_idea.org"
+                          "~/Dropbox/org/_inbox.org"
+                          "~/Dropbox/org/_workflow.org"
+                          "~/Dropbox/org/_learn.org"
+                          "~/Dropbox/org/_review.org"
+                          "~/Dropbox/org/_meeting.org"
+                          "~/Dropbox/org/_life.org"
+                          "~/Dropbox/org/reference/Bibliography.bib"))
    (run-with-idle-timer 30 nil #'org-clock-load)
    (run-with-timer 60 500 #'org-clock-save)
    (run-with-timer 60 500 #'elfeed-update)

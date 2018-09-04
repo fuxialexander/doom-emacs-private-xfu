@@ -549,7 +549,7 @@ INFO is a plist containing export options."
   (defun +org-private/org-add-ids-to-headlines-in-file ()
     "Add CUSTOM_ID properties to all headlines in the current file"
     (interactive)
-    (if (string-equal default-directory "/Users/xfu/Dropbox/org/")
+    (if (string-equal default-directory "~/Dropbox/org/")
         (save-excursion
         (widen)
         (goto-char (point-min))

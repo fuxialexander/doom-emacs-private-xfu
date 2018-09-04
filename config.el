@@ -67,7 +67,7 @@
 ;; *** magit
 (def-package! orgit :after (magit org))
 (after! magithub
-  (setq magithub-clone-default-directory "/Users/xfu/Source/playground/"))
+  (setq magithub-clone-default-directory "~/Repo"))
 (after! magit
   (defun +magit|remove-fringes ()
     (set-window-fringes nil 0 0)
