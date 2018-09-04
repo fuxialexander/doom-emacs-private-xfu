@@ -345,52 +345,7 @@
 (def-package! electric-operator
   :hook ((sh-mode . electric-operator-mode)
          (ess-mode . electric-operator-mode)
-         (inferior-ess-mode . electric-operator-mode)
-         (python-mode . electric-operator-mode))
-  :config
-  (apply #'electric-operator-add-rules-for-mode 'inferior-python-mode
-         electric-operator-prog-mode-rules)
-  (apply #'electric-operator-add-rules-for-mode 'inferior-ess-mode electric-operator-prog-mode-rules)
-  (electric-operator-add-rules-for-mode 'inferior-ess-mode
-                      (cons "." nil)    ; word separator
-                      (cons "<-" " <- ") ; assignment
-                      (cons "->" " -> ") ; Right assignment
-                      (cons "%%" " %% ") ; Modulus
-                      (cons "%/%" " %/% ") ; Integer divide
-                      (cons "%*%" " %*% ") ; Matrix product
-                      (cons "%o%" " %o% ") ; Outer product
-                      (cons "%x%" " %x% ") ; Kronecker product
-                      (cons "%in%" " %in% ") ; Matching operator
-                      (cons "~" " ~ ")       ; "is modeled by"
-                      (cons "%>%" " %>% ")   ; Pipe (magrittr)
-                      (cons "%<>%" " %<>% ") ; Assignment pipe (magrittr)
-                      (cons "%$%" " %$% ")   ; Exposition pipe (magrittr)
-                      (cons "%T>%" " %T>% ") ; Tee operator (magrittr)
-                      (cons "=" #'electric-operator-ess-mode-keyword-args-=))
-
-  (electric-operator-add-rules-for-mode 'inferior-python-mode
-                                        (cons "**" #'electric-operator-python-mode-**)
-                                        (cons "*" #'electric-operator-python-mode-*)
-                                        (cons ":" #'electric-operator-python-mode-:)
-                                        (cons "//" " // ") ; integer division
-                                        (cons "=" #'electric-operator-python-mode-kwargs-=)
-                                        (cons "-" #'electric-operator-python-mode-negative-slices)
-                                        (cons "->" " -> ") ; function return types
-                                        )
-  (electric-operator-add-rules-for-mode 'inferior-python-mode
-                                        (cons "**" #'electric-operator-python-mode-**)
-                                        (cons "*" #'electric-operator-python-mode-*)
-                                        (cons ":" #'electric-operator-python-mode-:)
-                                        (cons "//" " // ") ; integer division
-                                        (cons "=" #'electric-operator-python-mode-kwargs-=)
-                                        (cons "-" #'electric-operator-python-mode-negative-slices)
-                                        (cons "->" " -> ") ; function return types
-                                        )
-  (electric-operator-add-rules-for-mode 'sh-mode
-                                        (cons "<=" " <= ")
-                                        (cons ">=" " >= ")
-                                        (cons ">" " > ")
-                                        (cons "|" " | ")))
+         (python-mode . electric-operator-mode)))
 ;; *** smartparens
 (after! smartparens
   (add-hook 'minibuffer-setup-hook #'smartparens-mode)
