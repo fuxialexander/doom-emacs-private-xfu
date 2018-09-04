@@ -16,15 +16,15 @@
   :config
   (setq-default htmlize-pre-style t))
 
-(def-package! ox-pandoc
-  :defer t
-  :config
-  (push 'pandoc org-export-backends)
-  (if +org-html-embed-image
-      (push '(self-contained . t) org-pandoc-options))
-  (setq org-pandoc-options
-        '((standalone . t)
-          (mathjax . t))))
+;; (def-package! ox-pandoc
+;;   :defer t
+;;   :config
+;;   (push 'pandoc org-export-backends)
+;;   (if +org-html-embed-image
+;;       (push '(self-contained . t) org-pandoc-options))
+;;   (setq org-pandoc-options
+;;         '((standalone . t)
+;;           (mathjax . t))))
 
 ;;
 (defun +org|init-export ()
