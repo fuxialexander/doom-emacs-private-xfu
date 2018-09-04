@@ -7,32 +7,32 @@
       :gnvime "M-r" (lambda! (revert-buffer nil t t))
       :gnvime "M-g" #'org-agenda-show-daily
       :nvime "M-s" #'save-buffer
-      :nvime "M-j" #'evil-window-down
-      :nvime "M-k" #'evil-window-up
-      :nvime "M-h" #'evil-window-left
-      :nvime "M-l" #'evil-window-right
-      :nvime "M-d" #'evil-window-vsplit
-      :nvime "M-D" #'evil-window-split
+      (:when IS-MAC
+        :nvime "M-1" (λ! (+workspace/switch-to 0))
+        :nvime "M-2" (λ! (+workspace/switch-to 1))
+        :nvime "M-3" (λ! (+workspace/switch-to 2))
+        :nvime "M-4" (λ! (+workspace/switch-to 3))
+        :nvime "M-5" (λ! (+workspace/switch-to 4))
+        :nvime "M-6" (λ! (+workspace/switch-to 5))
+        :nvime "M-7" (λ! (+workspace/switch-to 6))
+        :nvime "M-8" (λ! (+workspace/switch-to 7))
+        :nvime "M-9" (λ! (+workspace/switch-to 8))
+        :nvime "M-w" #'delete-window
+        :nvime "M-j" #'evil-window-down
+        :nvime "M-k" #'evil-window-up
+        :nvime "M-h" #'evil-window-left
+        :nvime "M-l" #'evil-window-right
+        :nvime "M-d" #'evil-window-vsplit
+        :nvime "M-D" #'evil-window-split)
       :nvime "C-`" #'+popup/toggle
       :nvime "C-~" #'+popup/raise
       :nvime "M-t" #'+workspace/new
       :nvime "M-T" #'+workspace/display
-      :nvime "M-w" #'delete-window
       :nvime "M-W" #'delete-frame
       :nvime "C-M-f" #'toggle-frame-fullscreen
       :nvime "M-n" #'evil-buffer-new
       :nvime "M-N" #'make-frame
-      :nvime "M-1" (λ! (+workspace/switch-to 0))
-      :nvime "M-2" (λ! (+workspace/switch-to 1))
-      :nvime "M-3" (λ! (+workspace/switch-to 2))
-      :nvime "M-4" (λ! (+workspace/switch-to 3))
-      :nvime "M-5" (λ! (+workspace/switch-to 4))
-      :nvime "M-6" (λ! (+workspace/switch-to 5))
-      :nvime "M-7" (λ! (+workspace/switch-to 6))
-      :nvime "M-8" (λ! (+workspace/switch-to 7))
-      :nvime "M-9" (λ! (+workspace/switch-to 8))
       :nvime "M-0" #'+workspace/switch-to-last
-
       :nie "M-u" #'org-store-link
       :nie "M-o" #'org-open-at-point-global
       :nie "M-i" #'org-insert-last-stored-link
@@ -66,34 +66,38 @@
         :desc "ivy-resume" :nv "$" #'ivy-resume
         :desc "Find file in project" :nv "SPC" #'execute-extended-command
         :desc "Browse files" :n "/" #'find-file
-        :desc "Display Buffer" :n "m" #'ivy-switch-buffer
-        :desc "Find project files" :n "." #'counsel-projectile-find-file
+        (:unless (featurep! :feature workspaces)
+          :desc "Switch buffer" :n "," #'switch-to-buffer)
+        (:when (featurep! :feature workspaces)
+          :desc "Switch to workspace" :n "m" #'+workspace/switch-to
+          :desc "Switch workspace buffer" :n "," #'persp-switch-to-buffer
+          :desc "Switch buffer" :n "<" #'switch-to-buffer)
+        :desc "Find project files" :n "." #'projectile-find-file
         :desc "Toggle last popup" :n "`" #'+popup/toggle
         (:desc "search" :prefix "s"
-          :desc "Project" :nv "p" #'+ivy/project-search
-          :desc "Directory" :nv "d" (λ! (+ivy/project-search t))
-          :desc "Buffer" :nv "b" #'swiper
+          (:when (featurep! :completion ivy)
+            :desc "Buffer" :nv "b" #'swiper
+            :desc "Project" :nv "p" #'+ivy/project-search
+            :desc "Directory" :nv "d" #'+ivy/project-search-from-cwd)
+          (:when (featurep! :completion helm)
+            :desc "Buffer" :nv "b" #'swiper-helm
+            :desc "Project" :nv "p" #'+helm/project-search
+            :desc "Directory" :nv "d" #'+helm/project-search-from-cwd)
           :desc "Symbols" :nv "i" #'imenu
           :desc "Symbols across buffers" :nv "I" #'imenu-anywhere
           :desc "Online providers" :nv "o" #'+lookup/online-select)
-        (:desc "iTerm" :prefix "_"
-          :desc "cd" :nv "d" #'mac-iTerm-cd
-          :desc "send text" :nv "_" #'iterm-send-text
-          :desc "send ipython command" :nv "p" #'iterm-send-text-ipy
-          :desc "send ipython text" :nv "P" #'iterm-send-text-ipy
-          :desc "send file to R" :nv "R" #'iterm-send-file-R)
+        (:when IS-MAC
+          (:desc "iTerm" :prefix "_"
+            :desc "cd" :nv "d" #'mac-iTerm-cd
+            :desc "send text" :nv "_" #'iterm-send-text
+            :desc "send ipython command" :nv "p" #'iterm-send-text-ipy
+            :desc "send ipython text" :nv "P" #'iterm-send-text-ipy
+            :desc "send file to R" :nv "R" #'iterm-send-file-R))
         (:desc "file" :prefix "f"
-          :desc "Find file on TRAMP" :n "t" #'counsel-tramp)
-        (:desc "git" :prefix "g"
-          :desc "Git Hydra" :n "." #'+version-control@git-gutter/body)
-        (:desc "help" :prefix "h"
-          :n "h" help-map
-          :desc "Reload theme" :n "r" #'doom/reload-theme
-          :desc "Describe function" :n "f" #'counsel-describe-function
-          :desc "Describe key" :n "k" #'helpful-key
-          :desc "Describe variable" :n "v" #'counsel-describe-variable
-          :desc "Describe face" :n "t" #'counsel-faces)
-
+          (:when (featurep! :completion ivy)
+            :desc "Find file on TRAMP" :n "t" #'counsel-tramp)
+          (:when (featurep! :completion helm)
+            :desc "Find file on TRAMP" :n "t" #'helm-tramp))
         (:desc "open" :prefix "o"
           :desc "Twitter" :n "2" #'=twitter
           :desc "RSS" :n "e" #'=rss
@@ -109,14 +113,6 @@
           (:when IS-MAC
             :desc "Reveal in Finder" :n "f" #'+macos/reveal-in-finder
             :desc "Reveal project in Finder" :n "F" #'+macos/reveal-project-in-finder))
-        (:desc "project" :prefix "p"
-          :desc "Browse project" :n "." #'+xfu/browse-project)
-
-        (:desc "snippets" :prefix "y"
-          :desc "Find snippet for mode" :n "y" #'yas-visit-snippet-file
-          :desc "Find file in templates" :n "t" #'+default/browse-templates
-          :desc "Find snippet" :n "f" #'+xfu/find-in-snippets
-          :desc "Find snippet" :n "b" #'+xfu/browse-snippets)
         (:desc "toggle" :prefix "t"
           :desc "Company" :n "c" #'company-mode
           :desc "Line numbers" :n "n" #'doom/toggle-line-numbers
@@ -139,7 +135,6 @@
 
       ;; :nv "+" #'evil-numbers/inc-at-pt
       ;; :nv "-" #'evil-numbers/dec-at-pt
-      :nv "\"" #'counsel-evil-registers
 
       (:after bibtex
         :map bibtex-mode-map
@@ -161,7 +156,6 @@
         :n "M--" #'xwidget-webkit-zoom-out
         :n "j" #'xwidget-webkit-scroll-up-line
         :n "k" #'xwidget-webkit-scroll-down-line)
-
       (:after comint
         (:map comint-mode-map
           :i "C-k" #'comint-previous-input
@@ -182,7 +176,6 @@
           "S-TAB" nil
           [backtab] nil
           "M-o" #'company-search-kill-others
-          "C-f" #'counsel-company
           "<f1>" #'company-show-doc-buffer
           "C-M-f" #'company-search-candidates
           "M-f" #'company-filter-candidates)
@@ -207,7 +200,30 @@
         "M-k" #'ivy-previous-line
         "C-j" #'ivy-next-history-element
         "C-k" #'ivy-previous-history-element
+        "C-;" #'ivy-immediate-done
         "C-l" #'ivy-partial)
+      (:after helm-files
+        :map (helm-find-files-map helm-read-file-map)
+        "S-<return>" #'helm-ff-run-switch-other-window
+        [tab] #'helm-select-action
+        "C-w" #'helm-find-files-up-one-level)
+      (:after helm-locate
+        :map helm-generic-files-map
+        "S-<return>" #'helm-ff-run-switch-other-window)
+      (:after helm-buffers
+        :map helm-buffer-map
+        "S-<return>" #'helm-buffer-switch-other-window)
+      (:after helm-regexp
+        :map helm-moccur-map
+        "S-<return>" #'helm-moccur-run-goto-line-ow)
+      (:after helm-grep
+        :map helm-grep-map
+        "S-<return>" #'helm-grep-run-other-window-action)
+      (:after helm
+        :map helm-map
+        [tab] #'helm-select-action
+        "M-k" #'helm-previous-source
+        "M-j" #'helm-next-source)
       (:after info
         :map Info-mode-map
         :n "o" #'ace-link)
@@ -293,3 +309,6 @@
         which-key-replacement-alist)
   (push '((nil . "\\`evil-window-\\(.+\\)\\'") . (nil . "\\1"))
         which-key-replacement-alist))
+
+;; ** ex
+(ex! "tn"    #'+workspace:new)
