@@ -131,7 +131,7 @@
             :nmv "n"   #'notmuch-mua-new-mail
             :nmv "s-n" #'notmuch-mua-new-mail
             :nmv "j"   #'widget-forward
-            :nmv "s"   #'counsel-notmuch
+            :nmv "s"   #'helm-notmuch
             :nmv "q"   #'+mail/quit
             :nmv "e"   #'+mail/notmuch-update
             :nmv "r"   #'notmuch-hello-update)
@@ -152,14 +152,14 @@
             :nmv "q"   #'+mail/quit
             :nmv "R"   #'notmuch-search-reply-to-thread-sender
             :nmv "r"   #'notmuch-search-reply-to-thread
-            :nmv "s"   #'counsel-notmuch
+            :nmv "s"   #'helm-notmuch
             :nmv "S"   #'notmuch-search
             :nmv "x"   #'+mail/notmuch-search-spam)
           (:map notmuch-tree-mode-map
             :nmv "j"   #'notmuch-tree-next-message
             :nmv "k"   #'notmuch-tree-prev-message
             :nmv "S"   #'notmuch-search-from-tree-current-query
-            :nmv "s"   #'counsel-notmuch
+            :nmv "s"   #'helm-notmuch
             :nmv "t"   #'notmuch-tree
             :nmv ";"   #'notmuch-tree-tag
             :nmv "RET" #'notmuch-tree-show-message
@@ -181,9 +181,12 @@
             :desc "Attach file"         :n "f" #'mml-attach-file))))
 
 ;; * Other packages
-(def-package! counsel-notmuch
-  :commands counsel-notmuch
+(def-package! helm-notmuch
+  :commands helm-notmuch
   :after notmuch)
+;; (def-package! counsel-notmuch
+;;   :commands counsel-notmuch
+;;   :after notmuch)
 (def-package! org-mime
   :after (org notmuch)
   :config

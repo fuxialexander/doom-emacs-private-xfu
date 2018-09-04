@@ -50,10 +50,16 @@
 (defun +mail/notmuch-update ()
   (interactive)
   (message "Updating mails...")
-  (start-process-shell-command
-   "notmuch update"
-   nil
-   "cd ~/.mail/account.gmail && gmi push && gmi pull && notmuch new && afew -n -t"))
+  (when IS-MAC
+    (start-process-shell-command
+     "notmuch update"
+     nil
+     "cd ~/.mail/account.gmail && gmi push && gmi pull && notmuch new && afew -n -t"))
+  (when IS-LINUX
+    (start-process-shell-command
+     "notmuch update"
+     nil
+     "cd ~/.mail/account.gmail && proxychains4 gmi push && proxychains4 gmi pull && notmuch new && afew -n -t")))
 
 
 
