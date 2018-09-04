@@ -279,6 +279,8 @@
   )
 ;; ** edit
 ;; *** company
+(after! company-box
+  (setq company-box-max-candidates 10))
 (after! company
   ;; **** prescient
   (def-package! company-prescient
