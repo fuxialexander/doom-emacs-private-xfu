@@ -23,6 +23,8 @@
 (package! orgit)
 (package! alert)
 (package! pinentry)
+(when IS-LINUX
+  (package! pkgbuild-mode))
 ;; * Writing
 (package! academic-phrases)
 ;; * Coding

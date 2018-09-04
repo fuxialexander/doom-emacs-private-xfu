@@ -305,6 +305,10 @@
 ;; **** sed
 (def-package! sed-mode
   :commands (sed-mode))
+;; **** pkgbuild
+(when IS-LINUX
+  (def-package! pkgbuild-mode
+    :mode (("/PKGBUILD$" . pkgbuild-mode))))
 ;; *** yasnippet
 (def-package! ivy-yasnippet
   :commands (ivy-yasnippet))
