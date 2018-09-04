@@ -20,7 +20,8 @@
 
 (when (featurep! +export)
   (package! htmlize)
-  (package! ox-pandoc))
+  ;; (package! ox-pandoc)
+  )
 
 (when (featurep! +present)
   (package! ox-reveal))
