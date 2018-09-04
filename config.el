@@ -427,8 +427,6 @@
 
 (load! "+bindings")
 (load! "+popup")
-(after! doom-themes
-  (load! "+themes"))
 (load! "+idle")
 
 ;; ** Hacks
