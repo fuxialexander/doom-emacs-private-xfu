@@ -150,7 +150,7 @@
  +default-repeat-forward-key ";"
  +default-repeat-backward-key "'"
  evil-want-C-u-scroll t
- evil-want-integration nil
+ evil-want-integration t
  evil-shift-width 2
  evil-snipe-override-evil-repeat-keys nil
  evil-collection-company-use-tng nil
