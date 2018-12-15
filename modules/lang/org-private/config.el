@@ -26,7 +26,7 @@
   :after org
   :commands (org-brain-visualize)
   :init
-  (setq org-brain-path "~/Dropbox/org")
+  (setq org-brain-path "~/Dropbox/org/brain")
   (after! evil-snipe
     (push 'org-brain-visualize-mode evil-snipe-disabled-modes))
   ;; (add-hook 'org-agenda-mode-hook #'(lambda () (evil-vimish-fold-mode -1)))
@@ -377,7 +377,8 @@ If run interactively, get ENTRY from context."
 
   ;; Update UI when theme is changed
   (add-hook 'doom-load-theme-hook #'+org-private|setup-ui)
-  (org-clock-persistence-insinuate))
+  ;; (org-clock-persistence-insinuate)
+  )
 
 (defun +org-private|setup-keybinds ()
   (require 'evil-org)
@@ -803,7 +804,7 @@ This holds only for inactive timestamps."
 (def-package! org-clock
   :commands org-clock-save
   :hook (org-mode . org-clock-load)
-  :config
-  (setq org-clock-persist t
-        org-clock-persist-file (expand-file-name ".org-clock-persist-data.el" org-directory))
-  (add-hook 'kill-emacs-hook 'org-clock-save))
+  ;; (setq org-clock-persist t
+  ;;       org-clock-persist-file (expand-file-name ".org-clock-persist-data.el" org-directory))
+  ;; (add-hook 'kill-emacs-hook 'org-clock-save)
+  )

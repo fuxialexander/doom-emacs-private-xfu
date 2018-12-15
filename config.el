@@ -328,6 +328,7 @@
   (setq-default lispy-outline "^;; \\(?:;[^#]\\|\\*+\\)"
                 lispy-outline-header ";; ")
   :config
+  (add-hook 'lispy-mode-hook #'turn-off-smartparens-mode)
   (map! :map lispy-mode-map
         :i "_" #'special-lispy-different
         :i "C-d" #'lispy-delete
@@ -433,4 +434,10 @@
 
 ;; ** Hacks
 (add-to-list '+doom-solaire-themes '(doom-modern-dark . t))
+
+;; (defun doom-themes-set-faces (theme &rest faces)
+;;   "Customize THEME (a symbol) with FACES."
+;;   (declare (indent defun))
+;;   (apply #'custom-theme-set-faces (quote user)
+;;          (mapcar #'doom-themes--build-face (outline-2 :slant 'italic))))
 

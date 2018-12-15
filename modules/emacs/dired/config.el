@@ -30,7 +30,6 @@
          (dired-insert-set-properties (point-min) (point-max)))
     (set-buffer-modified-p nil))
   (add-hook 'dired-after-readin-hook #'+dired|sort-directories-first)
-  (add-hook 'doom-real-buffer-functions #'doom-dired-buffer-p)
   (after! solaire-mode
     (add-hook 'dired-mode-hook #'solaire-mode))
 

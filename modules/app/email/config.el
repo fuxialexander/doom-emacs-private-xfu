@@ -131,7 +131,7 @@
             :nmv "n"   #'notmuch-mua-new-mail
             :nmv "s-n" #'notmuch-mua-new-mail
             :nmv "j"   #'widget-forward
-            :nmv "s"   #'helm-notmuch
+            :nmv "s"   #'counsel-notmuch
             :nmv "q"   #'+mail/quit
             :nmv "e"   #'+mail/notmuch-update
             :nmv "r"   #'notmuch-hello-update)
@@ -152,14 +152,14 @@
             :nmv "q"   #'+mail/quit
             :nmv "R"   #'notmuch-search-reply-to-thread-sender
             :nmv "r"   #'notmuch-search-reply-to-thread
-            :nmv "s"   #'helm-notmuch
+            :nmv "s"   #'counsel-notmuch
             :nmv "S"   #'notmuch-search
             :nmv "x"   #'+mail/notmuch-search-spam)
-          (:map notmuch-tree-mode-map
+          :map notmuch-tree-mode-map
             :nmv "j"   #'notmuch-tree-next-message
             :nmv "k"   #'notmuch-tree-prev-message
             :nmv "S"   #'notmuch-search-from-tree-current-query
-            :nmv "s"   #'helm-notmuch
+            :nmv "s"   #'counsel-notmuch
             :nmv "t"   #'notmuch-tree
             :nmv ";"   #'notmuch-tree-tag
             :nmv "RET" #'notmuch-tree-show-message
@@ -170,7 +170,7 @@
             :nmv "A"   #'notmuch-tree-archive-thread
             :nmv "i"   #'+mail/open-message-with-mail-app-notmuch-tree
             :nmv "d"   #'+mail/notmuch-tree-delete
-            :nmv "x"   #'+mail/notmuch-tree-spam)
+            :nmv "x"   #'+mail/notmuch-tree-spam
           (:map notmuch-message-mode-map
             :desc "Save as Draft"       "M-s" #'notmuch-draft-save
             :desc "Resume Draft"        "M-r" #'notmuch-draft-resume
@@ -181,12 +181,12 @@
             :desc "Attach file"         :n "f" #'mml-attach-file))))
 
 ;; * Other packages
-(def-package! helm-notmuch
-  :commands helm-notmuch
-  :after notmuch)
-;; (def-package! counsel-notmuch
-;;   :commands counsel-notmuch
+;; (def-package! helm-notmuch
+;;   :commands helm-notmuch
 ;;   :after notmuch)
+(def-package! counsel-notmuch
+  :commands counsel-notmuch
+  :after notmuch)
 (def-package! org-mime
   :after (org notmuch)
   :config
