@@ -434,3 +434,5 @@
 ;; ** Hacks
 (add-to-list '+doom-solaire-themes '(doom-modern-dark . t))
 
+(when IS-LINUX
+  (setq conda-anaconda-home "/opt/miniconda3"))
