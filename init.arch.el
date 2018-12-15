@@ -142,7 +142,9 @@
  user-mail-address "fuxialexander@gmail.com"
  user-full-name "Alexander Fu Xi"
  max-specpdl-size 10000
- +file-templates-dir "~/.doom.d/templates")
+ +file-templates-dir "~/.doom.d/templates"
+ +python-conda-home "/home/xfu/.conda"
+ conda-anaconda-home "/opt/miniconda3")
 
 ;; * Keys
 (setq

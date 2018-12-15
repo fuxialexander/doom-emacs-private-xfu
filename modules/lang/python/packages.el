@@ -3,11 +3,21 @@
 
 ;; requires: python jedi setuptools
 
-(package! lpy :recipe (:fetcher github :repo "abo-abo/lpy" :files ("*")))
-(package! anaconda-mode)
+;; (package! lpy :recipe (:fetcher github :repo "abo-abo/lpy" :files ("*")))
 (package! nose)
-(package! conda)
 (package! py-isort)
-(package! company-anaconda)
 (package! pip-requirements)
 (package! yapfify :recipe (:fetcher github :repo "JorisE/yapfify"))
+;; Environmet management
+(package! pipenv)
+(when (featurep! +pyenv)
+  (package! pyenv-mode))
+(when (featurep! +pyvenv)
+  (package! pyvenv))
+(when (featurep! +conda)
+  (package! conda))
+
+;; Programming environment
+(when (package! anaconda-mode)
+  (when (featurep! :completion company)
+    (package! company-anaconda)))
