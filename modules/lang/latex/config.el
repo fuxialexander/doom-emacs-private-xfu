@@ -97,7 +97,7 @@ If no viewers are found, `latex-preview-pane' is used.")
     (add-to-list 'LaTeX-indent-environment-list `(,env +latex/LaTeX-indent-item)))
 
   (add-hook! 'LaTeX-mode-hook
-    (setq-local ivy-bibtex-default-action 'ivy-bibtex-insert-citation))
+    (setq-local ivy-bibtex-default-action 'ivy-bibtex-insert-citation)))
 
 
 (def-package! preview
