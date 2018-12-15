@@ -328,6 +328,7 @@
   (setq-default lispy-outline "^;; \\(?:;[^#]\\|\\*+\\)"
                 lispy-outline-header ";; ")
   :config
+  (add-hook 'lispy-mode-hook #'turn-off-smartparens-mode)
   (map! :map lispy-mode-map
         :i "_" #'special-lispy-different
         :i "C-d" #'lispy-delete
