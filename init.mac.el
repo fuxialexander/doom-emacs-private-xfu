@@ -123,8 +123,6 @@
  doom-big-font (font-spec :family "SF Mono" :size 14)
  ovp-font "Sarasa Mono SC"
  doom-theme 'doom-nord
- doom-line-numbers-style nil
- doom-line-numbers-visual-style nil
  +doom-modeline-buffer-file-name-style 'truncate-upto-project
  doom-neotree-enable-variable-pitch t
  doom-neotree-project-size 1.2
@@ -132,7 +130,7 @@
  doom-neotree-folder-size 1.0
  doom-neotree-chevron-size 0.6
  ;; scroll-conservatively 0
- doom-line-numbers-visual-style t
+ display-line-numbers-type nil
  browse-url-browser-function 'browse-url-default-browser
  org-bullets-bullet-list '("◉")
  indicate-buffer-boundaries nil

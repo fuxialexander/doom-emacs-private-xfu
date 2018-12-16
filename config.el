@@ -437,4 +437,8 @@
 
 (when IS-LINUX
   (setq conda-anaconda-home "/opt/miniconda3"))
-(remove-hook! 'prog-mode-hook 'display-line-numbers-mode)
+
+(def-package! org-kanban
+  :commands (org-kanban/initialize-at-end))
+
+(add-hook! :append 'doom-load-theme-hook (load! "+themes"))

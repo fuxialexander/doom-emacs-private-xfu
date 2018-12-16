@@ -21,6 +21,7 @@
 (package! shr-tag-pre-highlight)
 ;; * Tools
 (package! orgit)
+(package! org-kanban)
 (package! alert)
 (package! pinentry)
 (when IS-LINUX
