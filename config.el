@@ -437,3 +437,4 @@
 
 (when IS-LINUX
   (setq conda-anaconda-home "/opt/miniconda3"))
+(remove-hook! 'prog-mode-hook 'display-line-numbers-mode)
