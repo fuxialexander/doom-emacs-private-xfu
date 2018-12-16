@@ -366,9 +366,7 @@ If run interactively, get ENTRY from context."
           ("KILL" . org-todo-keyword-kill)
           ("OUTD" . org-todo-keyword-outd))
         org-todo-keywords
-        '((sequence "TODO(t!)"  "|" "DONE(d!/@)")
-          (sequence "WAIT(w@/@)" "|" "OUTD(o@/@)" "KILL(k@/@)")
-          (sequence "HABT(h!/@)" "|" "DONE(d!/@)" "KILL(k@/@)"))
+        '((sequence "TODO(t!)" "WAIT(w@/@)" "HABT(h!/@)" "|" "DONE(d!/@)" "OUTD(o@/@)" "KILL(k@/@)"))
         org-treat-insert-todo-heading-as-state-change t
         org-use-fast-tag-selection nil
         org-use-fast-todo-selection t
