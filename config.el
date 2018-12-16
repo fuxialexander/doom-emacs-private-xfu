@@ -396,7 +396,7 @@
         '(("hpc7" nil "/ssh:gw:")
           ("hpc8" nil "/ssh:gw:")
           ("hpc9" nil "/ssh:gw:")
-          ("hpc10" nil "/ssh:gw:")
+          ;; ("hpc10" nil "/ssh:gw:")
           ("hpc11" nil "/ssh:gw:")
           ("hpc12" nil "/ssh:gw:")
           ("hpc13" nil "/ssh:gw:")
