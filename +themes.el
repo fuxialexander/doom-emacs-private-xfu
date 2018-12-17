@@ -7,9 +7,54 @@
          (or theme 'user)
          (mapcar 'eval (mapcar #'doom-themes--build-face faces))))
 
-(doom-themes-set-faces 'user
-  '(font-lock-builtin-face              :foreground builtin :slant 'italic :weight 'light))
+;; (doom-themes-set-faces 'user
+;;   '(font-lock-builtin-face              :foreground builtin :slant 'italic :weight 'light))
+(defun doom-org-custom-fontification ()
+  "Correct (and improve) org-mode's font-lock keywords.
 
+  1. Re-set `org-todo' & `org-headline-done' faces, to make them respect
+     (inherit) underlying faces.
+  2. Make statistic cookies respect (inherit) underlying faces.
+  3. Fontify item bullets (make them stand out)
+  4. Fontify item checkboxes (and when they're marked done), like TODOs that are
+     marked done.
+  5. Fontify dividers/separators (5+ dashes)
+  6. Fontify #hashtags and @at-tags, for personal convenience; see
+     `doom-org-special-tags' to disable this."
+  (let ((org-todo (format org-heading-keyword-regexp-format
+                          org-todo-regexp))
+        (org-done (format org-heading-keyword-regexp-format
+                          (concat "\\(?:" (mapconcat #'regexp-quote org-done-keywords "\\|") "\\)"))))
+    (setq
+     org-font-lock-extra-keywords
+     (append (org-delete-all
+              (append `(("\\[\\([0-9]*%\\)\\]\\|\\[\\([0-9]*\\)/\\([0-9]*\\)\\]"
+                         (0 (org-get-checkbox-statistics-face) t))
+                        (,org-todo (2 (org-get-todo-face 2) t))
+                        (,org-done (2 'org-headline-done t)))
+                      (when (memq 'date org-activate-links)
+                        '((org-activate-dates (0 'org-date t))))
+                      )
+              org-font-lock-extra-keywords)
+             ;; respsect underlying faces!
+             `((,org-todo (2 (org-get-todo-face 2) prepend))
+               (,org-done (2 'org-headline-done prepend)))
+             ;; (when (memq 'date org-activate-links)
+             ;;   '((org-activate-dates (0 'org-date prepend))))
+             ;; Make checkbox statistic cookies respect underlying faces
+             '(("\\[\\([0-9]*%\\)\\]\\|\\[\\([0-9]*\\)/\\([0-9]*\\)\\]"
+                (0 (org-get-checkbox-statistics-face) prepend))
+               ;; I like how org-mode fontifies checked TODOs and want this to extend to
+               ;; checked checkbox items:
+               ("^[ \t]*\\(?:[-+*]\\|[0-9]+[).]\\)[ \t]+\\(\\(?:\\[@\\(?:start:\\)?[0-9]+\\][ \t]*\\)?\\[\\(?:X\\|\\([0-9]+\\)/\\2\\)\\][^\n]*\n\\)"
+                1 'org-headline-done prepend)
+               ;; make plain list bullets stand out
+               ("^ *\\([-+]\\|[0-9]+[).]\\) " 1 'org-list-dt append)
+               ;; and separators/dividers
+               ("^ *\\(-----+\\)$" 1 'org-meta-line))
+             ;; custom #hashtags & @at-tags for another level of organization
+             (when doom-org-special-tags
+               '(("\\s-\\(\\([#@]\\)[^+ \n.,]+\\)" 1 (doom-org--tag-face 2) prepend)))))))
 (doom-themes-set-faces 'user
   ;; ** font-lock
   '(font-lock-builtin-face              :foreground builtin :slant 'italic :weight 'light)
@@ -77,26 +122,28 @@
   ;; (org-block                    :background (doom-blend 'base4 'bg 0.15))
   ;; (org-block-background         :weight 'extralight :font "Iosevka" :background (doom-blend 'base4 'bg 0.1))
   ;; (org-block-begin-line         :weight 'extralight :font "Iosevka" :foreground (doom-blend 'blue 'bg 0.5) :background (doom-blend 'base4 'bg 0.1) :distant-foreground nil)
-  '(org-closed-custom            :weight 'extralight :font "Iosevka" :foreground bg :background base6 :distant-foreground fg)
-  '(org-closed-custom-braket     :foreground base6 :background base6 :distant-foreground base6)
+  '(org-ellipsis :background nil :foreground base5)
   '(org-column                   :inherit 'org-table)
   '(org-column-title             :inherit 'org-column :weight 'bold)
-  '(org-date                     :font "Iosevka" :weight 'extralight)
-  '(org-deadline-custom          :weight 'extralight :font "Iosevka" :foreground bg :background red :distant-foreground fg)
+  '(org-date          :weight 'extralight :font "Iosevka" :foreground fg)
+  '(org-deadline-custom          :weight 'extralight :font "Iosevka" :foreground bg :background red :distant-foreground bg)
+  '(org-scheduled-custom         :weight 'extralight :font "Iosevka" :foreground bg :background green :distant-foreground bg)
+  '(org-closed-custom            :weight 'extralight :font "Iosevka" :foreground bg :background base6 :distant-foreground bg)
   '(org-deadline-custom-braket   :foreground red   :background red :distant-foreground red)
-  '(org-ellipsis :background nil :foreground base5)
-  '(org-scheduled-custom         :weight 'extralight :font "Iosevka" :foreground bg :background green :distant-foreground fg)
   '(org-scheduled-custom-braket  :foreground green :background green :distant-foreground green)
+  '(org-closed-custom-braket     :foreground base6 :background base6 :distant-foreground base6)
+
   '(org-special-keyword          :foreground (doom-blend 'blue 'bg 0.3) :font "Iosevka" :weight 'extralight)
   '(org-table                    :overline base5 :font "Iosevka")
   '(org-tag                      :foreground green :weight 'light)
   '(org-todo                     :bold 'inherit :foreground highlight)
-  '(org-todo-keyword-done :foreground (doom-blend 'green 'bg 0.8)   :background (doom-blend 'green 'bg 0.2) :font "Iosevka" :height 1.0)
-  '(org-todo-keyword-habt :foreground (doom-blend 'yellow 'bg 0.8)  :background (doom-blend 'yellow 'bg 0.2) :font "Iosevka" :height 1.0)
-  '(org-todo-keyword-kill :foreground (doom-blend 'magenta 'bg 0.8) :background (doom-blend 'magenta 'bg 0.2) :font "Iosevka" :height 1.0)
-  '(org-todo-keyword-outd :foreground (doom-blend 'fg 'bg 0.8)      :background (doom-blend 'fg 'bg 0.2) :font "Iosevka" :height 1.0)
-  '(org-todo-keyword-todo :foreground (doom-blend 'blue 'bg 0.8)    :background (doom-blend 'blue 'bg 0.2) :font "Iosevka" :height 1.0)
-  '(org-todo-keyword-wait :foreground (doom-blend 'red 'bg 0.8)     :background (doom-blend 'red 'bg 0.2) :font "Iosevka" :height 1.0)
+  '(org-priority :foreground (doom-blend 'red 'bg 0.8)   :background (doom-blend 'red 'bg 0.03) :font "SF Mono" :weight 'bold :height 1.5)
+  '(org-todo-keyword-done :foreground (doom-blend 'green 'bg 0.8)   :background (doom-blend 'green 'bg 0.03) :font "SF Mono" :weight 'bold :height 1.0)
+  '(org-todo-keyword-habt :foreground (doom-blend 'yellow 'bg 0.8)  :background (doom-blend 'yellow 'bg 0.03) :font "SF Mono" :weight 'bold :height 1.0)
+  '(org-todo-keyword-kill :foreground (doom-blend 'magenta 'bg 0.8) :background (doom-blend 'magenta 'bg 0.03) :font "SF Mono" :weight 'bold :height 1.0)
+  '(org-todo-keyword-outd :foreground (doom-blend 'fg 'bg 0.8)      :background (doom-blend 'fg 'bg 0.03) :font "SF Mono" :weight 'bold :height 1.0)
+  '(org-todo-keyword-todo :foreground (doom-blend 'blue 'bg 0.8)    :background (doom-blend 'blue 'bg 0.03) :font "SF Mono" :weight 'bold :height 1.0)
+  '(org-todo-keyword-wait :foreground (doom-blend 'orange 'bg 0.8)     :background (doom-blend 'orange 'bg 0.03) :font "SF Mono" :weight 'bold :height 1.0)
   ;; ** ovp
   ;; (ovp-face :height 1.0 :font "Iosevka")
   ;; ** auctex (latex-mode)
