@@ -9,3 +9,4 @@
 (package! dired-narrow)
 (package! dired-sidebar)
 (package! diredfl)
+(package! ranger)

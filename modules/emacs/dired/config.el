@@ -14,11 +14,23 @@
    dired-listing-switches "-alh"
    ;; files
    image-dired-dir (concat doom-cache-dir "image-dired/")
-        image-dired-db-file (concat image-dired-dir "db.el")
+   image-dired-db-file (concat image-dired-dir "db.el")
    image-dired-gallery-dir (concat image-dired-dir "gallery/")
    image-dired-temp-image-file (concat image-dired-dir "temp-image")
    image-dired-temp-rotate-image-file (concat image-dired-dir "temp-rotate-image"))
   :config
+  (setq dired-listing-switches "-aBhl --group-directories-first")
+
+  (when IS-MAC
+    ;; Use GNU ls as `gls' from `coreutils' if available. Add `(setq
+    ;; dired-use-ls-dired nil)' to your config to suppress the Dired warning
+    ;; when not using GNU ls. We must look for `gls' after
+    ;; `exec-path-from-shell' was initialized to make sure that `gls' is in
+    ;; `exec-path'
+    (if-let* ((gls (executable-find "gls")))
+        (setq insert-directory-program gls)
+      (message "Cannot find `gls`. Install it using `brew install coreutils`")))
+
   (defun +dired|sort-directories-first ()
     "List directories first in dired buffers."
     (save-excursion
@@ -198,3 +210,27 @@
         :n "/" #'dired-narrow-fuzzy))
 (def-package! diredfl
   :hook (dired-mode . diredfl-mode))
+
+
+(def-package! ranger
+  :when (featurep! +ranger)
+  :after dired
+  :init
+  ;; set up image-dired to allow picture resize
+  (setq image-dired-dir (concat doom-cache-dir "image-dir"))
+  :config
+  (unless (file-directory-p image-dired-dir)
+    (make-directory image-dired-dir))
+
+  (set-popup-rule! "^\\*ranger" :ignore t)
+
+  (setq ranger-override-dired t
+        ranger-cleanup-on-disable t
+        ranger-omit-regexp "^\.DS_Store$"
+        ranger-excluded-extensions '("mkv" "iso" "mp4")
+        ranger-deer-show-details nil
+        ranger-max-preview-size 10
+        dired-omit-verbose nil))
+
+(def-package! dired-x
+  :hook (dired-mode . dired-omit-mode))
