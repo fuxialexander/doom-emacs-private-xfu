@@ -72,8 +72,8 @@
   (defun +magit|remove-fringes ()
     (set-window-fringes nil 0 0)
     (set-window-margins nil 1 nil))
-  (add-hook 'magit-mode-hook #'+magit|remove-fringes)
-  (add-hook 'magit-popup-mode-hook #'+magit|remove-fringes)
+  (add-hook 'magit-post-display-buffer-hook #'+magit|remove-fringes t)
+  (add-hook! magit-popup-mode-hook #'+magit|remove-fringes)
 
   (after! solaire-mode
     (add-hook 'magit-mode-hook #'solaire-mode))
