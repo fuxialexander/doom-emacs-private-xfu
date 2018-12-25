@@ -158,3 +158,6 @@
                          ("org" . "http://elpa.emacs-china.org/org/")
                          ("melpa" . "http://elpa.emacs-china.org/melpa/")))
 
+
+(add-to-list 'load-path "~/Repo/emacs-libvterm-burst")
+(require 'vterm)
