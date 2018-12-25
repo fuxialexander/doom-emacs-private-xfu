@@ -1,14 +1,14 @@
 ;;; ~/.doom.d/+themes.el -*- lexical-binding: t; -*-
 ;; * Faces
-
+;; ** Function override
 (defun doom-themes-set-faces (theme &rest faces)
   "Customize THEME (a symbol) with FACES."
   (apply #'custom-theme-set-faces
          (or theme 'user)
          (mapcar 'eval (mapcar #'doom-themes--build-face faces))))
 
-;; (doom-themes-set-faces 'user
-;;   '(font-lock-builtin-face              :foreground builtin :slant 'italic :weight 'light))
+
+
 (defun doom-org-custom-fontification ()
   "Correct (and improve) org-mode's font-lock keywords.
 
@@ -33,8 +33,7 @@
                         (,org-todo (2 (org-get-todo-face 2) t))
                         (,org-done (2 'org-headline-done t)))
                       (when (memq 'date org-activate-links)
-                        '((org-activate-dates (0 'org-date t))))
-                      )
+                        '((org-activate-dates (0 'org-date t)))))
               org-font-lock-extra-keywords)
              ;; respsect underlying faces!
              `((,org-todo (2 (org-get-todo-face 2) prepend))
@@ -56,19 +55,19 @@
              (when doom-org-special-tags
                '(("\\s-\\(\\([#@]\\)[^+ \n.,]+\\)" 1 (doom-org--tag-face 2) prepend)))))))
 (doom-themes-set-faces 'user
-  ;; ** font-lock
+;; ** font-lock
   '(font-lock-builtin-face              :foreground builtin :slant 'italic :weight 'light)
   '(font-lock-variable-name-face        :foreground variables :weight 'semi-bold)
   '(font-lock-function-name-face        :foreground functions :weight 'semi-bold)
   '(font-lock-keyword-face              :foreground keywords :weight 'semi-bold)
   '(font-lock-string-face               :foreground strings :weight 'semi-bold)
   '(font-lock-type-face                 :foreground type :slant 'italic)
-  ;; ** hi
+;; ** hi
   '(hi-yellow :foreground yellow :background (doom-blend 'yellow 'bg 0.3))
   '(hi-blue :foreground blue :background (doom-blend 'blue 'bg 0.3))
   '(hi-pink :foreground red :background (doom-blend 'red 'bg 0.3))
   '(hi-green :foreground green :background (doom-blend 'green 'bg 0.3))
-  ;; ** ivy
+;; ** ivy
   '(ivy-minibuffer-match-face-1 :background nil :foreground (doom-lighten 'grey 0.4) :weight 'light)
   '(ivy-minibuffer-match-face-2 :inherit 'ivy-minibuffer-match-face-1 :foreground magenta :background (doom-blend 'magenta 'base3 0.1) :weight 'semi-bold)
   '(ivy-minibuffer-match-face-3 :inherit 'ivy-minibuffer-match-face-1 :foreground green :background (doom-blend 'green 'base3 0.1) :weight 'semi-bold)
@@ -76,18 +75,18 @@
   '(prodigy-green-face :foreground green)
   '(prodigy-red-face :foreground red)
   '(prodigy-yellow-face :foreground yellow)
-  ;; ** ivy-posframe
+;; ** ivy-posframe
   '(ivy-posframe :background (doom-darken 'bg-alt 0.1))
   '(ivy-posframe-cursor :background highlight)
-  ;; ** swiper
+;; ** swiper
   '(swiper-line-face    :background blue :foreground bg)
   '(swiper-match-face-1 :inherit 'unspecified :weight 'bold)
   '(swiper-match-face-2 :inherit 'unspecified :background magenta  :foreground base0 :weight 'bold)
   '(swiper-match-face-3 :inherit 'unspecified :background green :foreground base0 :weight 'bold)
   '(swiper-match-face-4 :inherit 'unspecified :background yellow   :foreground base0 :weight 'bold)
-  ;; ** ace-window
+;; ** ace-window
   '(aw-leading-char-face :foreground base0 :background base7 :weight 'ultra-bold)
-  ;; ** company
+;; ** company
   '(company-tooltip-selection  :background selection :weight 'bold)
   '(company-preview                              :foreground comments :background bg :weight 'extralight)
   '(company-preview-common     :background base3 :foreground comments :background bg :weight 'extralight)
@@ -95,17 +94,16 @@
   '(company-box-background :background (doom-darken 'bg-alt 0.1))
   '(company-box-selection :inherit 'company-tooltip-selection)
   '(company-box-annotation :inherit 'company-tooltip-annotation)
-  ;; ** outline
-  '(outline-1  :font "SF Compact Display" :foreground blue   :height 1.6)
-  '(outline-2  :font "SF Compact Display" :foreground violet :height 1.4)
-  '(outline-3  :font "SF Compact Display" :foreground yellow :height 1.4)
-  '(outline-4  :font "SF Compact Display" :foreground red    :height 1.3)
-  '(outline-5  :font "SF Compact Display" :foreground blue   :height 1.3)
-  '(outline-6  :font "SF Compact Display" :foreground violet :height 1.2)
-  '(outline-7  :font "SF Compact Display" :foreground yellow :height 1.2)
-  '(outline-8  :font "SF Compact Display" :foreground red    :height 1.2)
-
-  ;; ** org-mode
+;; ** outline
+  '(outline-1  :font "SF Compact Display" :foreground blue  :background bg :height 1.4)
+  '(outline-2  :font "SF Compact Display" :foreground violet :height 1.2)
+  '(outline-3  :font "SF Compact Display" :foreground yellow :height 1.2)
+  '(outline-4  :font "SF Compact Display" :foreground red    :height 1.0)
+  '(outline-5  :font "SF Compact Display" :foreground blue   :height 1.0)
+  '(outline-6  :font "SF Compact Display" :foreground violet :height 1.0)
+  '(outline-7  :font "SF Compact Display" :foreground yellow :height 1.0)
+  '(outline-8  :font "SF Compact Display" :foreground red    :height 1.0)
+;; ** org-mode
   '(org-level-1         :inherit 'outline-1)
   '(org-level-2         :inherit 'outline-2)
   '(org-level-3         :inherit 'outline-3)
@@ -126,9 +124,9 @@
   '(org-column                   :inherit 'org-table)
   '(org-column-title             :inherit 'org-column :weight 'bold)
   '(org-date          :weight 'extralight :font "Iosevka" :foreground fg)
-  '(org-deadline-custom          :weight 'extralight :font "Iosevka" :foreground bg :background red :distant-foreground bg)
-  '(org-scheduled-custom         :weight 'extralight :font "Iosevka" :foreground bg :background green :distant-foreground bg)
-  '(org-closed-custom            :weight 'extralight :font "Iosevka" :foreground bg :background base6 :distant-foreground bg)
+  '(org-deadline-custom          :weight 'bold :font "Iosevka" :foreground bg :background red :distant-foreground bg)
+  '(org-scheduled-custom         :weight 'bold :font "Iosevka" :foreground bg :background green :distant-foreground bg)
+  '(org-closed-custom            :weight 'bold :font "Iosevka" :foreground bg :background base6 :distant-foreground bg)
   '(org-deadline-custom-braket   :foreground red   :background red :distant-foreground red)
   '(org-scheduled-custom-braket  :foreground green :background green :distant-foreground green)
   '(org-closed-custom-braket     :foreground base6 :background base6 :distant-foreground base6)
@@ -137,16 +135,17 @@
   '(org-table                    :overline base5 :font "Iosevka")
   '(org-tag                      :foreground green :weight 'light)
   '(org-todo                     :bold 'inherit :foreground highlight)
-  '(org-priority :foreground (doom-blend 'red 'bg 0.8)   :background (doom-blend 'red 'bg 0.03) :font "SF Mono" :weight 'bold :height 1.5)
-  '(org-todo-keyword-done :foreground (doom-blend 'green 'bg 0.8)   :background (doom-blend 'green 'bg 0.03) :font "SF Mono" :weight 'bold :height 1.0)
-  '(org-todo-keyword-habt :foreground (doom-blend 'yellow 'bg 0.8)  :background (doom-blend 'yellow 'bg 0.03) :font "SF Mono" :weight 'bold :height 1.0)
-  '(org-todo-keyword-kill :foreground (doom-blend 'magenta 'bg 0.8) :background (doom-blend 'magenta 'bg 0.03) :font "SF Mono" :weight 'bold :height 1.0)
-  '(org-todo-keyword-outd :foreground (doom-blend 'fg 'bg 0.8)      :background (doom-blend 'fg 'bg 0.03) :font "SF Mono" :weight 'bold :height 1.0)
-  '(org-todo-keyword-todo :foreground (doom-blend 'blue 'bg 0.8)    :background (doom-blend 'blue 'bg 0.03) :font "SF Mono" :weight 'bold :height 1.0)
-  '(org-todo-keyword-wait :foreground (doom-blend 'orange 'bg 0.8)     :background (doom-blend 'orange 'bg 0.03) :font "SF Mono" :weight 'bold :height 1.0)
-  ;; ** ovp
+  '(org-priority :weight 'bold :font "SF Mono" :height 'unspecified :foreground red)
+  '(org-priority-hide :weight 'extralight :font "SF Mono" :foreground bg :height 'unspecified)
+  '(org-todo-keyword-done :foreground (doom-blend 'green 'bg 0.7)    :font "SF Mono" :weight 'bold)
+  '(org-todo-keyword-habt :foreground (doom-blend 'yellow 'bg 0.7)   :font "SF Mono" :weight 'bold :height 1.0)
+  '(org-todo-keyword-kill :foreground (doom-blend 'magenta 'bg 0.7)  :font "SF Mono" :weight 'bold :height 1.0)
+  '(org-todo-keyword-outd :foreground (doom-blend 'fg 'bg 0.7)       :font "SF Mono" :weight 'bold :height 1.0)
+  '(org-todo-keyword-todo :foreground (doom-blend 'blue 'bg 0.7)     :font "SF Mono" :weight 'bold :height 1.0)
+  '(org-todo-keyword-wait :foreground (doom-blend 'orange 'bg 0.7)      :font "SF Mono" :weight 'bold :height 1.0)
+;; ** ovp
   ;; (ovp-face :height 1.0 :font "Iosevka")
-  ;; ** auctex (latex-mode)
+;; ** auctex (latex-mode)
   '(font-latex-sectioning-0-face :inherit 'outline-1)
   '(font-latex-sectioning-1-face :inherit 'outline-2)
   '(font-latex-sectioning-2-face :inherit 'outline-3)
@@ -155,7 +154,7 @@
   '(font-latex-sectioning-5-face :inherit 'outline-6)
   '(font-latex-sectioning-6-face :inherit 'outline-7)
   '(font-latex-sectioning-7-face :inherit 'outline-8)
-  ;; ** markdown-mode
+;; ** markdown-mode
   '(markdown-url-face              :foreground magenta :weight 'normal)
   '(markdown-header-face-1         :inherit 'org-level-1)
   '(markdown-header-face-2         :inherit 'org-level-2)
@@ -165,7 +164,7 @@
   '(markdown-header-face-6         :inherit 'org-level-6)
   '(markdown-header-face-7         :inherit 'org-level-7)
   '(markdown-header-face-8         :inherit 'org-level-8)
-  ;; ** elfeed
+;; ** elfeed
   ;; (elfeed-log-debug-level-face :foreground comments)
   ;; (elfeed-log-error-level-face :inherit 'error)
   ;; (elfeed-log-info-level-face  :inherit 'success)
@@ -182,7 +181,7 @@
   '(elfeed-show-feed-face :weight 'bold :foreground base6)
   '(elfeed-show-tag-face :weight 'extralight :background (doom-blend 'blue 'bg 0.2) :foreground (doom-color 'blue))
   '(elfeed-show-misc-face :weight 'extralight :foreground (doom-color 'yellow) )
-  ;; ** message
+;; ** message
   '(message-header-name       :foreground green)
   '(message-header-subject    :foreground highlight :weight 'bold)
   '(message-header-to         :foreground highlight :weight 'bold)
@@ -193,7 +192,7 @@
   '(message-separator         :foreground comments)
   '(message-mml               :foreground comments :slant 'italic)
   '(message-cited-text        :foreground magenta)
-  ;; ** notmuch
+;; ** notmuch
   ;; (notmuch-crypto-decryption               :foreground blue-l)
   ;; (notmuch-crypto-part-header              :foreground yellow-l)
   ;; (notmuch-crypto-signature-bad            :foreground red-l)
@@ -228,10 +227,10 @@
   ;; (notmuch-tree-no-match-tree-face         :foreground yellow)
   ;; (notmuch-wash-cited-text                 :foreground base4)
   '(notmuch-wash-toggle-button              :foreground blue :weight 'extralight)
-  ;; ** border
+;; ** border
   '(internal-border :foreground (doom-darken 'bg-alt 0.1) :background (doom-darken 'bg-alt 0.1))
   '(border :foreground fg :background fg)
-  ;; ** dired
+;; ** dired
   '(diredfl-file-name              :foreground fg :background bg)
   '(diredfl-dir-name               :foreground blue :background bg)
   '(diredfl-autofile-name          :foreground base4 :background bg)
@@ -257,26 +256,26 @@
   '(diredfl-symlink                :foreground violet :background bg)
   '(diredfl-tagged-autofile-name   :foreground base5 :background bg)
   '(diredfl-write-priv             :foreground red :background bg)
-  ;; ** flycheck
+;; ** flycheck
   '(flycheck-posframe-face :inherit nil :fg fg :bg bg-alt :font "SF Compact Display")
   '(flycheck-posframe-info-face :inherit 'flycheck-posframe-face)
   '(flycheck-posframe-warning-face :inherit 'flycheck-posframe-face :foreground warning)
   '(flycheck-posframe-error-face   :inherit 'flycheck-posframe-face :foreground error)
-  ;; ** lsp
+;; ** lsp
   ;; (lsp-ui-peek-footer :inherit 'lsp-ui-peek-header)
   ;; (lsp-ui-doc-url                 :inherit 'link)
   ;; (lsp-ui-doc-header              :background blue)
   ;; (lsp-ui-doc-background          :background bg-alt)
   ;; (lsp-ui-sideline-current-symbol :foreground bg :background highlight)
   ;; (lsp-ui-sideline-symbol         :background region)
-  ;; ** langtools
+;; ** langtools
   ;; (langtool-correction-face :foreground green :background (doom-blend 'green 'bg 0.3) :slant 'italic :weight 'bold)
   ;; (langtool-errline :foreground green :background (doom-blend 'green 'bg 0.3) :slant 'italic)
-  ;; ** wordsmith
+;; ** wordsmith
   ;;                 (wordsmith-noun-face :underline `(:color ,blue))
   ;;                 (wordsmith-verb-face :underline `(:color ,green))
   ;;                 (wordsmith-default-face :underline `(:color ,fg))
-  ;; ** ein
+;; ** ein
   ;; (ein:notification-tab-normal   :background base2)
   ;; (ein:notification-tab-selected :background base2)
   ;; (ein:cell-output-stderr        :background (doom-blend 'bg 'red 0.7))
@@ -289,9 +288,9 @@
   ;; (ein:cell-input-area           :background (doom-blend 'base4 'bg 0.15))
   ;; (ein:cell-input-prompt         :background (doom-blend 'base6 'bg 0.25) :weight 'light)
   ;; (ein:cell-output-prompt        :inherit 'ein:cell-input-prompt)
-  ;; ** twitter
+;; ** twitter
   ;; (twitter-divider :underline `(:color ,(doom-blend 'vertical-bar 'bg 0.8)))
-  ;; ** sx
+;; ** sx
   ;; (sx-inbox-item-type-unread         :foreground fg :background bg)
   ;; (sx-inbox-item-type                :foreground fg :background bg)
   ;; (sx-question-list-bounty           :foreground fg :background bg)

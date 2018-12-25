@@ -161,7 +161,7 @@ If run interactively, get ENTRY from context."
   (defface org-todo-keyword-wait '((t ())) "org-wait" :group 'org)
   (defface org-todo-keyword-done '((t ())) "org-done" :group 'org)
   (defface org-todo-keyword-habt '((t ())) "org-habt" :group 'org)
-
+  (defface org-priority-hide '((t ())) "org-priority-hide" :group 'org)
 
   ;; (advice-remove #'org-src-switch-to-buffer #'+popup*org-src-pop-to-buffer)
   ;; (set-popup-rule! "^\\*Org Src" :size 100 :side 'bottom :slot -1 :height 0.6 :select t)
@@ -290,6 +290,17 @@ If run interactively, get ENTRY from context."
                   '(org-font-lock-keywords t nil nil backward-paragraph))
       (kill-local-variable 'font-lock-keywords)
       nil))
+
+  (defun org-font-lock-add-priority-faces (limit)
+        "Add the special priority faces."
+        (while (re-search-forward "^\\*+ .*?\\(\\[\\(#\\(.\\)\\)\\]\\)" limit t)
+          (add-face-text-property
+           (match-beginning 1) (match-end 1)
+           'org-priority-hide)
+          (add-face-text-property
+           (match-beginning 2) (match-end 2)
+           (org-get-priority-face (string-to-char (match-string 3))))))
+
   (advice-add 'org-set-font-lock-defaults :override #'*org-set-font-lock-defaults)
   (defface org-deadline-custom '((t (:inherit 'default))) "org-deadline" :group 'org)
   (defface org-scheduled-custom '((t (:inherit 'default))) "org-schedule" :group 'org)
@@ -347,9 +358,9 @@ If run interactively, get ENTRY from context."
 
         org-pretty-entities-include-sub-superscripts t
         org-priority-faces
-        `((?a . ,(face-foreground 'error))
-          (?b . ,(face-foreground 'warning))
-          (?c . ,(face-foreground 'success)))
+        `((?A . ,(face-foreground 'error))
+          (?B . ,(face-foreground 'warning))
+          (?C . ,(face-foreground 'success)))
         org-publish-timestamp-directory (concat org-directory ".org-timestamps/")
         org-refile-targets '((nil :maxlevel . 9)
                              (org-agenda-files :maxlevel . 9))
