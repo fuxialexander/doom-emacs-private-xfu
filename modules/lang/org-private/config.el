@@ -127,7 +127,7 @@ If run interactively, get ENTRY from context."
         org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 3 :fileskip0 t :stepskip0 t :tags "-COMMENT"))
         org-agenda-compact-blocks t
         org-agenda-dim-blocked-tasks nil
-        org-agenda-files (ignore-errors (directory-files org-directory t "^\\(_.*\\|ref\\)\\.org$" t))
+        org-agenda-files (ignore-errors (directory-files org-directory t "^\\(.*\\|ref\\)\\.org$" t))
         org-agenda-follow-indirect t
         org-agenda-ignore-properties '(effort appt category)
         org-agenda-inhibit-startup t
@@ -312,8 +312,8 @@ If run interactively, get ENTRY from context."
         org-M-RET-may-split-line '((default . nil))
         org-export-babel-evaluate nil
         org-blank-before-new-entry '((heading . t) (plain-list-item . nil))
-        org-clock-clocktable-default-properties (quote (:maxlevel 3 :scope agenda :tags "-COMMENT"))
-        org-clocktable-defaults (quote (:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 t :fileskip0 t :tags "-COMMENT" :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil))
+        org-clock-clocktable-default-properties '(:maxlevel 3 :scope agenda :tags "-COMMENT")
+        org-clocktable-defaults '(:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 t :fileskip0 t :tags "-COMMENT" :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)
         org-columns-default-format "%45ITEM %TODO %SCHEDULED %DEADLINE %3PRIORITY %TAGS %CLOCKSUM %EFFORT %BUDGET_WEEK %BUDGET_MONTH %BUDGET_QUARTER %BUDGET_YEAR"
         org-complete-tags-always-offer-all-agenda-tags t
         org-cycle-include-plain-lists t
@@ -322,7 +322,7 @@ If run interactively, get ENTRY from context."
         org-enforce-todo-dependencies t
         org-ellipsis "⤵"
         org-entities-user
-        '(("flat"  "\\flat" nil "" "" "266D" "♭")
+        '(("flat" "\\flat" nil "" "" "266D" "♭")
           ("sharp" "\\sharp" nil "" "" "266F" "♯"))
         org-fontify-done-headline t
         org-fontify-quote-and-verse-blocks t
@@ -347,12 +347,20 @@ If run interactively, get ENTRY from context."
         org-log-done 'time
         org-log-into-drawer t
         org-log-note-clock-out t
-
+        org-log-note-headings '((done . "%t: DONE")
+                                (state . "%t: %-4S -> %-4s")
+                                (note . "%t: NOTE")
+                                (reschedule . "%t: %S -> RESCHEDULE")
+                                (delschedule . "%t: %S -> DESCHEDULE")
+                                (redeadline . "%t: %S -> REDEADLINE")
+                                (deldeadline . "%t: %S -> DEDEADLINE")
+                                (refile . "%t: REFILE")
+                                (clock-out . ""))
         org-log-redeadline 'time
         org-log-reschedule 'time
         org-log-state-notes-into-drawer t
         org-lowest-priority ?F
-        org-modules (quote (org-bibtex org-habit org-info org-protocol org-mac-link org-notmuch))
+        org-modules '(org-bibtex org-habit org-info org-protocol org-mac-link org-notmuch)
         org-outline-path-complete-in-steps nil
         org-pretty-entities nil
 
@@ -383,7 +391,6 @@ If run interactively, get ENTRY from context."
         org-use-fast-todo-selection t
         org-use-sub-superscripts '{}
         outline-blank-line t)
-
   ;; Update UI when theme is changed
   (add-hook 'doom-load-theme-hook #'+org-private|setup-ui)
   ;; (org-clock-persistence-insinuate)

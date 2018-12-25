@@ -98,12 +98,13 @@
       xml-query
       url-parse
       url-queue
-      elfeed-db
-      elfeed-lib
-      elfeed-log
-      elfeed-curl
-      elfeed-search
-      elfeed-org))
+      ;; elfeed-db
+      ;; elfeed-lib
+      ;; elfeed-log
+      ;; elfeed-curl
+      ;; elfeed-search
+      ;; elfeed-org
+      ))
    (run-with-idle-timer 30 nil #'auto-load-files
                         '("~/Dropbox/org/ref.org"
                           "~/Dropbox/org/idea.org"

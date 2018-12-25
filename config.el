@@ -65,7 +65,7 @@
 ;; *** magit
 (def-package! orgit :after (magit org))
 (after! magithub
-  (setq magithub-clone-default-directory "~/Repo"))
+  (setq magithub-clone-default-directory "~/Repo/"))
 (after! magit
   (defun +magit|remove-fringes ()
     (set-window-fringes nil 0 0)

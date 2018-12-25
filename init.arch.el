@@ -46,10 +46,10 @@
        gist
        magit
        reference
-                                        ;; password-store
+       ;; password-store
        pdf
        :lang
-                                        ;lsp
+       lsp
        data
        (python +conda)
        ess
@@ -84,7 +84,7 @@
         +synosaurus)
 
        :config
-       (default +snippets +evil-commands +bindings))
+       (default +snippets +bindings +commands))
 
 ;; * UI
 (setq
@@ -113,7 +113,7 @@
 ;;           "http_proxy" "socks_proxy" "https_proxy"
 ;;           "all_proxy" "no_proxy")
 
-;; (add-to-list 'default-frame-alist '(alpha . (95 . 95)))
+(add-to-list 'default-frame-alist '(alpha . (95 . 95)))
 (or standard-display-table
     (setq standard-display-table (make-display-table)))
 (set-display-table-slot standard-display-table 0 ?\ )
@@ -123,17 +123,7 @@
                                             fringe-indicator-alist)))
 
 ;; * Mac-specific
-(if (string-match-p "NS" (emacs-version))
-    (progn
-      (setq
-       ns-use-thin-smoothing t
-       ns-alternate-modifier 'super
-       ns-command-modifier 'meta)
-      (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-      (add-to-list 'default-frame-alist '(ns-appearance . dark)))
-  (setq mac-command-modifier 'super
-        mac-option-modifier 'meta
-        mac-pass-command-to-system nil))
+
 
 ;; * Config
 (setq
