@@ -2,15 +2,14 @@
 ;;;###autoload
 (defun dwim-jump ()
   (interactive)
-  (cond ((eq 'org-mode (buffer-local-value 'major-mode (current-buffer)))
-         (counsel-org-goto))
-        ((eq 'org-agenda-mode (buffer-local-value 'major-mode (current-buffer)))
-         (counsel-org-goto-all))
-        ((eq 'latex-mode major-mode)
-         (reftex-toc))
-        ((bound-and-true-p outline-minor-mode)
-         (counsel-oi))
-        (t (counsel-imenu))))
+  (cond
+   ((eq 'org-agenda-mode (buffer-local-value 'major-mode (current-buffer)))
+    (counsel-org-goto-all))
+   ((eq 'latex-mode major-mode)
+    (reftex-toc))
+   ((bound-and-true-p outline-minor-mode)
+    (counsel-outline))
+   (t (counsel-imenu))))
 
 ;;;###autoload
 (defun mac-iTerm-shell-command (text)
