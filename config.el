@@ -189,7 +189,7 @@
   (ivy-rich-mode 1)
   (advice-add #'ivy-posframe-enable :around #'doom*shut-up)
   (setq ivy-posframe-parameters
-        `((min-width . 120)
+        `((min-width . 100)
           (min-height . ,ivy-height)
           (left-fringe . 0)
           (right-fringe . 0)
