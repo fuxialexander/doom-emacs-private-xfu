@@ -295,7 +295,16 @@
 ;; *** language
 ;; **** elisp
 (after! elisp-mode
-  (add-hook 'emacs-lisp-mode-hook #'outline-minor-mode)
+  (add-hook 'emacs-lisp-mode-hook #'outline-minor-mode t)
+  (remove-hook 'emacs-lisp-mode-hook (lambda
+                                      (&rest _)
+                                      (set
+                                       (make-local-variable 'mode-name)
+                                       "Elisp")
+                                      (set
+                                       (make-local-variable 'outline-regexp)
+                                       ";;;;* [^ 	\n]")))
+  (setq-hook! 'emacs-lisp-mode-hook mode-name "Elisp")
   (set-lookup-handlers! 'emacs-lisp-mode :documentation #'helpful-at-point))
 (after! helpful
   (set-lookup-handlers! 'helpful-mode :documentation #'helpful-at-point))
