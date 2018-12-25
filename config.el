@@ -1,5 +1,5 @@
 ;;; config.el -*- lexical-binding: t; -*-
-;; * Config
+;; * config
 ;; ** general
 (setq request-storage-directory (concat doom-etc-dir "request/")
       trash-directory "~/.Trash/"
@@ -21,7 +21,6 @@
       +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin
       visual-fill-column-center-text t
       evil-escape-key-sequence nil
-      ;; mac-frame-tabbing nil
       line-spacing nil
       frame-resize-pixelwise t)
 (add-hook! minibuffer-setup (setq-local show-trailing-whitespace nil))
@@ -55,8 +54,7 @@
         aw-background nil))
 ;; *** outline
 (def-package! outshine :load-path "~/.doom.d/local/"
-  :hook ((python-mode . outshine-hook-function)
-         (emacs-lisp-mode . outshine-hook-function))
+  :hook ((outline-minor-mode . outshine-hook-function))
   :config
   (map! :map outline-minor-mode-map
         :nm [tab] #'outline-cycle
@@ -332,11 +330,12 @@
     (remove-hook 'evil-insert-state-entry-hook #'evil-mc-resume-cursors t)))
 ;; *** lispy
 (def-package! lispy
-  :hook (emacs-lisp-mode . lispy-mode)
+  :hook ((emacs-lisp-mode . lispy-mode))
   :init
   (setq-default lispy-outline "^;; \\(?:;[^#]\\|\\*+\\)"
                 lispy-outline-header ";; ")
   :config
+  (add-hook 'emacs-lisp-mode-hook #'lispy-mode t)
   (add-hook 'lispy-mode-hook #'turn-off-smartparens-mode)
   (map! :map lispy-mode-map
         :i "_" #'special-lispy-different
