@@ -7,16 +7,8 @@
       :gnvime "M-r" (lambda! (revert-buffer nil t t))
       :gnvime "M-g" #'org-agenda-show-daily
       :nvime "M-s" #'save-buffer
+      :nvime "M-v" #'yank
       (:when IS-MAC
-        :nvime "M-1" (λ! (+workspace/switch-to 0))
-        :nvime "M-2" (λ! (+workspace/switch-to 1))
-        :nvime "M-3" (λ! (+workspace/switch-to 2))
-        :nvime "M-4" (λ! (+workspace/switch-to 3))
-        :nvime "M-5" (λ! (+workspace/switch-to 4))
-        :nvime "M-6" (λ! (+workspace/switch-to 5))
-        :nvime "M-7" (λ! (+workspace/switch-to 6))
-        :nvime "M-8" (λ! (+workspace/switch-to 7))
-        :nvime "M-9" (λ! (+workspace/switch-to 8))
         :nvime "M-w" #'delete-window
         :nvime "M-j" #'evil-window-down
         :nvime "M-k" #'evil-window-up
@@ -46,6 +38,7 @@
       ;; "<M-return>" #'evil-mc-make-and-goto-next-match
       ;; "<C-M-return>" #'+evil/mc-make-cursor-here
       "M-W" #'kill-this-buffer
+      :nie "M-f" #'counsel-grep-or-swiper
       :nie "M-F" (lambda! (swiper
                            (if (symbol-at-point)
                                (format "\\_<%s\\_> " (symbol-at-point)) nil)))
@@ -69,7 +62,7 @@
         (:unless (featurep! :feature workspaces)
           :desc "Switch buffer" :n "," #'switch-to-buffer)
         (:when (featurep! :feature workspaces)
-          :desc "Switch to workspace" :n "m" #'+workspace/switch-to
+          :desc "Switch to workspace" :n "j" #'+workspace/switch-to
           :desc "Switch workspace buffer" :n "," #'persp-switch-to-buffer
           :desc "Switch buffer" :n "<" #'switch-to-buffer)
         :desc "Find project files" :n "." #'projectile-find-file
@@ -232,60 +225,203 @@
           :n "RET" #'helpful-visit-reference
           :n "o" #'ace-link-help
           :n "q" #'quit-window
-          :n "Q" #'ivy-resume)))
-
-;; ** ESS
-(map!
- (:after ess-r-mode
-   (:map inferior-ess-mode-map
-     :n "gh" #'ess-display-help-on-object))
- (:after ess
-   (:map ess-mode-map
-     :niv "<s-return>" #'ess-eval-region-or-line-and-step
-     "<up>" #'comint-next-input
-     "<down>" #'comint-previous-input
-     :n "gh" #'ess-display-help-on-object
-     (:localleader
-       :nv "RET" #'ess-eval-region-or-function-or-paragraph-and-step
-       :n "'" #'R
-       :n "<tab>" #'ess-switch-to-inferior-or-script-buffer
-       :n "<backtab>" #'ess-switch-process
-       :n ;; REPL
-       :n "B" #'ess-eval-buffer-and-go
-       :n "b" #'ess-eval-buffer
-       :nv "d" #'ess-eval-region-or-line-and-step
-       :n "D" #'ess-eval-function-or-paragraph-and-step
-       :n "L" #'ess-eval-line-and-go
-       :n "l" #'ess-eval-line
-       :nv "R" #'ess-eval-region-and-go
-       :nv "r" #'ess-eval-region
-       :n "F" #'ess-eval-function-and-go
-       :n "f" #'ess-eval-function
-       ;; predefined keymaps
-       :n "h" #'ess-doc-map
-       :n "x" #'ess-extra-map
-       :n "p" #'ess-r-package-dev-map
-       :n "v" #'ess-dev-map
-       ;; noweb
-       :n "cC" #'ess-eval-chunk-and-go
-       :n "cc" #'ess-eval-chunk
-       :n "cd" #'ess-eval-chunk-and-step
-       :n "cm" #'ess-noweb-mark-chunk
-       :n "cp" #'ess-noweb-previous-chunk
-       :n "cn" #'ess-noweb-next-chunk)))
- (:after ess-help
-   (:map ess-doc-map
-     "h" #'ess-display-help-on-object
-     "p" #'ess-R-dv-pprint
-     "t" #'ess-R-dv-ctable)
-   (:map ess-help-mode-map
-     :n "q" #'quit-window
-     :n "gh" #'ess-display-help-on-object
-     :v "RET" #'ess-eval-region-and-go
-     :n "C-j" #'ess-skip-to-next-section
-     :n "C-k" #'ess-skip-to-previous-section
-     :n "J" #'ess-skip-to-next-section
-     :n "K" #'ess-skip-to-previous-section)))
+          :n "Q" #'ivy-resume))
+      (:after pdf-annot
+        (:map pdf-annot-list-mode-map
+          :e "k" #'tablist-previous-line
+          :e "j" #'tablist-next-line))
+      ;; ** notmuch
+      (:after notmuch
+        (:map notmuch-show-mode-map
+          :nmv "o" #'ace-link-notmuch-show
+          :nmv "i" #'+mail/open-message-with-mail-app-notmuch-show
+          :nmv "I" #'notmuch-show-view-all-mime-parts
+          :nmv "q" #'notmuch-bury-or-kill-this-buffer
+          :nmv "s" #'counsel-notmuch
+          :nmv "t" #'notmuch-tree-from-show-current-query
+          :nmv "s-n" #'notmuch-mua-new-mail
+          :nmv "n" #'notmuch-show-next-thread-show
+          :nmv "r" #'notmuch-show-reply
+          :nmv "<tab>" #'notmuch-show-toggle-visibility-headers
+          :nmv "R" #'notmuch-show-reply-sender
+          :nmv "p" #'notmuch-show-previous-thread-show)
+        (:map notmuch-hello-mode-map
+          :nmv "o" #'ace-link-notmuch-hello
+          :nmv "t" #'notmuch-tree
+          :nmv "k" #'widget-backward
+          :nmv "n" #'notmuch-mua-new-mail
+          :nmv "s-n" #'notmuch-mua-new-mail
+          :nmv "j" #'widget-forward
+          :nmv "s" #'counsel-notmuch
+          :nmv "q" #'+mail/quit
+          :nmv "e" #'+mail/notmuch-update
+          :nmv "r" #'notmuch-hello-update)
+        (:map notmuch-search-mode-map
+          :nmv "j" #'notmuch-search-next-thread
+          :nmv "k" #'notmuch-search-previous-thread
+          :nmv "t" #'notmuch-tree-from-search-thread
+          :nmv "RET" #'notmuch-tree-from-search-thread
+          ;; :nmv "RET" #'notmuch-search-show-thread
+          :nmv "s-n" #'notmuch-mua-new-mail
+          :nmv "T" #'notmuch-tree-from-search-current-query
+          :nmv ";" #'notmuch-search-tag
+          :nmv "e" #'+mail/notmuch-update
+          :nmv "," #'notmuch-jump-search
+          :nmv "d" #'+mail/notmuch-search-delete
+          :nmv "a" #'notmuch-search-archive-thread
+          ;; :nmv "q"   #'notmuch
+          :nmv "q" #'+mail/quit
+          :nmv "R" #'notmuch-search-reply-to-thread-sender
+          :nmv "r" #'notmuch-search-reply-to-thread
+          :nmv "s" #'counsel-notmuch
+          :nmv "S" #'notmuch-search
+          :nmv "x" #'+mail/notmuch-search-spam)
+        (:map notmuch-tree-mode-map
+          :nmv "j" #'notmuch-tree-next-message
+          :nmv "k" #'notmuch-tree-prev-message
+          :nmv "S" #'notmuch-search-from-tree-current-query
+          :nmv "s" #'counsel-notmuch
+          :nmv "t" #'notmuch-tree
+          :nmv ";" #'notmuch-tree-tag
+          :nmv "RET" #'notmuch-tree-show-message
+          :nmv "q" #'notmuch-tree-quit
+          :nmv "s-n" #'notmuch-mua-new-mail
+          :nmv "r" #'notmuch-search-reply-to-thread-sender
+          :nmv "a" #'notmuch-tree-archive-message-then-next
+          :nmv "A" #'notmuch-tree-archive-thread
+          :nmv "i" #'+mail/open-message-with-mail-app-notmuch-tree
+          :nmv "d" #'+mail/notmuch-tree-delete
+          :nmv "x" #'+mail/notmuch-tree-spam)
+        (:map notmuch-message-mode-map
+          "M-s" #'notmuch-draft-save
+          "M-r" #'notmuch-draft-resume
+          :localleader
+          "," #'notmuch-mua-send-and-exit
+          "k" #'notmuch-mua-kill-buffer
+          "s" #'notmuch-draft-postpone
+          "f" #'mml-attach-file))
+      ;; ** ESS
+      (:after ess-help
+        (:map ess-doc-map
+          "h" #'ess-display-help-on-object
+          "p" #'ess-R-dv-pprint
+          "t" #'ess-R-dv-ctable
+          [C-return] #'ess-eval-line
+          [up] #'comint-next-input
+          [down] #'comint-previous-input)
+        (:map ess-help-mode-map
+          "q" #'quit-window
+          "gh" #'ess-display-help-on-object
+          "RET" #'ess-eval-region-and-go
+          "C-j" #'ess-skip-to-next-section
+          "C-k" #'ess-skip-to-previous-section
+          "J" #'ess-skip-to-next-section
+          "K" #'ess-skip-to-previous-section))
+      (:after ess-r-mode
+        :map inferior-ess-mode-map
+        :nv "gh" #'ess-display-help-on-object)
+      (:after ess
+        :map ess-mode-map
+        "<s-return>" #'ess-eval-region-or-line-and-step
+        "<up>" #'comint-next-input
+        "<down>" #'comint-previous-input
+        :nv "gh" #'ess-display-help-on-object
+        :localleader
+        "," #'ess-eval-region-or-function-or-paragraph-and-step
+        "'" #'R
+        [tab] #'ess-switch-to-inferior-or-script-buffer
+        [backtab] #'ess-switch-process
+        ;; REPL
+        "B" #'ess-eval-buffer-and-go
+        "b" #'ess-eval-buffer
+        "d" #'ess-eval-region-or-line-and-step
+        "D" #'ess-eval-function-or-paragraph-and-step
+        "L" #'ess-eval-line-and-go
+        "l" #'ess-eval-line
+        "R" #'ess-eval-region-and-go
+        "r" #'ess-eval-region
+        "F" #'ess-eval-function-and-go
+        "f" #'ess-eval-function
+        ;; predefined keymaps
+        "h" #'ess-doc-map
+        "x" #'ess-extra-map
+        "p" #'ess-r-package-dev-map
+        "v" #'ess-dev-map)
+      (:after dired
+        :map dired-mode-map
+        :n "q" #'quit-window
+        :n "v" #'evil-visual-char
+        :nv "j" #'dired-next-line
+        :nv "k" #'dired-previous-line
+        :n "h" #'dired-up-directory
+        :n "l" #'dired-find-file
+        :n "#" #'dired-flag-auto-save-files
+        :n "." #'evil-repeat
+        :n "~" #'dired-flag-backup-files
+        ;; Comparison commands
+        :n "=" #'dired-diff
+        :n "|" #'dired-compare-directories
+        ;; move to marked files
+        :m "[m" #'dired-prev-marked-file
+        :m "]m" #'dired-next-marked-file
+        :m "[d" #'dired-prev-dirline
+        :m "]d" #'dired-next-dirline
+        ;; Lower keys for commands not operating on all the marked files
+        :desc "wdired" :n "w" #'wdired-change-to-wdired-mode
+        :n "a" #'dired-find-alternate-file
+        :nv "d" #'dired-flag-file-deletion
+        :n "K" #'dired-do-kill-lines
+        :n "r" #'dired-do-redisplay
+        :nv "m" #'dired-mark
+        :nv "t" #'dired-toggle-marks
+        :nv "u" #'dired-unmark          ; also "*u"
+        :nv "p" #'dired-unmark-backward
+        ;; :n "W" #'browse-url-of-dired-file
+        :n "x" #'dired-do-flagged-delete
+        :n "y" #'dired-copy-filename-as-kill
+        :n "Y" (lambda! (dired-copy-filename-as-kill 0))
+        :n "+" #'dired-create-directory
+        :n "O" #'dired-open-mac
+        :n "o" #'dired-preview-mac
+        ;; hiding
+        :n "<tab>" #'dired-hide-subdir ;; FIXME: This can probably live on a better binding.
+        :n "<backtab>" #'dired-hide-all
+        :n "$" #'dired-hide-details-mode
+        ;; misc
+        :n "U" #'dired-undo
+        ;; subtree
+        )
+      (:after dired-quick-sort
+        :map dired-mode-map
+        :n "s" #'hydra-dired-quick-sort/body)
+      (:after dired-filter
+        :map dired-mode-map
+        :n "F" dired-filter-mark-map
+        :n "f" dired-filter-map)
+      (:after dired-subtree
+        :map dired-mode-map
+        :n "H" #'dired-subtree-remove
+        :n "L" #'dired-subtree-insert
+        :n "i" #'dired-subtree-insert
+        :localleader
+        :n "ii" #'dired-subtree-insert
+        :n "ir" #'dired-subtree-remove
+        :n "ij" #'dired-subtree-down
+        :n "ik" #'dired-subtree-up
+        :n "in" #'dired-subtree-next-sibling
+        :n "ip" #'dired-subtree-previous-sibling
+        :n "if" #'dired-subtree-apply-filter
+        :n "ia" #'dired-subtree-narrow
+        :n "i_" #'dired-subtree-beginning
+        :n "i$" #'dired-subtree-end
+        :n "im" #'dired-subtree-mark-subtree
+        :n "im" #'dired-subtree-unmark-subtree
+        :n "if" #'dired-subtree-only-this-file
+        :n "id" #'dired-subtree-only-this-directory)
+      (:after dired-narrow
+        :map dired-mode-map
+        :n "?" #'dired-narrow-regexp
+        :n "/" #'dired-narrow-fuzzy))
 
 ;; ** do-repeat
 ;; *** org
@@ -311,4 +447,4 @@
         which-key-replacement-alist))
 
 ;; ** ex
-(ex! "tn"    #'+workspace:new)
+(evil-ex-define-cmd "tn" #'+workspace:new)

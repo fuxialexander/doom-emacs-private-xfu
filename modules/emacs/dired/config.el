@@ -19,18 +19,6 @@
    image-dired-temp-image-file (concat image-dired-dir "temp-image")
    image-dired-temp-rotate-image-file (concat image-dired-dir "temp-rotate-image"))
   :config
-  (setq dired-listing-switches "-aBhl --group-directories-first")
-
-  (when IS-MAC
-    ;; Use GNU ls as `gls' from `coreutils' if available. Add `(setq
-    ;; dired-use-ls-dired nil)' to your config to suppress the Dired warning
-    ;; when not using GNU ls. We must look for `gls' after
-    ;; `exec-path-from-shell' was initialized to make sure that `gls' is in
-    ;; `exec-path'
-    (if-let* ((gls (executable-find "gls")))
-        (setq insert-directory-program gls)
-      (message "Cannot find `gls`. Install it using `brew install coreutils`")))
-
   (defun +dired|sort-directories-first ()
     "List directories first in dired buffers."
     (save-excursion
@@ -58,105 +46,7 @@
 
   (after! evil-snipe
     (push 'dired-mode evil-snipe-disabled-modes))
-  (set-evil-initial-state! 'dired-mode 'normal)
-  (map! (:after dired
-          :map dired-mode-map
-          :n "RET" #'dired
-          :n "SPC" nil
-          (:localleader
-            :desc "wdired" :n "'" #'wdired-change-to-wdired-mode
-            (:desc "regexp" :prefix "r"
-              :n "u" #'dired-upcase
-              :n "l" #'dired-downcase
-              :n "d" #'dired-flag-files-regexp
-              :n "g" #'dired-mark-files-containing-regexp
-              :n "m" #'dired-mark-files-regexp
-              :n "r" #'dired-do-rename-regexp
-              :n "c" #'dired-do-copy-regexp
-              :n "h" #'dired-do-hardlink-regexp
-              :n "r" #'dired-do-rename-regexp
-              :n "s" #'dired-do-symlink-regexp
-              :n "&" #'dired-flag-garbage-files)
-            (:desc "mark" :prefix "m"
-              :n "e" #'dired-mark-executables
-              :n "d" #'dired-mark-directories
-              :n "l" #'dired-mark-symlinks
-              :n "r" #'dired-mark-files-regexp
-              :n "c" #'dired-change-marks
-              :n "s" #'dired-mark-subdir-files
-              :n "m" #'dired-mark
-              :n "u" #'dired-unmark
-              :n "af" #'dired-unmark-all-files
-              :n "am" #'dired-unmark-all-marks)
-            (:desc "do" :prefix "d"
-              :n "a" #'dired-do-find-regexp
-              :n "c" #'dired-do-copy
-              :n "b" #'dired-do-byte-compile
-              :n "d" #'dired-do-delete
-              :n "g" #'dired-do-chgrp ;; FIXME: This can probably live on a better binding.
-              :n "h" #'dired-do-hardlink
-              :n "l" #'dired-do-load
-              :n "m" #'dired-do-chmod
-              :n "o" #'dired-do-chown
-              :n "q" #'dired-do-find-regexp-and-replace
-              :n "r" #'dired-do-rename
-              :n "s" #'dired-do-symlink
-              :n "t" #'dired-do-touch
-              :n "x" #'dired-do-shell-command
-              :n "z" #'dired-do-compress
-              :n "Z" #'dired-do-compress-to
-              :n "!" #'dired-do-shell-command
-              :n "&" #'dired-do-async-shell-command)
-            ;; encryption and decryption (epa-dired)
-            (:desc "crypt" :prefix "x"
-              :n "d" #'epa-dired-do-decrypt
-              :n "v" #'epa-dired-do-verify
-              :n "s" #'epa-dired-do-sign
-              :n "e" #'epa-dired-do-encrypt))
-          :n "q" #'quit-window
-          :n "v" #'evil-visual-char
-          :nv "j" #'dired-next-line
-          :nv "k" #'dired-previous-line
-          :n "h" #'dired-up-directory
-          :n "l" #'dired-find-file
-
-          :n "#" #'dired-flag-auto-save-files
-          :n "." #'evil-repeat
-          :n "~" #'dired-flag-backup-files
-          ;; Comparison commands
-          :n "=" #'dired-diff
-          :n "|" #'dired-compare-directories
-          ;; move to marked files
-          :m "[m" #'dired-prev-marked-file
-          :m "]m" #'dired-next-marked-file
-          :m "[d" #'dired-prev-dirline
-          :m "]d" #'dired-next-dirline
-          ;; Lower keys for commands not operating on all the marked files
-          :desc "wdired" :n "w" #'wdired-change-to-wdired-mode
-          :n "a" #'dired-find-alternate-file
-          :nv "d" #'dired-flag-file-deletion
-          :n "K" #'dired-do-kill-lines
-          :n "r" #'dired-do-redisplay
-          :nv "m" #'dired-mark
-          :nv "t" #'dired-toggle-marks
-          :nv "u" #'dired-unmark        ; also "*u"
-          :nv "p" #'dired-unmark-backward
-          ;; :n "W" #'browse-url-of-dired-file
-          :n "x" #'dired-do-flagged-delete
-          :n "y" #'dired-copy-filename-as-kill
-          :n "Y" (lambda! (dired-copy-filename-as-kill 0))
-          :n "+" #'dired-create-directory
-          :n "O" #'dired-open-mac
-          :n "o" #'dired-preview-mac
-          ;; hiding
-          :n "<tab>" #'dired-hide-subdir ;; FIXME: This can probably live on a better binding.
-          :n "<backtab>" #'dired-hide-all
-          :n "$" #'dired-hide-details-mode
-
-          ;; misc
-          :n "U" #'dired-undo
-          ;; subtree
-          )))
+  (set-evil-initial-state! 'dired-mode 'normal))
 
 (def-package! ivy-dired-history
   :after dired
@@ -167,70 +57,15 @@
 (def-package! dired-quick-sort
   :after dired
   :config
-  (dired-quick-sort-setup)
-  (map! :map dired-mode-map
-        :n "s" #'hydra-dired-quick-sort/body))
+  (dired-quick-sort-setup))
 
 (def-package! dired-filter
-  :after dired
-  :config
-  (map! :map dired-mode-map
-        :n "F" dired-filter-mark-map
-        :n "f" dired-filter-map))
+  :after dired)
 
 (def-package! dired-subtree
-  :after dired
-  :config
-  (map! :map dired-mode-map
-        :n "H" #'dired-subtree-remove
-        :n "L" #'dired-subtree-insert
-        :n "i" #'dired-subtree-insert
-        (:localleader
-          (:desc "subtree" :prefix "i"
-            :n "i" #'dired-subtree-insert
-            :n "r" #'dired-subtree-remove
-            :n "j" #'dired-subtree-down
-            :n "k" #'dired-subtree-up
-            :n "n" #'dired-subtree-next-sibling
-            :n "p" #'dired-subtree-previous-sibling
-            :n "f" #'dired-subtree-apply-filter
-            :n "a" #'dired-subtree-narrow
-            :n "_" #'dired-subtree-beginning
-            :n "$" #'dired-subtree-end
-            :n "m" #'dired-subtree-mark-subtree
-            :n "m" #'dired-subtree-unmark-subtree
-            :n "f" #'dired-subtree-only-this-file
-            :n "d" #'dired-subtree-only-this-directory))))
+  :after dired)
 
 (def-package! dired-narrow
-  :after dired
-  :config
-  (map! :map dired-mode-map
-        :n "?" #'dired-narrow-regexp
-        :n "/" #'dired-narrow-fuzzy))
+  :after dired)
 (def-package! diredfl
   :hook (dired-mode . diredfl-mode))
-
-
-(def-package! ranger
-  :when (featurep! +ranger)
-  :after dired
-  :init
-  ;; set up image-dired to allow picture resize
-  (setq image-dired-dir (concat doom-cache-dir "image-dir"))
-  :config
-  (unless (file-directory-p image-dired-dir)
-    (make-directory image-dired-dir))
-
-  (set-popup-rule! "^\\*ranger" :ignore t)
-
-  (setq ranger-override-dired t
-        ranger-cleanup-on-disable t
-        ranger-omit-regexp "^\.DS_Store$"
-        ranger-excluded-extensions '("mkv" "iso" "mp4")
-        ranger-deer-show-details nil
-        ranger-max-preview-size 10
-        dired-omit-verbose nil))
-
-(def-package! dired-x
-  :hook (dired-mode . dired-omit-mode))

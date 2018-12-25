@@ -382,119 +382,78 @@ If run interactively, get ENTRY from context."
   (require 'evil-org)
   (add-hook 'org-tab-first-hook #'+org|cycle-only-current-subtree t)
   (advice-add #'org-return-indent :after #'+org*fix-newline-and-indent-in-src-blocks)
-  (evil-define-key* 'insert evil-org-mode-map
-    ;; dedent with shift-tab in insert mode
-    [backtab] #'+org/dedent)
-  (evil-define-key* 'insert evil-org-mode-map
-    [return] #'org-return-indent)
-  (evil-define-key* 'normal evil-org-mode-map
-    [return] #'+org/dwim-at-point)
-  (evil-define-key* '(insert normal) evil-org-mode-map
-    [M-return]   (λ! (+org/insert-item 'below))
-    [S-M-return] (λ! (+org/insert-item 'above)))
-  (evil-define-key* 'motion evil-org-mode-map
-    "]]"  (λ! (org-forward-heading-same-level nil) (org-beginning-of-line))
-    "[["  (λ! (org-backward-heading-same-level nil) (org-beginning-of-line))
-    "]h"  #'org-next-visible-heading
-    "[h"  #'org-previous-visible-heading
-    "]l"  #'org-next-link
-    "[l"  #'org-previous-link
-    "]s"  #'org-babel-next-src-block
-    "[s"  #'org-babel-previous-src-block
-    "^"   #'evil-org-beginning-of-line
-    "0"   (λ! (let (visual-line-mode) (org-beginning-of-line))))
-  (evil-define-key* 'normal evil-org-mode-map
-    "gQ"  #'org-fill-paragraph
-    ;; sensible vim-esque folding keybinds
-    "za"  #'+org/toggle-fold
-    "zA"  #'org-shifttab
-    "zc"  #'+org/close-fold
-    "zC"  #'outline-hide-subtree
-    "zm"  #'+org/hide-next-fold-level
-    "zo"  #'+org/open-fold
-    "zO"  #'outline-show-subtree
-    "zr"  #'+org/show-next-fold-level
-    "zR"  #'outline-show-all)
+
 
   (after! evil-org
-    (map! :map evil-org-mode-map
-          :i "<S-tab>" #'+org/dedent
-          "M-o" #'org-open-at-point
-          "M-i" #'org-insert-last-stored-link
-          "M-I" #'org-insert-link
-          "M-p" #'org-ref-ivy-insert-cite-link
-          :nvime "C-j" (lambda! (org-next-visible-heading 1) (recenter))
-          :nvime "C-k" (lambda! (org-previous-visible-heading 1) (recenter))
-          :nv "M-j" nil
-          :nv "M-k" nil
-          :nv "M-l" nil
-          :nv "M-h" nil
+    (map! (:map evil-org-mode-map
+            ;; :i <S-tab> #'+org/dedent
+            "M-o" #'org-open-at-point
+            "M-i" #'org-insert-last-stored-link
+            "M-I" #'org-insert-link
+            "M-p" #'org-ref-ivy-insert-cite-link
+            :nvime "C-j" (lambda! (org-next-visible-heading 1) (recenter))
+            :nvime "C-k" (lambda! (org-previous-visible-heading 1) (recenter))
+            :nv "M-j" nil
+            :nv "M-k" nil
+            :nv "M-l" nil
+            :nv "M-h" nil
 
-          :ni "<M-backspace>" #'org-babel-remove-result
-          :ni "<M-return>" #'+org/work-on-heading
-          :n "RET" #'+org/dwim-at-point
-          :i "RET" #'org-return-indent
-          :n [tab] #'org-cycle
-          :n "M-t" nil
-          :m "]v" #'org-next-block
-          :m "[v" #'org-previous-block
-          :m "]i" #'org-next-item
-          :m "[i" #'org-previous-item
-          :m "]h" #'org-next-visible-heading
-          :m "[h" #'org-previous-visible-heading
-          :m "_" #'evil-org-beginning-of-line
-          :m "0" (λ! (let ((visual-line-mode)) (org-beginning-of-line)))
-          :n "gQ" #'org-fill-paragraph
-          ;; sensible code-folding vim keybinds
-          :n "za" #'+org/toggle-fold
-          :n "zA" #'org-shifttab
-          :n "zc" #'outline-hide-subtree
-          :n "zC" (λ! (outline-hide-sublevels 1))
-          :n "zd" (lambda (&optional arg) (interactive "p") (outline-hide-sublevels (or arg 3)))
-          :n "zm" (λ! (outline-hide-sublevels 1))
-          :n "zo" #'outline-show-subtree
-          :n "zO" #'outline-show-all
-          :n "zr" #'outline-show-all
-
-          :ni [M-return] #'org-meta-return
-          :ni [S-M-return] (lambda! (+org/insert-go-eol)
-                                    (call-interactively #'org-insert-todo-heading))
-          (:localleader
-            :n "," #'org-ctrl-c-ctrl-c
-            :n "s" #'org-schedule
-            :n "m" #'+org-toggle-math
-            :n "b" #'+org-private@org-babel-hydra/body
-            :n "c" #'org-columns
-            :n "C" #'(lambda () (interactive) (let ((current-prefix-arg 2)) (call-interactively #'org-columns)))
-            :n "L" #'+org/remove-link
-            :n "d" #'org-deadline
-            :n "'" #'org-edit-special
-            :n "e" #'org-set-effort
-            :n "t" #'org-todo
-            :n "r" #'org-refile
-            :n [tab] #'org-export-dispatch
-            :n "E" #'org-clock-modify-effort-estimate
-            :n "p" #'org-set-property
-            :n "i" #'org-clock-in
-            :n "o" #'org-clock-out
-            :n "=" (λ! (call-interactively #'evil-append) (insert (+reference/skim-get-annotation)))
-            :n "n" #'org-narrow-to-subtree
-            :n "N" #'org-narrow-to-element
-            :n "w" #'widen
-            :n "$" #'wordnut-lookup-current-word
-            :n "h" #'org-toggle-heading
-            :n "A" #'org-archive-subtree
-            :n "a" #'org-toggle-archive-tag)
+            :ni "<M-backspace>" #'org-babel-remove-result
+            :ni "<M-return>" #'+org/work-on-heading
+            :n "RET" #'+org/dwim-at-point
+            :i "RET" #'org-return-indent
+            :n [tab] #'org-cycle
+            :n "M-t" nil
+            :m "]v" #'org-next-block
+            :m "[v" #'org-previous-block
+            :m "]i" #'org-next-item
+            :m "[i" #'org-previous-item
+            :m "]h" #'org-next-visible-heading
+            :m "[h" #'org-previous-visible-heading
+            :m "_" #'evil-org-beginning-of-line
+            :m "0" (λ! (let ((visual-line-mode)) (org-beginning-of-line)))
+            :n "gQ" #'org-fill-paragraph
+            :ni [M-return] #'org-meta-return
+            :ni [S-M-return] (lambda! (+org/insert-go-eol)
+                                      (call-interactively #'org-insert-todo-heading))
+            (:localleader
+              :n "," #'org-ctrl-c-ctrl-c
+              :n "s" #'org-schedule
+              :n "m" #'+org-toggle-math
+              :n "b" #'+org-private@org-babel-hydra/body
+              :n "c" #'org-columns
+              :n "C" (lambda () (interactive) (let ((current-prefix-arg 2)) (call-interactively #'org-columns)))
+              :n "L" #'+org/remove-link
+              :n "d" #'org-deadline
+              :n "'" #'org-edit-special
+              :n "e" #'org-set-effort
+              :n "t" #'org-todo
+              :n "r" #'org-refile
+              :n [tab] #'org-export-dispatch
+              :n "E" #'org-clock-modify-effort-estimate
+              :n "p" #'org-set-property
+              :n "i" #'org-clock-in
+              :n "o" #'org-clock-out
+              :n "=" (λ! (call-interactively #'evil-append) (insert (+reference/skim-get-annotation)))
+              :n "n" #'org-narrow-to-subtree
+              :n "N" #'org-narrow-to-element
+              :n "w" #'widen
+              :n "$" #'wordnut-lookup-current-word
+              :n "h" #'org-toggle-heading
+              :n "A" #'org-archive-subtree
+              :n "a" #'org-toggle-archive-tag))
           (:after org-agenda
             (:map org-agenda-mode-map
-              :nm "<escape>" #'org-agenda-Quit
+              ;; :nm <escape> #'org-agenda-Quit
+              :nm "j" #'evil-next-line
+              :nm "k" #'evil-previous-line
               :nm "J" #'org-clock-convenience-timestamp-down
               :nm "K" #'org-clock-convenience-timestamp-up
               :nm "M-j" #'org-agenda-later
               :nm "M-k" #'org-agenda-earlier
               :nm "M-o" #'org-clock-convenience-fill-gap
               :nm "M-e" #'org-clock-convenience-fill-gap-both
-              :nm "\\" #'ace-window
+              ;; :nm "\\" #'ace-window
               :nm "t" #'org-agenda-todo
               :nm "p" #'org-set-property
               :nm "r" #'org-agenda-redo
@@ -507,7 +466,7 @@ If run interactively, get ENTRY from context."
               :nm "M-j" #'counsel-org-goto-all
               :nm "i" #'org-agenda-clock-in
               :nm "o" #'org-agenda-clock-out
-              :nm "<tab>" #'org-agenda-goto
+              :nm [tab] #'org-agenda-goto
               :nm "C" #'org-agenda-capture
               :nm "m" #'org-agenda-bulk-mark
               :nm "u" #'org-agenda-bulk-unmark
@@ -521,7 +480,10 @@ If run interactively, get ENTRY from context."
               :nm "q" #'org-agenda-quit
               :nm "s" #'org-agenda-schedule
               :nm "z" #'org-agenda-view-mode-dispatch
-              :nm "S" #'org-save-all-org-buffers)))))
+              :nm "S" #'org-save-all-org-buffers)
+            (:map org-super-agenda-header-map
+              "j" #'evil-next-line
+              "k" #'evil-previous-line)))))
 
 (defun +org-private|setup-overrides ()
   (after! org-html
