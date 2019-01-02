@@ -20,10 +20,18 @@
       twittering-connection-type-order '(wget urllib-http native urllib-https)
       +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin
       visual-fill-column-center-text t
-      evil-escape-key-sequence nil
+      evil-escape-key-sequence "fd"
       ;; mac-frame-tabbing nil
       line-spacing nil
       frame-resize-pixelwise t)
+(when IS-WINDOWS
+  (setq bibtex-completion-bibliography '("c:/Users/xfu/Dropbox/org/reference/Bibliography.bib")
+        bibtex-completion-library-path "c:/Users/xfu/Dropbox/org/reference/pdf/"
+        bibtex-completion-notes-path "c:/Users/xfu/Dropbox/org/ref.org"
+        org-directory "c:/Users/xfu/Dropbox/org"
+        org-ref-default-bibliography '("c:/Users/xfu/Dropbox/org/reference/Bibliography.bib")
+        org-ref-bibliography-notes "c:/Users/xfu/Dropbox/org/ref.org"
+        org-ref-pdf-directory "c:/Users/xfu/Dropbox/org/reference/pdf/"))
 (add-hook! minibuffer-setup (setq-local show-trailing-whitespace nil))
 (remove-hook 'text-mode-hook #'hl-line-mode)
 (remove-hook 'conf-mode-hook #'hl-line-mode)

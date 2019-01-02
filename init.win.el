@@ -53,22 +53,23 @@
        ;; data
        ;; (python +conda)
        ;; ess
-       ;; (latex
-       ;;  +latexmk
-       ;;  +zathura)
-       ;; (org
-       ;;  +attach
-       ;;  +babel
-       ;;  +capture
-       ;;  +present)
-       ;; (org-private
-       ;;  +todo
-       ;;  +babel
-       ;;  ;; +ipython +right-popup
-       ;;  +capture
-       ;;  ;; +latex
-       ;;  +export
-       ;;  +style)
+       (latex
+        +latexmk
+        ;; +zathura
+        )
+       (org
+        +attach
+        +babel
+        +capture
+        +present)
+       (org-private
+        +todo
+        +babel
+        ;; +ipython +right-popup
+        +capture
+        ;; +latex
+        ;; +export
+        +style)
        emacs-lisp
        ;; javascript
        ;; markdown
@@ -150,7 +151,7 @@
  +default-repeat-forward-key ";"
  +default-repeat-backward-key "'"
  evil-want-C-u-scroll t
- evil-want-integration nil
+ evil-want-integration t
  evil-shift-width 2
  evil-snipe-override-evil-repeat-keys nil
  evil-collection-company-use-tng nil

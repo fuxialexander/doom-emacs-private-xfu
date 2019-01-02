@@ -2,6 +2,7 @@
 ;;; lang/latex/packages.el
 
 (package! auctex)
+(package! cdlatex)
 (package! flyspell)
 ;; (package! magic-latex-buffer)
 

@@ -155,6 +155,7 @@
 
 (def-package! dired-quick-sort
   :after dired
+  :when (not IS-WINDOWS)
   :config
   (dired-quick-sort-setup)
   (map! :map dired-mode-map
