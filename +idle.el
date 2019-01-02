@@ -82,16 +82,16 @@
       hydra
       mm-view
       message
-      notmuch-lib
-      notmuch-tag
-      notmuch-show
-      notmuch-tree
-      notmuch-mua
-      notmuch-hello
-      notmuch-maildir-fcc
-      notmuch-message
-      notmuch-parser
-      notmuch
+      ;; notmuch-lib
+      ;; notmuch-tag
+      ;; notmuch-show
+      ;; notmuch-tree
+      ;; notmuch-mua
+      ;; notmuch-hello
+      ;; notmuch-maildir-fcc
+      ;; notmuch-message
+      ;; notmuch-parser
+      ;; notmuch
       org-mime
       cl-lib
       xml
