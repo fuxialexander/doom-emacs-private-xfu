@@ -99,10 +99,9 @@
  doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 24)
  doom-big-font (font-spec :family "SF Mono" :size 24)
  doom-theme 'doom-nord
- doom-line-numbers-style nil
  +modeline-height 48
  +helm-posframe-text-scale 0
- doom-line-numbers-visual-style t
+ display-line-numbers-type nil
  browse-url-browser-function 'xwidget-webkit-browse-url
  org-bullets-bullet-list '("◉")
  indicate-buffer-boundaries nil
@@ -115,7 +114,7 @@
 ;;           "http_proxy" "socks_proxy" "https_proxy"
 ;;           "all_proxy" "no_proxy")
 
-(add-to-list 'default-frame-alist '(alpha . (95 . 95)))
+;; (add-to-list 'default-frame-alist '(alpha . (95 . 95)))
 (or standard-display-table
     (setq standard-display-table (make-display-table)))
 (set-display-table-slot standard-display-table 0 ?\ )

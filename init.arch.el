@@ -46,10 +46,10 @@
        gist
        magit
        reference
-                                        ;; password-store
+       ;; password-store
        pdf
        :lang
-                                        ;lsp
+       lsp
        data
        (python +conda)
        ess
@@ -84,7 +84,7 @@
         +synosaurus)
 
        :config
-       (default +snippets +evil-commands +bindings))
+       (default +snippets +bindings +commands))
 
 ;; * UI
 (setq
@@ -98,10 +98,9 @@
  doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 24)
  doom-big-font (font-spec :family "SF Mono" :size 24)
  doom-theme 'doom-nord
- doom-line-numbers-style nil
  +modeline-height 48
  +helm-posframe-text-scale 0
- doom-line-numbers-visual-style t
+ display-line-numbers-type nil
  browse-url-browser-function 'xwidget-webkit-browse-url
  org-bullets-bullet-list '("◉")
  indicate-buffer-boundaries nil
@@ -124,17 +123,7 @@
                                             fringe-indicator-alist)))
 
 ;; * Mac-specific
-(if (string-match-p "NS" (emacs-version))
-    (progn
-      (setq
-       ns-use-thin-smoothing t
-       ns-alternate-modifier 'super
-       ns-command-modifier 'meta)
-      (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-      (add-to-list 'default-frame-alist '(ns-appearance . dark)))
-  (setq mac-command-modifier 'super
-        mac-option-modifier 'meta
-        mac-pass-command-to-system nil))
+
 
 ;; * Config
 (setq
@@ -142,7 +131,9 @@
  user-mail-address "fuxialexander@gmail.com"
  user-full-name "Alexander Fu Xi"
  max-specpdl-size 10000
- +file-templates-dir "~/.doom.d/templates")
+ +file-templates-dir "~/.doom.d/templates"
+ +python-conda-home "/home/xfu/.conda"
+ conda-anaconda-home "/opt/miniconda3")
 
 ;; * Keys
 (setq
@@ -167,3 +158,6 @@
                          ("org" . "http://elpa.emacs-china.org/org/")
                          ("melpa" . "http://elpa.emacs-china.org/melpa/")))
 
+
+(add-to-list 'load-path "~/Repo/emacs-libvterm-burst")
+(require 'vterm)

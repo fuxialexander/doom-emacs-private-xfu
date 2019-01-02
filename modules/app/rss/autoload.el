@@ -1,6 +1,6 @@
 ;;; modules/app/rss/autoload.el -*- lexical-binding: t; -*-
 (require 'avy)
-(require 'xwidget)
+;; (require 'xwidget)
 
 ;; * workflow and layout
 ;;;###autoload
@@ -263,7 +263,10 @@
 ;;;###autoload
 (defun ace-link--elfeed-action  (pt)
   (goto-char pt)
-  (xwidget-webkit-browse-url-elfeed))
+  (let ((url (get-text-property (point) 'shr-url)))
+    (browse-url url))
+  ;; (xwidget-webkit-browse-url-elfeed)
+  )
 
 ;;;###autoload
 (defun xwidget-webkit-browse-url-elfeed ()

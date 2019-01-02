@@ -20,20 +20,23 @@
        vc-gutter
        doom
        doom-dashboard
-       doom-modeline
+       modeline
        hl-todo
        ;; fci
        nav-flash
        evil-goggles
        ;; neotree
        treemacs
-       pretty-code
+       ;; pretty-code
        (popup
         +all
         +defaults)
        window-select
        :editor
        rotate-text
+       multiple-cursors
+       ;; lispy
+       format
        :emacs
        vc
        dired
@@ -73,10 +76,12 @@
        (org-private
         +todo
         +babel
-        +ipython +right-popup
+        ;; +ipython +right-popup
         +capture
         +latex
-        +export +style)
+        ;; +export
+        +style
+        )
        emacs-lisp
        javascript
        markdown
@@ -105,7 +110,7 @@
    (:eval (if (buffer-file-name)
               (abbreviate-file-name (buffer-file-name))
             "%b")))
- doom-font (font-spec :family "SF mono" :size 10)
+ doom-font (font-spec :family "SF mono" :size 12)
  doom-variable-pitch-font
  (font-spec
   :family "SF Compact Display"
@@ -114,11 +119,10 @@
   :weight 'normal
   :slant 'normal
   :registry "iso10646-1")
- doom-unicode-font (font-spec :family "SF Mono" :size 10)
- doom-big-font (font-spec :family "SF Mono" :size 12)
+ doom-unicode-font (font-spec :family "SF Mono" :size 12)
+ doom-big-font (font-spec :family "SF Mono" :size 14)
  ovp-font "Sarasa Mono SC"
  doom-theme 'doom-nord
- doom-line-numbers-style nil
  +doom-modeline-buffer-file-name-style 'truncate-upto-project
  doom-neotree-enable-variable-pitch t
  doom-neotree-project-size 1.2
@@ -126,8 +130,8 @@
  doom-neotree-folder-size 1.0
  doom-neotree-chevron-size 0.6
  ;; scroll-conservatively 0
- doom-line-numbers-visual-style t
- browse-url-browser-function 'xwidget-webkit-browse-url
+ display-line-numbers-type nil
+ browse-url-browser-function 'browse-url-default-browser
  org-bullets-bullet-list '("◉")
  indicate-buffer-boundaries nil
  frame-alpha-lower-limit 0
@@ -174,7 +178,7 @@
  +default-repeat-forward-key ";"
  +default-repeat-backward-key "'"
  evil-want-C-u-scroll t
- evil-want-integration nil
+ evil-want-integration t
  evil-shift-width 2
  evil-snipe-override-evil-repeat-keys nil
  evil-collection-company-use-tng nil

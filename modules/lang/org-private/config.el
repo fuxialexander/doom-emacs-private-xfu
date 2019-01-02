@@ -26,7 +26,7 @@
   :after org
   :commands (org-brain-visualize)
   :init
-  (setq org-brain-path "~/Dropbox/org")
+  (setq org-brain-path "~/Dropbox/org/brain")
   (after! evil-snipe
     (push 'org-brain-visualize-mode evil-snipe-disabled-modes))
   ;; (add-hook 'org-agenda-mode-hook #'(lambda () (evil-vimish-fold-mode -1)))
@@ -127,7 +127,7 @@ If run interactively, get ENTRY from context."
         org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 3 :fileskip0 t :stepskip0 t :tags "-COMMENT"))
         org-agenda-compact-blocks t
         org-agenda-dim-blocked-tasks nil
-        org-agenda-files (ignore-errors (directory-files org-directory t "^\\(_.*\\|ref\\)\\.org$" t))
+        org-agenda-files (ignore-errors (directory-files org-directory t "^\\(.*\\|ref\\)\\.org$" t))
         org-agenda-follow-indirect t
         org-agenda-ignore-properties '(effort appt category)
         org-agenda-inhibit-startup t
@@ -161,7 +161,7 @@ If run interactively, get ENTRY from context."
   (defface org-todo-keyword-wait '((t ())) "org-wait" :group 'org)
   (defface org-todo-keyword-done '((t ())) "org-done" :group 'org)
   (defface org-todo-keyword-habt '((t ())) "org-habt" :group 'org)
-
+  (defface org-priority-hide '((t ())) "org-priority-hide" :group 'org)
 
   ;; (advice-remove #'org-src-switch-to-buffer #'+popup*org-src-pop-to-buffer)
   ;; (set-popup-rule! "^\\*Org Src" :size 100 :side 'bottom :slot -1 :height 0.6 :select t)
@@ -200,26 +200,26 @@ If run interactively, get ENTRY from context."
                    '(3 'org-property-value t))
              ;; Special keywords
              (list (concat "\\<\\(DEADLINE: \\)" org-ts-regexp-both-braket)
-                   '(1 'org-deadline-custom prepend)
-                   '(2 'org-deadline-custom-braket prepend)
-                   '(3 'org-deadline-custom prepend)
-                   '(4 'org-deadline-custom-braket prepend))
+                   '(1 'org-deadline-custom t)
+                   '(2 'org-deadline-custom-braket t)
+                   '(3 'org-deadline-custom t)
+                   '(4 'org-deadline-custom-braket t))
              (list (concat "\\<\\(SCHEDULED: \\)" org-ts-regexp-both-braket)
-                   '(1 'org-scheduled-custom prepend)
-                   '(2 'org-scheduled-custom-braket prepend)
-                   '(3 'org-scheduled-custom prepend)
-                   '(4 'org-scheduled-custom-braket prepend))
+                   '(1 'org-scheduled-custom t)
+                   '(2 'org-scheduled-custom-braket t)
+                   '(3 'org-scheduled-custom t)
+                   '(4 'org-scheduled-custom-braket t))
              (list (concat "\\<\\(CLOSED: \\)" org-ts-regexp-both-braket)
-                   '(1 'org-closed-custom prepend)
-                   '(2 'org-closed-custom-braket prepend)
-                   '(3 'org-closed-custom prepend)
-                   '(4 'org-closed-custom-braket prepend))
+                   '(1 'org-closed-custom t)
+                   '(2 'org-closed-custom-braket t)
+                   '(3 'org-closed-custom t)
+                   '(4 'org-closed-custom-braket t))
              (list (concat "\\<" org-clock-string) '(0 'org-special-keyword prepend))
              ;; Link related fontification.
              '(org-activate-links)
              (when (memq 'tag lk) '(org-activate-tags (1 'org-tag prepend)))
              (when (memq 'radio lk) '(org-activate-target-links (1 'org-link t)))
-             (when (memq 'date lk) '(org-activate-dates (0 'org-date t)))
+             (when (memq 'date lk) '(org-activate-dates (0 'org-date append)))
              (when (memq 'footnote lk) '(org-activate-footnote-links))
              ;; Targets.
              (list org-any-target-regexp '(0 'org-target t))
@@ -290,6 +290,17 @@ If run interactively, get ENTRY from context."
                   '(org-font-lock-keywords t nil nil backward-paragraph))
       (kill-local-variable 'font-lock-keywords)
       nil))
+
+  (defun org-font-lock-add-priority-faces (limit)
+        "Add the special priority faces."
+        (while (re-search-forward "^\\*+ .*?\\(\\[\\(#\\(.\\)\\)\\]\\)" limit t)
+          (add-face-text-property
+           (match-beginning 1) (match-end 1)
+           'org-priority-hide)
+          (add-face-text-property
+           (match-beginning 2) (match-end 2)
+           (org-get-priority-face (string-to-char (match-string 3))))))
+
   (advice-add 'org-set-font-lock-defaults :override #'*org-set-font-lock-defaults)
   (defface org-deadline-custom '((t (:inherit 'default))) "org-deadline" :group 'org)
   (defface org-scheduled-custom '((t (:inherit 'default))) "org-schedule" :group 'org)
@@ -301,8 +312,8 @@ If run interactively, get ENTRY from context."
         org-M-RET-may-split-line '((default . nil))
         org-export-babel-evaluate nil
         org-blank-before-new-entry '((heading . t) (plain-list-item . nil))
-        org-clock-clocktable-default-properties (quote (:maxlevel 3 :scope agenda :tags "-COMMENT"))
-        org-clocktable-defaults (quote (:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 t :fileskip0 t :tags "-COMMENT" :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil))
+        org-clock-clocktable-default-properties '(:maxlevel 3 :scope agenda :tags "-COMMENT")
+        org-clocktable-defaults '(:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 t :fileskip0 t :tags "-COMMENT" :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)
         org-columns-default-format "%45ITEM %TODO %SCHEDULED %DEADLINE %3PRIORITY %TAGS %CLOCKSUM %EFFORT %BUDGET_WEEK %BUDGET_MONTH %BUDGET_QUARTER %BUDGET_YEAR"
         org-complete-tags-always-offer-all-agenda-tags t
         org-cycle-include-plain-lists t
@@ -311,7 +322,7 @@ If run interactively, get ENTRY from context."
         org-enforce-todo-dependencies t
         org-ellipsis "⤵"
         org-entities-user
-        '(("flat"  "\\flat" nil "" "" "266D" "♭")
+        '(("flat" "\\flat" nil "" "" "266D" "♭")
           ("sharp" "\\sharp" nil "" "" "266F" "♯"))
         org-fontify-done-headline t
         org-fontify-quote-and-verse-blocks t
@@ -336,20 +347,28 @@ If run interactively, get ENTRY from context."
         org-log-done 'time
         org-log-into-drawer t
         org-log-note-clock-out t
-
+        org-log-note-headings '((done . "%t: DONE")
+                                (state . "%t: %-4S -> %-4s")
+                                (note . "%t: NOTE")
+                                (reschedule . "%t: %S -> RESCHEDULE")
+                                (delschedule . "%t: %S -> DESCHEDULE")
+                                (redeadline . "%t: %S -> REDEADLINE")
+                                (deldeadline . "%t: %S -> DEDEADLINE")
+                                (refile . "%t: REFILE")
+                                (clock-out . ""))
         org-log-redeadline 'time
         org-log-reschedule 'time
         org-log-state-notes-into-drawer t
         org-lowest-priority ?F
-        org-modules (quote (org-bibtex org-habit org-info org-protocol org-mac-link org-notmuch))
+        org-modules '(org-bibtex org-habit org-info org-protocol org-mac-link org-notmuch)
         org-outline-path-complete-in-steps nil
         org-pretty-entities nil
 
         org-pretty-entities-include-sub-superscripts t
         org-priority-faces
-        `((?a . ,(face-foreground 'error))
-          (?b . ,(face-foreground 'warning))
-          (?c . ,(face-foreground 'success)))
+        `((?A . ,(face-foreground 'error))
+          (?B . ,(face-foreground 'warning))
+          (?C . ,(face-foreground 'success)))
         org-publish-timestamp-directory (concat org-directory ".org-timestamps/")
         org-refile-targets '((nil :maxlevel . 9)
                              (org-agenda-files :maxlevel . 9))
@@ -366,136 +385,93 @@ If run interactively, get ENTRY from context."
           ("KILL" . org-todo-keyword-kill)
           ("OUTD" . org-todo-keyword-outd))
         org-todo-keywords
-        '((sequence "TODO(t!)"  "|" "DONE(d!/@)")
-          (sequence "WAIT(w@/@)" "|" "OUTD(o@/@)" "KILL(k@/@)")
-          (sequence "HABT(h!/@)" "|" "DONE(d!/@)" "KILL(k@/@)"))
+        '((sequence "TODO(t!)" "WAIT(w@/@)" "HABT(h!/@)" "|" "DONE(d!/@)" "OUTD(o@/@)" "KILL(k@/@)"))
         org-treat-insert-todo-heading-as-state-change t
         org-use-fast-tag-selection nil
         org-use-fast-todo-selection t
         org-use-sub-superscripts '{}
         outline-blank-line t)
-
   ;; Update UI when theme is changed
   (add-hook 'doom-load-theme-hook #'+org-private|setup-ui)
-  (org-clock-persistence-insinuate))
+  ;; (org-clock-persistence-insinuate)
+  )
 
 (defun +org-private|setup-keybinds ()
   (require 'evil-org)
   (add-hook 'org-tab-first-hook #'+org|cycle-only-current-subtree t)
   (advice-add #'org-return-indent :after #'+org*fix-newline-and-indent-in-src-blocks)
-  (evil-define-key* 'insert evil-org-mode-map
-    ;; dedent with shift-tab in insert mode
-    [backtab] #'+org/dedent)
-  (evil-define-key* 'insert evil-org-mode-map
-    [return] #'org-return-indent)
-  (evil-define-key* 'normal evil-org-mode-map
-    [return] #'+org/dwim-at-point)
-  (evil-define-key* '(insert normal) evil-org-mode-map
-    [M-return]   (λ! (+org/insert-item 'below))
-    [S-M-return] (λ! (+org/insert-item 'above)))
-  (evil-define-key* 'motion evil-org-mode-map
-    "]]"  (λ! (org-forward-heading-same-level nil) (org-beginning-of-line))
-    "[["  (λ! (org-backward-heading-same-level nil) (org-beginning-of-line))
-    "]h"  #'org-next-visible-heading
-    "[h"  #'org-previous-visible-heading
-    "]l"  #'org-next-link
-    "[l"  #'org-previous-link
-    "]s"  #'org-babel-next-src-block
-    "[s"  #'org-babel-previous-src-block
-    "^"   #'evil-org-beginning-of-line
-    "0"   (λ! (let (visual-line-mode) (org-beginning-of-line))))
-  (evil-define-key* 'normal evil-org-mode-map
-    "gQ"  #'org-fill-paragraph
-    ;; sensible vim-esque folding keybinds
-    "za"  #'+org/toggle-fold
-    "zA"  #'org-shifttab
-    "zc"  #'+org/close-fold
-    "zC"  #'outline-hide-subtree
-    "zm"  #'+org/hide-next-fold-level
-    "zo"  #'+org/open-fold
-    "zO"  #'outline-show-subtree
-    "zr"  #'+org/show-next-fold-level
-    "zR"  #'outline-show-all)
+
 
   (after! evil-org
-    (map! :map evil-org-mode-map
-          :i "<S-tab>" #'+org/dedent
-          "M-o" #'org-open-at-point
-          "M-i" #'org-insert-last-stored-link
-          "M-I" #'org-insert-link
-          "M-p" #'org-ref-ivy-insert-cite-link
-          :nvime "C-j" (lambda! (org-next-visible-heading 1) (recenter))
-          :nvime "C-k" (lambda! (org-previous-visible-heading 1) (recenter))
-          :nv "M-j" nil
-          :nv "M-k" nil
-          :nv "M-l" nil
-          :nv "M-h" nil
+    (map! (:map evil-org-mode-map
+            ;; :i <S-tab> #'+org/dedent
+            "M-o" #'org-open-at-point
+            "M-i" #'org-insert-last-stored-link
+            "M-I" #'org-insert-link
+            "M-p" #'org-ref-ivy-insert-cite-link
+            :nvime "C-j" (lambda! (org-next-visible-heading 1) (recenter))
+            :nvime "C-k" (lambda! (org-previous-visible-heading 1) (recenter))
+            :nv "M-j" nil
+            :nv "M-k" nil
+            :nv "M-l" nil
+            :nv "M-h" nil
 
-          :ni "<M-backspace>" #'org-babel-remove-result
-          :ni "<M-return>" #'+org/work-on-heading
-          :n "RET" #'+org/dwim-at-point
-          :i "RET" #'org-return-indent
-          :n [tab] #'org-cycle
-          :n "M-t" nil
-          :m "]v" #'org-next-block
-          :m "[v" #'org-previous-block
-          :m "]i" #'org-next-item
-          :m "[i" #'org-previous-item
-          :m "]h" #'org-next-visible-heading
-          :m "[h" #'org-previous-visible-heading
-          :m "_" #'evil-org-beginning-of-line
-          :m "0" (λ! (let ((visual-line-mode)) (org-beginning-of-line)))
-          :n "gQ" #'org-fill-paragraph
-          ;; sensible code-folding vim keybinds
-          :n "za" #'+org/toggle-fold
-          :n "zA" #'org-shifttab
-          :n "zc" #'outline-hide-subtree
-          :n "zC" (λ! (outline-hide-sublevels 1))
-          :n "zd" (lambda (&optional arg) (interactive "p") (outline-hide-sublevels (or arg 3)))
-          :n "zm" (λ! (outline-hide-sublevels 1))
-          :n "zo" #'outline-show-subtree
-          :n "zO" #'outline-show-all
-          :n "zr" #'outline-show-all
-
-          :ni [M-return] #'org-meta-return
-          :ni [S-M-return] (lambda! (+org/insert-go-eol)
-                                    (call-interactively #'org-insert-todo-heading))
-          (:localleader
-            :n "," #'org-ctrl-c-ctrl-c
-            :n "s" #'org-schedule
-            :n "m" #'+org-toggle-math
-            :n "b" #'+org-private@org-babel-hydra/body
-            :n "c" #'org-columns
-            :n "C" #'(lambda () (interactive) (let ((current-prefix-arg 2)) (call-interactively #'org-columns)))
-            :n "L" #'+org/remove-link
-            :n "d" #'org-deadline
-            :n "'" #'org-edit-special
-            :n "e" #'org-set-effort
-            :n "t" #'org-todo
-            :n "r" #'org-refile
-            :n [tab] #'org-export-dispatch
-            :n "E" #'org-clock-modify-effort-estimate
-            :n "p" #'org-set-property
-            :n "i" #'org-clock-in
-            :n "o" #'org-clock-out
-            :n "=" (λ! (call-interactively #'evil-append) (insert (+reference/skim-get-annotation)))
-            :n "n" #'org-narrow-to-subtree
-            :n "N" #'org-narrow-to-element
-            :n "w" #'widen
-            :n "$" #'wordnut-lookup-current-word
-            :n "h" #'org-toggle-heading
-            :n "A" #'org-archive-subtree
-            :n "a" #'org-toggle-archive-tag)
+            :ni "<M-backspace>" #'org-babel-remove-result
+            :ni "<M-return>" #'+org/work-on-heading
+            :n "RET" #'+org/dwim-at-point
+            :i "RET" #'org-return-indent
+            :n [tab] #'org-cycle
+            :n "M-t" nil
+            :m "]v" #'org-next-block
+            :m "[v" #'org-previous-block
+            :m "]i" #'org-next-item
+            :m "[i" #'org-previous-item
+            :m "]h" #'org-next-visible-heading
+            :m "[h" #'org-previous-visible-heading
+            :m "_" #'evil-org-beginning-of-line
+            :m "0" (λ! (let ((visual-line-mode)) (org-beginning-of-line)))
+            :n "gQ" #'org-fill-paragraph
+            :ni [M-return] #'org-meta-return
+            :ni [S-M-return] (lambda! (+org/insert-go-eol)
+                                      (call-interactively #'org-insert-todo-heading))
+            (:localleader
+              :n "," #'org-ctrl-c-ctrl-c
+              :n "s" #'org-schedule
+              :n "m" #'+org-toggle-math
+              :n "b" #'+org-private@org-babel-hydra/body
+              :n "c" #'org-columns
+              :n "C" (lambda () (interactive) (let ((current-prefix-arg 2)) (call-interactively #'org-columns)))
+              :n "L" #'+org/remove-link
+              :n "d" #'org-deadline
+              :n "'" #'org-edit-special
+              :n "e" #'org-set-effort
+              :n "t" #'org-todo
+              :n "r" #'org-refile
+              :n [tab] #'org-export-dispatch
+              :n "E" #'org-clock-modify-effort-estimate
+              :n "p" #'org-set-property
+              :n "i" #'org-clock-in
+              :n "o" #'org-clock-out
+              :n "=" (λ! (call-interactively #'evil-append) (insert (+reference/skim-get-annotation)))
+              :n "n" #'org-narrow-to-subtree
+              :n "N" #'org-narrow-to-element
+              :n "w" #'widen
+              :n "$" #'wordnut-lookup-current-word
+              :n "h" #'org-toggle-heading
+              :n "A" #'org-archive-subtree
+              :n "a" #'org-toggle-archive-tag))
           (:after org-agenda
             (:map org-agenda-mode-map
-              :nm "<escape>" #'org-agenda-Quit
+              ;; :nm <escape> #'org-agenda-Quit
+              :nm "j" #'evil-next-line
+              :nm "k" #'evil-previous-line
               :nm "J" #'org-clock-convenience-timestamp-down
               :nm "K" #'org-clock-convenience-timestamp-up
               :nm "M-j" #'org-agenda-later
               :nm "M-k" #'org-agenda-earlier
               :nm "M-o" #'org-clock-convenience-fill-gap
               :nm "M-e" #'org-clock-convenience-fill-gap-both
-              :nm "\\" #'ace-window
+              ;; :nm "\\" #'ace-window
               :nm "t" #'org-agenda-todo
               :nm "p" #'org-set-property
               :nm "r" #'org-agenda-redo
@@ -508,7 +484,7 @@ If run interactively, get ENTRY from context."
               :nm "M-j" #'counsel-org-goto-all
               :nm "i" #'org-agenda-clock-in
               :nm "o" #'org-agenda-clock-out
-              :nm "<tab>" #'org-agenda-goto
+              :nm [tab] #'org-agenda-goto
               :nm "C" #'org-agenda-capture
               :nm "m" #'org-agenda-bulk-mark
               :nm "u" #'org-agenda-bulk-unmark
@@ -522,7 +498,10 @@ If run interactively, get ENTRY from context."
               :nm "q" #'org-agenda-quit
               :nm "s" #'org-agenda-schedule
               :nm "z" #'org-agenda-view-mode-dispatch
-              :nm "S" #'org-save-all-org-buffers)))))
+              :nm "S" #'org-save-all-org-buffers)
+            (:map org-super-agenda-header-map
+              "j" #'evil-next-line
+              "k" #'evil-previous-line)))))
 
 (defun +org-private|setup-overrides ()
   (after! org-html
@@ -669,106 +648,6 @@ This holds only for inactive timestamps."
            (save-excursion (goto-char (org-element-property :begin context))
                            (call-interactively 'counsel-org-tag)) t)))))
   (add-hook 'org-ctrl-c-ctrl-c-hook '+org-private/*org-ctrl-c-ctrl-c-counsel-org-tag)
-  (defvar *org-git-notes nil
-    "use log notes for git commit notes")
-  (defun *org-store-log-note ()
-    "Finish taking a log note, and insert it to where it belongs."
-    (let ((txt (prog1 (buffer-string)
-                 (kill-buffer)))
-          (note (cdr (assq org-log-note-purpose org-log-note-headings)))
-          lines)
-      (while (string-match "\\`# .*\n[ \t\n]*" txt)
-        (setq txt (replace-match "" t t txt)))
-      (when (string-match "\\s-+\\'" txt)
-        (setq txt (replace-match "" t t txt)))
-      (setq lines (and (not (equal "" txt)) (org-split-string txt "\n")))
-      (when (org-string-nw-p note)
-        (setq note
-              (org-replace-escapes
-               note
-               (list (cons "%u" (user-login-name))
-                     (cons "%U" user-full-name)
-                     (cons "%t" (format-time-string
-                                 (org-time-stamp-format 'long 'inactive)
-                                 org-log-note-effective-time))
-                     (cons "%T" (format-time-string
-                                 (org-time-stamp-format 'long nil)
-                                 org-log-note-effective-time))
-                     (cons "%d" (format-time-string
-                                 (org-time-stamp-format nil 'inactive)
-                                 org-log-note-effective-time))
-                     (cons "%D" (format-time-string
-                                 (org-time-stamp-format nil nil)
-                                 org-log-note-effective-time))
-                     (cons "%s" (cond
-                                 ((not org-log-note-state) "")
-                                 ((string-match-p org-ts-regexp
-                                                  org-log-note-state)
-                                  (format "\"[%s]\""
-                                          (substring org-log-note-state 1 -1)))
-                                 (t (format "\"%s\"" org-log-note-state))))
-                     (cons "%S"
-                           (cond
-                            ((not org-log-note-previous-state) "")
-                            ((string-match-p org-ts-regexp
-                                             org-log-note-previous-state)
-                             (format "\"[%s]\""
-                                     (substring
-                                      org-log-note-previous-state 1 -1)))
-                            (t (format "\"%s\""
-                                       org-log-note-previous-state)))))))
-        (when lines (setq note (concat note " \\\\")))
-        (push note lines))
-      (when (and lines (not org-note-abort))
-        (setq *org-git-notes (concat *org-git-notes ": " (substring-no-properties (car lines))))
-        (with-current-buffer (marker-buffer org-log-note-marker)
-          (org-with-wide-buffer
-           ;; Find location for the new note.
-           (goto-char org-log-note-marker)
-           (set-marker org-log-note-marker nil)
-           ;; Note associated to a clock is to be located right after
-           ;; the clock.  Do not move point.
-           (unless (eq org-log-note-purpose 'clock-out)
-             (goto-char (org-log-beginning t)))
-           ;; Make sure point is at the beginning of an empty line.
-           (cond ((not (bolp)) (let ((inhibit-read-only t)) (insert "\n")))
-                 ((looking-at "[ \t]*\\S-") (save-excursion (insert "\n"))))
-           ;; In an existing list, add a new item at the top level.
-           ;; Otherwise, indent line like a regular one.
-           (let ((itemp (org-in-item-p)))
-             (if itemp
-                 (indent-line-to
-                  (let ((struct (save-excursion
-                                  (goto-char itemp) (org-list-struct))))
-                    (org-list-get-ind (org-list-get-top-point struct) struct)))
-               (org-indent-line)))
-           (insert (org-list-bullet-string "-") (pop lines))
-           (let ((ind (org-list-item-body-column (line-beginning-position))))
-             (dolist (line lines)
-               (insert "\n")
-               (indent-line-to ind)
-               (insert line)))
-           (message "Note stored")
-           (org-back-to-heading t)
-           (org-cycle-hide-drawers 'children))
-          ;; Fix `buffer-undo-list' when `org-store-log-note' is called
-          ;; from within `org-add-log-note' because `buffer-undo-list'
-          ;; is then modified outside of `org-with-remote-undo'.
-          (when (eq this-command 'org-agenda-todo)
-            (setcdr buffer-undo-list (cddr buffer-undo-list)))
-          (let ((file (buffer-file-name)))
-            (require 'magit)
-            (magit-call-git "add" file)
-            (magit-call-git "commit" "-m" (concat file ": " *org-git-notes))
-            (magit-refresh)))))
-    ;; Don't add undo information when called from `org-agenda-todo'.
-    (let ((buffer-undo-list (eq this-command 'org-agenda-todo)))
-      (set-window-configuration org-log-note-window-configuration)
-      (with-current-buffer (marker-buffer org-log-note-return-to)
-        (goto-char org-log-note-return-to))
-      (move-marker org-log-note-return-to nil)
-      (when org-log-post-message (message "%s" org-log-post-message))))
-  (advice-add 'org-store-log-note :override #'*org-store-log-note)
   (advice-add 'org-shiftcontrolup :override #'*org/shiftcontrolup)
   (advice-add 'org-shiftcontroldown :override #'*org/shiftcontroldown)
 
@@ -803,7 +682,7 @@ This holds only for inactive timestamps."
 (def-package! org-clock
   :commands org-clock-save
   :hook (org-mode . org-clock-load)
-  :config
-  (setq org-clock-persist t
-        org-clock-persist-file (expand-file-name ".org-clock-persist-data.el" org-directory))
-  (add-hook 'kill-emacs-hook 'org-clock-save))
+  ;; (setq org-clock-persist t
+  ;;       org-clock-persist-file (expand-file-name ".org-clock-persist-data.el" org-directory))
+  ;; (add-hook 'kill-emacs-hook 'org-clock-save)
+  )

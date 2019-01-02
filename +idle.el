@@ -98,21 +98,22 @@
       xml-query
       url-parse
       url-queue
-      elfeed-db
-      elfeed-lib
-      elfeed-log
-      elfeed-curl
-      elfeed-search
-      elfeed-org))
+      ;; elfeed-db
+      ;; elfeed-lib
+      ;; elfeed-log
+      ;; elfeed-curl
+      ;; elfeed-search
+      ;; elfeed-org
+      ))
    (run-with-idle-timer 30 nil #'auto-load-files
                         '("~/Dropbox/org/ref.org"
-                          "~/Dropbox/org/_idea.org"
-                          "~/Dropbox/org/_inbox.org"
-                          "~/Dropbox/org/_workflow.org"
-                          "~/Dropbox/org/_learn.org"
-                          "~/Dropbox/org/_review.org"
-                          "~/Dropbox/org/_meeting.org"
-                          "~/Dropbox/org/_life.org"
+                          "~/Dropbox/org/idea.org"
+                          "~/Dropbox/org/inbox.org"
+                          "~/Dropbox/org/workflow.org"
+                          "~/Dropbox/org/learn.org"
+                          "~/Dropbox/org/review.org"
+                          "~/Dropbox/org/meeting.org"
+                          "~/Dropbox/org/life.org"
                           "~/Dropbox/org/reference/Bibliography.bib"))
    (run-with-idle-timer 30 nil #'org-clock-load)
    (run-with-timer 60 500 #'org-clock-save)

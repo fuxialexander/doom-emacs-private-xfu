@@ -1,16 +1,6 @@
 ;;; lang/latex/autoload.el -*- lexical-binding: t; -*-
 
 ;;;###autoload
-(def-setting! :latex-bibtex-file (file)
-  "Sets the default file RefTeX uses to search for citations."
-  `(setq +latex-bibtex-file ,file))
-
-;;;###autoload
-(def-setting! :latex-bibtex-dir (dir)
-  "Sets the directory where AUCTeX will search for PDFs associated to BibTeX references."
-  `(setq +latex-bibtex-dir ,dir))
-
-;;;###autoload
 (defun +latex/LaTeX-indent-item ()
   "Provide proper indentation for LaTeX \"itemize\",\"enumerate\", and \"description\" environments.
 
@@ -242,3 +232,12 @@ TAB=goto RET=goto+hide [v]iew [q]uit [r]escan [l]abels [f]ollow [x]r [?]Help
 (defun +latex/font-oblique () (interactive) (TeX-font nil ?\C-s))
 ;;;###autoload
 (defun +latex/font-upright () (interactive) (TeX-font nil ?\C-u))
+
+;;;###autoload
+(defun +latex-symbols-company-backend (command &optional arg &rest _ignored)
+  "A wrapper backend for `company-mode' that either uses
+`company-math-symbols-unicode' or `company-math-symbols-latex'. If
+`+latex-enable-unicode-math' is non-nil use the former, otherwise the latter."
+  (if +latex-enable-unicode-math
+      (company-math-symbols-unicode command arg)
+    (company-math-symbols-latex command arg)))
