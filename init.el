@@ -87,15 +87,13 @@
        (default +snippets +bindings +commands))
 
 ;; * UI
-(setq +helm-posframe-text-scale 0
-      +modeline-height 48
-      browse-url-browser-function 'xwidget-webkit-browse-url
+(setq browse-url-browser-function 'xwidget-webkit-browse-url
       display-line-numbers-type nil
-      doom-big-font (font-spec :family "SF Mono" :size 24)
-      doom-font (font-spec :family "SF mono" :size 24)
+      doom-big-font (font-spec :family "SF Mono" :size 18)
+      doom-font (font-spec :family "SF mono" :size 14)
       doom-theme 'doom-nord
-      doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 24)
-      doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 26)
+      doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 14)
+      doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 14)
       frame-alpha-lower-limit 0
       frame-title-format
       '("emacs%@"
@@ -108,7 +106,7 @@
       pdf-view-use-unicode-ligther nil
       which-key-idle-delay 0.3)
 
-(add-to-list 'default-frame-alist '(alpha . (95 . 95)))
+;; (add-to-list 'default-frame-alist '(alpha . (95 . 95)))
 (or standard-display-table
     (setq standard-display-table (make-display-table)))
 (set-display-table-slot standard-display-table 0 ?\ )
@@ -120,16 +118,20 @@
 ;; * Mac-specific
 (when IS-MAC
   (setq insert-directory-program "gls")
-  (setq ns-use-thin-smoothing t
-        ns-alternate-modifier 'super
-        ns-command-modifier 'meta)
+  (setq ns-use-thin-smoothing t)
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'default-frame-alist '(ns-appearance . dark)))
 ;; * Arch-specific
 (when IS-LINUX
   (setq insert-directory-program "ls"
         conda-anaconda-home "/opt/miniconda3"
-        +python-conda-home "/home/xfu/.conda"))
+        +python-conda-home "/home/xfu/.conda"
+        +modeline-height 48
+        doom-big-font (font-spec :family "SF Mono" :size 24)
+        doom-font (font-spec :family "SF mono" :size 24)
+        doom-theme 'doom-nord
+        doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 24)
+        doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 26)))
 ;; * Windows-specific
 (when IS-WINDOWS
   (setq insert-directory-program "ls"))
