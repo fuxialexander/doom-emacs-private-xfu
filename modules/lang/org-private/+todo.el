@@ -15,8 +15,6 @@
                  :time-grid t)
           (:name "Today\n"
                  :scheduled today)
-          (:name "Habits\n"
-                 :habit t)
           (:name "Due today\n"
                  :deadline today)
           (:name "Overdue\n"
