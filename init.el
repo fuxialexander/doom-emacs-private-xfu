@@ -167,5 +167,5 @@
   :pre-config nil)
 
 ;; ** vterm
-(add-to-list 'load-path "~/Repo/emacs-libvterm-burst")
+(add-to-list 'load-path "~/Repo/emacs-libvterm")
 (require 'vterm)
