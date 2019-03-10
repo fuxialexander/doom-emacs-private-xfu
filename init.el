@@ -9,8 +9,6 @@
         +devdocs
         +docsets)
        snippets
-       spellcheck
-       (syntax-checker +childframe)
        workspaces
 
        :completion
@@ -37,13 +35,14 @@
        electric
        eshell
        term
-       ediff
        imenu
 
        :tools
        ein
        editorconfig
        gist
+       flyspell
+       flycheck
        magit
        reference
        ;; password-store
@@ -165,5 +164,5 @@
   :pre-config nil)
 
 ;; ** vterm
-(add-to-list 'load-path "~/Repo/emacs-libvterm-burst")
-(require 'vterm)
+;; (add-to-list 'load-path "~/Repo/emacs-libvterm-burst")
+;; (require 'vterm)

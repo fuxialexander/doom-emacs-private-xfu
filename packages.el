@@ -24,6 +24,12 @@
 (package! org-kanban)
 (package! alert)
 (package! pinentry)
+
+(package! zmq)
+(package! websocket)
+(package! simple-httpd)
+;(package! emacs-jupyter :recipe (:fetcher github :repo "dzop/emacs-jupyter" :files ("*")))
+
 (when IS-LINUX
   (package! pkgbuild-mode))
 ;; * Writing

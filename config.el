@@ -459,3 +459,4 @@
 ;; *** pdf-tools
 (after! pdf-view
   (advice-add 'pdf-view-mouse-set-region :override #'*pdf-view-mouse-set-region))
+

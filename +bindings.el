@@ -7,15 +7,18 @@
       :gnvime "M-r" (lambda! (revert-buffer nil t t))
       :gnvime "M-g" #'org-agenda-show-daily
       :nvime "M-s" #'save-buffer
+      :nvime "s-s" #'save-buffer
       :nvime "M-v" #'yank
-      (:when IS-MAC
-        :nvime "M-w" #'delete-window
-        :nvime "M-j" #'evil-window-down
-        :nvime "M-k" #'evil-window-up
-        :nvime "M-h" #'evil-window-left
-        :nvime "M-l" #'evil-window-right
-        :nvime "M-d" #'evil-window-vsplit
-        :nvime "M-D" #'evil-window-split)
+      :nvime "s-v" #'yank
+      :v "M-c" #'yank
+      :v "s-c" #'evil-yank
+      :nvime "M-w" #'delete-window
+      :nvime "M-j" #'evil-window-down
+      :nvime "M-k" #'evil-window-up
+      :nvime "M-h" #'evil-window-left
+      :nvime "M-l" #'evil-window-right
+      :nvime "M-d" #'evil-window-vsplit
+      :nvime "M-D" #'evil-window-split
       :nvime "C-`" #'+popup/toggle
       :nvime "C-~" #'+popup/raise
       :nvime "M-t" #'+workspace/new
@@ -38,10 +41,10 @@
       ;; "<M-return>" #'evil-mc-make-and-goto-next-match
       ;; "<C-M-return>" #'+evil/mc-make-cursor-here
       "M-W" #'kill-this-buffer
-      :nie "M-f" #'counsel-grep-or-swiper
-      :nie "M-F" (lambda! (swiper
+      :nie "s-f" (lambda! (swiper
                            (if (symbol-at-point)
                                (format "\\_<%s\\_> " (symbol-at-point)) nil)))
+      :v "s-f" (lambda! (swiper (buffer-substring-no-properties (region-beginning) (region-end))))
       (:after outline
         :map (outline-mode-map outline-minor-mode-map)
         :nvime "C-h" #'dwim-jump

@@ -115,7 +115,8 @@
                           "~/Dropbox/org/meeting.org"
                           "~/Dropbox/org/life.org"
                           "~/Dropbox/org/reference/Bibliography.bib"))
-   (run-with-idle-timer 30 nil #'org-clock-load)
-   (run-with-timer 60 500 #'org-clock-save)
-   (run-with-timer 60 500 #'elfeed-update)
-   (run-with-timer 60 500 #'+mail/notmuch-update)))
+   ;; (run-with-idle-timer 30 nil #'org-clock-load)
+   ;; (run-with-timer 60 500 #'org-clock-save)
+   ;; (run-with-timer 60 500 #'elfeed-update)
+   ;; (run-with-timer 60 500 #'+mail/notmuch-update)
+   ))

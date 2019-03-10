@@ -227,7 +227,6 @@ If run interactively, get ENTRY from context."
              '("^&?%%(.*\\|<%%([^>\n]*?>" (0 'org-sexp-date t))
              ;; Macro
              '(org-fontify-macros)
-             '(org-hide-wide-columns (0 nil append))
              ;; TODO keyword
              (list (format org-heading-keyword-regexp-format
                            org-todo-regexp)
