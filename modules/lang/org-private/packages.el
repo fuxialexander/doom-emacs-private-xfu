@@ -20,7 +20,8 @@
 
 (when (featurep! +export)
   (package! htmlize)
-  ;; (package! ox-pandoc)
+  (when IS-MAC
+    (package! ox-pandoc))
   )
 
 (when (featurep! +present)

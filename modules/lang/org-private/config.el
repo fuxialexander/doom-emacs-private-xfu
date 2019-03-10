@@ -1,10 +1,5 @@
 ;;; lang/org-private/config.el -*- lexical-binding: t; -*-
 
-;; (setq org-blank-before-new-entry nil
-;;       org-modules (quote (org-bibtex org-habit org-info org-protocol org-mac-link org-notmuch))
-;;       org-imenu-depth 8)
-
-
 ;; Sub-modules
 (if (featurep! +todo)    (load! "+todo"))
 (if (featurep! +babel)   (load! "+babel"))
@@ -147,11 +142,7 @@ If run interactively, get ENTRY from context."
         org-agenda-start-with-log-mode t
         org-agenda-sticky nil
         org-agenda-tags-column 'auto
-        org-agenda-use-tag-inheritance nil
-        org-habit-following-days 0
-        org-habit-graph-column 1
-        org-habit-preceding-days 8
-        org-habit-show-habits t))
+        org-agenda-use-tag-inheritance nil))
 
 (defun +org-private|setup-ui ()
   "Configures the UI for `org-mode'."
@@ -160,7 +151,7 @@ If run interactively, get ENTRY from context."
   (defface org-todo-keyword-outd '((t ())) "org-outd" :group 'org)
   (defface org-todo-keyword-wait '((t ())) "org-wait" :group 'org)
   (defface org-todo-keyword-done '((t ())) "org-done" :group 'org)
-  (defface org-todo-keyword-habt '((t ())) "org-habt" :group 'org)
+  (defface org-todo-keyword-want '((t ())) "org-want" :group 'org)
   (defface org-priority-hide '((t ())) "org-priority-hide" :group 'org)
 
   ;; (advice-remove #'org-src-switch-to-buffer #'+popup*org-src-pop-to-buffer)
@@ -357,9 +348,8 @@ If run interactively, get ENTRY from context."
                                 (clock-out . ""))
         org-log-redeadline 'time
         org-log-reschedule 'time
-        org-log-state-notes-into-drawer t
         org-lowest-priority ?F
-        org-modules '(org-bibtex org-habit org-info org-protocol org-mac-link org-notmuch)
+        org-modules '(org-bibtex org-info org-protocol org-mac-link org-notmuch)
         org-outline-path-complete-in-steps nil
         org-pretty-entities nil
 
@@ -378,13 +368,13 @@ If run interactively, get ENTRY from context."
         org-tags-column 0
         org-todo-keyword-faces
         '(("TODO" . org-todo-keyword-todo)
-          ("HABT" . org-todo-keyword-habt)
+          ("WANT" . org-todo-keyword-want)
           ("DONE" . org-todo-keyword-done)
           ("WAIT" . org-todo-keyword-wait)
           ("KILL" . org-todo-keyword-kill)
           ("OUTD" . org-todo-keyword-outd))
         org-todo-keywords
-        '((sequence "TODO(t!)" "WAIT(w@/@)" "HABT(h!/@)" "|" "DONE(d!/@)" "OUTD(o@/@)" "KILL(k@/@)"))
+        '((sequence "TODO(t!)" "WAIT(w@/@)" "WANT(h!/@)" "|" "DONE(d!/@)" "OUTD(o@/@)" "KILL(k@/@)"))
         org-treat-insert-todo-heading-as-state-change t
         org-use-fast-tag-selection nil
         org-use-fast-todo-selection t
@@ -475,7 +465,6 @@ If run interactively, get ENTRY from context."
               :nm "p" #'org-set-property
               :nm "r" #'org-agenda-redo
               :nm "e" #'org-agenda-set-effort
-              :nm "H" #'org-habit-toggle-habits
               :nm "L" #'org-agenda-log-mode
               :nm "D" #'org-agenda-toggle-diary
               :nm "G" #'org-agenda-toggle-time-grid
