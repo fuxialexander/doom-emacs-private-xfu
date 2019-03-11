@@ -188,8 +188,7 @@
           counsel-recentf
           (:columns
            ((ivy-rich-candidate (:width 100))
-            (ivy-rich-file-last-modified-time (:face font-lock-doc-face))))
-          )))
+            (ivy-rich-file-last-modified-time (:face font-lock-doc-face :width 30)))))))
 ;; **** ivy-posframe
 (after! ivy
   (ivy-rich-mode 1)

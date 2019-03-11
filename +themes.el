@@ -77,6 +77,7 @@
   '(prodigy-yellow-face :foreground yellow)
 ;; ** ivy-posframe
   '(ivy-posframe :background (doom-darken 'bg-alt 0.1))
+  '(ivy-posframe-border :background (doom-darken 'bg-alt 0.1))
   '(ivy-posframe-cursor :background highlight)
 ;; ** swiper
   '(swiper-line-face    :background blue :foreground bg)
