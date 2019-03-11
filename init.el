@@ -44,6 +44,7 @@
        flyspell
        flycheck
        magit
+       vterm
        reference
        ;; password-store
        pdf
@@ -165,6 +166,3 @@
   :pre-init nil
   :pre-config nil)
 
-;; ** vterm
-(add-to-list 'load-path "~/Repo/emacs-libvterm")
-(require 'vterm)
