@@ -426,21 +426,6 @@
         :n "?" #'dired-narrow-regexp
         :n "/" #'dired-narrow-fuzzy))
 
-;; ** do-repeat
-;; *** org
-(after! org
-  (do-repeat! org-next-item org-next-item org-previous-item)
-  (do-repeat! org-next-link org-next-link org-previous-link)
-  (do-repeat! org-next-block org-next-block org-previous-block)
-  (do-repeat! org-previous-item org-next-item org-previous-item)
-  (do-repeat! org-previous-link org-next-link org-previous-link)
-  (do-repeat! org-previous-block org-next-block org-previous-block))
-
-;; *** git
-(after! git-gutter
-  (do-repeat! git-gutter:next-hunk git-gutter:next-hunk git-gutter:previous-hunk)
-  (do-repeat! git-gutter:previous-hunk git-gutter:next-hunk git-gutter:previous-hunk))
-
 
 ;; ** which-key ui
 (after! which-key

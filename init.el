@@ -1,33 +1,27 @@
 ;; * Modules
-(doom! :feature
-       ;; debugger
-       eval
-       (evil
-        +everywhere)
-       file-templates
-       (lookup
-        +devdocs
-        +docsets)
-       snippets
-       workspaces
-
-       :completion
+(doom! :completion
        (company +auto +childframe)
        (ivy +childframe)
        ;; (helm +fuzzy)
 
        :ui
+       workspaces
        vc-gutter
        doom
        doom-dashboard
        modeline
        hl-todo
        nav-flash
-       evil-goggles
+       ophints
        treemacs
        (popup +all +defaults)
        window-select
        :editor
+       (evil
+        +everywhere)
+       file-templates
+
+       snippets
        rotate-text
        :emacs
        vc
@@ -38,6 +32,11 @@
        imenu
 
        :tools
+       (lookup
+        +devdocs
+        +docsets)
+
+       eval
        ein
        editorconfig
        gist

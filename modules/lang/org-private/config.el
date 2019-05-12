@@ -79,13 +79,10 @@ If run interactively, get ENTRY from context."
 ;;   :after org)
 
 (def-package! evil-org
-  :when (featurep! :feature evil)
+  :when (featurep! :editor evil +everywhere)
   :hook (org-mode . evil-org-mode)
-  :hook (org-load . evil-org-set-key-theme)
   :init
-  (setq evil-org-want-hybrid-shift t
-        evil-org-use-additional-insert nil
-        evil-org-key-theme '(navigation
+  (setq evil-org-key-theme '(navigation
                              shift
                              todo
                              additional
@@ -93,17 +90,16 @@ If run interactively, get ENTRY from context."
                              insert
                              textobjects))
   (add-hook 'org-load-hook #'+org-private|setup-keybinds t)
-  (advice-add 'evil-org-open-below :override #'+org-private*evil-org-open-below))
-
+  (add-hook 'evil-org-mode-hook #'evil-normalize-keymaps)
+  )
 ;;
 ;; Bootstrap
 ;;
 
-(add-hook 'org-load-hook #'+org-private|setup-ui t)
-(add-hook 'org-load-hook #'+org-private|setup-agenda t)
-(add-hook 'org-load-hook #'+org-private|setup-overrides t)
-
-
+(after! org
+  (+org-private|setup-ui)
+  (+org-private|setup-agenda)
+  (+org-private|setup-overrides))
 
 
 (remove-hook! 'org-mode-hook #'(visual-line-mode
@@ -386,110 +382,104 @@ If run interactively, get ENTRY from context."
   )
 
 (defun +org-private|setup-keybinds ()
-  (require 'evil-org)
-  (add-hook 'org-tab-first-hook #'+org|cycle-only-current-subtree t)
-  (advice-add #'org-return-indent :after #'+org*fix-newline-and-indent-in-src-blocks)
+  (map! (:map evil-org-mode-map
+          ;; :i <S-tab> #'+org/dedent
+          "M-o" #'org-open-at-point
+          "M-i" #'org-insert-last-stored-link
+          "M-I" #'org-insert-link
+          "M-p" #'org-ref-ivy-insert-cite-link
+          :nvime "C-j" (lambda! (org-next-visible-heading 1) (recenter))
+          :nvime "C-k" (lambda! (org-previous-visible-heading 1) (recenter))
+          :nv "M-j" nil
+          :nv "M-k" nil
+          :nv "M-l" nil
+          :nv "M-h" nil
 
-
-  (after! evil-org
-    (map! (:map evil-org-mode-map
-            ;; :i <S-tab> #'+org/dedent
-            "M-o" #'org-open-at-point
-            "M-i" #'org-insert-last-stored-link
-            "M-I" #'org-insert-link
-            "M-p" #'org-ref-ivy-insert-cite-link
-            :nvime "C-j" (lambda! (org-next-visible-heading 1) (recenter))
-            :nvime "C-k" (lambda! (org-previous-visible-heading 1) (recenter))
-            :nv "M-j" nil
-            :nv "M-k" nil
-            :nv "M-l" nil
-            :nv "M-h" nil
-
-            :ni "<M-backspace>" #'org-babel-remove-result
-            :ni "<M-return>" #'+org/work-on-heading
-            :n "RET" #'+org/dwim-at-point
-            :i "RET" #'org-return-indent
-            :n [tab] #'org-cycle
-            :n "M-t" nil
-            :m "]v" #'org-next-block
-            :m "[v" #'org-previous-block
-            :m "]i" #'org-next-item
-            :m "[i" #'org-previous-item
-            :m "]h" #'org-next-visible-heading
-            :m "[h" #'org-previous-visible-heading
-            :m "_" #'evil-org-beginning-of-line
-            :m "0" (λ! (let ((visual-line-mode)) (org-beginning-of-line)))
-            :n "gQ" #'org-fill-paragraph
-            :ni [M-return] #'org-meta-return
-            :ni [S-M-return] (lambda! (+org/insert-go-eol)
-                                      (call-interactively #'org-insert-todo-heading))
-            (:localleader
-              :n "," #'org-ctrl-c-ctrl-c
-              :n "s" #'org-schedule
-              :n "m" #'+org-toggle-math
-              :n "b" #'+org-private@org-babel-hydra/body
-              :n "c" #'org-columns
-              :n "C" (lambda () (interactive) (let ((current-prefix-arg 2)) (call-interactively #'org-columns)))
-              :n "L" #'+org/remove-link
-              :n "d" #'org-deadline
-              :n "'" #'org-edit-special
-              :n "e" #'org-set-effort
-              :n "t" #'org-todo
-              :n "r" #'org-refile
-              :n [tab] #'org-export-dispatch
-              :n "E" #'org-clock-modify-effort-estimate
-              :n "p" #'org-set-property
-              :n "i" #'org-clock-in
-              :n "o" #'org-clock-out
-              :n "=" (λ! (call-interactively #'evil-append) (insert (+reference/skim-get-annotation)))
-              :n "n" #'org-narrow-to-subtree
-              :n "N" #'org-narrow-to-element
-              :n "w" #'widen
-              :n "$" #'wordnut-lookup-current-word
-              :n "h" #'org-toggle-heading
-              :n "A" #'org-archive-subtree
-              :n "a" #'org-toggle-archive-tag))
-          (:after org-agenda
-            (:map org-agenda-mode-map
-              ;; :nm <escape> #'org-agenda-Quit
-              :nm "j" #'evil-next-line
-              :nm "k" #'evil-previous-line
-              :nm "J" #'org-clock-convenience-timestamp-down
-              :nm "K" #'org-clock-convenience-timestamp-up
-              :nm "M-j" #'org-agenda-later
-              :nm "M-k" #'org-agenda-earlier
-              :nm "M-o" #'org-clock-convenience-fill-gap
-              :nm "M-e" #'org-clock-convenience-fill-gap-both
-              ;; :nm "\\" #'ace-window
-              :nm "t" #'org-agenda-todo
-              :nm "p" #'org-set-property
-              :nm "r" #'org-agenda-redo
-              :nm "e" #'org-agenda-set-effort
-              :nm "L" #'org-agenda-log-mode
-              :nm "D" #'org-agenda-toggle-diary
-              :nm "G" #'org-agenda-toggle-time-grid
-              :nm ";" #'counsel-org-tag-agenda
-              :nm "M-j" #'counsel-org-goto-all
-              :nm "i" #'org-agenda-clock-in
-              :nm "o" #'org-agenda-clock-out
-              :nm [tab] #'org-agenda-goto
-              :nm "C" #'org-agenda-capture
-              :nm "m" #'org-agenda-bulk-mark
-              :nm "u" #'org-agenda-bulk-unmark
-              :nm "U" #'org-agenda-bulk-unmark-all
-              :nm "f" #'+org@org-agenda-filter/body
-              :nm "-" #'org-agenda-manipulate-query-subtract
-              :nm "=" #'org-agenda-manipulate-query-add
-              :nm "_" #'org-agenda-manipulate-query-subtract-re
-              :nm "$" #'org-agenda-manipulate-query-add-re
-              :nm "d" #'org-agenda-deadline
-              :nm "q" #'org-agenda-quit
-              :nm "s" #'org-agenda-schedule
-              :nm "z" #'org-agenda-view-mode-dispatch
-              :nm "S" #'org-save-all-org-buffers)
-            (:map org-super-agenda-header-map
-              "j" #'evil-next-line
-              "k" #'evil-previous-line)))))
+          :ni "<M-backspace>" #'org-babel-remove-result
+          :ni "<M-return>" #'+org/work-on-heading
+          :n "RET" #'+org/dwim-at-point
+          :i "RET" #'org-return-indent
+          :n [tab] #'org-cycle
+          :n "M-t" nil
+          :m "]v" #'org-next-block
+          :m "[v" #'org-previous-block
+          :m "]i" #'org-next-item
+          :m "[i" #'org-previous-item
+          :m "]h" #'org-next-visible-heading
+          :m "[h" #'org-previous-visible-heading
+          :m "_" #'evil-org-beginning-of-line
+          :m "0" (λ! (let ((visual-line-mode)) (org-beginning-of-line)))
+          :n "gQ" #'org-fill-paragraph
+          :ni [M-return] #'org-meta-return
+          :ni [S-M-return] (lambda! (+org/insert-go-eol)
+                                    (call-interactively #'org-insert-todo-heading))
+          (:localleader
+            :n "," #'org-ctrl-c-ctrl-c
+            :n "s" #'org-schedule
+            :n "m" #'+org-toggle-math
+            :n "b" #'+org-private@org-babel-hydra/body
+            :n "c" #'org-columns
+            :n "C" (lambda () (interactive) (let ((current-prefix-arg 2)) (call-interactively #'org-columns)))
+            :n "L" #'+org/remove-link
+            :n "d" #'org-deadline
+            :n "'" #'org-edit-special
+            :n "e" #'org-set-effort
+            :n "t" #'org-todo
+            :n "r" #'org-refile
+            :n [tab] #'org-export-dispatch
+            :n "E" #'org-clock-modify-effort-estimate
+            :n "p" #'org-set-property
+            :n "i" #'org-clock-in
+            :n "o" #'org-clock-out
+            :n "=" (λ! (call-interactively #'evil-append) (insert (+reference/skim-get-annotation)))
+            :n "n" #'org-narrow-to-subtree
+            :n "N" #'org-narrow-to-element
+            :n "w" #'widen
+            :n "$" #'wordnut-lookup-current-word
+            :n "h" #'org-toggle-heading
+            :n "A" #'org-archive-subtree
+            :n "a" #'org-toggle-archive-tag))
+        (:after org-agenda
+          (:map org-agenda-mode-map
+            ;; :nm <escape> #'org-agenda-Quit
+            :nm "j" #'evil-next-line
+            :nm "k" #'evil-previous-line
+            :nm "J" #'org-clock-convenience-timestamp-down
+            :nm "K" #'org-clock-convenience-timestamp-up
+            :nm "M-j" #'org-agenda-later
+            :nm "M-k" #'org-agenda-earlier
+            :nm "M-o" #'org-clock-convenience-fill-gap
+            :nm "M-e" #'org-clock-convenience-fill-gap-both
+            ;; :nm "\\" #'ace-window
+            :nm "t" #'org-agenda-todo
+            :nm "p" #'org-set-property
+            :nm "r" #'org-agenda-redo
+            :nm "e" #'org-agenda-set-effort
+            :nm "L" #'org-agenda-log-mode
+            :nm "D" #'org-agenda-toggle-diary
+            :nm "G" #'org-agenda-toggle-time-grid
+            :nm ";" #'counsel-org-tag-agenda
+            :nm "M-j" #'counsel-org-goto-all
+            :nm "i" #'org-agenda-clock-in
+            :nm "o" #'org-agenda-clock-out
+            :nm [tab] #'org-agenda-goto
+            :nm "C" #'org-agenda-capture
+            :nm "m" #'org-agenda-bulk-mark
+            :nm "u" #'org-agenda-bulk-unmark
+            :nm "U" #'org-agenda-bulk-unmark-all
+            :nm "f" #'+org@org-agenda-filter/body
+            :nm "-" #'org-agenda-manipulate-query-subtract
+            :nm "=" #'org-agenda-manipulate-query-add
+            :nm "_" #'org-agenda-manipulate-query-subtract-re
+            :nm "$" #'org-agenda-manipulate-query-add-re
+            :nm "d" #'org-agenda-deadline
+            :nm "q" #'org-agenda-quit
+            :nm "s" #'org-agenda-schedule
+            :nm "z" #'org-agenda-view-mode-dispatch
+            :nm "S" #'org-save-all-org-buffers)
+          (:map org-super-agenda-header-map
+            "j" #'evil-next-line
+            "k" #'evil-previous-line))))
 
 (defun +org-private|setup-overrides ()
   (after! org-html
