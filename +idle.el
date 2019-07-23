@@ -105,14 +105,15 @@
       ;; elfeed-search
       ;; elfeed-org
       ))
-   (run-with-idle-timer 30 nil #'auto-load-files
-                        '("~/Dropbox/org/ref.org"
-                          "~/Dropbox/org/idea.org"
-                          "~/Dropbox/org/inbox.org"
-                          "~/Dropbox/org/workflow.org"
-                          "~/Dropbox/org/learn.org"
-                          "~/Dropbox/org/review.org"
-                          "~/Dropbox/org/meeting.org"
-                          "~/Dropbox/org/life.org"
-                          "~/Dropbox/org/reference/Bibliography.bib"))
-   (run-with-timer 60 500 #'elfeed-update)))
+   ;; (run-with-idle-timer 30 nil #'auto-load-files
+   ;;                      '("~/Dropbox/org/ref.org"
+   ;;                        "~/Dropbox/org/idea.org"
+   ;;                        "~/Dropbox/org/inbox.org"
+   ;;                        "~/Dropbox/org/workflow.org"
+   ;;                        "~/Dropbox/org/learn.org"
+   ;;                        "~/Dropbox/org/review.org"
+   ;;                        "~/Dropbox/org/meeting.org"
+   ;;                        "~/Dropbox/org/life.org"
+   ;;                        "~/Dropbox/org/reference/Bibliography.bib"))
+   ;; (run-with-timer 60 500 #'elfeed-update)
+   ))

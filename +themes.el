@@ -134,7 +134,7 @@
   '(org-closed-custom-braket     :foreground base6 :background base6 :distant-foreground base6)
 
   '(org-special-keyword          :foreground (doom-blend 'blue 'bg 0.3) :font "Iosevka" :weight 'extralight)
-  '(org-table                    :overline base5 :font "Iosevka")
+  '(org-table                    :overline base5)
   '(org-link  :inherit 'link :font "Iosevka" :foreground blue)
   '(org-tag                      :foreground green :weight 'light)
   '(org-todo                     :bold 'inherit :foreground highlight)

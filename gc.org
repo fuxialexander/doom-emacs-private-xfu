@@ -404,7 +404,6 @@ nil
 (pinentry-start)))
 #+END_SRC
 
-
 * git commit when org-log
 #+BEGIN_SRC elisp
 (defvar *org-git-notes nil
@@ -508,3 +507,60 @@ nil
     (when org-log-post-message (message "%s" org-log-post-message))))
 (advice-add 'org-store-log-note :override #'*org-store-log-note)
 #+END_SRC
+
+* Prevoius lispy config
+#+BEGIN_SRC elisp
+(def-package! lispy
+  :hook ((emacs-lisp-mode . lispy-mode))
+  :init
+  (setq-default lispy-outline "^;; \\(?:;[^#]\\|\\*+\\)"
+                lispy-outline-header ";; ")
+  :config
+  (add-hook 'emacs-lisp-mode-hook #'lispy-mode t)
+  (add-hook 'lispy-mode-hook #'turn-off-smartparens-mode)
+  (map! :map lispy-mode-map
+        :i "_" #'special-lispy-different
+        :i "C-d" #'lispy-delete
+        :i "C-u" #'universal-argument
+        :i [remap delete-backward-char] #'lispy-delete-backward))
+(def-package! lispyville
+  :after (evil)
+  :hook (lispy-mode . lispyville-mode)
+  :config
+  (lispyville-set-key-theme
+   '(operators
+     c-w
+     prettify
+     escape
+     (slurp/barf-lispy))))
+#+END_SRC
+
+* electric-operators
+#+BEGIN_SRC elisp
+(def-package! electric-operator
+  :hook ((sh-mode . electric-operator-mode)
+         (ess-mode . electric-operator-mode)
+         (python-mode . electric-operator-mode)))
+#+END_SRC
+
+* smartparens
+#+BEGIN_SRC elisp
+(after! smartparens
+  (add-hook 'minibuffer-setup-hook #'smartparens-mode)
+  (add-hook 'eshell-mode-hook #'smartparens-mode)
+  ;; Auto-close more conservatively and expand braces on RET
+  (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
+  (let ((unless-list '(sp-point-before-word-p
+                       sp-point-after-word-p
+                       sp-point-before-same-p)))
+    (sp-pair "'" nil :unless unless-list)
+    (sp-pair "\"" nil :unless unless-list))
+  (sp-pair "{" nil :post-handlers '(("||\n[i]" "RET") ("| " " "))
+           :unless '(sp-point-before-word-p sp-point-before-same-p))
+  (sp-pair "(" nil :post-handlers '(("||\n[i]" "RET") ("| " " "))
+           :unless '(sp-point-before-word-p sp-point-before-same-p))
+  (sp-pair "[" nil :post-handlers '(("| " " "))
+           :unless '(sp-point-before-word-p sp-point-before-same-p)))
+#+END_SRC
+
+* auths for conda and tramp
