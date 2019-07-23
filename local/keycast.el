@@ -137,17 +137,17 @@ instead."
                (format " %s" (propertize (symbol-name cmd)
                                          'face 'keycast-command))))))
 
-(def-modeline! main-keycast
-  (bar matches " " buffer-info "  %l:%c %p  " selection-info keycast)
-  (buffer-encoding major-mode vcs flycheck))
+(doom-modeline-def-modeline 'main-keycast
+  '(bar matches " " buffer-info "  %l:%c %p  " selection-info keycast)
+  '(buffer-encoding major-mode vcs checker))
 
 ;;;###autoload
 (define-minor-mode keycast-mode
   "Show current command and its key binding in the mode line."
   :global t
   (if keycast-mode
-      (doom-set-modeline 'main-keycast)
-    (doom-set-modeline 'main)))
+      (set-modeline! 'main-keycast)
+    (set-modeline! 'main)))
 
 
 ;;;

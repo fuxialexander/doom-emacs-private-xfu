@@ -39,6 +39,7 @@
            ;; password-store
            editorconfig
            eval
+           lsp
            flycheck
            flyspell
            magit

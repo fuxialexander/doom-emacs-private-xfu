@@ -3,10 +3,6 @@
 ;; ** general
 (setq +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin
       +reference-field 'bioinfo
-      +rss-elfeed-files '("elfeed.org")
-      bibtex-completion-bibliography '("~/Dropbox/org/reference/Bibliography.bib")
-      bibtex-completion-library-path "~/Dropbox/org/reference/pdf/"
-      bibtex-completion-notes-path "~/Dropbox/org/ref.org"
       browse-url-browser-function 'browse-url-default-browser
       delete-by-moving-to-trash t
       electric-pair-inhibit-predicate 'ignore
@@ -14,10 +10,6 @@
       evil-escape-key-sequence nil
       frame-resize-pixelwise t
       line-spacing nil
-      org-directory "~/Dropbox/org"
-      org-ref-bibliography-notes "~/Dropbox/org/ref.org"
-      org-ref-default-bibliography '("~/Dropbox/org/reference/Bibliography.bib")
-      org-ref-pdf-directory "~/Dropbox/org/reference/pdf/"
       persp-interactive-init-frame-behaviour-override -1
       request-storage-directory (concat doom-etc-dir "request/")
       trash-directory "~/.Trash/"
@@ -61,7 +53,7 @@
         :nm [tab] #'outline-cycle
         :nm [backtab] #'outshine-cycle-buffer))
 
-;; ;; *** magit
+;; *** magit
 ;; (def-package! orgit :after (magit org))
 ;; (after! magithub
 ;;   (setq magithub-clone-default-directory "~/Repo/"))
@@ -94,56 +86,17 @@
   :config
   (setq tldr-directory-path (concat doom-etc-dir "tldr/")))
 
-;; ;; *** ivy
-;; ;; **** ivy-advice
+;; *** ivy
+;; **** ivy-advice
 ;; (after! lv
 ;;   (advice-add 'lv-window :override #'*lv-window))
-;; (after! colir
-;;   (advice-add 'colir--blend-background :override #'*colir--blend-background)
-;;   (advice-add 'colir-blend-face-background :override #'*colir-blend-face-background))
-;; (after! ivy-hydra
-;;   (defhydra +ivy-coo-hydra (:hint nil :color pink)
-;;     "
-;;  Move     ^^^^^^^^^^ | Call         ^^^^ | Cancel^^ | Options^^ | Action _w_/_s_/_a_: %s(ivy-action-name)
-;; ----------^^^^^^^^^^-+--------------^^^^-+-------^^-+--------^^-+---------------------------------
-;;  _g_ ^ ^ _k_ ^ ^ _u_ | _f_orward _o_ccur | _i_nsert | _c_alling: %-7s(if ivy-calling \"on\" \"off\") _C_ase-fold: %-10`ivy-case-fold-search
-;;  ^|^ _h_ ^+^ _l_ ^I^ | _RET_ done     ^^ | _q_uit   | _m_atcher: %-7s(ivy--matcher-desc) _t_runcate: %-11`truncate-lines
-;;  _G_ ^ ^ _j_ ^ ^ _d_ | _TAB_ alt-done ^^ | ^ ^      | _<_/_>_: shrink/grow
-;; "
-;;     ;; arrows
-;;     ("j" ivy-next-line)
-;;     ("k" ivy-previous-line)
-;;     ("l" ivy-alt-done)
-;;     ("h" ivy-backward-delete-char)
-;;     ("g" ivy-beginning-of-buffer)
-;;     ("G" ivy-end-of-buffer)
-;;     ("d" ivy-scroll-up-command)
-;;     ("u" ivy-scroll-down-command)
-;;     ("e" ivy-scroll-down-command)
-;;     ;; actions
-;;     ("q" keyboard-escape-quit :exit t)
-;;     ("C-g" keyboard-escape-quit :exit t)
-;;     ("<escape>" keyboard-escape-quit :exit t)
-;;     ("C-o" nil)
-;;     ("i" nil)
-;;     ("TAB" ivy-alt-done :exit nil)
-;;     ("C-j" ivy-alt-done :exit nil)
-;;     ("RET" ivy-done :exit t)
-;;     ("C-m" ivy-done :exit t)
-;;     ("C-SPC" ivy-call-and-recenter :exit nil)
-;;     ("f" ivy-call)
-;;     ("c" ivy-toggle-calling)
-;;     ("m" ivy-toggle-fuzzy)
-;;     (">" ivy-minibuffer-grow)
-;;     ("<" ivy-minibuffer-shrink)
-;;     ("w" ivy-prev-action)
-;;     ("s" ivy-next-action)
-;;     ("a" ivy-read-action)
-;;     ("t" (setq truncate-lines (not truncate-lines)))
-;;     ("C" ivy-toggle-case-fold)
-;;     ("o" ivy-occur :exit t)))
+;; fix swiper highlight color
+(after! colir
+  (advice-add 'colir--blend-background :override #'*colir--blend-background)
+  (advice-add 'colir-blend-face-background :override #'*colir-blend-face-background))
 
 ;; **** ivy-posframe
+
 ;; (after! ivy
 ;;   (ivy-rich-mode 1)
 ;;   (advice-add #'ivy-posframe-enable :around #'doom*shut-up)
@@ -203,15 +156,14 @@
         counsel-org-headline-display-style 'title
         counsel-org-headline-display-tags t
         counsel-org-headline-display-todo t))
-;; ;; ;; **** ivy-switch-buffer
+;; **** ivy-switch-buffer
 ;; ;;   (advice-add 'ivy--switch-buffer-action :override #'*ivy--switch-buffer-action)
 
-;; ;; **** counsel-M-x
 
-;; ;; **** counsel-tramp
+;; **** counsel-tramp
 (def-package! counsel-tramp :load-path "~/.doom.d/local/"
   :commands (counsel-tramp))
-;; ;; ;; *** projectile
+;; *** projectile
 (after! projectile
   (setq projectile-ignored-projects '("~/" "/tmp")
         projectile-ignored-project-function
@@ -219,7 +171,7 @@
           (or (file-remote-p root)
               (string-match ".*Trash.*" root)
               (string-match ".*Cellar.*" root)))))
-;; ;; *** iterm
+;; *** iterm
 ;; (def-package! iterm :load-path "~/.doom.d/local"
 ;;   :commands (iterm-cd
 ;;              iterm-send-text
@@ -230,13 +182,13 @@
 ;;              iterm-cwd-R
 ;;              iterm-send-file-julia
 ;;              iterm-cwd-julia))
-;; ;; ** emacs
-;; ;; *** recentf
+;; ** emacs
+;; *** recentf
 (after! recentf
   (setq recentf-auto-cleanup 60)
   (add-to-list 'recentf-exclude 'file-remote-p)
   (add-to-list 'recentf-exclude ".*Cellar.*"))
-;; ;; *** comint
+;; *** comint
 ;; (after! comint
 ;;   (add-hook 'comint-preoutput-filter-functions #'dirtrack-filter-out-pwd-prompt))
 ;; (after! flycheck-posframe
@@ -247,50 +199,53 @@
 ;;   (advice-add 'flycheck-posframe-show-posframe :override #'*flycheck-posframe-show-posframe)
 ;;   ;; (advice-add '+syntax-checker-cleanup-popup :override #'+syntax-checker*cleanup-popup)
 ;;   )
-;; ;; ** edit
-;; ;; *** company
+;; ** edit
+;; *** company
 ;; (after! company-box
 ;;   (setq company-box-max-candidates 10))
 
-;;   ;; **** company-ui
+;; **** company-ui
 ;;   (setq company-tooltip-limit 10
 ;;         company-tooltip-minimum-width 80
 ;;         company-tooltip-minimum 10
 ;;         company-backends
 ;;         '(company-capf company-dabbrev company-files company-yasnippet)
 ;;         company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode)))
-;; ;; *** language
-;; ;; **** elisp
-;; (after! elisp-mode
-;;   (add-hook 'emacs-lisp-mode-hook #'outline-minor-mode t)
-;;   (remove-hook 'emacs-lisp-mode-hook (lambda
-;;                                       (&rest _)
-;;                                       (set
-;;                                        (make-local-variable 'mode-name)
-;;                                        "Elisp")
-;;                                       (set
-;;                                        (make-local-variable 'outline-regexp)
-;;                                        ";;;;* [^ 	\n]")))
-;;   (setq-hook! 'emacs-lisp-mode-hook mode-name "Elisp")
-;;   (set-lookup-handlers! 'emacs-lisp-mode :documentation #'helpful-at-point))
-;; (after! helpful
-;;   (set-lookup-handlers! 'helpful-mode :documentation #'helpful-at-point))
-;; ;; **** python
+;; *** language
+;; **** elisp
+(after! lispy
+  (setq lispy-outline "^;; \\(?:;[^#]\\|\\*+\\)"
+        lispy-outline-header ";; "))
+(after! elisp-mode
+  (add-hook 'emacs-lisp-mode-hook #'outline-minor-mode t)
+  (remove-hook 'emacs-lisp-mode-hook (lambda
+                                      (&rest _)
+                                      (set
+                                       (make-local-variable 'mode-name)
+                                       "Elisp")
+                                      (set
+                                       (make-local-variable 'outline-regexp)
+                                       ";;;;* [^ 	\n]")))
+  (setq-hook! 'emacs-lisp-mode-hook mode-name "Elisp")
+  (set-lookup-handlers! 'emacs-lisp-mode :documentation #'helpful-at-point))
+(after! helpful
+  (set-lookup-handlers! 'helpful-mode :documentation #'helpful-at-point))
+;; **** python
 ;; (after! python
 ;;   (add-hook 'python-mode-hook #'outline-minor-mode)
 ;;   (set-company-backend! 'python-mode '(company-anaconda :with company-yasnippet company-dabbrev company-files))
 ;;   (set-lookup-handlers! 'python-mode :documentation #'anaconda-mode-show-doc))
-;; ;; **** sed
+;; **** sed
 ;; (def-package! sed-mode
 ;;   :commands (sed-mode))
-;; ;; **** pkgbuild
+;; **** pkgbuild
 ;; (when IS-LINUX
 ;;   (def-package! pkgbuild-mode
 ;;     :mode (("/PKGBUILD$" . pkgbuild-mode))))
-;; ;; *** yasnippet
+;; *** yasnippet
 ;; (def-package! ivy-yasnippet
 ;;   :commands (ivy-yasnippet))
-;; ;; *** evil
+;; *** evil
 ;; (after! evil-mc
 ;;   ;; Make evil-mc resume its cursors when I switch to insert mode
 ;;   (add-hook! 'evil-mc-before-cursors-created
@@ -315,7 +270,7 @@
 
 
 ;; ** hacks
-(add-to-list '+doom-solaire-themes '(doom-modern-dark . t))
+;; (add-to-list '+doom-solaire-themes '(doom-modern-dark . t))
 
 ;; (when IS-LINUX
 ;;   (setq conda-anaconda-home "/opt/miniconda3"))

@@ -78,20 +78,6 @@ If run interactively, get ENTRY from context."
 ;; (def-package! org-web-tools
 ;;   :after org)
 
-(def-package! evil-org
-  :when (featurep! :editor evil +everywhere)
-  :hook (org-mode . evil-org-mode)
-  :init
-  (setq evil-org-key-theme '(navigation
-                             shift
-                             todo
-                             additional
-                             operators
-                             insert
-                             textobjects))
-  (add-hook 'org-load-hook #'+org-private|setup-keybinds t)
-  (add-hook 'evil-org-mode-hook #'evil-normalize-keymaps)
-  )
 ;;
 ;; Bootstrap
 ;;
