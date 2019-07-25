@@ -3,162 +3,95 @@
   (not (equal user-login-name "xfu"))
   "Is the emacs launched from Termux?")
 
-(if IS-TERMUX
-    (doom! :completion
-           (company +auto)
-           ivy
+(if (not (equal user-login-name "xfu"))
+    (doom!
+     :completion
+     (company +auto)
+     ivy)
+  (doom!
+   :completion
+   (company +auto +childframe)
+   (ivy +childframe)
+   :ui
+   nav-flash
+   :term
+   vterm
+   :tools
+   (flycheck +childframe)
+   lsp
+   :lang
+   (latex
+   +latexmk
+   +zathura)
+   ;; :lang
+   :app
+   ;; sx
+   rss
+   ;;(write
+   ;; +wordnut
+   ;; +synosaurus)
+   ))
 
-           :ui
-           (popup +all +defaults)
-           doom
-           doom-dashboard
-           hl-todo
-           modeline
-           treemacs
-           window-select
-           workspaces
+(doom! :emacs
+       dired
+       electric
+       vc
 
-           :editor
-           (evil +commands +everywhere)
-           file-templates
-           fold
-           format
-           lispy
-           multiple-cursors
-           rotate-text
-           snippets
+       :ui
+       (popup +all +defaults)
+       vc-gutter
+       doom
+       doom-dashboard
+       hl-todo
+       modeline
+       ophints
+       treemacs
+       window-select
+       workspaces
 
-           :emacs
-           dired
-           electric
-           vc
+       :editor
+       (evil +commands +everywhere)
+       file-templates
+       fold
+       format
+       lispy
+       multiple-cursors
+       rotate-text
+       snippets
 
-           :tools
-           ;;       reference
-           (lookup +docsets)
-           ;; password-store
-           editorconfig
-           eval
-           lsp
-           flycheck
-           flyspell
-           magit
-           ;;       gist
-
-           :lang
-           ;;       lsp
-           ;;       data
-           ;;       (python +conda)
-           ess
-           ;;       (latex
-           ;;        +latexmk
-           ;;        +zathura)
-           (org
-            +attach
-            +babel
-            +capture
-            +present)
-           ;; (org-private
-           ;;  +todo
-           ;;  +babel
-           ;;  +capture
-           ;;  +latex
-           ;;  +export
-           ;;  +style)
-           emacs-lisp
-           ;;       javascript
-           markdown
-           sh
-           ;;       web
-
-           :config
-           (default +snippets +bindings +commands))
-  (doom! :completion
-         (company +auto +childframe)
-         (ivy +childframe)
-
-         :ui
-         nav-flash
-         vc-gutter
-         (popup +all +defaults)
-         doom
-         doom-dashboard
-         hl-todo
-         modeline
-         ophints
-         treemacs
-         window-select
-         workspaces
-
-         :editor
-         (evil +commands +everywhere)
-         file-templates
-         fold
-         format
-         lispy
-         multiple-cursors
-         rotate-text
-         snippets
-
-         :emacs
-         dired
-         electric
-         vc
-
-         :term
-         vterm
-
-         :tools
-         ;;       reference
-         ;;      ein
-         (lookup +docsets)
-         ;; password-store
-         editorconfig
-         eval
-         flycheck
-         flyspell
-         magit
-         ;;       gist
-
-         :lang
-         ;;       lsp
-         ;;       data
-         ;;       (python +conda)
-         ess
-         ;;       (latex
-         ;;        +latexmk
-         ;;        +zathura)
-         (org
-          +attach
-          +babel
-          +capture
-          +present)
-         ;; (org-private
-         ;;  +todo
-         ;;  +babel
-         ;;  +ipython +right-popup
-         ;;  +capture
-         ;;  +latex
-         ;;  +export
-         ;;  +style)
-         emacs-lisp
-         ;;       javascript
-         markdown
-         sh
-         ;;       web
-
-         :email
-         notmuch
-
-         :app
-         ;;       sx
-         ;;       rss
-         ;;(write
-         ;; +wordnut
-         ;; +synosaurus)
-
-         :config
-         (default +snippets +bindings +commands)))
+       :tools
+       ;; reference
+       (lookup +docsets)
+       ;; password-store
+       editorconfig
+       eval
+       flyspell
+       magit
+       lsp
+       :lang
+       ;; data
+       ;; (python +conda)
+       ess
+       (org
+        +attach
+        +babel
+        +capture
+        +latex
+        +present)
+       (org-private
+        +todo
+        +babel
+        ;; +ipython +right-popup
+        +capture
+        +export
+        +style)
+       emacs-lisp
+       ;; javascript
+       markdown
+       sh
+       ;; web
+       :config
+       (default +snippets +bindings +commands))
 
 ;; * UI
 (setq browse-url-browser-function 'browse-url-default-browser

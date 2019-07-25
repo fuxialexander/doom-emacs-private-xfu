@@ -78,22 +78,14 @@ If run interactively, get ENTRY from context."
 ;; (def-package! org-web-tools
 ;;   :after org)
 
-;;
-;; Bootstrap
-;;
+(def-package! org-clock
+  :commands org-clock-save
+  :hook (org-mode . org-clock-load)
+  ;; (setq org-clock-persist t
+  ;;       org-clock-persist-file (expand-file-name ".org-clock-persist-data.el" org-directory))
+  ;; (add-hook 'kill-emacs-hook 'org-clock-save)
+  )
 
-(after! org
-  (+org-private|setup-ui)
-  (+org-private|setup-agenda)
-  (+org-private|setup-overrides))
-
-
-(remove-hook! 'org-mode-hook #'(visual-line-mode
-                                toc-org-enable))
-
-;; (add-hook 'org-mode-hook #'+org-private|setup-editing t)
-(add-hook 'org-mode-hook #'auto-fill-mode)
-(add-hook 'org-mode-hook #'eldoc-mode t)
 
 ;;
 ;; `org-load' hooks
@@ -639,14 +631,15 @@ This holds only for inactive timestamps."
     str)
   (advice-add 'org-format-outline-path :filter-return #'*org-format-outline-path-normalize))
 
-;;
-;; `org-mode' hooks
-;;
 
-(def-package! org-clock
-  :commands org-clock-save
-  :hook (org-mode . org-clock-load)
-  ;; (setq org-clock-persist t
-  ;;       org-clock-persist-file (expand-file-name ".org-clock-persist-data.el" org-directory))
-  ;; (add-hook 'kill-emacs-hook 'org-clock-save)
-  )
+(after! org
+  (add-hook! 'org-load-hook
+    #'(+org-private|setup-ui
+       +org-private|setup-agenda
+       +org-private|setup-overrides))
+
+  ;; (remove-hook! 'org-mode-hook #'(toc-org-enable))
+
+  ;; (add-hook 'org-mode-hook #'+org-private|setup-editing t)
+  (add-hook 'org-mode-hook #'auto-fill-mode)
+  (add-hook 'org-mode-hook #'eldoc-mode t))

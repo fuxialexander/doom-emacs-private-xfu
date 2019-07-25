@@ -43,7 +43,7 @@
       "M-W" #'kill-this-buffer
       :nie "s-f" (lambda! (swiper
                            (if (symbol-at-point)
-                               (format "\\_<%s\\_> " (symbol-at-point)) nil)))
+                               (replace-regexp-in-string "\\([\+\!]\\)" "\\\\\\1" (format "\\_<%s\\_> " (symbol-at-point))) nil)))
       :v "s-f" (lambda! (swiper (buffer-substring-no-properties (region-beginning) (region-end))))
       (:after outline
         :map (outline-mode-map outline-minor-mode-map)

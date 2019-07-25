@@ -142,7 +142,7 @@
                    'counsel-M-x
                    '(:columns
                      ((counsel-M-x-transformer (:width 30)) ; the original transformer
-                      (ivy-rich-counsel-function-docstring (:width 100 :face font-lock-doc-face))))))
+                      (ivy-rich-counsel-function-docstring (:width 70 :face font-lock-doc-face))))))
   (ivy-rich-mode +1))
 
 ;; **** counsel-config
