@@ -29,7 +29,7 @@
 %i
 %?")
    ("t" "Todo" entry
-    (file "~/Dropbox/org/inbox.org")
+    (file ,(concat org-directory "inbox.org"))
     "* %^{Logging for...}
 :PROPERTIES:
 :Created: %U
@@ -37,7 +37,7 @@
 %i
 %?" )
    ("tl" "Todo with link" entry
-    (file "~/Dropbox/org/inbox.org")
+    (file ,(concat org-directory "inbox.org"))
     "* %^{Logging for...}
 :PROPERTIES:
 :Created: %U
@@ -46,7 +46,7 @@
 %i
 %?" )
    ("ic" "Idea from Chrome" entry
-    (file "~/Dropbox/org/idea.org")
+    (file ,(concat org-directory "idea.org"))
     "* %^{Logging for...} :idea:
 :PROPERTIES:
 :Created: %U
@@ -55,7 +55,7 @@
 %i
 %?" )
    ("c" "Calendar" entry
-    (file "~/Dropbox/org/cal/cal.org")
+    (file ,(concat org-directory "cal/cal.org"))
     "* %^{Logging for...}
 %^{LOCATION}p
 %^T
@@ -70,7 +70,7 @@
 %i
 %?"  :clock-in t  )
    ("M" "Meeting" entry
-    (file+olp+datetree "~/Dropbox/org/_meeting.org")
+    (file+olp+datetree ,(concat org-directory "meeting.org"))
     "* %^{Logging for...} :logs:communication:
 %^{Effort}p
 %i
@@ -94,7 +94,7 @@
 %i
 %?"  :clock-in t  )
    ("i" "Idea" entry
-    (file "~/Dropbox/org/_idea.org")
+    (file ,(concat org-directory "idea.org"))
     "* %A :idea:
 :PROPERTIES:
 :Created: %U
@@ -103,7 +103,7 @@
 %i
 %?")
    ("drl" "Daily Review with link" entry
-    (file+olp+datetree "~/Dropbox/org/_review.org")
+    (file+olp+datetree ,(concat org-directory "review.org"))
     "* %^{Review} :review:daily:
 :PROPERTIES:
 :Created: %U
@@ -111,21 +111,21 @@
 :END:
 %?" :time-prompt t)
    ("dr" "Daily Review" entry
-    (file+olp+datetree "~/Dropbox/org/_review.org")
+    (file+olp+datetree ,(concat org-directory "review.org"))
     "* %^{Review} :review:daily:
 :PROPERTIES:
 :Created: %U
 :END:
 %?" :time-prompt t)
    ("wr" "Week Review" entry
-    (file+olp+datetree "~/Dropbox/org/_review.org")
+    (file+olp+datetree ,(concat org-directory "review.org"))
     "* %^{Review for...|Mood|Research|Learn|Entertainment|Life} :review:week:%\\1:
 :PROPERTIES:
 :Created: %U
 :END:
 %?" :time-prompt t)
    ("mr" "Month Review" entry
-    (file+olp+datetree "~/Dropbox/org/_review.org")
+    (file+olp+datetree ,(concat org-directory "review.org"))
     "* %^{Review for...|Mood|Research|Learn|Entertainment|Life} :review:month:%\\1:
 :PROPERTIES:
 :Created: %U

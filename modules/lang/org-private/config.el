@@ -16,12 +16,25 @@
 ;;
 ;; Plugins
 ;;
+;; (def-package! webkit-katex-render :load-path "~/Source/playground/emacs-webkit-katex-render"
+;;   :when (featurep 'xwidget-internal)
+;;   :commands (webkit-katex-render-mode)
+;;   :config
+;;   (setq webkit-katex-render--background-color (doom-color 'bg)))
+
+(def-package! cdlatex
+  :commands (org-cdlatex-mode
+             cdlatex-mode
+             turn-on-cdlatex
+             turn-on-org-cdlatex)
+  :init
+  (setq cdlatex-math-modify-alist '((?B "\\mathbb" nil t nil nil))))
 
 (def-package! org-brain
   :after org
   :commands (org-brain-visualize)
   :init
-  (setq org-brain-path "~/Dropbox/org/brain")
+  (setq org-brain-path (concat org-directory "brain/"))
   (after! evil-snipe
     (push 'org-brain-visualize-mode evil-snipe-disabled-modes))
   ;; (add-hook 'org-agenda-mode-hook #'(lambda () (evil-vimish-fold-mode -1)))
@@ -484,7 +497,7 @@ INFO is a plist containing export options."
   (defun +org-private/org-add-ids-to-headlines-in-file ()
     "Add CUSTOM_ID properties to all headlines in the current file"
     (interactive)
-    (if (string-equal default-directory "~/Dropbox/org/")
+    (if (string-equal default-directory org-directory)
         (save-excursion
         (widen)
         (goto-char (point-min))

@@ -93,6 +93,12 @@
        :config
        (default +snippets +bindings +commands))
 
+;; * Config
+(setq +file-templates-dir "~/.doom.d/templates"
+      max-specpdl-size 10000
+      user-full-name "Alexander Fu Xi"
+      user-mail-address "fuxialexander@gmail.com")
+
 ;; * UI
 (setq browse-url-browser-function 'browse-url-default-browser
       display-line-numbers-type nil
@@ -123,11 +129,6 @@
                             fringe-indicator-alist))))
 
 
-;; * Config
-(setq +file-templates-dir "~/.doom.d/templates"
-      max-specpdl-size 10000
-      user-full-name "Alexander Fu Xi"
-      user-mail-address "fuxialexander@gmail.com")
 
 ;; * Keys
 (setq +default-repeat-backward-key "'"

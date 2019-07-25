@@ -14,7 +14,9 @@
       request-storage-directory (concat doom-etc-dir "request/")
       trash-directory "~/.Trash/"
       twittering-connection-type-order '(wget urllib-http native urllib-https)
-      visual-fill-column-center-text t)
+      visual-fill-column-center-text t
+      evil-org-key-theme '(navigation shift todo
+                                      additional operators insert textobjects))
 
 ;; (add-hook! minibuffer-setup (setq-local show-trailing-whitespace nil))
 ;; (remove-hook 'text-mode-hook #'hl-line-mode)
@@ -266,6 +268,7 @@
 (load! "+popup")
 (when (string-equal user-mail-address "fuxialexander@gmail.com")
   ;(load! "+idle")
+  (load! "+xfu")
   (load! "+auth"))
 
 
