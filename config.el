@@ -281,7 +281,7 @@
 ;; (def-package! org-kanban
 ;;   :commands (org-kanban/initialize-at-end))
 
-(add-hook! :append 'doom-load-theme-hook (load! "+themes"))
+(add-hook! 'doom-load-theme-hook :append  #'(load! "+themes"))
 
 ;; *** pdf-tools
 ;; (after! pdf-view

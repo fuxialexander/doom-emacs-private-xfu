@@ -6,7 +6,7 @@
 
 (def-package! org-super-agenda
   :commands (org-super-agenda-mode)
-  :init (advice-add #'org-super-agenda-mode :around #'doom*shut-up)
+  :init (advice-add #'org-super-agenda-mode :around #'doom-shut-up-a)
   :config
   (setq org-super-agenda-groups
         '((:name "Log\n"

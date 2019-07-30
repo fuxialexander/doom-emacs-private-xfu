@@ -1,43 +1,22 @@
 ;; * Modules
-(defvar IS-TERMUX
-  (not (equal user-login-name "xfu"))
-  "Is the emacs launched from Termux?")
+(defvar NOT-TERMUX (equal user-login-name "xfu")
+  "Not inside TERMUX.app")
 
-(if (not (equal user-login-name "xfu"))
-    (doom!
-     :completion
-     (company +auto)
-     ivy)
-  (doom!
-   :completion
-   (company +auto +childframe)
-   (ivy +childframe)
-   :ui
-   nav-flash
-   :term
-   vterm
-   :tools
-   (flycheck +childframe)
-   lsp
-   :lang
-   (latex
-   +latexmk
-   +zathura)
-   ;; :lang
-   :app
-   ;; sx
-   rss
-   ;;(write
-   ;; +wordnut
-   ;; +synosaurus)
-   ))
+(doom! :completion
+       (:if NOT-TERMUX
+           (company +auto +childframe)
+         (company +auto))
+       (:if NOT-TERMUX
+           (ivy +childframe)
+         ivy)
 
-(doom! :emacs
+       :emacs
        dired
        electric
        vc
 
        :ui
+       (:if NOT-TERMUX nav-flash)
        (popup +all +defaults)
        vc-gutter
        doom
@@ -48,6 +27,9 @@
        treemacs
        window-select
        workspaces
+
+       :term
+       (:if NOT-TERMUX vterm)
 
        :editor
        (evil +commands +everywhere)
@@ -60,8 +42,10 @@
        snippets
 
        :tools
+       (:if NOT-TERMUX (flycheck +childframe))
+       (:if NOT-TERMUX lsp)
        ;; reference
-       (lookup +docsets)
+       ;; (lookup +docsets)
        ;; password-store
        editorconfig
        eval
@@ -71,9 +55,11 @@
        :lang
        ;; data
        ;; (python +conda)
+       (:if NOT-TERMUX (latex +latexmk +zathura))
        ess
        (org
         +attach
+        ;; +ref
         +babel
         +capture
         +latex
@@ -90,6 +76,9 @@
        markdown
        sh
        ;; web
+
+       :app
+       (:if NOT-TERMUX rss)
        :config
        (default +snippets +bindings +commands))
 
@@ -149,7 +138,7 @@
                          ("melpa" . "http://elpa.emacs-china.org/melpa/")))
 
 ;; * Termux-specific
-(when IS-TERMUX
+(when (not NOT-TERMUX)
   (setq browse-url-browser-function 'browse-url-xdg-open))
 ;; * Mac-specific
 (when IS-MAC
