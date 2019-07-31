@@ -55,23 +55,6 @@
         :nm [tab] #'outline-cycle
         :nm [backtab] #'outshine-cycle-buffer))
 
-;; *** magit
-;; (def-package! orgit :after (magit org))
-;; (after! magithub
-;;   (setq magithub-clone-default-directory "~/Repo/"))
-;; (after! magit
-;;   (defun +magit|remove-fringes ()
-;;     (set-window-fringes nil 0 0)
-;;     (set-window-margins nil 1 nil))
-;;   (add-hook 'magit-post-display-buffer-hook #'+magit|remove-fringes t)
-;;   (add-hook! magit-popup-mode-hook #'+magit|remove-fringes)
-
-;;   (after! solaire-mode
-;;     (add-hook 'magit-mode-hook #'solaire-mode))
-;;   (magit-wip-after-save-mode 1)
-;;   (magit-wip-after-apply-mode 1)
-;;   (setq magit-save-repository-buffers 'dontask)
-;;   (advice-add 'magit-list-repositories :override #'*magit-list-repositories))
 
 ;; *** keycast
 (def-package! keycast :load-path "~/.doom.d/local/keycast.el"
