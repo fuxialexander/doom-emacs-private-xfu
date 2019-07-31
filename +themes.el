@@ -55,6 +55,7 @@
              (when doom-org-special-tags
                '(("\\s-\\(\\([#@]\\)[^+ \n.,]+\\)" 1 (doom-org--tag-face 2) prepend)))))))
 (doom-themes-set-faces 'user
+  '(variable-pitch :font "SF Compact Display")
 ;; ** font-lock
   '(font-lock-builtin-face              :foreground builtin :slant 'italic :weight 'light)
   '(font-lock-variable-name-face        :foreground variables :weight 'semi-bold)
