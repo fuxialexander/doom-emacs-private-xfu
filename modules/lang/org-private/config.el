@@ -147,6 +147,7 @@ If run interactively, get ENTRY from context."
 
   ;; setup customized font lock
   (setq org-ts-regexp-both-braket "\\([[<]\\)\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\} ?[^]\n>]*?\\)\\([]>]\\)")
+
   (defun *org-set-font-lock-defaults ()
     "Set font lock defaults for the current buffer."
     (let* ((em org-fontify-emphasized-text)
@@ -200,7 +201,8 @@ If run interactively, get ENTRY from context."
              (when (memq 'date lk) '(org-activate-dates (0 'org-date append)))
              (when (memq 'footnote lk) '(org-activate-footnote-links))
              ;; Targets.
-             (list org-any-target-regexp '(0 'org-target t))
+             (list org-radio-target-regexp '(0 'org-target t))
+	           (list org-target-regexp '(0 'org-target t))
              ;; Diary sexps.
              '("^&?%%(.*\\|<%%([^>\n]*?>" (0 'org-sexp-date t))
              ;; Macro
@@ -228,6 +230,12 @@ If run interactively, get ENTRY from context."
                              (regexp-opt (mapcar 'car org-tag-groups-alist))
                              ":\\).*$")
                      '(1 'org-tag-group prepend)))
+	           ;;
+             ;; Special keywords
+	           ;; (list (concat "\\<" org-deadline-string) '(0 'org-special-keyword t))
+	           ;; (list (concat "\\<" org-scheduled-string) '(0 'org-special-keyword t))
+	           ;; (list (concat "\\<" org-closed-string) '(0 'org-special-keyword t))
+	           ;; (list (concat "\\<" org-clock-string) '(0 'org-special-keyword t))
 
              ;; Emphasis
              (when em '(org-do-emphasis-faces))
@@ -265,18 +273,20 @@ If run interactively, get ENTRY from context."
       (setq-local org-font-lock-keywords org-font-lock-extra-keywords)
       (setq-local font-lock-defaults
                   '(org-font-lock-keywords t nil nil backward-paragraph))
+      (setq-local font-lock-extend-after-change-region-function
+		              #'org-fontify-extend-region)
       (kill-local-variable 'font-lock-keywords)
       nil))
 
   (defun org-font-lock-add-priority-faces (limit)
-        "Add the special priority faces."
-        (while (re-search-forward "^\\*+ .*?\\(\\[\\(#\\(.\\)\\)\\]\\)" limit t)
-          (add-face-text-property
-           (match-beginning 1) (match-end 1)
-           'org-priority-hide)
-          (add-face-text-property
-           (match-beginning 2) (match-end 2)
-           (org-get-priority-face (string-to-char (match-string 3))))))
+    "Add the special priority faces."
+    (while (re-search-forward "^\\*+ .*?\\(\\[\\(#\\(.\\)\\)\\]\\)" limit t)
+      (add-face-text-property
+       (match-beginning 1) (match-end 1)
+       'org-priority-hide)
+      (add-face-text-property
+       (match-beginning 2) (match-end 2)
+       (org-get-priority-face (string-to-char (match-string 3))))))
 
   (advice-add 'org-set-font-lock-defaults :override #'*org-set-font-lock-defaults)
   (defface org-deadline-custom '((t (:inherit 'default))) "org-deadline" :group 'org)
@@ -646,10 +656,10 @@ This holds only for inactive timestamps."
 
 
 (after! org
-  (add-hook! 'org-load-hook
-    #'(+org-private|setup-ui
-       +org-private|setup-agenda
-       +org-private|setup-overrides))
+  (+org-private|setup-ui)
+  (+org-private|setup-agenda)
+  (+org-private|setup-keybinds)
+  (+org-private|setup-overrides)
 
   ;; (remove-hook! 'org-mode-hook #'(toc-org-enable))
 
