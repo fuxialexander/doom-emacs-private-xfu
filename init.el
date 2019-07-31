@@ -59,7 +59,7 @@
        ess
        (org
         +attach
-        ;; +ref
+        +ref
         +babel
         +capture
         +latex

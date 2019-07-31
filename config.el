@@ -281,7 +281,8 @@
 ;; (def-package! org-kanban
 ;;   :commands (org-kanban/initialize-at-end))
 
-(add-hook! 'doom-load-theme-hook :append  #'(load! "+themes"))
+(add-to-list 'load-path "~/.doom.d/local/emacs-application-framework.git/")
+(add-hook! 'doom-load-theme-hook :append (load! "+themes"))
 
 ;; *** pdf-tools
 ;; (after! pdf-view

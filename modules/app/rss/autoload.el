@@ -33,9 +33,7 @@
     (setq-local shr-width 120)
     (setq-local line-spacing 0.3)
     (setq-local shr-current-font '(:family "charter" :height 1.2))
-    (set-buffer-modified-p nil))
-  (let ((visual-fill-column-width 120))
-    (visual-fill-column-mode)))
+    (set-buffer-modified-p nil)))
 
 ;;;###autoload
 (defun +rss/delete-pane ()
