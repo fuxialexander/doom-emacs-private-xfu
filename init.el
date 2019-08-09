@@ -65,13 +65,7 @@
         +capture
         +latex
         +present)
-       (org-private
-        +todo
-        +babel
-        ;; +ipython +right-popup
-        +capture
-        +export
-        +style)
+       org-private
        emacs-lisp
        ;; javascript
        markdown
