@@ -1,13 +1,15 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; lang/org-private/packages.el
 
-(package! org-plus-contrib)
-(package! toc-org)
-(package! org-web-tools)
+;; (package! org-plus-contrib)
+;; (package! toc-org)
+;; (package! org-web-tools)
 ;; (package! org-wild-notifier)
 (package! org-brain)
 (package! org-super-agenda)
 (package! org-clock-convenience)
+(package! webkit-katex-render :recipe (:fetcher github :repo "fuxialexander/webkit-katex-render" :files ("*")))
+(package! org-clock-budget :recipe (:fetcher github :repo "Fuco1/org-clock-budget" :files ("*")))
 
 (when (featurep! +attach)
   (package! org-download))
@@ -28,4 +30,3 @@
   (package! ox-reveal))
 
 ;; (when (featurep! +publish))
-
