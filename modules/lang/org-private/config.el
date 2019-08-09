@@ -148,7 +148,7 @@ If run interactively, get ENTRY from context."
   ;; setup customized font lock
   (setq org-ts-regexp-both-braket "\\([[<]\\)\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\} ?[^]\n>]*?\\)\\([]>]\\)")
 
-  (defun *org-set-font-lock-defaults ()
+ (defun *org-set-font-lock-defaults ()
     "Set font lock defaults for the current buffer."
     (let* ((em org-fontify-emphasized-text)
            (lk org-highlight-links)
@@ -198,7 +198,8 @@ If run interactively, get ENTRY from context."
              '(org-activate-links)
              (when (memq 'tag lk) '(org-activate-tags (1 'org-tag prepend)))
              (when (memq 'radio lk) '(org-activate-target-links (1 'org-link t)))
-             (when (memq 'date lk) '(org-activate-dates (0 'org-date append)))
+             (when (memq 'date lk) '(org-activate-dates (0 'org-date t)))
+             ;; (when (memq 'date lk) '(org-activate-dates (0 'org-date append)))
              (when (memq 'footnote lk) '(org-activate-footnote-links))
              ;; Targets.
              (list org-radio-target-regexp '(0 'org-target t))
@@ -334,17 +335,17 @@ If run interactively, get ENTRY from context."
         org-log-done 'time
         org-log-into-drawer t
         org-log-note-clock-out t
-        org-log-note-headings '((done . "%t: DONE")
-                                (state . "%t: %-4S -> %-4s")
-                                (note . "%t: NOTE")
-                                (reschedule . "%t: %S -> RESCHEDULE")
-                                (delschedule . "%t: %S -> DESCHEDULE")
-                                (redeadline . "%t: %S -> REDEADLINE")
-                                (deldeadline . "%t: %S -> DEDEADLINE")
-                                (refile . "%t: REFILE")
-                                (clock-out . ""))
-        org-log-redeadline 'time
-        org-log-reschedule 'time
+        ;; org-log-note-headings '((done . "%t: DONE")
+        ;;                         (state . "%t: %-4S -> %-4s")
+        ;;                         (note . "%t: NOTE")
+        ;;                         (reschedule . "%t: %S -> RESCHEDULE")
+        ;;                         (delschedule . "%t: %S -> DESCHEDULE")
+        ;;                         (redeadline . "%t: %S -> REDEADLINE")
+        ;;                         (deldeadline . "%t: %S -> DEDEADLINE")
+        ;;                         (refile . "%t: REFILE")
+        ;;                         (clock-out . ""))
+        ;; org-log-redeadline 'time
+        ;; org-log-reschedule 'time
         org-lowest-priority ?F
         org-modules '(org-bibtex org-info org-protocol org-mac-link org-notmuch)
         org-outline-path-complete-in-steps nil
