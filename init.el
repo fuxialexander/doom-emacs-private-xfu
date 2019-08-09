@@ -44,8 +44,9 @@
        :tools
        (:if NOT-TERMUX (flycheck +childframe))
        (:if NOT-TERMUX lsp)
+       (:if NOT-TERMUX pdf)
        ;; reference
-       ;; (lookup +docsets)
+       (lookup +docsets)
        ;; password-store
        editorconfig
        eval
@@ -54,7 +55,7 @@
        lsp
        :lang
        ;; data
-       ;; (python +conda)
+       (python +lsp +pyenv +conda)
        (:if NOT-TERMUX (latex +latexmk +zathura))
        ess
        (org
