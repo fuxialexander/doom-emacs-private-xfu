@@ -2,7 +2,7 @@
 ;; * config
 ;; ** general
 (setq +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin
-      +reference-field 'bioinfo
+      +org-reference-field 'bioinfo
       browse-url-browser-function 'browse-url-default-browser
       delete-by-moving-to-trash t
       electric-pair-inhibit-predicate 'ignore
@@ -280,5 +280,13 @@
   (add-hook 'treemacs-select-hook #'remove-fringes))
 
 ;; *** pdf-tools
-;; (after! pdf-view
-;;   (advice-add 'pdf-view-mouse-set-region :override #'*pdf-view-mouse-set-region))
+(after! pdf-view
+  (advice-add 'pdf-view-mouse-set-region :override #'*pdf-view-mouse-set-region))
+
+(use-package! org-noter
+  :commands (org-noter)
+  :config
+  (after! pdf-tools
+    (setq pdf-annot-activate-handler-functions #'org-noter-jump-to-note))
+  (setq org-noter-notes-mode-map (make-sparse-keymap)))
+(use-package! org-pdftools)

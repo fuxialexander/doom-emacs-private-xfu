@@ -117,8 +117,30 @@
 ;; * Keys
 (setq +default-repeat-backward-key "'"
       +default-repeat-forward-key ";"
-      +evil-collection-disabled-list '(elfeed notmuch kotlin-mode simple dired helm ivy anaconda-mode outline)
-      +magit-hub-features t
+      +evil-collection-disabled-list '(
+                                       anaconda-mode
+                                       buff-menu
+                                       comint
+                                       company
+                                       custom
+                                       eldoc
+                                       elisp-mode
+                                       ert
+                                       free-keys
+                                       help
+                                       helm
+                                       image
+                                       kotlin-mode
+                                       occur
+                                       package-menu
+                                       ruby-mode
+                                       simple
+                                       slime
+
+                                       elfeed
+                                       notmuch
+                                       ;; outline
+                                       )
       doom-localleader-key ","
       evil-collection-company-use-tng nil
       evil-respect-visual-line-mode t
