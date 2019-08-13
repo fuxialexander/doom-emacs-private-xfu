@@ -53,6 +53,7 @@
        flyspell
        magit
        lsp
+       pdf
        :lang
        ;; data
        (python +lsp +pyenv +conda)
@@ -162,7 +163,10 @@
   (setq insert-directory-program "/usr/local/bin/gls")
   (setq ns-use-thin-smoothing t)
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-  (add-to-list 'default-frame-alist '(ns-appearance . dark)))
+  (add-to-list 'default-frame-alist '(ns-appearance . dark))
+(setenv "PKG_CONFIG_PATH" (concat (shell-command-to-string "printf %s \"$(brew --prefix libffi)\"") "/lib/pkgconfig/"))
+
+)
 ;; * Arch-specific
 (when IS-LINUX
   (setq insert-directory-program "ls"
