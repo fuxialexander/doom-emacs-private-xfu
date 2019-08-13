@@ -44,6 +44,7 @@
        :tools
        (:if NOT-TERMUX (flycheck +childframe))
        (:if NOT-TERMUX lsp)
+       (:if NOT-TERMUX pdf)
        ;; reference
        (lookup +docsets)
        ;; password-store
@@ -55,7 +56,7 @@
        pdf
        :lang
        ;; data
-       ;; (python +conda)
+       (python +lsp +pyenv +conda)
        (:if NOT-TERMUX (latex +latexmk +zathura))
        ess
        (org
@@ -65,13 +66,7 @@
         +capture
         +latex
         +present)
-       (org-private
-        +todo
-        +babel
-        ;; +ipython +right-popup
-        +capture
-        +export
-        +style)
+       org-private
        emacs-lisp
        ;; javascript
        markdown

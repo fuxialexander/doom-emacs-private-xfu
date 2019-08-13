@@ -62,7 +62,7 @@ name of the sub-editing buffer."
     (let* ((lang
             (if (eq type 'src-block) (org-element-property :language element)
               "example"))
-           (lang-f (and (eq type 'src-block) (org-src--get-lang-mode lang)))
+           (lang-f (and (eq type 'src-block) (org-src-get-lang-mode lang)))
            (babel-info (and (eq type 'src-block)
                             (org-babel-get-src-block-info 'light)))
            deactivate-mark)

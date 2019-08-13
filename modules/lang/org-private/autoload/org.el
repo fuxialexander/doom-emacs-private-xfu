@@ -1,6 +1,10 @@
 ;;; lang/org-private/autoload/org.el -*- lexical-binding: t; -*-
 
 ;;;###autoload
+(defun +org-move-point-to-heading ()
+        (cond ((org-at-heading-p) (org-beginning-of-line))
+              (t (org-previous-visible-heading 1))))
+;;;###autoload
 (defun export-diary-from-cal ()
   (interactive)
   (start-process-shell-command "export diary" nil "~/.emacs.d-backup/private/local/calendardiary 30 > ~/Dropbox/org/cal.diary"))
@@ -17,7 +21,6 @@
   (interactive)
   (org-indent-mode 1)
   (recenter-top-bottom))
-
 
 ;;;###autoload
 (defun +org/work-on-heading ()
@@ -110,3 +113,13 @@ Passing in any prefix argument, executes the command without special behavior."
                      (org-insert-item (org-at-item-checkbox-p))))
          (evil-insert nil))
         ((evil-open-below count))))
+
+;;;###autoload
+(defun +org-toggle-math ()
+  (interactive)
+  (if (bound-and-true-p org-cdlatex-mode)
+      (org-cdlatex-mode -1)
+    (org-cdlatex-mode +1))
+  (if (bound-and-true-p webkit-katex-render-mode)
+      (webkit-katex-render-mode -1)
+    (webkit-katex-render-mode +1)))
