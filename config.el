@@ -388,18 +388,7 @@ frame's PPI is larger than 180. Otherwise, return 1."
               page width nil nil
               `(,(car colors) ,(cdr colors) ,@region)))
          :width width))))
-  (defun pdf-view-create-page (page &optional window)
-    "Create an image of PAGE for display on WINDOW."
-    (let* ((size (pdf-view-desired-image-size page window))
-           (width (car size))
-           (data (pdf-cache-renderpage
-                  page width width))
-           (hotspots (pdf-view-apply-hotspot-functions
-                      window page size)))
-      (pdf-view-create-image data
-        :width width
-        :map hotspots
-        :pointer 'arrow)))
+
   (advice-add 'pdf-view-mouse-set-region :override #'*pdf-view-mouse-set-region))
 
 (use-package! org-noter
