@@ -281,7 +281,8 @@
 
 ;; *** pdf-tools
 (after! pdf-view
-
+  (setq pdf-view-use-scaling t
+        pdf-view-use-imagemagick nil)
   (defun pdf-view-use-scaling-p ()
     "Return t if scaling should be used."
     (and (or (and (eq system-type 'darwin) (string-equal emacs-version "27.0.50"))
@@ -291,7 +292,7 @@
   (defun pdf-view-create-page (page &optional window)
     "Create an image of PAGE for display on WINDOW."
     (let* ((size (pdf-view-desired-image-size page window))
-           (width (if (not pdf-view-use-scaling)
+           (width (if (not (pdf-view-use-scaling-p))
                       (car size)
                     (* 2 (car size))))
            (data (pdf-cache-renderpage
@@ -300,7 +301,7 @@
                       window page size)))
       (pdf-view-create-image data
         :width width
-        :scale 0.5
+        :scale (if (pdf-view-use-scaling-p) 0.5 1)
         :map hotspots
         :pointer 'arrow)))
 
