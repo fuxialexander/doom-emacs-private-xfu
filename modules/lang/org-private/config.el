@@ -47,7 +47,13 @@
         org-log-into-drawer t
         org-log-note-clock-out t
         org-lowest-priority ?F
-        org-modules '(org-bibtex org-info org-protocol org-mac-link org-notmuch)
+        org-modules '(ol-bibtex
+                      ol-info
+                      org-protocol
+                      org-mac-link
+                      ol-w3m
+                      ol-bibtex
+                      ol-eww)
         org-outline-path-complete-in-steps nil
         org-pretty-entities nil
         org-pretty-entities-include-sub-superscripts t

@@ -5,4 +5,4 @@
   (package! ivy-bibtex))
 (when (featurep! :completion helm)
   (package! helm-bibtex))
-(package! org-ref :recipe (:fetcher github :repo "fuxialexander/org-ref" :files ("*")))
+(package! org-ref :recipe (:host github :repo "fuxialexander/org-ref" :files ("*")))

@@ -7,7 +7,7 @@
 (defun =rss ()
   "Activate (or switch to) `elfeed' in its workspace."
   (interactive)
-  (unless (featurep! :feature workspaces)
+  (unless (featurep! :ui workspaces)
     (user-error ":feature workspaces is required, but disabled"))
   (+workspace-switch "rss" t)
   (if-let* ((buf (cl-find-if (lambda (it) (string-match-p "^\\*elfeed" (buffer-name (window-buffer it))))

@@ -1,5 +1,5 @@
 ;; autoload/evil.el -*- lexical-binding: t; -*-
-;;;###if (featurep! :feature evil)
+;;;###if (featurep! :editor evil)
 
 ;;;###autoload (autoload '+xfu:multi-next-line "autoload/evil" nil t)
 (evil-define-motion +xfu:multi-next-line (count)

@@ -62,9 +62,9 @@
         :desc "ivy-resume" :nv "$" #'ivy-resume
         :desc "Find file in project" :nv "SPC" #'execute-extended-command
         :desc "Browse files" :n "/" #'find-file
-        (:unless (featurep! :feature workspaces)
+        (:unless (featurep! :ui workspaces)
           :desc "Switch buffer" :n "," #'switch-to-buffer)
-        (:when (featurep! :feature workspaces)
+        (:when (featurep! :ui workspaces)
           :desc "Switch to workspace" :n "j" #'+workspace/switch-to
           :desc "Switch workspace buffer" :n "," #'persp-switch-to-buffer
           :desc "Switch buffer" :n "<" #'switch-to-buffer)

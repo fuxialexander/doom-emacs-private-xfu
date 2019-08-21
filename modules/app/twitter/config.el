@@ -103,7 +103,7 @@
 
   (add-hook 'doom-real-buffer-functions #'+twitter-buffer-p)
 
-  (when (featurep! :feature popup)
+  (when (featurep! :ui popup)
     (setq twittering-pop-to-buffer-function #'+twitter-display-buffer)
     (set-popup-rule! "^\\*twittering-edit" nil :select t :modeline 'minimal))
 

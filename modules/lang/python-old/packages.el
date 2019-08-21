@@ -3,11 +3,11 @@
 
 ;; requires: python jedi setuptools
 
-;; (package! lpy :recipe (:fetcher github :repo "abo-abo/lpy" :files ("*")))
+;; (package! lpy :recipe (:host github :repo "abo-abo/lpy" :files ("*")))
 (package! nose)
 (package! py-isort)
 (package! pip-requirements)
-(package! yapfify :recipe (:fetcher github :repo "JorisE/yapfify"))
+(package! yapfify :recipe (:host github :repo "JorisE/yapfify"))
 ;; Environmet management
 (package! pipenv)
 (when (featurep! +pyenv)

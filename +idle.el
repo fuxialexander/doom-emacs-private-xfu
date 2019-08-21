@@ -21,7 +21,7 @@
 (make-thread
  (lambda ()
    (run-with-idle-timer 10 nil #'auto-require-packages
-    '(dash
+    'dash
       f
       s
       with-editor
@@ -51,7 +51,7 @@
       org-clock
       org-agenda
       org-capture
-      org-notmuch
+      ;; org-notmuch
       htmlize
       bibtex
       biblio
@@ -104,7 +104,7 @@
       ;; elfeed-curl
       ;; elfeed-search
       ;; elfeed-org
-      ))
+      )
    ;; (run-with-idle-timer 30 nil #'auto-load-files
    ;;                      '("~/Dropbox/org/ref.org"
    ;;                        "~/Dropbox/org/idea.org"
