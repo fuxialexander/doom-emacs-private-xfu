@@ -59,13 +59,31 @@
 
 ;; *** keycast
 (use-package! keycast :load-path "~/.doom.d/local/keycast.el"
-  :commands (keycast-mode)
+ :commands (keycast-mode)
   :config
   (setq keycast-substitute-alist '((evil-next-line nil nil)
                                    (evil-previous-line nil nil)
                                    (evil-forward-char nil nil)
                                    (evil-backward-char nil nil)
                                    (self-insert-command nil nil))))
+(use-package! org-noter
+  :commands (org-noter)
+  :config
+  (require 'org-noter-pdftools)
+  (after! pdf-tools
+    (setq pdf-annot-activate-handler-functions #'org-noter-jump-to-note))
+  (setq org-noter-notes-mode-map (make-sparse-keymap)))
+
+(use-package! org-pdftools
+  :init (setq org-pdftools-search-string-separator "??")
+  :config
+  (after! org
+    (org-link-set-parameters "pdftools"
+                             :follow #'org-pdftools-open
+                             :complete #'org-pdftools-complete-link
+                             :store #'org-pdftools-store-link
+                             :export #'org-pdftools-export)
+    (add-hook 'org-store-link-functions 'org-pdftools-store-link)))
 ;; *** tldr
 (use-package! tldr
   :commands (tldr)
@@ -260,6 +278,7 @@
 
 ;; *** pdf-tools
 (after! pdf-view
+  (require 'pdf-isearch)
   (setq pdf-view-use-scaling t
         pdf-view-use-imagemagick nil)
   (defun pdf-view-use-scaling-p ()

@@ -61,7 +61,7 @@
        (lookup +docsets)
        magit
        lsp
-       ;; pdf
+       pdf
        :lang
        ;; data
        (python +lsp +pyenv +conda)
