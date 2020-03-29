@@ -6,14 +6,8 @@
        (:if NOT-TERMUX
            (company +auto +childframe)
          (company +auto))
-       (:if NOT-TERMUX
-           (ivy +childframe)
-         ivy)
+       ivy
 
-       :emacs
-       dired
-       electric
-       vc
 
        :ui
        (:if NOT-TERMUX nav-flash)
@@ -22,49 +16,62 @@
        doom
        doom-dashboard
        hl-todo
+       hydra
        modeline
        ophints
        treemacs
        window-select
        workspaces
-
-       :term
-       (:if NOT-TERMUX vterm)
+       zen
 
        :editor
        (evil +commands +everywhere)
        file-templates
        fold
-       format
+       (format +onsave)
        lispy
        multiple-cursors
        rotate-text
        snippets
+       word-wrap
+
+       :emacs
+       dired
+       dired-plugins
+       electric
+       ibuffer
+       vc
+
+       :term
+       (:if NOT-TERMUX vterm)
+
+       :checkers
+       (:if NOT-TERMUX syntax)
+       spell
+       grammar
 
        :tools
-       (:if NOT-TERMUX (flycheck +childframe))
        (:if NOT-TERMUX lsp)
-       (:if NOT-TERMUX pdf)
+       docker
+       ;; (:if NOT-TERMUX pdf)
        ;; reference
-       (lookup +docsets)
        ;; password-store
        editorconfig
-       eval
-       flyspell
+       (eval +overlay)
+       (lookup +docsets)
        magit
        lsp
-       pdf
+       ;; pdf
        :lang
        ;; data
        (python +lsp +pyenv +conda)
-       (:if NOT-TERMUX (latex +latexmk +zathura))
+       ;; (:if NOT-TERMUX (latex +latexmk +zathura))
        ess
        (org
-        +attach
-        +ref
-        +babel
-        +capture
-        +latex
+        +dragndrop
+        +jupyter
+        +pandoc
+        +pomodoro
         +present)
        org-private
        emacs-lisp
@@ -75,8 +82,9 @@
 
        :app
        (:if NOT-TERMUX rss)
+
        :config
-       (default +snippets +bindings +commands))
+       (default +snippets +bindings +smartparens))
 
 ;; * Config
 (setq +file-templates-dir "~/.doom.d/templates"
@@ -88,7 +96,7 @@
 (setq browse-url-browser-function 'browse-url-default-browser
       display-line-numbers-type nil
       doom-big-font (font-spec :family "SF Mono" :size 18)
-      doom-font (font-spec :family "SF mono" :size 14)
+      doom-font (font-spec :family "SF Mono" :size 14)
       doom-theme 'doom-nord
       doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 14)
       doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 14)
@@ -137,10 +145,12 @@
                                        ruby-mode
                                        simple
                                        slime
+                                       lispy
 
                                        elfeed
                                        notmuch
                                        ;; outline
+
                                        )
       doom-localleader-key ","
       evil-collection-company-use-tng nil
@@ -158,6 +168,7 @@
 ;; * Termux-specific
 (when (not NOT-TERMUX)
   (setq browse-url-browser-function 'browse-url-xdg-open))
+
 ;; * Mac-specific
 (when IS-MAC
   (setq insert-directory-program "/usr/local/bin/gls")
@@ -174,7 +185,7 @@
         +python-conda-home "/home/xfu/.conda"
         +modeline-height 48
         doom-big-font (font-spec :family "SF Mono" :size 24)
-        doom-font (font-spec :family "SF mono" :size 24)
+        doom-font (font-spec :family "SF Mono" :size 24)
         doom-theme 'doom-nord
         doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 24)
         doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 26)))

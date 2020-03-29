@@ -57,10 +57,10 @@
         org-outline-path-complete-in-steps nil
         org-pretty-entities nil
         org-pretty-entities-include-sub-superscripts t
-        org-priority-faces
-        `((?A . ,(face-foreground 'error))
-          (?B . ,(face-foreground 'warning))
-          (?C . ,(face-foreground 'success)))
+        ;; org-priority-faces
+        ;; `((?A . ,(face-foreground 'error))
+        ;;   (?B . ,(face-foreground 'warning))
+        ;;   (?C . ,(face-foreground 'success)))
         org-publish-timestamp-directory (concat org-directory ".org-timestamps/")
         org-refile-targets '((nil :maxlevel . 9)
                              (org-agenda-files :maxlevel . 9))
@@ -135,7 +135,7 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
   (set-popup-rule! "^\\*Org Agenda.*" :slot -1 :size 120 :side 'left :select t)
   ;; (set-evil-initial-state! 'org-agenda-mode 'normal)
   )
-(def-package! org-super-agenda
+(use-package! org-super-agenda
   :commands (org-super-agenda-mode)
   :init (advice-add #'org-super-agenda-mode :around #'doom-shut-up-a)
   :config
@@ -200,7 +200,7 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
 (after! ox
   (when (executable-find "pandoc")
     (require 'ox-pandoc)))
-(def-package! htmlize
+(use-package! htmlize
   :commands (htmlize-buffer
              htmlize-file
              htmlize-many-files
@@ -351,12 +351,12 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
 :END:
 %?" :time-prompt t))))
 ;; * Other Plugins
-(def-package! org-clock-convenience
+(use-package! org-clock-convenience
   :commands (org-clock-convenience-timestamp-up
              org-clock-convenience-timestamp-down
              org-clock-convenience-fill-gap
              org-clock-convenience-fill-gap-both))
-(def-package! org-clock-budget
+(use-package! org-clock-budget
   :commands (org-clock-budget-report)
   :init
   (defun my-buffer-face-mode-org-clock-budget ()
@@ -376,19 +376,19 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
   (add-hook! 'org-clock-budget-report-mode-hook
     (toggle-truncate-lines 1)
     (my-buffer-face-mode-org-clock-budget)))
-(def-package! webkit-katex-render
+(use-package! webkit-katex-render
   :when (featurep 'xwidget-internal)
   :commands (webkit-katex-render-mode)
   :config
   (setq webkit-katex-render--background-color (doom-color 'bg)))
-(def-package! cdlatex
+(use-package! cdlatex
   :commands (org-cdlatex-mode
              cdlatex-mode
              turn-on-cdlatex
              turn-on-org-cdlatex)
   :init
   (setq cdlatex-math-modify-alist '((?B "\\mathbb" nil t nil nil))))
-(def-package! org-brain
+(use-package! org-brain
   :after org
   :commands (org-brain-visualize)
   :init

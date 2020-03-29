@@ -1,6 +1,6 @@
 ;;; lang/latex/+ref.el -*- lexical-binding: t; -*-
 
-(def-package! reftex
+(use-package! reftex
   :hook (LaTeX-mode . reftex-mode)
   :config
   ;; set up completion for citations and references

@@ -27,8 +27,9 @@
 (package! zmq)
 (package! websocket)
 (package! simple-httpd)
-(package! org-pdftools :recipe (:host github :repo "fuxialexander/org-pdftools" :files ("*")))
-(package! org-noter :recipe (:host github :repo "fuxialexander/org-noter" :branch "pdf-notes-booster" :files ("*")))
+(package! org-pdftools :recipe (:host github :repo "fuxialexander/org-pdftools" :files ("org-pdftools.el")))
+(package! org-noter-pdftools :recipe (:host github :repo "fuxialexander/org-pdftools" :files ("org-noter-pdftools.el")))
+(package! org-noter)
 ;(package! emacs-jupyter :recipe (:host github :repo "dzop/emacs-jupyter" :files ("*")))
 
 (when IS-LINUX
@@ -38,6 +39,7 @@
 ;; * Coding
 (package! evil-collection)
 (package! ivy-yasnippet)
+(package! groovy-mode)
 (package! helpful)
 (package! tldr)
 (package! ess)
@@ -51,3 +53,4 @@
 (package! deadgrep)
 ;; * Maintain
 (package! esup)
+(package! package-lint)

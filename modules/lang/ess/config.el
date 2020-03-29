@@ -3,7 +3,7 @@
 (defvar R-remote-session "R-session-name")
 (defvar R-remote-directory "/path/to/your/project/directory")
 
-(def-package! ess-mode
+(use-package! ess-mode
   :commands (R stata julia SAS ess-remote)
   :init
   (setq ess-offset-continued 'straight
@@ -62,7 +62,7 @@
   (require 'smartparens-ess))
 
 
-(def-package! ess-help
+(use-package! ess-help
   :commands (ess-display-help-on-object)
   :config
   (set-evil-initial-state! 'ess-help-mode 'normal)

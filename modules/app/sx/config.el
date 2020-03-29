@@ -1,6 +1,6 @@
 ;;; app/sx/config.el -*- lexical-binding: t; -*-
 
-(def-package! sx
+(use-package! sx
   :commands (sx-search)
   :config
   (setq sx-tab-default-order 'creation

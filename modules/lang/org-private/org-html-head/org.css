@@ -1,3 +1,355 @@
+/** WARNING - USE AT OWN RISK */
+/** IT IS AGAINST APPLE'S POLICY TO USE SF PRO FOR ANYTHING OTHER THAN iOS/tvOS/macOS/watchOS DESIGN & DEVELOPMENT */
+/** https://sf.abarba.me/font.css */
+/** https://sf.abarba.me/LICENSE.pdf */
+
+/** 1. Copy/import this file into your main css/scss file */
+/** 2. Change css font-family: to "SF Text", "SF Display" or "SF Mono" */
+/** 3. Apply font-weight or italic to html elements */
+
+/** THANK YOU */
+/** I host these fonts on Cloudfront with SSL in all AWS regions for the best performance and reliability */
+/** If you'd like to help offset costs, I'd very much appreciate a donation via Lisk https://lisk.io */
+/** Address: 14987768355736502769L */
+/** Delegate: andrew */
+
+/*---------------------------------------------------------------------------*
+ * SF UI Display
+ *---------------------------------------------------------------------------*/
+
+/** Black */
+@font-face {
+  font-family: "SF Display";
+  font-weight: 900;
+  src: url("https://sf.abarba.me/SF-UI-Display-Black.otf");
+}
+
+/** Bold */
+@font-face {
+  font-family: "SF Display";
+  font-weight: 700;
+  src: url("https://sf.abarba.me/SF-UI-Display-Bold.otf");
+}
+
+/** Heavy */
+@font-face {
+  font-family: "SF Display";
+  font-weight: 800;
+  src: url("https://sf.abarba.me/SF-UI-Display-Heavy.otf");
+}
+
+/** Light */
+@font-face {
+  font-family: "SF Display";
+  font-weight: 200;
+  src: url("https://sf.abarba.me/SF-UI-Display-Light.otf");
+}
+
+/** Medium */
+@font-face {
+  font-family: "SF Display";
+  font-weight: 500;
+  src: url("https://sf.abarba.me/SF-UI-Display-Medium.otf");
+}
+
+/** Regular */
+@font-face {
+  font-family: "SF Display";
+  font-weight: 400;
+  src: url("https://sf.abarba.me/SF-UI-Display-Regular.otf");
+}
+
+/** Semibold */
+@font-face {
+  font-family: "SF Display";
+  font-weight: 600;
+  src: url("https://sf.abarba.me/SF-UI-Display-Semibold.otf");
+}
+
+/** Thin */
+@font-face {
+  font-family: "SF Display";
+  font-weight: 300;
+  src: url("https://sf.abarba.me/SF-UI-Display-Thin.otf");
+}
+
+/** Ultralight */
+@font-face {
+  font-family: "SF Display";
+  font-weight: 100;
+  src: url("https://sf.abarba.me/SF-UI-Display-Ultralight.otf");
+}
+
+/*---------------------------------------------------------------------------*
+ * SF UI Text
+ *---------------------------------------------------------------------------*/
+
+/** Bold */
+@font-face {
+  font-family: "SF Text";
+  font-weight: 700;
+  src: url("https://sf.abarba.me/SF-UI-Text-Bold.otf");
+}
+
+/** Bold Italic */
+@font-face {
+  font-family: "SF Text";
+  font-weight: 700;
+  font-style: italic;
+  src: url("https://sf.abarba.me/SF-UI-Text-BoldItalic.otf");
+}
+
+/** Heavy */
+@font-face {
+  font-family: "SF Text";
+  font-weight: 800;
+  src: url("https://sf.abarba.me/SF-UI-Text-Heavy.otf");
+}
+
+/** Heavy Italic */
+@font-face {
+  font-family: "SF Text";
+  font-weight: 800;
+  font-style: italic;
+  src: url("https://sf.abarba.me/SF-UI-Text-HeavyItalic.otf");
+}
+
+/** Light */
+@font-face {
+  font-family: "SF Text";
+  font-weight: 200;
+  src: url("https://sf.abarba.me/SF-UI-Text-Light.otf");
+}
+
+/** Light Italic */
+@font-face {
+  font-family: "SF Text";
+  font-weight: 200;
+  font-style: italic;
+  src: url("https://sf.abarba.me/SF-UI-Text-HeavyItalic.otf");
+}
+
+/** Medium */
+@font-face {
+  font-family: "SF Text";
+  font-weight: 500;
+  src: url("https://sf.abarba.me/SF-UI-Text-Medium.otf");
+}
+
+/** Medium Italic */
+@font-face {
+  font-family: "SF Text";
+  font-weight: 500;
+  font-style: italic;
+  src: url("https://sf.abarba.me/SF-UI-Text-MediumItalic.otf");
+}
+
+/** Regular */
+@font-face {
+  font-family: "SF Text";
+  font-weight: 400;
+  src: url("https://sf.abarba.me/SF-UI-Text-Regular.otf");
+}
+
+/** Regular Italic */
+@font-face {
+  font-family: "SF Text";
+  font-weight: 400;
+  font-style: italic;
+  src: url("https://sf.abarba.me/SF-UI-Text-RegularItalic.otf");
+}
+
+/** Semibold */
+@font-face {
+  font-family: "SF Text";
+  font-weight: 600;
+  src: url("https://sf.abarba.me/SF-UI-Text-Semibold.otf");
+}
+
+/** Semibold Italic */
+@font-face {
+  font-family: "SF Text";
+  font-weight: 600;
+  font-style: italic;
+  src: url("https://sf.abarba.me/SF-UI-Text-SemiboldItalic.otf");
+}
+
+/** Ultrathin */
+@font-face {
+  font-family: "SF Text";
+  font-weight: 100;
+  src: url("https://sf.abarba.me/SF-UI-Text-Ultrathin.otf");
+}
+
+/** Ultrathin Italic */
+@font-face {
+  font-family: "SF Text";
+  font-weight: 100;
+  font-style: italic;
+  src: url("https://sf.abarba.me/SF-UI-Text-UltrathinItalic.otf");
+}
+
+/*---------------------------------------------------------------------------*
+ * SF Mono
+ *---------------------------------------------------------------------------*/
+
+/** Bold */
+@font-face {
+  font-family: "SF Mono";
+  font-weight: 700;
+  src: url("https://sf.abarba.me/SFMono-Bold.otf");
+}
+
+/** Bold Italic */
+@font-face {
+  font-family: "SF Mono";
+  font-weight: 700;
+  font-style: italic;
+  src: url("https://sf.abarba.me/SFMono-BoldItalic.otf");
+}
+
+/** Heavy */
+@font-face {
+  font-family: "SF Mono";
+  font-weight: 800;
+  src: url("https://sf.abarba.me/SFMono-Heavy.otf");
+}
+
+/** Heavy Italic */
+@font-face {
+  font-family: "SF Mono";
+  font-weight: 800;
+  font-style: italic;
+  src: url("https://sf.abarba.me/SFMono-HeavyItalic.otf");
+}
+
+/** Light */
+@font-face {
+  font-family: "SF Mono";
+  font-weight: 200;
+  src: url("https://sf.abarba.me/SFMono-Light.otf");
+}
+
+/** Light Italic */
+@font-face {
+  font-family: "SF Mono";
+  font-weight: 200;
+  font-style: italic;
+  src: url("https://sf.abarba.me/SFMono-HeavyItalic.otf");
+}
+
+/** Medium */
+@font-face {
+  font-family: "SF Mono";
+  font-weight: 500;
+  src: url("https://sf.abarba.me/SFMono-Medium.otf");
+}
+
+/** Medium Italic */
+@font-face {
+  font-family: "SF Mono";
+  font-weight: 500;
+  font-style: italic;
+  src: url("https://sf.abarba.me/SFMono-MediumItalic.otf");
+}
+
+/** Regular */
+@font-face {
+  font-family: "SF Mono";
+  font-weight: 400;
+  src: url("https://sf.abarba.me/SFMono-Regular.otf");
+}
+
+/** Regular Italic */
+@font-face {
+  font-family: "SF Mono";
+  font-weight: 400;
+  font-style: italic;
+  src: url("https://sf.abarba.me/SFMono-RegularItalic.otf");
+}
+
+/** Semibold */
+@font-face {
+  font-family: "SF Mono";
+  font-weight: 600;
+  src: url("https://sf.abarba.me/SFMono-Semibold.otf");
+}
+
+/** Semibold Italic */
+@font-face {
+  font-family: "SF Mono";
+  font-weight: 600;
+  font-style: italic;
+  src: url("https://sf.abarba.me/SFMono-SemiboldItalic.otf");
+}
+
+@font-face {
+    font-family: 'Charter';
+    src: url('assets/fonts/Charter-Italic.eot');
+    src: url('assets/fonts/Charter-Italic.eot?#iefix') format('embedded-opentype'),
+        url('assets/fonts/Charter-Italic.woff2') format('woff2'),
+        url('assets/fonts/Charter-Italic.woff') format('woff'),
+        url('assets/fonts/Charter-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Charter';
+    src: url('assets/fonts/Charter-BoldItalic.eot');
+    src: url('assets/fonts/Charter-BoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('assets/fonts/Charter-BoldItalic.woff2') format('woff2'),
+        url('assets/fonts/Charter-BoldItalic.woff') format('woff'),
+        url('assets/fonts/Charter-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Charter';
+    src: url('assets/fonts/Charter-BlackItalic.eot');
+    src: url('assets/fonts/Charter-BlackItalic.eot?#iefix') format('embedded-opentype'),
+        url('assets/fonts/Charter-BlackItalic.woff2') format('woff2'),
+        url('assets/fonts/Charter-BlackItalic.woff') format('woff'),
+        url('assets/fonts/Charter-BlackItalic.ttf') format('truetype');
+    font-weight: 900;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Charter';
+    src: url('assets/fonts/Charter-Roman.eot');
+    src: url('assets/fonts/Charter-Roman.eot?#iefix') format('embedded-opentype'),
+        url('assets/fonts/Charter-Roman.woff2') format('woff2'),
+        url('assets/fonts/Charter-Roman.woff') format('woff'),
+        url('assets/fonts/Charter-Roman.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Charter';
+    src: url('assets/fonts/Charter-Black.eot');
+    src: url('assets/fonts/Charter-Black.eot?#iefix') format('embedded-opentype'),
+        url('assets/fonts/Charter-Black.woff2') format('woff2'),
+        url('assets/fonts/Charter-Black.woff') format('woff'),
+        url('assets/fonts/Charter-Black.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Charter';
+    src: url('assets/fonts/Charter-Bold.eot');
+    src: url('assets/fonts/Charter-Bold.eot?#iefix') format('embedded-opentype'),
+        url('assets/fonts/Charter-Bold.woff2') format('woff2'),
+        url('assets/fonts/Charter-Bold.woff') format('woff'),
+        url('assets/fonts/Charter-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+
 #mainNav {
     background-color: #FFF;
     border-bottom: 1px solid #e9ecef;
@@ -322,7 +674,7 @@ code {
 }
 
 .title {
-    font-family: "SF Compact Display", 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: "SF Display", 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     margin-bottom: 1.5em;
     margin-top: 1.5em;
     text-align: left;
@@ -404,11 +756,20 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: 'SF Compact Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'SF Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-weight: 800;
     margin-bottom: .5em;
     margin-top: .5em;
     text-align: left;
+}
+
+h2 {
+    font-size: 35px;
+}
+h3 {
+    font-family: 'Charter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 25px;
+    font-style: italic;
 }
 
 header {
@@ -500,8 +861,28 @@ img::-moz-selection {
 }
 
 nav[data-toggle='toc'] {
-    font-family: "SF Compact Display", 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    margin-top: 30px;
+    font-family: "SF Display", 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    top: 42px;
+}
+
+@media (max-width: 768px) {
+  /* override stickyness so that the navigation does not follow scrolling */
+  nav[data-toggle="toc"] {
+    margin-bottom: 42px;
+    position: static;
+  }
+
+  /* PICK ONE */
+  /* don't expand nested items, which pushes down the rest of the page when navigating */
+  nav[data-toggle="toc"] .nav .active .nav {
+    display: none;
+  }
+  /* alternatively, if you *do* want the second-level navigation to be shown (as seen on this page on mobile), use this */
+  /*
+  nav[data-toggle='toc'] .nav .nav {
+    display: block;
+  }
+  */
 }
 
 p {
@@ -509,6 +890,10 @@ p {
     margin: 30px 0;
 }
 
+img {
+    max-width: 100%;
+    height: auto;
+}
 pre.src {
     background-color: #E5E9F0;
     color: #2E3440;
@@ -522,103 +907,9 @@ pre.src:before {
     border: 1px solid #E5E9F0;
     color: #2E3440;
     display: none;
-    font-family: "SF Compact Display", 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: "SF Display", 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     padding: 3px;
     position: absolute;
     right: 10px;
     top: 10px;
-}
-
-@media max-width 768px {
-    nav[data-toggle='toc'] {
-        position: relative;
-    }
-
-    nav[data-toggle='toc'] .nav .active .nav {
-        display: none;
-    }
-}
-
-@media only screen and min-width 992px {
-    #mainNav {
-        -moz-transform: translate3d(0, 0, 0);
-        -moz-transition: background-color .2s;
-        -ms-transform: translate3d(0, 0, 0);
-        -o-transform: translate3d(0, 0, 0);
-        -webkit-backface-visibility: hidden;
-        -webkit-transform: translate3d(0, 0, 0);
-        -webkit-transition: background-color .2s;
-        background: transparent;
-        border-bottom: 1px solid transparent;
-        transform: translate3d(0, 0, 0);
-        transition: background-color .2s;
-    }
-
-    #mainNav .navbar-brand,
-    #mainNav .navbar-nav>li.nav-item>a {
-        color: #fff;
-        padding: 10px 20px;
-    }
-
-    #mainNav .navbar-brand:focus,
-    #mainNav .navbar-brand:hover,
-    #mainNav .navbar-nav>li.nav-item>a:focus,
-    #mainNav .navbar-nav>li.nav-item>a:hover {
-        color: rgba(255, 255, 255, 0.8);
-    }
-
-    #mainNav.is-fixed {
-        -moz-transition: 0 .2s;
-        -webkit-transition: 0 .2s;
-        background-color: rgba(255, 255, 255, 0.9);
-        border-bottom: 1px solid #FFF;
-        position: fixed;
-        top: -67px;
-        transition: transform .2s;
-    }
-
-    #mainNav.is-fixed .navbar-brand,
-    #mainNav.is-fixed .navbar-nav>li.nav-item>a {
-        color: #212529;
-    }
-
-    #mainNav.is-fixed .navbar-brand:focus,
-    #mainNav.is-fixed .navbar-brand:hover,
-    #mainNav.is-fixed .navbar-nav>li.nav-item>a:focus,
-    #mainNav.is-fixed .navbar-nav>li.nav-item>a:hover {
-        color: #0085A1;
-    }
-
-    #mainNav.is-visible {
-        -moz-transform: translate3d(0, 100%, 0);
-        -ms-transform: translate3d(0, 100%, 0);
-        -o-transform: translate3d(0, 100%, 0);
-        -webkit-transform: translate3d(0, 100%, 0);
-        transform: translate3d(0, 100%, 0);
-    }
-}
-
-@media only screen and min-width 768px {
-    .post-preview>a>.post-title {
-        font-size: 36px;
-    }
-
-    header.masthead .page-heading h1,
-    header.masthead .site-heading h1 {
-        font-size: 80px;
-    }
-
-    header.masthead .page-heading,
-    header.masthead .post-heading,
-    header.masthead .site-heading {
-        padding: 200px 0;
-    }
-
-    header.masthead .post-heading .subheading {
-        font-size: 30px;
-    }
-
-    header.masthead .post-heading h1 {
-        font-size: 55px;
-    }
 }

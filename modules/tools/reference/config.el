@@ -1,6 +1,6 @@
 ;;; tools/reference/config.el -*- lexical-binding: t; -*-
 
-(def-package! org-ref
+(use-package! org-ref
   :commands (org-ref-bibtex-next-entry
              org-ref-bibtex-previous-entry
              doi-utils-get-bibtex-entry-pdf
@@ -59,7 +59,7 @@
     (add-to-list 'doi-utils-pdf-url-functions 'generic-as-get-pdf-url t)))
 
 
-(def-package! bibtex
+(use-package! bibtex
   :defer t
   :config
   (setq bibtex-dialect 'biblatex
@@ -69,7 +69,7 @@
         [fill-paragraph] #'bibtex-fill-entry))
 
 
-(def-package! bibtex-completion
+(use-package! bibtex-completion
   :defer t
   :config
   (setq bibtex-completion-format-citation-functions
@@ -91,7 +91,7 @@
           (lambda (fpath)
             (async-start-process "open-pdf" "/usr/bin/xdg-open" nil fpath))))))
 
-(def-package! ivy-bibtex
+(use-package! ivy-bibtex
   :when (featurep! :completion ivy)
   :commands (ivy-bibtex)
   :config
@@ -102,6 +102,6 @@
     (ivy-add-actions 'ivy-bibtex '(("SPC" ivy-bibtex-quicklook "Quick look")))))
 
 
-(def-package! helm-bibtex
+(use-package! helm-bibtex
   :when (featurep! :completion helm)
   :commands helm-bibtex)

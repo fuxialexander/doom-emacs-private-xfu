@@ -5,7 +5,7 @@
 ;;; Code:
 ;;* Requires
 (eval-when-compile
-  (require 'cl))
+  (require 'cl-lib))
 (require 'outline)
 ;; necessary before Emacs 24.3
 ;; (require 'newcomment)

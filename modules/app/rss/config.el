@@ -12,7 +12,7 @@
 ;; Packages
 ;;
 
-(def-package! elfeed
+(use-package! elfeed
   :commands elfeed
   :init
   (defface elfeed-show-title-face '((t (:weight ultrabold :slant italic :height 1.5)))
@@ -100,14 +100,14 @@
     (advice-add #'elfeed-show-entry :override #'+rss/elfeed-show-entry))
 
   (elfeed-org)
-  (def-package! elfeed-link))
+  (use-package! elfeed-link))
 
 ;;;; Elfeed-org
-(def-package! elfeed-org
+(use-package! elfeed-org
   :commands (elfeed-org)
   :config
   (setq rmh-elfeed-org-files '("~/.doom.d/modules/app/rss/elfeed.org")))
 
-(def-package! org-ref-elfeed
+(use-package! org-ref-elfeed
   :when (featurep! :tools reference)
   :commands (org-ref-elfeed-add))

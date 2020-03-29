@@ -1,6 +1,6 @@
 ;;; lang/lsp/config.el -*- lexical-binding: t; -*-
 ;; * General
-(def-package! lsp-mode
+(use-package! lsp-mode
   :commands (lsp-mode)
   :init
   (setq lsp-auto-guess-root t
@@ -9,7 +9,7 @@
   (require 'lsp-clients)
   (add-hook 'python-mode-hook #'lsp))
 
-(def-package! lsp-ui
+(use-package! lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
   :init
   ;; (setq-default lsp-ui-doc-frame-parameters
@@ -75,11 +75,11 @@
     ("w" (-let [(i . n) (lsp-ui-find-next-reference '(:role 16))]
            (if (> n 0) (message "write %d/%d" i n))) "next write" :bind nil)))
 
-(def-package! company-lsp
+(use-package! company-lsp
   :after lsp-mode)
 
 ;; * JS
-;; (def-package! lsp-javascript-typescript
+;; (use-package! lsp-javascript-typescript
 ;;   :hook ((js-mode . lsp-javascript-typescript-enable)
 ;;          (typescript-mode . lsp-javascript-typescript-enable)
 ;;          (rjsx-mode . lsp-javascript-typescript-enable))
@@ -95,7 +95,7 @@
 ;;     :references #'lsp-ui-peek-find-references))
 
 ;; * CSS
-;; (def-package! lsp-css :load-path "~/.doom.d/local"
+;; (use-package! lsp-css :load-path "~/.doom.d/local"
 ;;   :hook ((css-mode . lsp-css-enable)
 ;;          (sass-mode . lsp-css-enable)
 ;;          (less-mode . lsp-css-enable)
@@ -114,7 +114,7 @@
 ;;      :references #'lsp-ui-peek-find-references))
 
 ;; * Python
-;; (def-package! lsp-python
+;; (use-package! lsp-python
 ;;   :commands (lsp-python-enable)
 ;;   :config
 ;;   (setq python-indent-guess-indent-offset-verbose nil)
@@ -124,5 +124,5 @@
 ;;     :references #'lsp-ui-peek-find-references))
 
 ;; * R
-;; (def-package! lsp-r
+;; (use-package! lsp-r
 ;;   :hook (R-mode . lsp-R-enable))

@@ -11,7 +11,7 @@
 ;;
 ;; Packages
 
-(def-package! python
+(use-package! python
   :defer t
   :init
   (setq python-environment-directory doom-cache-dir
@@ -86,7 +86,7 @@
   (add-hook 'python-mode-hook #'+python|update-version))
 
 
-;; (def-package! lpy
+;; (use-package! lpy
 ;;   :when (featurep! +lpy)
 ;;   :hook ((python-mode . lpy-mode))
 ;;   :config
@@ -116,7 +116,7 @@
 ;;   (advice-add 'lispy-short-process-name :override #'*lispy-short-process-name)
 ;;   (advice-add 'lispy-set-python-process-action :override #'*lispy-set-python-process-action))
 
-(def-package! lsp-python
+(use-package! lsp-python
   :commands (lsp-python-enable)
   :config
   (setq python-indent-guess-indent-offset-verbose nil)
@@ -125,7 +125,7 @@
     :definition #'lsp-ui-peek-find-definitions
     :references #'lsp-ui-peek-find-references))
 
-(def-package! anaconda-mode
+(use-package! anaconda-mode
   :hook python-mode
   :init
   (setq anaconda-mode-installation-directory (concat doom-etc-dir "anaconda/")
@@ -159,7 +159,7 @@
         :nv "f" #'anaconda-mode-find-file
         :nv "u" #'anaconda-mode-find-references))
 
-(def-package! py-isort
+(use-package! py-isort
   :after python
   :config
   (map! :map python-mode-map
@@ -167,7 +167,7 @@
         :n "s" #'py-isort-buffer
         :v "s" #'py-isort-region))
 
-(def-package! yapfify
+(use-package! yapfify
   :after python
   :hook (python-mode . yapf-mode)
   :config
@@ -175,7 +175,7 @@
         :localleader
         :nv "=" #'yapfify-buffer))
 
-(def-package! nose
+(use-package! nose
   :commands nose-mode
   :preface (defvar nose-mode-map (make-sparse-keymap))
   :init (associate! nose-mode :match "/test_.+\\.py$" :modes (python-mode))
@@ -200,7 +200,7 @@
 ;;
 ;; Environment management
 
-(def-package! pipenv
+(use-package! pipenv
   :commands pipenv-project-p
   :hook (python-mode . pipenv-mode)
   :init (setq pipenv-with-projectile nil)
@@ -209,7 +209,7 @@
   (advice-add #'pipenv-deactivate :after-while #'+python|update-version))
 
 
-(def-package! pyenv-mode
+(use-package! pyenv-mode
   :when (featurep! +pyenv)
   :after python
   :config
@@ -221,7 +221,7 @@
                'append))
 
 
-(def-package! pyvenv
+(use-package! pyvenv
   :when (featurep! +pyvenv)
   :after python
   :config
@@ -233,7 +233,7 @@
                'append))
 
 
-(def-package! conda
+(use-package! conda
   :when (featurep! +conda)
   :after python
   :config

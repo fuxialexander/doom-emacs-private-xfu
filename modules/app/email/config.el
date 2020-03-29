@@ -1,7 +1,7 @@
 ;;; app/email/config.el -*- lexical-binding: t; -*-
 
 ;; * Prodigy
-;; (def-package! prodigy
+;; (use-package! prodigy
 ;;   :commands (prodigy
 ;;              prodigy-find-service
 ;;              prodigy-start-service)
@@ -25,7 +25,7 @@
 ;;     "imapnotify-gmail"))))
 
 ;; * Notmuch
-(def-package! notmuch
+(use-package! notmuch
   :commands (notmuch
              notmuch-tree
              notmuch-tree-mode
@@ -110,13 +110,13 @@
         doom-real-buffer-functions))
 
 ;; * Other packages
-;; (def-package! helm-notmuch
+;; (use-package! helm-notmuch
 ;;   :commands helm-notmuch
 ;;   :after notmuch)
-(def-package! counsel-notmuch
+(use-package! counsel-notmuch
   :commands counsel-notmuch
   :after notmuch)
-(def-package! org-mime
+(use-package! org-mime
   :after (org notmuch)
   :config
   (setq

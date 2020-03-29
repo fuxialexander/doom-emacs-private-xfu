@@ -3,6 +3,7 @@
 ;; ** general
 (setq +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin
       +org-reference-field 'bioinfo
+      +magit-default-clone-url "https://github.com/"
       browse-url-browser-function 'browse-url-default-browser
       delete-by-moving-to-trash t
       electric-pair-inhibit-predicate 'ignore
@@ -36,9 +37,9 @@
 
 ;; ** tools
 ;; *** deadgrep
-(def-package! deadgrep :commands (deadgrep))
+(use-package! deadgrep :commands (deadgrep))
 ;; *** avy
-(def-package! ace-link
+(use-package! ace-link
   :commands (ace-link))
 (after! avy
   (setq avy-keys '(?a ?s ?d ?f ?j ?k ?l ?\;)))
@@ -48,7 +49,7 @@
         aw-ignore-current t
         aw-background nil))
 ;; *** outline
-(def-package! outshine :load-path "~/.doom.d/local/"
+(use-package! outshine :load-path "~/.doom.d/local/"
   :hook ((outline-minor-mode . outshine-hook-function))
   :config
   (map! :map outline-minor-mode-map
@@ -57,7 +58,7 @@
 
 
 ;; *** keycast
-(def-package! keycast :load-path "~/.doom.d/local/keycast.el"
+(use-package! keycast :load-path "~/.doom.d/local/keycast.el"
   :commands (keycast-mode)
   :config
   (setq keycast-substitute-alist '((evil-next-line nil nil)
@@ -66,7 +67,7 @@
                                    (evil-backward-char nil nil)
                                    (self-insert-command nil nil))))
 ;; *** tldr
-(def-package! tldr
+(use-package! tldr
   :commands (tldr)
   :config
   (setq tldr-directory-path (concat doom-etc-dir "tldr/")))
@@ -80,28 +81,6 @@
   (advice-add 'colir--blend-background :override #'*colir--blend-background)
   (advice-add 'colir-blend-face-background :override #'*colir-blend-face-background))
 
-;; **** ivy-posframe
-
-;; (after! ivy
-;;   (ivy-rich-mode 1)
-;;   (advice-add #'ivy-posframe-enable :around #'doom*shut-up)
-;;   (setq ivy-posframe-parameters
-;;         `((min-width . 100)
-;;           (min-height . ,ivy-height)
-;;           (left-fringe . 0)
-;;           (right-fringe . 0)
-;;           (internal-border-width . 10))
-;;         ivy-display-functions-alist
-;;         '((counsel-git-grep)
-;;           (counsel-grep)
-;;           (counsel-pt)
-;;           (counsel-ag)
-;;           (counsel-rg)
-;;           (counsel-notmuch)
-;;           (swiper)
-;;           (counsel-irony . ivy-display-function-overlay)
-;;           (ivy-completion-in-region . ivy-display-function-overlay)
-;;           (t . ivy-posframe-display-at-frame-center))))
 
 ;; **** ivy-config
 (after! ivy
@@ -146,7 +125,7 @@
 
 
 ;; **** counsel-tramp
-(def-package! counsel-tramp :load-path "~/.doom.d/local/"
+(use-package! counsel-tramp :load-path "~/.doom.d/local/"
   :commands (counsel-tramp))
 ;; *** projectile
 (after! projectile
@@ -157,7 +136,7 @@
               (string-match ".*Trash.*" root)
               (string-match ".*Cellar.*" root)))))
 ;; *** iterm
-;; (def-package! iterm :load-path "~/.doom.d/local"
+;; (use-package! iterm :load-path "~/.doom.d/local"
 ;;   :commands (iterm-cd
 ;;              iterm-send-text
 ;;              iterm-send-text-ipy
@@ -221,14 +200,14 @@
 ;;   (set-company-backend! 'python-mode '(company-anaconda :with company-yasnippet company-dabbrev company-files))
 ;;   (set-lookup-handlers! 'python-mode :documentation #'anaconda-mode-show-doc))
 ;; **** sed
-;; (def-package! sed-mode
+;; (use-package! sed-mode
 ;;   :commands (sed-mode))
 ;; **** pkgbuild
 ;; (when IS-LINUX
-;;   (def-package! pkgbuild-mode
+;;   (use-package! pkgbuild-mode
 ;;     :mode (("/PKGBUILD$" . pkgbuild-mode))))
 ;; *** yasnippet
-;; (def-package! ivy-yasnippet
+;; (use-package! ivy-yasnippet
 ;;   :commands (ivy-yasnippet))
 ;; *** evil
 ;; (after! evil-mc
@@ -261,11 +240,11 @@
 ;; (when IS-LINUX
 ;;   (setq conda-anaconda-home "/opt/miniconda3"))
 
-;; (def-package! org-kanban
+;; (use-package! org-kanban
 ;;   :commands (org-kanban/initialize-at-end))
 
 (add-to-list 'load-path "~/.doom.d/local/emacs-application-framework.git/")
-(add-hook! 'doom-load-theme-hook :append (load! "+themes"))
+ (add-hook! 'doom-load-theme-hook :append (load! "+themes"))
 
 ;; *** fringe
 (defun remove-fringes ()
@@ -389,12 +368,27 @@ frame's PPI is larger than 180. Otherwise, return 1."
               `(,(car colors) ,(cdr colors) ,@region)))
          :width width))))
 
-  (advice-add 'pdf-view-mouse-set-region :override #'*pdf-view-mouse-set-region))
+  (advice-add 'pdf-view-mouse-set-region :override #'*pdf-view-mouse-set-region)
+  )
 
 (use-package! org-noter
   :commands (org-noter)
   :config
+  (require 'org-noter-pdftools)
   (after! pdf-tools
     (setq pdf-annot-activate-handler-functions #'org-noter-jump-to-note))
   (setq org-noter-notes-mode-map (make-sparse-keymap)))
-(use-package! org-pdftools)
+
+(use-package! org-pdftools
+  :init (setq org-pdftools-search-string-separator "??")
+  :config
+  (after! org
+    (org-link-set-parameters "pdftools"
+                             :follow #'org-pdftools-open
+                             :complete #'org-pdftools-complete-link
+                             :store #'org-pdftools-store-link
+                             :export #'org-pdftools-export)
+    (add-hook 'org-store-link-functions 'org-pdftools-store-link)))
+
+(use-package! groovy-mode)
+(use-package! package-lint)

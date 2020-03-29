@@ -12,7 +12,7 @@
 ;; Plugins
 ;;
 
-(def-package! calfw
+(use-package! calfw
   :commands (cfw:open-calendar-buffer)
   :config
 
@@ -37,14 +37,14 @@
   (advice-add #'cfw:render-button :override #'+calendar*cfw:render-button))
 
 
-(def-package! calfw-org
+(use-package! calfw-org
   :commands (cfw:open-org-calendar
              cfw:org-create-source
              cfw:open-org-calendar-withkevin
              my-open-calendar))
 
 
-(def-package! org-gcal
+(use-package! org-gcal
   :commands (org-gcal-sync
              org-gcal-fetch
              org-gcal-post-at-point

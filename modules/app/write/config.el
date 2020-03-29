@@ -7,7 +7,7 @@
     "mother tongue of user")
   (defvar +langtool-jar-path (file-expand-wildcards "/usr/local/Cellar/languagetool/*/libexec/languagetool-commandline.jar")
     "TODO")
-  (def-package! langtool
+  (use-package! langtool
     :commands (langtool-check
                langtool-check-done
                langtool-switch-default-language
@@ -17,7 +17,7 @@
     (setq langtool-default-language +langtool-default-lang
           langtool-mother-tongue +langtool-mother-tongue
           langtool-language-tool-jar +langtool-jar-path)))
-(def-package! wordnut
+(use-package! wordnut
   :commands (wordnut-search
              wordnut-lookup-current-word)
   :config
@@ -86,7 +86,7 @@ Turning on wordnut mode runs the normal hook `wordnut-mode-hook'.
         :nm "RET" #'wordnut-lookup-current-word
         :nm "q" #'quit-window
         :nm "gh" #'wordnut-lookup-current-word))
-(def-package! synosaurus
+(use-package! synosaurus
     :commands (synosaurus-mode
                synosaurus-lookup
                synosaurus-choose-and-replace)
@@ -95,7 +95,7 @@ Turning on wordnut mode runs the normal hook `wordnut-mode-hook'.
     :config
     (setq synosaurus-choose-method 'default))
 (when IS-MAC
-  (def-package! osx-dictionary
+  (use-package! osx-dictionary
     :commands (osx-dictionary-search-word-at-point
                osx-dictionary-search-input)
     :config
@@ -107,18 +107,18 @@ Turning on wordnut mode runs the normal hook `wordnut-mode-hook'.
       :nm "RET" #'osx-dictionary-search-word-at-point
       :nm "r"   #'osx-dictionary-read-word)
     (set-popup-rule! "\\*osx-dictionary" :size 80 :side 'right :select t :quit t)))
-(def-package! powerthesaurus
+(use-package! powerthesaurus
   :commands (powerthesaurus-lookup-word))
-(def-package! org-variable-pitch :load-path "~/.doom.d/local"
+(use-package! org-variable-pitch :load-path "~/.doom.d/local"
   :commands (org-variable-pitch-minor-mode)
   :init
   (setq ovp-font "Operator Mono"))
-(def-package! academic-phrases
+(use-package! academic-phrases
   :commands (academic-phrases
              academic-phrases-by-section))
-(def-package! wordsmith-mode
+(use-package! wordsmith-mode
   :commands (wordsmitch-mode))
-;; (def-package! mixed-pitch
+;; (use-package! mixed-pitch
 ;;   :config
 ;;   ;; (define-minor-mode mixed-pitch-mode
 ;; ;;     "Change the default face of the current buffer to a variable pitch, while keeping some faces fixed pitch.
