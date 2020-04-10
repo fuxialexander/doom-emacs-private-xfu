@@ -54,7 +54,7 @@
        (:if NOT-TERMUX lsp)
        docker
        ;; (:if NOT-TERMUX pdf)
-       ;; reference
+       reference
        ;; password-store
        editorconfig
        (eval +overlay)
@@ -71,6 +71,8 @@
         +dragndrop
         +jupyter
         +pandoc
+        +brain
+        +roam
         +pomodoro
         +present)
        org-private
@@ -82,6 +84,8 @@
 
        :app
        (:if NOT-TERMUX rss)
+       (:if NOT-TERMUX sx)
+       (:if NOT-TERMUX calendar)
 
        :config
        (default +snippets +bindings +smartparens))
@@ -91,6 +95,9 @@
       max-specpdl-size 10000
       user-full-name "Alexander Fu Xi"
       user-mail-address "fuxialexander@gmail.com")
+
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;; * UI
 (setq browse-url-browser-function 'browse-url-default-browser

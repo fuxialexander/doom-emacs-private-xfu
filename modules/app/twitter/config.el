@@ -110,6 +110,7 @@
   (after! solaire-mode
     (add-hook 'twittering-mode-hook #'solaire-mode))
 
-  (def-modeline! twitter
-    (bar matches " %b " selection-info)
-    ()))
+  ;; (def-modeline! twitter
+  ;;   (bar matches " %b " selection-info)
+  ;;   ())
+  )

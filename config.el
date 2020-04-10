@@ -4,7 +4,7 @@
 (setq +calendar-open-calendar-function 'cfw:open-org-calendar-withoutkevin
       +org-reference-field 'bioinfo
       +magit-default-clone-url "https://github.com/"
-      browse-url-browser-function 'browse-url-default-browser
+      browse-url-browser-function 'browse-url-chrome
       delete-by-moving-to-trash t
       electric-pair-inhibit-predicate 'ignore
       enable-remote-dir-locals t
@@ -395,8 +395,9 @@ frame's PPI is larger than 180. Otherwise, return 1."
   :config
   (require 'org-noter-pdftools)
   (after! pdf-tools
-    (setq pdf-annot-activate-handler-functions #'org-noter-jump-to-note))
-  (setq org-noter-notes-mode-map (make-sparse-keymap)))
+    (setq pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note))
+  ;; (setq org-noter-notes-mode-map (make-sparse-keymap))
+  )
 
 (use-package! org-pdftools
   :init (setq org-pdftools-search-string-separator "??")
@@ -411,3 +412,23 @@ frame's PPI is larger than 180. Otherwise, return 1."
 
 (use-package! groovy-mode)
 (use-package! package-lint)
+
+
+;; * set browser in wsl
+(setq-default sysTypeSpecific system-type) ;; get the system-type value
+
+(cond
+ ;; If type is "gnu/linux", override to "wsl/linux" if it's WSL.
+ ((eq sysTypeSpecific 'gnu/linux)
+  (when (string-match "Linux.*microsoft.*Linux"
+                      (shell-command-to-string "uname -a"))
+
+    (setq-default sysTypeSpecific "wsl/linux") ;; for later use.
+    (setq
+     cmdExeBin "/mnt/c/Windows/System32/cmd.exe"
+     cmdExeArgs '("/c" "start" "") )
+    (setq
+     browse-url-generic-program  cmdExeBin
+     browse-url-generic-args     cmdExeArgs
+     browse-url-browser-function 'browse-url-generic)
+    )))

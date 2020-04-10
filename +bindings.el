@@ -28,9 +28,7 @@
       :nvime "M-n" #'evil-buffer-new
       :nvime "M-N" #'make-frame
       :nvime "M-0" #'+workspace/switch-to-last
-      :nie "M-u" #'org-store-link
-      :nie "M-o" #'org-open-at-point-global
-      :nie "M-i" #'org-insert-last-stored-link
+
       :nvie "M-/" #'evil-commentary-line
       ;; :gnvime "M-s-i" (lambda! (find-file "~/Dropbox/org/inbox.org"))
       ;; :gnvime "M-s-r" (lambda! (find-file "~/Dropbox/org/review.org"))
@@ -95,11 +93,11 @@
           (:when (featurep! :completion helm)
             :desc "Find file on TRAMP" :n "t" #'helm-tramp))
         (:desc "open" :prefix "o"
-          :desc "Twitter" :n "2" #'=twitter
           :desc "RSS" :n "e" #'=rss
           :desc "Calendar" :n "c" #'=calendar
           :desc "Eshell" :n "s" #'+eshell/open-popup
           :desc "Mail" :n "m" #'=mail
+          :desc "OrgNoter" :n "o" #'org-noter
           :desc "Treemacs" :n "n" #'+treemacs/toggle
           :n "E" nil
           :n "M" nil
@@ -132,6 +130,15 @@
       ;; :nv "+" #'evil-numbers/inc-at-pt
       ;; :nv "-" #'evil-numbers/dec-at-pt
 
+      (:map text-mode-map
+        :nie "M-u" #'org-store-link
+        :nie "M-o" #'org-open-at-point-global
+        :nie "M-i" #'org-insert-last-stored-link)
+      (:after org-noter
+        :map org-noter-doc-mode-map
+        "M-i" #'org-noter-insert-precise-note
+        "M-o" #'org-noter-pdftools-jump-to-note
+        "q" #'org-noter-kill-session)
       (:after bibtex
         :map bibtex-mode-map
         "s-." #'org-ref-bibtex-hydra/body)

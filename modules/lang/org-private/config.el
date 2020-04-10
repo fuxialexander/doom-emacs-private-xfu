@@ -24,8 +24,8 @@
         org-cycle-include-plain-lists t
         org-cycle-separator-lines 1
         org-enforce-todo-dependencies t
-        org-bullets-bullet-list '("✦")
-        org-ellipsis " ➤"
+        org-bullets-bullet-list '("◉")
+        org-ellipsis " >"
         org-fontify-done-headline t
         org-fontify-quote-and-verse-blocks t
         org-fontify-whole-heading-line t

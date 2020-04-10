@@ -321,7 +321,7 @@
   ;; (sx-question-mode-score            :foreground fg :background bg-alt)
   '(sx-question-mode-date             :foreground orange :background bg-alt)
   ;; (sx-question-mode-title-comments   :foreground fg :background bg-alt)
-  '(sx-question-mode-title            :foreground fg :background bg-alt :font "SF UI Display" :weight 'bold :height 1.4)
+  '(sx-question-mode-title            :foreground fg :background bg-alt :weight 'bold :height 1.4)
   '(sx-question-mode-header              :inherit 'message-header-name :background bg-alt)
   '(sx-user-accept-rate :foreground green :weight 'light)
   '(sx-user-reputation                :foreground grey :background bg-alt)
