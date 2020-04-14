@@ -12,4 +12,4 @@
 (after! treemacs
   (add-hook 'treemacs-select-hook #'remove-fringes))
 
-(add-hook! 'doom-load-theme-hook :append (load! "+themes"))
+;; (add-hook! 'doom-load-theme-hook :append (load! "+themes"))
