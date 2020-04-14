@@ -72,11 +72,8 @@
         +present)
        org-private
        emacs-lisp
-       ;; javascript
        markdown
        sh
-       ;; web
-
        :app
        (:if NOT-TERMUX rss)
        (:if NOT-TERMUX sx)
@@ -128,8 +125,7 @@
 ;; * Keys
 (setq +default-repeat-backward-key "'"
       +default-repeat-forward-key ";"
-      +evil-collection-disabled-list '(
-                                       anaconda-mode
+      +evil-collection-disabled-list '(anaconda-mode
                                        buff-menu
                                        comint
                                        company
@@ -148,12 +144,9 @@
                                        simple
                                        slime
                                        lispy
-
                                        elfeed
-                                       notmuch
                                        ;; outline
-
-                                       )
+                                       notmuch)
       doom-localleader-key ","
       evil-collection-company-use-tng nil
       evil-respect-visual-line-mode t
