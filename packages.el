@@ -12,21 +12,13 @@
 ;; (package! org-bullets :disable t)
 ;; * UI
 (package! prettify-utils :recipe (:host github :repo "Ilazki/prettify-utils.el" :files ("*")))
-(package! prescient)
-(package! company-prescient)
-(package! flycheck-posframe)
 (package! ov)
-(package! evil-collection)
 (package! shr-tag-pre-highlight)
 ;; * Tools
 (package! orgit)
-(package! org-kanban)
 (package! alert)
 (package! pinentry)
 
-(package! zmq)
-(package! websocket)
-(package! simple-httpd)
 (package! org-pdftools :recipe (:host github :repo "fuxialexander/org-pdftools" :files ("org-pdftools.el")))
 (package! org-noter-pdftools :recipe (:host github :repo "fuxialexander/org-pdftools" :files ("org-noter-pdftools.el")))
 (package! org-noter)
@@ -37,13 +29,7 @@
 ;; * Writing
 (package! academic-phrases)
 ;; * Coding
-(package! evil-collection)
-(package! ivy-yasnippet)
-(package! groovy-mode)
 (package! helpful)
-(package! tldr)
-(package! ess)
-(package! electric-operator)
 (package! emacs-snippets :recipe (:host github :repo "hlissner/emacs-snippets" :files ("*")))
 (package! lispy)
 (package! lispyville)
@@ -52,5 +38,4 @@
 (package! snakemake-mode)
 (package! deadgrep)
 ;; * Maintain
-(package! esup)
 (package! package-lint)

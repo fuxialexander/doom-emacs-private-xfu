@@ -72,7 +72,7 @@
         +jupyter
         +pandoc
         +brain
-        +roam
+        ;+roam
         +pomodoro
         +present)
        org-private

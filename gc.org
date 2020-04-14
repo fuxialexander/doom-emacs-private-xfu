@@ -204,7 +204,7 @@ t)
 (map-delete fringe-indicator-alist 'truncation)
 #+END_SRC
 
-* Org babel hack 
+* Org babel hack
 :PROPERTIES:
 :ID:       4B48B3C2-293A-4B26-97BD-80A5ABAC1E1F
 :END:
@@ -800,3 +800,100 @@ nil
 ;;             "k" #'evil-previous-line))))
 #+END_SRC
 
+
+
+* python, sed, pkgbuild
+#+BEGIN_SRC elisp
+(after! python
+  (add-hook 'python-mode-hook #'outline-minor-mode)
+  (set-company-backend! 'python-mode '(company-anaconda :with company-yasnippet company-dabbrev company-files))
+  (set-lookup-handlers! 'python-mode :documentation #'anaconda-mode-show-doc))
+(use-package! sed-mode
+  :commands (sed-mode))
+(when IS-LINUX
+  (use-package! pkgbuild-mode
+    :mode (("/PKGBUILD$" . pkgbuild-mode))))
+#+END_SRC
+
+* company-mode
+#+BEGIN_SRC elisp
+(setq company-tooltip-limit 10
+      company-tooltip-minimum-width 80
+      company-tooltip-minimum 10
+      company-backends
+      '(company-capf company-dabbrev company-files company-yasnippet)
+      company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode))
+#+END_SRC
+
+* flycheck-posframe
+#+BEGIN_SRC elisp
+(after! flycheck-posframe
+  (setq flycheck-posframe-warning-prefix "⚠ "
+        flycheck-posframe-info-prefix "··· "
+        flycheck-posframe-error-prefix " ")
+  ;; (advice-add 'flycheck-posframe-delete-posframe :override #'*flycheck-posframe-delete-posframe)
+  (advice-add 'flycheck-posframe-show-posframe :override #'*flycheck-posframe-show-posframe)
+  ;; (advice-add '+syntax-checker-cleanup-popup :override #'+syntax-checker*cleanup-popup)
+  )
+#+END_SRC
+
+* web, xwidget, shr
+#+BEGIN_SRC elisp
+(after! eww
+  (advice-add 'eww-display-html :around
+              'eww-display-html--override-shr-external-rendering-functions))
+(after! shr
+  (require 'shr-tag-pre-highlight)
+  (add-to-list 'shr-external-rendering-functions
+               '(pre . shr-tag-pre-highlight)))
+(after! xwidget
+  (advice-add 'xwidget-webkit-new-session :override #'*xwidget-webkit-new-session)
+  (advice-add 'xwidget-webkit-goto-url :override #'*xwidget-webkit-goto-url)
+  (setq xwidget-webkit-enable-plugins t))
+#+END_SRC
+
+
+* iterm
+#+BEGIN_SRC elisp
+ (use-package! iterm :load-path
+  :commands (iterm-cd+END_SRC
+              iterm-send-text
+              iterm-send-text-i
+              iterm-send-file-i
+              iterm-cwd-ipy
+              iterm-send-file-R
+              iterm-cwd-R
+              iterm-send-file-j
+              iterm-cwd-julia))
+#+END_SRC
+
+* ivy
+#+BEGIN_SRC elisp
+;; **** ivy-config
+(after! ivy
+  (ivy-add-actions
+   'ivy-switch-buffer
+   '(("d" (lambda (buf) (display-buffer buf)) "display")))
+  (setq ivy-use-selectable-prompt t
+        ivy-rich-parse-remote-buffer nil
+        +ivy-buffer-icons nil
+        ivy-use-virtual-buffers nil
+        ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-cd-selected
+        ivy-rich-switch-buffer-name-max-length 50))
+(after! ivy-posframe
+  (setq ivy-posframe-height-alist '((counsel-M-x . 20)
+                                    (counsel-recentf . 20)
+                                    (counsel-find-file . 20)
+                                    (counsel-projectile-find-file . 20)
+                                    (projectile-find-file . 20)
+                                    (ivy-switch-buffer . 20))))
+(after! ivy-rich
+  (setq ivy-rich-display-transformers-list
+        (plist-put ivy-rich-display-transformers-list
+                   'counsel-M-x
+                   '(:columns
+                     ((counsel-M-x-transformer (:width 30)) ; the original transformer
+                      (ivy-rich-counsel-function-docstring (:width 70 :face font-lock-doc-face))))))
+  (ivy-rich-mode +1))
+
+#+END_SRC

@@ -12,12 +12,12 @@
 ;;             "/ssh:xfu@hpc14.cse.cuhk.edu.hk:/research/kevinyip10/xfu/miniconda3"
 ;;             "/ssh:xfu@hpc15.cse.cuhk.edu.hk:/research/kevinyip10/xfu/miniconda3"))
 
-(setq url-proxy-services '(("HTTP" . "0.0.0.0:12233")
-                           ("http" . "0.0.0.0:12233")
-                           ("HTTPS" . "0.0.0.0:12233")
-                           ("https" . "0.0.0.0:12233")
-                           ("SOCKS" . "0.0.0.0:1080")
-                           ("socks" . "0.0.0.0:1080")))
+(setq url-proxy-services '(("HTTP" . "192.168.8.116:1080")
+                           ("http" . "192.168.8.116:1080")
+                           ("HTTPS" . "192.168.8.116:1080")
+                           ("https" . "192.168.8.116:1080")
+                           ("SOCKS" . "192.168.8.116:1080")
+                           ("socks" . "192.168.8.116:1080")))
 ;; * tramp
 (after! tramp-sh
   (setq
