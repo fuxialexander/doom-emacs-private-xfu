@@ -1,5 +1,7 @@
 ;; * Modules
-(defvar NOT-TERMUX (equal user-login-name "xfu")
+(defvar NOT-TERMUX (not (string-match-p "*Android*"
+                         (shell-command-to-string
+                          "uname -a")))
   "Not inside TERMUX.app")
 
 (doom! :completion
@@ -7,8 +9,6 @@
            (company +auto +childframe)
          (company +auto))
        ivy
-
-
        :ui
        (:if NOT-TERMUX nav-flash)
        (popup +all +defaults)
@@ -23,7 +23,6 @@
        window-select
        workspaces
        zen
-
        :editor
        (evil +commands +everywhere)
        file-templates
@@ -34,26 +33,22 @@
        rotate-text
        snippets
        word-wrap
-
        :emacs
        dired
        dired-plugins
        electric
        ibuffer
        vc
-
        :term
        (:if NOT-TERMUX vterm)
-
        :checkers
        (:if NOT-TERMUX syntax)
        spell
        grammar
-
        :tools
        (:if NOT-TERMUX lsp)
        docker
-       ;; (:if NOT-TERMUX pdf)
+       (:if NOT-TERMUX pdf)
        reference
        ;; password-store
        editorconfig
@@ -178,7 +173,7 @@
 
 ;; * Mac-specific
 (when IS-MAC
-  (setq insert-directory-program "/usr/local/bin/gls")
+  (setq insert-directory-program "gls")
   (setq ns-use-thin-smoothing t)
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'default-frame-alist '(ns-appearance . dark))
