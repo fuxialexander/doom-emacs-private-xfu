@@ -107,7 +107,8 @@
   (setq org-agenda-block-separator ""
         org-agenda-clockreport-parameter-plist '(:link t :maxlevel 3 :fileskip0 t :stepskip0 t :tags "-COMMENT")
         org-agenda-compact-blocks t
-        org-agenda-files (ignore-errors (directory-files org-directory t "^\\(.*\\|ref\\)\\.org$" t))
+        org-agenda-files (directory-files-recursively "~/org/" "\.org$")
+        ;; org-agenda-files (ignore-errors (directory-files org-directory t "^\\(.*\\|ref\\)\\.org$" t))
         org-agenda-follow-indirect t
         ;; org-agenda-ignore-properties '(effort appt category)
         ;; org-agenda-use-tag-inheritance nil
