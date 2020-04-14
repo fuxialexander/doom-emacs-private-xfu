@@ -1,16 +1,11 @@
 ;; * Modules
-(defvar NOT-TERMUX (equal user-login-name "xfu")
-  "Not inside TERMUX.app")
-
 (doom! :completion
-       (:if NOT-TERMUX
-           (company +auto +childframe)
-         (company +auto))
        ivy
 
+       (company +auto +childframe)
 
        :ui
-       (:if NOT-TERMUX nav-flash)
+       nav-flash
        (popup +all +defaults)
        vc-gutter
        doom
@@ -43,15 +38,14 @@
        vc
 
        :term
-       (:if NOT-TERMUX vterm)
-
+       vterm
        :checkers
-       (:if NOT-TERMUX syntax)
+       syntax
        spell
        grammar
 
        :tools
-       (:if NOT-TERMUX lsp)
+       lsp
        docker
        ;; (:if NOT-TERMUX pdf)
        reference
@@ -72,7 +66,7 @@
         +jupyter
         +pandoc
         +brain
-        +roam
+        ;; +roam
         +pomodoro
         +present)
        org-private
@@ -83,9 +77,9 @@
        ;; web
 
        :app
-       (:if NOT-TERMUX rss)
-       (:if NOT-TERMUX sx)
-       (:if NOT-TERMUX calendar)
+       rss
+       sx
+       calendar
 
        :config
        (default +snippets +bindings +smartparens))
@@ -173,8 +167,7 @@
                          ("melpa" . "http://elpa.emacs-china.org/melpa/")))
 
 ;; * Termux-specific
-(when (not NOT-TERMUX)
-  (setq browse-url-browser-function 'browse-url-xdg-open))
+(setq browse-url-browser-function 'browse-url-xdg-open)
 
 ;; * Mac-specific
 (when IS-MAC
@@ -182,9 +175,9 @@
   (setq ns-use-thin-smoothing t)
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'default-frame-alist '(ns-appearance . dark))
-(setenv "PKG_CONFIG_PATH" (concat (shell-command-to-string "printf %s \"$(brew --prefix libffi)\"") "/lib/pkgconfig/"))
+  (setenv "PKG_CONFIG_PATH" (concat (shell-command-to-string "printf %s \"$(brew --prefix libffi)\"") "/lib/pkgconfig/"))
 
-)
+  )
 ;; * Arch-specific
 (when IS-LINUX
   (setq insert-directory-program "ls"
