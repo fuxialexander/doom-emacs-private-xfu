@@ -1,5 +1,5 @@
 ;; * Modules
-(defvar NOT-TERMUX (not (string-match-p "*Android*"
+(defvar NOT-TERMUX (not (string-match-p ".*Android*"
                          (shell-command-to-string
                           "uname -a")))
   "Not inside TERMUX.app")
@@ -11,7 +11,8 @@
        ivy
        :ui
        (:if NOT-TERMUX nav-flash)
-       (popup +all +defaults)
+       (:if NOT-TERMUX
+           (popup +all +defaults))
        vc-gutter
        doom
        doom-dashboard
@@ -55,8 +56,6 @@
        (eval +overlay)
        (lookup +docsets)
        magit
-       lsp
-       pdf
        :lang
        ;; data
        (python +lsp +pyenv +conda)

@@ -97,13 +97,13 @@
     #'yas-minor-mode-on))
 ;; * load
 (load! "+bindings")
-(load! "+popup")
 (when (string-equal user-mail-address "fuxialexander@gmail.com")
   ;(load! "+idle")
   (load! "+xfu")
   (load! "+auth"))
 (when (string-match-p ".*wsl" (shell-command-to-string "hostname"))
   (load! "+wsl"))
-(when (not (string-match-p "TERMUX" (shell-command-to-string "echo $TERMUX")))
+(when NOT-TERMUX
+  (load! "+popup")
   (load! "+pdf")
   (load! "+gui"))
