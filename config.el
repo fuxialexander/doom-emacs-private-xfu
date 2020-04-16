@@ -80,6 +80,7 @@
   (setq lispy-outline "^;; \\(?:;[^#]\\|\\*+\\)"
         lispy-outline-header ";; "))
 
+
 (after! elisp-mode
   (add-hook 'emacs-lisp-mode-hook #'outline-minor-mode t)
   (remove-hook 'emacs-lisp-mode-hook (lambda
@@ -107,3 +108,6 @@
   (load! "+popup")
   (load! "+pdf")
   (load! "+gui"))
+
+(after! evil-org
+  (remove-hook! 'org-tab-first-hook #'+org-cycle-only-current-subtree-h))

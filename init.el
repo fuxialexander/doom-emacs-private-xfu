@@ -183,3 +183,4 @@
         doom-theme 'doom-nord
         doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 24)
         doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 26)))
+

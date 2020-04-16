@@ -43,9 +43,9 @@
         org-indent-indentation-per-level 2
         org-indent-mode-turns-on-hiding-stars t
         org-list-description-max-indent 4
-        org-log-done 'time
+        org-log-done nil
         org-log-into-drawer t
-        org-log-note-clock-out t
+        ;; org-log-note-clock-out t
         org-lowest-priority ?F
         org-modules '(ol-bibtex
                       ol-info
@@ -73,12 +73,9 @@
         '(("TODO" . org-todo-keyword-todo)
           ("WANT" . org-todo-keyword-want)
           ("DONE" . org-todo-keyword-done)
-          ("WAIT" . org-todo-keyword-wait)
-          ("KILL" . org-todo-keyword-kill)
-          ("OUTD" . org-todo-keyword-outd))
+          ("WAIT" . org-todo-keyword-wait))
         org-todo-keywords
-        '((sequence "TODO(t!)" "WAIT(w@/@)" "WANT(h!/@)" "|" "DONE(d!/@)" "OUTD(o@/@)" "KILL(k@/@)"))
-        org-treat-insert-todo-heading-as-state-change t
+        '((sequence "TODO(t)" "WAIT(w)" "|" "DONE(d)" "KILL(k)"))
         org-use-fast-tag-selection nil
         org-use-fast-todo-selection t
         outline-blank-line t
@@ -113,17 +110,23 @@
         ;; org-agenda-ignore-properties '(effort appt category)
         ;; org-agenda-use-tag-inheritance nil
         org-agenda-inhibit-startup t
+        org-agenda-scheduled-leaders '("S=   " "S-%2d ")
+        org-agenda-deadline-leaders '("D=   " "D+%2d " "D-%2d ")
+        org-agenda-todo-keyword-format "%s"
+        org-agenda-prefix-format '((agenda . "%-12t%s")
+                                   (todo . "")
+                                   (tags . "%-12:c")
+                                   (search . "%-12:c"))
         org-agenda-log-mode-items '(closed clock)
         org-agenda-overriding-header ""
         org-agenda-restore-windows-after-quit t
         org-agenda-skip-deadline-if-done t
         org-agenda-skip-deadline-prewarning-if-scheduled t
         org-agenda-skip-scheduled-if-done t
-        org-agenda-start-with-log-mode t
         org-agenda-sticky nil
-        org-agenda-tags-column 'auto)
+        org-agenda-tags-column 0)
 
-  (org-super-agenda-mode)
+  ;; (org-super-agenda-mode)
   (defhydra +org@org-agenda-filter (:color pink :hint nil)
     "
 _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
@@ -133,31 +136,28 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
     ("r" org-agenda-filter-by-regexp)
     ("d" org-agenda-filter-remove-all)
     ("q" nil "cancel" :color blue))
-  (set-popup-rule! "^\\*Org Agenda.*" :slot -1 :size 120 :side 'left :select t)
-  ;; (set-evil-initial-state! 'org-agenda-mode 'normal)
+  (set-popup-rule! "^\\*Org Agenda.*" :slot -1 :size 60 :side 'left :select t)
   )
-(use-package! org-super-agenda
-  :commands (org-super-agenda-mode)
-  :init (advice-add #'org-super-agenda-mode :around #'doom-shut-up-a)
-  :config
-  (setq org-super-agenda-groups
-        '((:name "Log\n"
-                 :log t)  ; Automatically named "Log"
-          (:name "Schedule\n"
-                 :time-grid t)
-          (:name "Today\n"
-                 :scheduled today)
-          (:name "Due today\n"
-                 :deadline today)
-          (:name "Overdue\n"
-                 :deadline past)
-          (:name "Due soon\n"
-                 :deadline future)
-          (:name "Waiting\n"
-                 :todo "WAIT"
-                 :order 98)
-          (:name "Scheduled earlier\n"
-                 :scheduled past))))
+;; (use-package! org-super-agenda
+;;   :commands (org-super-agenda-mode)
+;;   :init (advice-add #'org-super-agenda-mode :around #'doom-shut-up-a)
+;;   :config
+;;   (setq org-super-agenda-groups
+;;         '((:name "Schedule\n"
+;;                  :time-grid t)
+;;           (:name "Today\n"
+;;                  :scheduled today)
+;;           (:name "Due today\n"
+;;                  :deadline today)
+;;           (:name "Overdue\n"
+;;                  :deadline past)
+;;           (:name "Due soon\n"
+;;                  :deadline future)
+;;           (:name "Waiting\n"
+;;                  :todo "WAIT"
+;;                  :order 98)
+;;           (:name "Scheduled earlier\n"
+;;                  :scheduled past))))
 
 ;; * Export
 (defvar +org-html-embed-image t

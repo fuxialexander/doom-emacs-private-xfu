@@ -39,21 +39,49 @@
       ;; "<M-return>" #'evil-mc-make-and-goto-next-match
       ;; "<C-M-return>" #'+evil/mc-make-cursor-here
       "M-W" #'kill-this-buffer
-      :nie "s-f" (lambda! (swiper
+      :nie "M-f" (lambda! (swiper
                            (if (symbol-at-point)
                                (replace-regexp-in-string "\\([\+\!]\\)" "\\\\\\1" (format "\\_<%s\\_> " (symbol-at-point))) nil)))
-      :v "s-f" (lambda! (swiper (buffer-substring-no-properties (region-beginning) (region-end))))
+      :v "M-f" (lambda! (swiper (buffer-substring-no-properties (region-beginning) (region-end))))
+      (:after org
+        :map (org-mode-map)
+        [M-return] #'org-meta-return
+        [C-return] #'org-insert-todo-heading
+        [C-S-return]   #'org-insert-todo-subheading
+        [M-S-return] #'org-insert-subheading
+        [C-M-return] #'org-return-indent
+        (:when IS-MAC
+          [s-return]   nil
+          [s-S-return] nil
+          [s-M-return] nil))
+      (:after evil-org
+        :map (evil-org-mode-map)
+        :ni [C-return] #'org-insert-todo-heading
+        :ni [C-S-return] #'org-insert-todo-subheading
+        (:when IS-MAC
+          [s-return]   nil
+          [s-S-return] nil
+          [s-M-return] nil))
+      (:after org-agenda
+        :map (org-agenda-mode-map)
+        "j" #'org-agenda-next-line
+        "J" #'org-agenda-next-item
+        "k" #'org-agenda-previous-line
+        "K" #'org-agenda-previous-item
+        "n" #'org-agenda-goto-date
+        "N" #'org-agenda-clock-goto
+        "p" #'org-agenda-capture)
       (:after outline
         :map (outline-mode-map outline-minor-mode-map)
-        :nvime "C-h" #'dwim-jump
-        :nvime "C-l" #'outline-cycle
-        :nvime "C-j" (lambda! (outline-next-visible-heading 1) (recenter))
-        :nvime "C-k" (lambda! (outline-previous-visible-heading 1) (recenter))
-        :nvime "<C-return>" (lambda! (evil-open-below 0) (outline-insert-heading))
-        :nvime "C-S-h" #'outline-promote
-        :nvime "C-S-l" #'outline-demote
-        :nvime "C-S-j" #'outline-move-subtree-down
-        :nvime "C-S-k" #'outline-move-subtree-up)
+        "C-h" #'dwim-jump
+        "C-l" #'outline-cycle
+        "C-j" (lambda! (outline-next-visible-heading 1) (recenter))
+        "C-k" (lambda! (outline-previous-visible-heading 1) (recenter))
+        "<M-return>" (lambda! (evil-open-below 0) (outline-insert-heading))
+        "C-S-h" #'outline-promote
+        "C-S-l" #'outline-demote
+        "C-S-j" #'outline-move-subtree-down
+        "C-S-k" #'outline-move-subtree-up)
       (:leader
         :nv "X" nil
         :desc "org-capture" :nv "X" #'counsel-org-capture
