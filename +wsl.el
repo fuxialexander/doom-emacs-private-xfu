@@ -12,9 +12,23 @@
     (setq-default sysTypeSpecific "wsl/linux") ;; for later use.
     (setq
      cmdExeBin "/mnt/c/Windows/System32/cmd.exe"
-     cmdExeArgs '("/c" "start" "") )
+     cmdExeArgs '("/c" "start" ""))
     (setq
      browse-url-generic-program  cmdExeBin
      browse-url-generic-args     cmdExeArgs
      browse-url-browser-function 'browse-url-generic)
-    )))
+
+    (defun org-file-apps-wsl (path)
+      (shell-command (concat
+                      "/mnt/c/Windows/System32/cmd.exe /c start \""
+                      (file-relative-name path) "\"")))
+
+    (after! org
+      (setq org-file-apps
+            `(("pdf" . emacs)
+              ("\\.x?html?\\'" . (lambda (file link)
+                                   (org-file-apps-wsl file)))
+              (auto-mode . emacs)
+              (directory . emacs)
+              (t . (lambda (file link)
+                     (org-file-apps-wsl file)))))))))

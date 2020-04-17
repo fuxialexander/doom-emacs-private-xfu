@@ -3,7 +3,7 @@
 (after! org
   (add-hook 'org-metareturn-hook '+org/insert-go-eol)
   (add-hook 'org-ctrl-c-ctrl-c-hook '+org-private/*org-ctrl-c-ctrl-c-counsel-org-tag)
-  (add-hook 'org-mode-hook (lambda () (add-hook 'before-save-hook '+org-private/org-add-ids-to-headlines-in-file nil 'local)))
+  ;; (add-hook 'org-mode-hook (lambda () (add-hook 'before-save-hook '+org-private/org-add-ids-to-headlines-in-file nil 'local)))
   (add-hook 'org-metareturn-hook '+org/insert-item-with-ts)
   (advice-add 'org-eldoc-get-breadcrumb :filter-return #'*org-eldoc-get-timestamp)
   (advice-add 'org-format-outline-path :filter-return #'*org-format-outline-path-normalize)
@@ -11,6 +11,12 @@
   (defface org-deadline-custom '((t (:inherit 'default))) "org-deadline" :group 'org)
   (advice-add 'org-shiftcontrolup :override #'*org/shiftcontrolup)
   (advice-add 'org-shiftcontroldown :override #'*org/shiftcontroldown)
+  (add-hook! org-mode
+             #'visual-line-mode
+             #'visual-fill-column-mode)
+  (add-hook! org-mode
+    (auto-fill-mode -1)
+    (hl-line-mode -1))
 ;; * UI
   (defface org-closed-custom-braket '((t (:inherit 'default))) "org-close" :group 'org)
   (setq org-adapt-indentation nil
@@ -84,8 +90,11 @@
           ("\\.x?html?\\'" . default)
           (auto-mode . emacs)
           (directory . emacs)
-          (t . ,(cond (IS-MAC "open \"%s\"")
-                      (IS-LINUX "xdg-open \"%s\"")))))
+          (t . ,(cond
+                 ((string-match-p "wsl" (shell-command-to-string "uname -a"))
+                  (lambda (file link) (org-file-apps-wsl file)))
+                 (IS-MAC "open \"%s\"")
+                 (IS-LINUX "xdg-open \"%s\"")))))
   (setq org-ts-regexp-both-braket "\\([[<]\\)\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\} ?[^]\n>]*?\\)\\([]>]\\)")
   (defface org-deadline-custom-braket '((t (:inherit 'default))) "org-deadline" :group 'org)
   (defface org-scheduled-custom-braket '((t (:inherit 'default))) "org-schedule" :group 'org)
