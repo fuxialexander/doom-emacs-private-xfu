@@ -50,8 +50,8 @@
        (:if NOT-TERMUX lsp)
        docker
        (:if NOT-TERMUX pdf)
-       reference
-       ;; password-store
+       ;; reference
+       (pass +auth)
        editorconfig
        (eval +overlay)
        (lookup +docsets)
