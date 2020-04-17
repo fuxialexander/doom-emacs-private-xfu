@@ -49,10 +49,13 @@
    (append
     '("/research/kevinyip10/xfu/miniconda3/bin"
       "/uac/gds/xfu/bin")
-    tramp-remote-path)
-   tramp-remote-process-environment
-   (append
-    tramp-remote-process-environment
-    '("http_proxy=http://proxy.cse.cuhk.edu.hk:8000"
-      "https_proxy=http://proxy.cse.cuhk.edu.hk:8000"
-      "ftp_proxy=http://proxy.cse.cuhk.edu.hk:8000"))))
+    tramp-remote-path))
+
+  ;; (setq
+  ;;  tramp-remote-process-environment
+  ;;  (append
+  ;;   tramp-remote-process-environment
+  ;;   '("http_proxy=http://proxy.cse.cuhk.edu.hk:8000"
+  ;;     "https_proxy=http://proxy.cse.cuhk.edu.hk:8000"
+  ;;     "ftp_proxy=http://proxy.cse.cuhk.edu.hk:8000")))
+  )
