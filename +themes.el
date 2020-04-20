@@ -1,11 +1,11 @@
 ;;; ~/.doom.d/+themes.el -*- lexical-binding: t; -*-
 ;; * Faces
 ;; ** Function override
-(defun doom-themes-set-faces (theme &rest faces)
-  "Customize THEME (a symbol) with FACES."
-  (apply #'custom-theme-set-faces
-         (or theme 'user)
-         (mapcar 'eval (mapcar #'doom-themes--build-face faces))))
+;; (defun doom-themes-set-faces (theme &rest faces)
+;;   "Customize THEME (a symbol) with FACES."
+;;   (apply #'custom-theme-set-faces
+;;          (or theme 'user)
+;;          (mapcar 'eval (mapcar #'doom-themes--build-face faces))))
 
 
 

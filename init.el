@@ -3,6 +3,10 @@
                          (shell-command-to-string
                           "uname -a")))
   "Not inside TERMUX.app")
+(defvar IS-WSL (string-match-p "Linux.*microsoft.*Linux"
+                         (shell-command-to-string
+                          "uname -a"))
+  "Inside WSL")
 
 (doom! :completion
        (:if NOT-TERMUX

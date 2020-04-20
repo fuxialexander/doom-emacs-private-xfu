@@ -6,9 +6,7 @@
 (cond
  ;; If type is "gnu/linux", override to "wsl/linux" if it's WSL.
  ((eq sysTypeSpecific 'gnu/linux)
-  (when (string-match "Linux.*microsoft.*Linux"
-                      (shell-command-to-string "uname -a"))
-
+  (when IS-WSL
     (setq-default sysTypeSpecific "wsl/linux") ;; for later use.
     (setq
      cmdExeBin "/mnt/c/Windows/System32/cmd.exe"

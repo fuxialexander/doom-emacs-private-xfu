@@ -12,9 +12,9 @@
   (advice-add 'org-shiftcontrolup :override #'*org/shiftcontrolup)
   (advice-add 'org-shiftcontroldown :override #'*org/shiftcontroldown)
   (add-hook! org-mode
-             #'visual-line-mode
              #'visual-fill-column-mode)
   (add-hook! org-mode
+    (setq fill-column 120)
     (auto-fill-mode -1)
     (hl-line-mode -1))
 ;; * UI

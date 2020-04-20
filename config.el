@@ -74,6 +74,30 @@
 ;; (after! comint
 ;;   (add-hook 'comint-preoutput-filter-functions #'dirtrack-filter-out-pwd-prompt))
 ;;
+;; *** UI
+(after! mixed-pitch
+  (pushnew! mixed-pitch-fixed-pitch-faces
+           'org-special-keyword
+           'org-latex-and-related
+           'org-property-value
+           'org-scheduled-custom
+           'org-scheduled-custom-braket
+           'org-ref-cite-face
+           'org-list-dt
+           'org-tag
+           'font-lock-comment-face
+           'markdown-code-face
+           'markdown-comment-face
+           'markdown-footnote-marker-face
+           'markdown-gfm-checkbox-face
+           'markdown-inline-code-face
+           'markdown-language-info-face
+           'markdown-language-info-properties
+           'markdown-language-keyword-face
+           'markdown-language-keyword-properties
+           'markdown-math-face
+           'markdown-markup-face
+           'markdown-pre-face))
 ;; *** language
 ;; **** elisp
 (after! lispy
@@ -102,9 +126,10 @@
   ;(load! "+idle")
   (load! "+xfu")
   (load! "+auth"))
-(when (string-match-p ".*wsl" (shell-command-to-string "hostname"))
+(when IS-WSL
   (load! "+wsl"))
 (when NOT-TERMUX
+  (add-hook! 'doom-load-theme-hook :append (load! "+themes"))
   (load! "+popup")
   (load! "+pdf")
   (load! "+gui"))
