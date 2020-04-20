@@ -158,6 +158,11 @@
       ;; :nv "+" #'evil-numbers/inc-at-pt
       ;; :nv "-" #'evil-numbers/dec-at-pt
 
+      (:after pdf-view
+        :map pdf-view-mode-map
+          :nie "M-u" #'org-store-link
+          :nie "M-o" #'org-open-at-point-global
+          :nie "M-i" #'org-insert-last-stored-link)
       (:map text-mode-map
         :nie "M-u" #'org-store-link
         :nie "M-o" #'org-open-at-point-global
