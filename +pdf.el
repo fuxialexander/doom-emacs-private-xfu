@@ -7,11 +7,15 @@
   (advice-add 'pdf-view-mouse-set-region :override #'*pdf-view-mouse-set-region))
 
 
-(use-package org-pdftools
+(use-package! org-pdftools
   :hook (org-load . org-pdftools-setup-link))
 
-(use-package org-noter-pdftools
-  :after org-noter
+(use-package! org-noter-pdftools
   :config
   (after! pdf-annot
-    (add-hook pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
+    (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
+
+(use-package! org-noter
+  :commands (org-noter)
+  :config
+  (add-hook! org-noter-notes-mode (require 'org-noter-pdftools)))
