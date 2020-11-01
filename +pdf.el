@@ -14,4 +14,4 @@
   :after org-noter
   :config
   (after! pdf-annot
-    (add-hook pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
+    (setq pdf-annot-activate-handler-functions '(org-noter-pdftools-jump-to-note))))

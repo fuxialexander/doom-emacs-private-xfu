@@ -5,7 +5,7 @@
 ;; (package! toc-org)
 ;; (package! org-web-tools)
 ;; (package! org-wild-notifier)
-(package! org-brain)
+;; (package! org-brain)
 (package! org-super-agenda)
 (package! org-clock-convenience)
 (package! webkit-katex-render :recipe (:host github :repo "fuxialexander/emacs-webkit-katex-render" :files ("*")))

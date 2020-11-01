@@ -52,8 +52,8 @@
        grammar
        :tools
        (:if NOT-TERMUX lsp)
-       docker
-       (:if NOT-TERMUX pdf)
+       ;; docker
+       ;; (:if NOT-TERMUX pdf)
        ;; reference
        (pass +auth)
        editorconfig
@@ -70,7 +70,7 @@
         +jupyter
         +pandoc
         +brain
-        ;+roam
+        +roam
         +pomodoro
         +present)
        org-private
@@ -159,9 +159,9 @@
       evil-want-integration t)
 
 ;; * Repo
-(setq package-archives '(("gnu" . "http://elpa.emacs-china.org/gnu/")
-                         ("org" . "http://elpa.emacs-china.org/org/")
-                         ("melpa" . "http://elpa.emacs-china.org/melpa/")))
+;; (setq package-archives '(("gnu" . "http://elpa.emacs-china.org/gnu/")
+;;                          ("org" . "http://elpa.emacs-china.org/org/")
+;;                          ("melpa" . "http://elpa.emacs-china.org/melpa/")))
 
 ;; * Termux-specific
 (when (not NOT-TERMUX)

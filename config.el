@@ -64,6 +64,8 @@
           (or (file-remote-p root)
               (string-match ".*Trash.*" root)
               (string-match ".*Cellar.*" root)))))
+
+(use-package! groovy-mode)
 ;; ** emacs
 ;; *** recentf
 (after! recentf
@@ -84,6 +86,7 @@
            'org-scheduled-custom-braket
            'org-ref-cite-face
            'org-list-dt
+           'org-link
            'org-tag
            'font-lock-comment-face
            'markdown-code-face
@@ -131,7 +134,7 @@
 (when NOT-TERMUX
   (add-hook! 'doom-load-theme-hook :append (load! "+themes"))
   (load! "+popup")
-  (load! "+pdf")
+  ;; (load! "+pdf")
   (load! "+gui"))
 
 (after! evil-org

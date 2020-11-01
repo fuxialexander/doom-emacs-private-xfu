@@ -19,9 +19,9 @@
 (package! alert)
 (package! pinentry)
 
-(package! org-pdftools :recipe (:host github :repo "fuxialexander/org-pdftools" :files ("org-pdftools.el")))
-(package! org-noter-pdftools :recipe (:host github :repo "fuxialexander/org-pdftools" :files ("org-noter-pdftools.el")))
-(package! org-noter)
+;; (package! org-pdftools :recipe (:host github :repo "fuxialexander/org-pdftools" :files ("org-pdftools.el")))
+;; (package! org-noter-pdftools :recipe (:host github :repo "fuxialexander/org-pdftools" :files ("org-noter-pdftools.el")))
+;; (package! org-noter)
 ;(package! emacs-jupyter :recipe (:host github :repo "dzop/emacs-jupyter" :files ("*")))
 
 (when IS-LINUX
@@ -37,5 +37,6 @@
 (package! function-args)
 (package! snakemake-mode)
 (package! deadgrep)
+(package! groovy-mode)
 ;; * Maintain
 (package! package-lint)

@@ -1,5 +1,6 @@
 ;;; lang/org-private/config.el -*- lexical-binding: t; -*-
 
+;; * Advices
 (after! org
   (add-hook 'org-metareturn-hook '+org/insert-go-eol)
   (add-hook 'org-ctrl-c-ctrl-c-hook '+org-private/*org-ctrl-c-ctrl-c-counsel-org-tag)
@@ -22,7 +23,7 @@
   (setq org-adapt-indentation nil
         org-M-RET-may-split-line '((default . nil))
         org-export-use-babel nil
-        org-blank-before-new-entry '((heading . t) (plain-list-item . nil))
+        org-blank-before-new-entry '((heading . nil) (plain-list-item . nil))
         org-clock-clocktable-default-properties '(:maxlevel 3 :scope agenda :tags "-COMMENT")
         org-clocktable-defaults '(:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 t :fileskip0 t :tags "-COMMENT" :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)
         org-columns-default-format "%45ITEM %TODO %SCHEDULED %DEADLINE %3PRIORITY %TAGS %CLOCKSUM %EFFORT %BUDGET_WEEK %BUDGET_MONTH %BUDGET_QUARTER %BUDGET_YEAR"
@@ -107,7 +108,6 @@
   (defface org-todo-keyword-wait '((t ())) "org-wait" :group 'org)
   (defface org-todo-keyword-todo '((t ())) "org-todo" :group 'org)
   (defface org-todo-keyword-kill '((t ())) "org-kill" :group 'org))
-
 ;; * Agenda
 (after! org-agenda
   (setq org-agenda-block-separator ""
@@ -167,7 +167,6 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
 ;;                  :order 98)
 ;;           (:name "Scheduled earlier\n"
 ;;                  :scheduled past))))
-
 ;; * Export
 (defvar +org-html-embed-image t
   "whether image is embeded as base64 in html")
@@ -217,7 +216,6 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
              htmlize-many-files-dired)
   :config
   (setq-default htmlize-pre-style t))
-
 ;; * Babel
 (after! ob
   (setq +org-babel-mode-alist
@@ -232,7 +230,6 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
   (after! ivy
     (ivy-add-actions '+org-private/get-name-src-block
                      '(("g" org-babel-goto-named-src-block "Goto")))))
-
 ;; * Capture
 (after! org-capture
   (add-hook 'org-capture-prepare-finalize-hook #'counsel-org-tag)
@@ -398,60 +395,60 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
              turn-on-org-cdlatex)
   :init
   (setq cdlatex-math-modify-alist '((?B "\\mathbb" nil t nil nil))))
-(use-package! org-brain
-  :after org
-  :commands (org-brain-visualize)
-  :init
-  (setq org-brain-path (concat org-directory "brain/"))
-  (after! evil-snipe
-    (push 'org-brain-visualize-mode evil-snipe-disabled-modes))
-  ;; (add-hook 'org-agenda-mode-hook #'(lambda () (evil-vimish-fold-mode -1)))
-  (set-evil-initial-state! 'org-brain-visualize-mode 'normal)
-  :config
-  (set-popup-rule! "^\\*org-brain\\*$" :vslot -1 :size 0.3 :side 'left :select t)
-  (defun org-brain-set-tags (entry)
-    "Use `org-set-tags' on headline ENTRY.
-If run interactively, get ENTRY from context."
-    (interactive (list (org-brain-entry-at-pt)))
-    (when (org-brain-filep entry)
-      (error "Can only set tags on headline entries"))
-    (org-with-point-at (org-brain-entry-marker entry)
-      (counsel-org-tag)
-      (save-buffer))
-    (org-brain--revert-if-visualizing))
-  (setq org-brain-visualize-default-choices 'all
-        org-brain-file-entries-use-title nil
-        org-brain-title-max-length 30)
-  (map!
-   (:map org-brain-visualize-mode-map
-     :n "a" #'org-brain-visualize-attach
-     :n "b" #'org-brain-visualize-back
-     :n "c" #'org-brain-add-child
-     :n "C" #'org-brain-remove-child
-     :n "p" #'org-brain-add-parent
-     :n "P" #'org-brain-remove-parent
-     :n "f" #'org-brain-add-friendship
-     :n "F" #'org-brain-remove-friendship
-     :n "d" #'org-brain-delete-entry
-     :n "g" #'revert-buffer
-     :n "_" #'org-brain-new-child
-     :n ";" #'org-brain-set-tags
-     :n "j" #'forward-button
-     :n "k" #'backward-button
-     :n "l" #'org-brain-add-resource
-     :n "L" #'org-brain-visualize-paste-resource
-     :n "t" #'org-brain-set-title
-     :n "$" #'org-brain-pin
-     :n "o" #'ace-link-woman
-     :n "q" #'org-brain-visualize-quit
-     :n "r" #'org-brain-visualize-random
-     :n "R" #'org-brain-visualize-wander
-     :n "s" #'org-brain-visualize
-     :n "S" #'org-brain-goto
-     :n [tab] #'org-brain-goto-current
-     :n "m" #'org-brain-visualize-mind-map
-     :n "[" #'org-brain-visualize-add-grandchild
-     :n "]" #'org-brain-visualize-remove-grandchild
-     :n "{" #'org-brain-visualize-add-grandparent
-     :n "}" #'org-brain-visualize-remove-grandparent
-     )))
+;; (use-package! org-brain
+;;   :after org
+;;   :commands (org-brain-visualize)
+;;   :init
+;;   (setq org-brain-path (concat org-directory "brain/"))
+;;   (after! evil-snipe
+;;     (push 'org-brain-visualize-mode evil-snipe-disabled-modes))
+;;   ;; (add-hook 'org-agenda-mode-hook #'(lambda () (evil-vimish-fold-mode -1)))
+;;   (set-evil-initial-state! 'org-brain-visualize-mode 'normal)
+;;   :config
+;;   (set-popup-rule! "^\\*org-brain\\*$" :vslot -1 :size 0.3 :side 'left :select t)
+;;   (defun org-brain-set-tags (entry)
+;;     "Use `org-set-tags' on headline ENTRY.
+;; If run interactively, get ENTRY from context."
+;;     (interactive (list (org-brain-entry-at-pt)))
+;;     (when (org-brain-filep entry)
+;;       (error "Can only set tags on headline entries"))
+;;     (org-with-point-at (org-brain-entry-marker entry)
+;;       (counsel-org-tag)
+;;       (save-buffer))
+;;     (org-brain--revert-if-visualizing))
+;;   (setq org-brain-visualize-default-choices 'all
+;;         org-brain-file-entries-use-title nil
+;;         org-brain-title-max-length 30)
+;;   (map!
+;;    (:map org-brain-visualize-mode-map
+;;      :n "a" #'org-brain-visualize-attach
+;;      :n "b" #'org-brain-visualize-back
+;;      :n "c" #'org-brain-add-child
+;;      :n "C" #'org-brain-remove-child
+;;      :n "p" #'org-brain-add-parent
+;;      :n "P" #'org-brain-remove-parent
+;;      :n "f" #'org-brain-add-friendship
+;;      :n "F" #'org-brain-remove-friendship
+;;      :n "d" #'org-brain-delete-entry
+;;      :n "g" #'revert-buffer
+;;      :n "_" #'org-brain-new-child
+;;      :n ";" #'org-brain-set-tags
+;;      :n "j" #'forward-button
+;;      :n "k" #'backward-button
+;;      :n "l" #'org-brain-add-resource
+;;      :n "L" #'org-brain-visualize-paste-resource
+;;      :n "t" #'org-brain-set-title
+;;      :n "$" #'org-brain-pin
+;;      :n "o" #'ace-link-woman
+;;      :n "q" #'org-brain-visualize-quit
+;;      :n "r" #'org-brain-visualize-random
+;;      :n "R" #'org-brain-visualize-wander
+;;      :n "s" #'org-brain-visualize
+;;      :n "S" #'org-brain-goto
+;;      :n [tab] #'org-brain-goto-current
+;;      :n "m" #'org-brain-visualize-mind-map
+;;      :n "[" #'org-brain-visualize-add-grandchild
+;;      :n "]" #'org-brain-visualize-remove-grandchild
+;;      :n "{" #'org-brain-visualize-add-grandparent
+;;      :n "}" #'org-brain-visualize-remove-grandparent
+;;      )))
