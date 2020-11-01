@@ -6,7 +6,10 @@
       +magit-default-clone-url "https://github.com/"
       browse-url-browser-function 'browse-url-chrome
       delete-by-moving-to-trash t
+      +reference-field "bioinfo"
       electric-pair-inhibit-predicate 'ignore
+      org-superstar-headline-bullets-list '("✪" "○" "✸" "◉" )
+      org-superstar-prettify-item-bullets t
       enable-remote-dir-locals t
       evil-escape-key-sequence nil
       frame-resize-pixelwise t
