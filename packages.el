@@ -11,7 +11,7 @@
 (package! ob-translate :disable t)
 ;; (package! org-bullets :disable t)
 ;; * UI
-(package! prettify-utils :recipe (:host github :repo "Ilazki/prettify-utils.el" :files ("*")))
+;; (package! prettify-utils :recipe (:host github :repo "Ilazki/prettify-utils.el" :files ("*")))
 (package! ov)
 (package! shr-tag-pre-highlight)
 ;; * Tools
@@ -24,19 +24,19 @@
 ;; (package! org-noter)
 ;(package! emacs-jupyter :recipe (:host github :repo "dzop/emacs-jupyter" :files ("*")))
 
-(when IS-LINUX
-  (package! pkgbuild-mode))
+;; (when IS-LINUX
+;;   (package! pkgbuild-mode))
 ;; * Writing
-(package! academic-phrases)
+;; (package! academic-phrases)
 ;; * Coding
 (package! helpful)
 (package! emacs-snippets :recipe (:host github :repo "hlissner/emacs-snippets" :files ("*")))
-(package! lispy)
-(package! lispyville)
-(package! sed-mode)
-(package! function-args)
-(package! snakemake-mode)
+;; (package! lispy)
+;; (package! lispyville)
+;; (package! sed-mode)
+;; (package! function-args)
+;; (package! snakemake-mode)
 (package! deadgrep)
 (package! groovy-mode)
 ;; * Maintain
-(package! package-lint)
+;; (package! package-lint)

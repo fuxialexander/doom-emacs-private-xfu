@@ -115,16 +115,6 @@
   '(org-level-7         :inherit 'outline-7)
   '(org-level-8         :inherit 'outline-8)
   '(org-agenda-column-dateline   :inherit 'org-column)
-<<<<<<< HEAD
-  ;; '(org-agenda-date         :foreground (doom-blend 'yellow 'bg 0.8) :weight 'bold)
-  ;; '(org-agenda-date-today   :foreground (doom-blend 'blue 'bg 0.8)   :weight 'bold)
-  ;; '(org-agenda-date-weekend :foreground (doom-blend 'green 'bg 0.8)  :weight 'bold)
-  ;; '(org-agenda-structure    :foreground (doom-blend 'violet 'bg 0.8) :weight 'bold)
-=======
->>>>>>> 6cba7913d23da9bb5f16889eb03dac013d243867
-  ;; (org-block                    :background (doom-blend 'base4 'bg 0.15))
-  ;; (org-block-background         :weight 'extralight :font "Iosevka" :background (doom-blend 'base4 'bg 0.1))
-  ;; (org-block-begin-line         :weight 'extralight :font "Iosevka" :foreground (doom-blend 'blue 'bg 0.5) :background (doom-blend 'base4 'bg 0.1) :distant-foreground nil)
   '(org-ellipsis :background nil :foreground base5)
   '(org-column                   :inherit 'org-table)
   '(org-column-title             :inherit 'org-column :weight 'bold)

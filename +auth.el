@@ -56,7 +56,8 @@
    ;;   ("gpu15" nil "/ssh:gw:"))
    tramp-remote-path
    (append
-    '("/research/kevinyip10/xfu/miniconda3/bin"
+    '("/home/xf2217/miniconda3/bin"
+      "/research/kevinyip10/xfu/miniconda3/bin"
       "/uac/gds/xfu/bin")
     tramp-remote-path))
 

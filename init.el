@@ -10,30 +10,30 @@
 
 (doom! :completion
        (:if NOT-TERMUX
-           (company +auto +childframe)
-         (company +auto))
+        (company +childframe)
+        company)
        ivy
+
+
        :ui
-       (:if NOT-TERMUX nav-flash)
        (:if NOT-TERMUX
-           (popup +all +defaults))
+        (popup +defaults))
        vc-gutter
        doom
        doom-dashboard
        hl-todo
-       hydra
-       modeline
+                                        ;hydra
+       (modeline +light)
        ophints
-       treemacs
-       window-select
+       ;; window-select
        workspaces
-       zen
+       ;; zen
        :editor
-       (evil +commands +everywhere)
+       (evil +everywhere)
        file-templates
        fold
        (format +onsave)
-       lispy
+       ;lispy
        multiple-cursors
        rotate-text
        snippets
@@ -42,14 +42,14 @@
        dired
        dired-plugins
        electric
-       ibuffer
+                                        ;ibuffer
        vc
        :term
        (:if NOT-TERMUX vterm)
        :checkers
        (:if NOT-TERMUX syntax)
        spell
-       grammar
+       ;grammar
        :tools
        (:if NOT-TERMUX lsp)
        ;; docker
@@ -62,34 +62,38 @@
        magit
        :lang
        ;; data
-       (python +lsp +pyenv +conda)
+       (python +lsp)
        ;; (:if NOT-TERMUX (latex +latexmk +zathura))
-       ess
+       (ess +lsp)
        (org
-        +dragndrop
-        +jupyter
-        +pandoc
-        +brain
-        +roam
-        +pomodoro
-        +present)
-       org-private
+                                        ; +dragndrop
+                                        ; +jupyter
+                                        ; +pandoc
+                                        ; +brain
+                                        ; +roam
+                                        ; +pomodoro
+                                        ; +present
+        )
+                                        ;org-private
        emacs-lisp
        markdown
        sh
+       :os
+       (:if IS-MAC macos)
+       tty
        :app
        (:if NOT-TERMUX rss)
-       (:if NOT-TERMUX sx)
-       (:if NOT-TERMUX calendar)
+       ;(:if NOT-TERMUX sx)
+       ;(:if NOT-TERMUX calendar)
 
        :config
-       (default +snippets +bindings +smartparens))
+       (default +bindings +smartparens))
 
 ;; * Config
 (setq +file-templates-dir "~/.doom.d/templates"
       max-specpdl-size 10000
-      user-full-name "Alexander Fu Xi"
-      user-mail-address "fuxialexander@gmail.com")
+      user-full-name "Xi Fu"
+      user-mail-address "fu.xi@columbia.edu")
 
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -97,11 +101,11 @@
 ;; * UI
 (setq browse-url-browser-function 'browse-url-default-browser
       display-line-numbers-type nil
-      doom-big-font (font-spec :family "SF Mono" :size 18)
-      doom-font (font-spec :family "SF Mono" :size 14)
-      doom-theme 'doom-nord
-      doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 14)
-      doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 14)
+      doom-big-font (font-spec :family "Victor Mono" :size 16)
+      doom-font (font-spec :family "Victor Mono" :size 12)
+      doom-theme 'doom-dracula
+      doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 12)
+      doom-variable-pitch-font (font-spec :family "SF Compact Display" :size 12)
       frame-alpha-lower-limit 0
       frame-title-format
       '("emacs%@"
@@ -113,7 +117,6 @@
       org-bullets-bullet-list '("◉")
       pdf-view-use-unicode-ligther nil
       which-key-idle-delay 0.3)
-
 (when (display-graphic-p)
   (or standard-display-table
       (setq standard-display-table (make-display-table)))
