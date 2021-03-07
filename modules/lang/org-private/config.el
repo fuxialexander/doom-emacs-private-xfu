@@ -2,6 +2,44 @@
 
 ;; * Advices
 (after! org
+
+  (require 'smartparens)
+  (require 'smartparens-text)
+
+  (defun sp--org-skip-asterisk (_ms mb me)
+    "Non-nil if the asterisk is part of the outline marker."
+    (save-excursion
+      (goto-char mb)
+      (beginning-of-line)
+      (let ((skip-distance (skip-chars-forward "*")))
+        (if (= skip-distance 1)
+            (not (memq (syntax-class (syntax-after (point))) '(2 3)))
+          (<= me (point))))))
+
+  (defun sp-org-point-after-left-square-bracket-p (id action _context)
+    "Return t if point is after a left square bracket, nil otherwise.
+This predicate is only tested on \"insert\" action."
+    (when (eq action 'insert)
+      (sp--looking-back-p (concat "\\[" (regexp-quote id)))))
+
+  (sp-with-modes 'org-mode
+    (sp-local-pair "*" "*"
+                   :unless '(sp-point-after-word-p sp-point-at-bol-p)
+                   :skip-match 'sp--org-skip-asterisk)
+    (sp-local-pair "_" "_" :unless '(sp-point-after-word-p))
+    (sp-local-pair "/" "/" :unless '(sp-point-after-word-p sp-org-point-after-left-square-bracket-p) :post-handlers '(("[d1]" "SPC")))
+    (sp-local-pair "~" "~" :unless '(sp-point-after-word-p) :post-handlers '(("[d1]" "SPC")))
+    (sp-local-pair "=" "=" :unless '(sp-point-after-word-p) :post-handlers '(("[d1]" "SPC")))
+    (sp-local-pair "«" "»"))
+  (sp-local-pair 'org-mode "\\[" "\\]")
+  (sp-local-pair 'org-mode "$" "$")
+  (sp-local-pair 'org-mode "'" "'" :actions '(rem))
+  (sp-local-pair 'org-mode "=" "=" :actions '(rem))
+  (sp-local-pair 'org-mode "\\left(" "\\right)" :trigger "\\l(" :post-handlers '(sp-latex-insert-spaces-inside-pair))
+  (sp-local-pair 'org-mode "\\left[" "\\right]" :trigger "\\l[" :post-handlers '(sp-latex-insert-spaces-inside-pair))
+  (sp-local-pair 'org-mode "\\left\\{" "\\right\\}" :trigger "\\l{" :post-handlers '(sp-latex-insert-spaces-inside-pair))
+  (sp-local-pair 'org-mode "\\left|" "\\right|" :trigger "\\l|" :post-handlers '(sp-latex-insert-spaces-inside-pair))
+
   (add-hook 'org-metareturn-hook '+org/insert-go-eol)
   (add-hook 'org-ctrl-c-ctrl-c-hook '+org-private/*org-ctrl-c-ctrl-c-counsel-org-tag)
   ;; (add-hook 'org-mode-hook (lambda () (add-hook 'before-save-hook '+org-private/org-add-ids-to-headlines-in-file nil 'local)))
@@ -20,82 +58,84 @@
     (hl-line-mode -1))
 ;; * UI
   (defface org-closed-custom-braket '((t (:inherit 'default))) "org-close" :group 'org)
-  (setq org-adapt-indentation nil
-        org-M-RET-may-split-line '((default . nil))
-        org-export-use-babel nil
-        org-blank-before-new-entry '((heading . nil) (plain-list-item . nil))
-        org-clock-clocktable-default-properties '(:maxlevel 3 :scope agenda :tags "-COMMENT")
-        org-clocktable-defaults '(:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 t :fileskip0 t :tags "-COMMENT" :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)
-        org-columns-default-format "%45ITEM %TODO %SCHEDULED %DEADLINE %3PRIORITY %TAGS %CLOCKSUM %EFFORT %BUDGET_WEEK %BUDGET_MONTH %BUDGET_QUARTER %BUDGET_YEAR"
-        org-complete-tags-always-offer-all-agenda-tags t
-        org-cycle-include-plain-lists t
-        org-cycle-separator-lines 1
-        org-enforce-todo-dependencies t
-        org-bullets-bullet-list '("◉")
-        org-ellipsis " >"
-        org-fontify-done-headline t
-        org-fontify-quote-and-verse-blocks t
-        org-fontify-whole-heading-line t
-        org-footnote-auto-label 'plain
-        org-global-properties '(("Effort_ALL" . "0 0:05 0:10 0:30 1:00 2:00 3:00 4:00 5:00 6:00 7:00 8:00 9:00 10:00 11:00 12:00 13:00 14:00 15:00 16:00 17:00 18:00 19:00 20:00"))
-        org-hidden-keywords nil
-        org-hide-block-startup t
-        org-highest-priority ?A
-        org-insert-heading-respect-content t
-        org-id-link-to-org-use-id t
-        org-id-locations-file (concat org-directory ".org-id-locations")
-        org-id-track-globally t
-        org-image-actual-width nil
-        org-imenu-depth 8
-        org-indent-indentation-per-level 2
-        org-indent-mode-turns-on-hiding-stars t
-        org-list-description-max-indent 4
-        org-log-done nil
-        org-log-into-drawer t
-        ;; org-log-note-clock-out t
-        org-lowest-priority ?F
-        org-modules '(ol-bibtex
-                      ol-info
-                      org-protocol
-                      org-mac-link
-                      ol-w3m
-                      ol-bibtex
-                      ol-eww)
-        org-outline-path-complete-in-steps nil
-        org-pretty-entities nil
-        org-pretty-entities-include-sub-superscripts t
-        ;; org-priority-faces
-        ;; `((?A . ,(face-foreground 'error))
-        ;;   (?B . ,(face-foreground 'warning))
-        ;;   (?C . ,(face-foreground 'success)))
-        org-publish-timestamp-directory (concat org-directory ".org-timestamps/")
-        org-refile-targets '((nil :maxlevel . 9)
-                             (org-agenda-files :maxlevel . 9))
-        org-refile-use-outline-path 'file
-        org-startup-folded t
-        org-startup-indented t
-        org-startup-with-inline-images nil
-        org-tags-column 0
-        org-todo-keyword-faces
-        '(("TODO" . org-todo-keyword-todo)
-          ("WANT" . org-todo-keyword-want)
-          ("DONE" . org-todo-keyword-done)
-          ("WAIT" . org-todo-keyword-wait))
-        org-todo-keywords
-        '((sequence "TODO(t)" "WAIT(w)" "|" "DONE(d)" "KILL(k)"))
-        org-use-fast-tag-selection nil
-        org-use-fast-todo-selection t
-        outline-blank-line t
-        org-file-apps
-        `(("pdf" . emacs)
-          ("\\.x?html?\\'" . default)
-          (auto-mode . emacs)
-          (directory . emacs)
-          (t . ,(cond
-                 ((string-match-p "wsl" (shell-command-to-string "uname -a"))
-                  (lambda (file link) (org-file-apps-wsl file)))
-                 (IS-MAC "open \"%s\"")
-                 (IS-LINUX "xdg-open \"%s\"")))))
+  (setq
+   org-directory "~/org/"
+   org-adapt-indentation nil
+   org-M-RET-may-split-line '((default . nil))
+   org-export-use-babel nil
+   org-blank-before-new-entry '((heading . t) (plain-list-item . auto))
+   org-clock-clocktable-default-properties '(:maxlevel 3 :scope agenda :tags "-COMMENT")
+   org-clocktable-defaults '(:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 t :fileskip0 t :tags "-COMMENT" :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)
+   org-columns-default-format "%45ITEM %TODO %SCHEDULED %DEADLINE %3PRIORITY %TAGS %CLOCKSUM %EFFORT %BUDGET_WEEK %BUDGET_MONTH %BUDGET_QUARTER %BUDGET_YEAR"
+   org-complete-tags-always-offer-all-agenda-tags t
+   org-cycle-include-plain-lists t
+   org-cycle-separator-lines 1
+   org-enforce-todo-dependencies t
+   org-bullets-bullet-list '("◉")
+   org-ellipsis " >"
+   org-fontify-done-headline t
+   org-fontify-quote-and-verse-blocks t
+   org-fontify-whole-heading-line t
+   org-footnote-auto-label 'plain
+   org-global-properties '(("Effort_ALL" . "0 0:05 0:10 0:30 1:00 2:00 3:00 4:00 5:00 6:00 7:00 8:00 9:00 10:00 11:00 12:00 13:00 14:00 15:00 16:00 17:00 18:00 19:00 20:00"))
+   org-hidden-keywords nil
+   org-hide-block-startup t
+   org-highest-priority ?A
+   org-insert-heading-respect-content t
+   org-id-link-to-org-use-id t
+   org-id-locations-file (concat org-directory ".org-id-locations")
+   org-id-track-globally t
+   org-image-actual-width nil
+   org-imenu-depth 8
+   org-indent-indentation-per-level 2
+   org-indent-mode-turns-on-hiding-stars t
+   org-list-description-max-indent 4
+   org-log-done nil
+   org-log-into-drawer t
+   ;; org-log-note-clock-out t
+   org-lowest-priority ?F
+   org-modules '(ol-bibtex
+                 ol-info
+                 org-protocol
+                 org-mac-link
+                 ol-w3m
+                 ol-bibtex
+                 ol-eww)
+   org-outline-path-complete-in-steps nil
+   org-pretty-entities nil
+   org-pretty-entities-include-sub-superscripts t
+   ;; org-priority-faces
+   ;; `((?A . ,(face-foreground 'error))
+   ;;   (?B . ,(face-foreground 'warning))
+   ;;   (?C . ,(face-foreground 'success)))
+   org-publish-timestamp-directory (concat org-directory ".org-timestamps/")
+   org-refile-targets '((nil :maxlevel . 9)
+                        (org-agenda-files :maxlevel . 9))
+   org-refile-use-outline-path 'file
+   org-startup-folded t
+   org-startup-indented t
+   org-startup-with-inline-images nil
+   org-tags-column 0
+   org-todo-keyword-faces
+   '(("TODO" . org-todo-keyword-todo)
+     ("WANT" . org-todo-keyword-want)
+     ("DONE" . org-todo-keyword-done)
+     ("WAIT" . org-todo-keyword-wait))
+   org-todo-keywords
+   '((sequence "TODO(t)" "WAIT(w)" "|" "DONE(d)" "KILL(k)"))
+   org-use-fast-tag-selection nil
+   org-use-fast-todo-selection t
+   outline-blank-line nil
+   org-file-apps
+   `(("pdf" . emacs)
+     ("\\.x?html?\\'" . default)
+     (auto-mode . emacs)
+     (directory . emacs)
+     (t . ,(cond
+            ((string-match-p "wsl" (shell-command-to-string "uname -a"))
+             (lambda (file link) (org-file-apps-wsl file)))
+            (IS-MAC "open \"%s\"")
+            (IS-LINUX "xdg-open \"%s\"")))))
   (setq org-ts-regexp-both-braket "\\([[<]\\)\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\} ?[^]\n>]*?\\)\\([]>]\\)")
   (defface org-deadline-custom-braket '((t (:inherit 'default))) "org-deadline" :group 'org)
   (defface org-scheduled-custom-braket '((t (:inherit 'default))) "org-schedule" :group 'org)
@@ -167,6 +207,7 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
 ;;                  :order 98)
 ;;           (:name "Scheduled earlier\n"
 ;;                  :scheduled past))))
+
 ;; * Export
 (defvar +org-html-embed-image t
   "whether image is embeded as base64 in html")
@@ -206,9 +247,7 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
         org-export-async-debug t
         org-export-async-init-file (concat doom-private-dir "local/ox-init.el")
         org-publish-timestamp-directory (concat doom-cache-dir "/org-timestamps/")))
-(after! ox
-  (when (executable-find "pandoc")
-    (require 'ox-pandoc)))
+
 (use-package! htmlize
   :commands (htmlize-buffer
              htmlize-file
@@ -233,8 +272,6 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
 ;; * Capture
 (after! org-capture
   (add-hook 'org-capture-prepare-finalize-hook #'counsel-org-tag)
-  ;; (if (featurep! calendar)
-  ;;     (add-hook 'org-capture-after-finalize-hook #'org-gcal-sync))
   (setq org-default-notes-file "inbox.org"
         +org-capture-todo-file "inbox.org"
         +org-capture-notes-file "inbox.org"
@@ -343,6 +380,8 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
 :Created: %U
 :END:
 %?" :time-prompt t)
+          ("l" "Link" entry (file+headline "~/org/inbox.org" "Links")
+                    "* %a %^g\n %?\n %T\n %i")
           ("wr" "Week Review" entry
            (file+olp+datetree ,(concat org-directory "review.org"))
            "* %^{Review for...|Mood|Research|Learn|Entertainment|Life} :review:week:%\\1:
@@ -393,62 +432,50 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
              cdlatex-mode
              turn-on-cdlatex
              turn-on-org-cdlatex)
+  :hook (org-noter-notes-mode . turn-on-org-cdlatex)
   :init
   (setq cdlatex-math-modify-alist '((?B "\\mathbb" nil t nil nil))))
-;; (use-package! org-brain
-;;   :after org
-;;   :commands (org-brain-visualize)
-;;   :init
-;;   (setq org-brain-path (concat org-directory "brain/"))
-;;   (after! evil-snipe
-;;     (push 'org-brain-visualize-mode evil-snipe-disabled-modes))
-;;   ;; (add-hook 'org-agenda-mode-hook #'(lambda () (evil-vimish-fold-mode -1)))
-;;   (set-evil-initial-state! 'org-brain-visualize-mode 'normal)
-;;   :config
-;;   (set-popup-rule! "^\\*org-brain\\*$" :vslot -1 :size 0.3 :side 'left :select t)
-;;   (defun org-brain-set-tags (entry)
-;;     "Use `org-set-tags' on headline ENTRY.
-;; If run interactively, get ENTRY from context."
-;;     (interactive (list (org-brain-entry-at-pt)))
-;;     (when (org-brain-filep entry)
-;;       (error "Can only set tags on headline entries"))
-;;     (org-with-point-at (org-brain-entry-marker entry)
-;;       (counsel-org-tag)
-;;       (save-buffer))
-;;     (org-brain--revert-if-visualizing))
-;;   (setq org-brain-visualize-default-choices 'all
-;;         org-brain-file-entries-use-title nil
-;;         org-brain-title-max-length 30)
-;;   (map!
-;;    (:map org-brain-visualize-mode-map
-;;      :n "a" #'org-brain-visualize-attach
-;;      :n "b" #'org-brain-visualize-back
-;;      :n "c" #'org-brain-add-child
-;;      :n "C" #'org-brain-remove-child
-;;      :n "p" #'org-brain-add-parent
-;;      :n "P" #'org-brain-remove-parent
-;;      :n "f" #'org-brain-add-friendship
-;;      :n "F" #'org-brain-remove-friendship
-;;      :n "d" #'org-brain-delete-entry
-;;      :n "g" #'revert-buffer
-;;      :n "_" #'org-brain-new-child
-;;      :n ";" #'org-brain-set-tags
-;;      :n "j" #'forward-button
-;;      :n "k" #'backward-button
-;;      :n "l" #'org-brain-add-resource
-;;      :n "L" #'org-brain-visualize-paste-resource
-;;      :n "t" #'org-brain-set-title
-;;      :n "$" #'org-brain-pin
-;;      :n "o" #'ace-link-woman
-;;      :n "q" #'org-brain-visualize-quit
-;;      :n "r" #'org-brain-visualize-random
-;;      :n "R" #'org-brain-visualize-wander
-;;      :n "s" #'org-brain-visualize
-;;      :n "S" #'org-brain-goto
-;;      :n [tab] #'org-brain-goto-current
-;;      :n "m" #'org-brain-visualize-mind-map
-;;      :n "[" #'org-brain-visualize-add-grandchild
-;;      :n "]" #'org-brain-visualize-remove-grandchild
-;;      :n "{" #'org-brain-visualize-add-grandparent
-;;      :n "}" #'org-brain-visualize-remove-grandparent
-;;      )))
+
+(use-package! org-roam-bibtex
+  :after org-roam
+  :hook (org-roam-mode . org-roam-bibtex-mode))
+
+(use-package! org-roam-server
+  :config
+  (unless (server-running-p)
+    (org-roam-server-mode))
+  (setq org-roam-server-host "127.0.0.1"
+        org-roam-server-port 8089
+        org-roam-server-authenticate nil
+        org-roam-server-export-inline-images t
+        org-roam-server-serve-files nil
+        org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
+        org-roam-server-network-poll t
+        org-roam-server-network-arrows nil
+        org-roam-server-network-label-truncate t
+        org-roam-server-network-label-truncate-length 60
+        org-roam-server-network-label-wrap-length 20))
+
+(after! org-roam
+  (setq org-roam-buffer-position 'left
+        org-roam-tag-sources '(prop vanilla)
+        +org-roam-open-buffer-on-find-file nil))
+(use-package! org-transclusion
+  :commands (org-transclusion-mode)
+  :hook ((org-load . org-transclusion-mode)))
+
+
+;; * Dynamic agenda files
+;; (defvar dynamic-agenda-files nil
+;;   "dynamic generate agenda files list when changing org state")
+;; (advice-add 'org-agenda-files :filter-return #'dynamic-agenda-files-advice)
+;; (add-to-list 'org-after-todo-state-change-hook 'update-dynamic-agenda-hook t)
+
+(after! mixed-pitch
+  (pushnew! mixed-pitch-fixed-pitch-faces
+            'org-scheduled-custom
+            'org-deadline-custom
+            'org-closed-custom
+            'org-scheduled-custom-braket
+            'org-deadline-custom-braket
+            'org-closed-custom-braket))

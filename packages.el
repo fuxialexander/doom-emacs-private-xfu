@@ -9,19 +9,22 @@
 (package! ob-sql-mode :disable t)
 (package! ob-translate :disable t)
 (package! ob-translate :disable t)
+(unpin! t)
 ;; (package! org-bullets :disable t)
 ;; * UI
 ;; (package! prettify-utils :recipe (:host github :repo "Ilazki/prettify-utils.el" :files ("*")))
+(package! epc)
 (package! ov)
 (package! shr-tag-pre-highlight)
 ;; * Tools
-(package! orgit)
+(package! cdlatex)
 (package! alert)
 (package! pinentry)
 
-;; (package! org-pdftools :recipe (:host github :repo "fuxialexander/org-pdftools" :files ("org-pdftools.el")))
-;; (package! org-noter-pdftools :recipe (:host github :repo "fuxialexander/org-pdftools" :files ("org-noter-pdftools.el")))
-;; (package! org-noter)
+(package! org-pdftools :recipe (:host github :repo "fuxialexander/org-pdftools" :files ("org-pdftools.el")))
+(package! org-noter-pdftools :recipe (:host github :repo "fuxialexander/org-pdftools" :files ("org-noter-pdftools.el")))
+(package! org-noter)
+(package! nov)
 ;(package! emacs-jupyter :recipe (:host github :repo "dzop/emacs-jupyter" :files ("*")))
 
 ;; (when IS-LINUX
@@ -37,6 +40,8 @@
 ;; (package! function-args)
 ;; (package! snakemake-mode)
 (package! deadgrep)
+(package! edit-server)
 (package! groovy-mode)
+
 ;; * Maintain
 ;; (package! package-lint)

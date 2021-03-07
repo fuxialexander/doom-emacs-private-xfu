@@ -12,6 +12,7 @@
 ;; Packages
 ;;
 
+;; * Elfeed
 (use-package! elfeed
   :commands elfeed
   :init
@@ -19,6 +20,9 @@
     "title face in elfeed show buffer"
     :group 'elfeed)
   (defface elfeed-show-author-face `((t (:weight light)))
+    "title face in elfeed show buffer"
+    :group 'elfeed)
+  (defface elfeed-show-content-face `((t (:inherit 'variable-pitch :height 1.3)))
     "title face in elfeed show buffer"
     :group 'elfeed)
   (defface elfeed-show-feed-face `((t (:weight bold)))
@@ -32,7 +36,7 @@
     :group 'elfeed)
 
   :config
-  (setq elfeed-search-filter "@1-week-ago +unread"
+  (setq elfeed-search-filter "@1-week-ago +unread "
         elfeed-db-directory (concat doom-local-dir "elfeed/db/")
         elfeed-enclosure-default-dir (concat doom-local-dir "elfeed/enclosures/")
         elfeed-search-print-entry-function '+rss/elfeed-search-print-entry
@@ -47,11 +51,12 @@
   (push (lambda (buf) (string-match-p "^\\*elfeed" (buffer-name buf)))
         doom-real-buffer-functions)
 
-  (set-popup-rule! "\\*elfeed-xwidget-webkit*" :side 'bottom :height 40 :select t)
+  ;; (set-popup-rule! "\\*elfeed-xwidget-webkit*" :side 'bottom :height 40 :select t)
   ;; Enhance readability of a post
   (add-hook! 'elfeed-show-mode-hook
-    (+rss|elfeed-wrap)
+    (writeroom-mode 1)
     (solaire-mode 1)
+    ;; (awesome-tab-mode -1)
     (hide-mode-line-mode 1))
   (add-hook! 'elfeed-search-update-hook #'(solaire-mode
                                            hide-mode-line-mode))
@@ -78,7 +83,8 @@
     ;; avoid ligature hang
     (advice-add #'elfeed-search--header-1 :override #'+rss/elfeed-search--header-1)
     (advice-add #'elfeed-show-next :override #'+rss/elfeed-show-next)
-    (advice-add #'elfeed-show-prev :override #'+rss/elfeed-show-prev))
+    (advice-add #'elfeed-show-prev :override #'+rss/elfeed-show-prev)
+    )
 
   (after! elfeed-show
     (map! :map elfeed-show-mode-map
@@ -97,12 +103,13 @@
     (after! evil-snipe
       (push 'elfeed-show-mode evil-snipe-disabled-modes))
     (set-evil-initial-state! 'elfeed-show-mode 'normal)
-    (advice-add #'elfeed-show-entry :override #'+rss/elfeed-show-entry))
+    (advice-add #'elfeed-show-entry :override #'+rss/elfeed-show-entry)
+    )
 
   (elfeed-org)
   (use-package! elfeed-link))
 
-;;;; Elfeed-org
+;; * Elfeed-org
 (use-package! elfeed-org
   :commands (elfeed-org)
   :config

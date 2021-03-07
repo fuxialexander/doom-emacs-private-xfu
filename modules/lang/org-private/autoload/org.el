@@ -1,4 +1,28 @@
 ;;; lang/org-private/autoload/org.el -*- lexical-binding: t; -*-
+;;;###autoload
+(defun update-dynamic-agenda-hook ()
+  (let ((done (or (not org-state) ;; nil when no TODO list
+                  (member org-state org-done-keywords)))
+        (file (buffer-file-name))
+        (agenda (funcall (ad-get-orig-definition 'org-agenda-files)) ))
+    (unless (member file agenda)
+      (if done
+          (save-excursion
+            (goto-char (point-min))
+            ;; Delete file from dynamic files when all TODO entry changed to DONE
+            (unless (search-forward-regexp org-not-done-heading-regexp nil t)
+              (customize-save-variable
+               'dynamic-agenda-files
+               (cl-delete-if (lambda (k) (string= k file))
+                             dynamic-agenda-files))))
+        ;; Add this file to dynamic agenda files
+        (unless (member file dynamic-agenda-files)
+          (customize-save-variable 'dynamic-agenda-files
+                                   (add-to-list 'dynamic-agenda-files file)))))))
+;;;###autoload
+(defun dynamic-agenda-files-advice (orig-val)
+  (require 'cl-lib)
+  (cl-union orig-val dynamic-agenda-files :test #'equal))
 
 ;;;###autoload
 (defun +org-move-point-to-heading ()

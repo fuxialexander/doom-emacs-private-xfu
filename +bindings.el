@@ -4,21 +4,24 @@
 (map! :map key-translation-map
       "M-√" (kbd "<C-return>"))
 (map! :i "<M-return>" nil
+      :gni "M-z" #'evil-undo
+      :gni "M-Z" #'evil-redo
       :gnvime "M-r" (lambda! (revert-buffer nil t t))
+      :gnvime "M-s" #'save-buffer
       :gnvime "M-g" #'org-agenda-show-daily
-      :nvime "M-s" #'save-buffer
-      :nvime "s-s" #'save-buffer
+      :nvime "M-u" #'org-store-link
       :nvime "M-v" #'yank
-      :nvime "s-v" #'yank
+      ;; :nvime "s-v" #'yank
       :v "M-c" #'yank
-      :v "s-c" #'evil-yank
-      :nvime "M-w" #'delete-window
-      :nvime "M-j" #'evil-window-down
-      :nvime "M-k" #'evil-window-up
-      :nvime "M-h" #'evil-window-left
-      :nvime "M-l" #'evil-window-right
-      :nvime "M-d" #'evil-window-vsplit
-      :nvime "M-D" #'evil-window-split
+      ;; :v "s-c" #'evil-yank
+      :gnvime "M-w" #'delete-window
+      :gnvime "M-<down>" #'evil-window-down
+      :gnvime "M-<up>" #'evil-window-up
+      :gnvime "M-<left>" #'evil-window-left
+      :gnvime "M-<right>" #'evil-window-right
+      :gnvime "M-d" #'evil-window-vsplit
+      :gnvime "M-D" #'evil-window-split
+
       :nvime "C-`" #'+popup/toggle
       :nvime "C-~" #'+popup/raise
       :nvime "M-t" #'+workspace/new
@@ -66,6 +69,10 @@
         [s-return]   nil
         [s-S-return] nil
         [s-M-return] nil))
+      (:after lispyville
+       :map (lispyville-mode-map lispy-mode-map-paredit lispy-mode-map-evilcp)
+       :n "M-s" nil
+       "M-s" nil)
       (:after org-agenda
        :map (org-agenda-mode-map)
        "j" #'org-agenda-next-line
@@ -77,20 +84,22 @@
        "p" #'org-agenda-capture)
       (:after outline
        :map (outline-mode-map outline-minor-mode-map)
-       "C-h" #'dwim-jump
-       "C-l" #'outline-cycle
-       "C-j" (lambda! (outline-next-visible-heading 1) (recenter))
-       "C-k" (lambda! (outline-previous-visible-heading 1) (recenter))
-       "<M-return>" (lambda! (evil-open-below 0) (outline-insert-heading))
-       "C-S-h" #'outline-promote
-       "C-S-l" #'outline-demote
-       "C-S-j" #'outline-move-subtree-down
-       "C-S-k" #'outline-move-subtree-up)
+       ;; "C-h" #'dwim-jump
+       ;; "C-l" #'outline-cycle
+       ;; "C-j" (lambda! (outline-next-visible-heading 1) (recenter))
+       ;; "C-k" (lambda! (outline-previous-visible-heading 1) (recenter))
+
+       ;; "<M-return>" (lambda! (evil-open-below 0) (outline-insert-heading))
+       ;; "C-S-h" #'outline-promote
+       ;; "C-S-l" #'outline-demote
+       ;; "C-S-j" #'outline-move-subtree-down
+       ;; "C-S-k" #'outline-move-subtree-up
+       nil)
       (:leader
        :nv "X" nil
        :desc "org-capture" :nv "X" #'counsel-org-capture
-       :desc "ivy-resume" :nv "$" #'ivy-resume
-       :desc "Find file in project" :nv "SPC" #'execute-extended-command
+       ;; :desc "ivy-resume" :nv "$" #'ivy-resume
+       ;; :desc "Find file in project" :nv "SPC" #'execute-extended-command
        :desc "Browse files" :n "/" #'find-file
        (:unless (featurep! :ui workspaces)
         :desc "Switch buffer" :n "," #'switch-to-buffer)
@@ -165,6 +174,7 @@
       (:map text-mode-map
        :nie "M-u" #'org-store-link
        :nie "M-o" #'org-open-at-point-global
+       :nie "M-I" #'org-insert-link-global
        :nie "M-i" #'org-insert-last-stored-link)
       (:after org-noter
        :map org-noter-doc-mode-map
@@ -268,6 +278,9 @@
         :n "o" #'ace-link-help
         :n "q" #'quit-window
         :n "Q" #'ivy-resume))
+      (:after pdf-view
+       (:map pdf-view-mode-map
+        :n "M-s" #'save-buffer))
       (:after pdf-annot
        (:map pdf-annot-list-mode-map
         :e "k" #'tablist-previous-line

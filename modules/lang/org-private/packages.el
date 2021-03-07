@@ -6,7 +6,10 @@
 ;; (package! org-web-tools)
 ;; (package! org-wild-notifier)
 ;; (package! org-brain)
-(package! org-super-agenda)
+;; (package! org-super-agenda)
+(package! org-roam-server)
+(package! org-roam-bibtex)
+(package! org-transclusion :recipe (:host github :repo "nobiot/org-transclusion" :files ("*")))
 (package! org-clock-convenience)
 (package! webkit-katex-render :recipe (:host github :repo "fuxialexander/emacs-webkit-katex-render" :files ("*")))
 (package! org-clock-budget :recipe (:host github :repo "Fuco1/org-clock-budget" :files ("*")))
@@ -22,8 +25,7 @@
 
 (when (featurep! +export)
   (package! htmlize)
-  (when IS-MAC
-    (package! ox-pandoc))
+  (package! ox-pandoc)
   )
 
 (when (featurep! +present)

@@ -1,5 +1,4 @@
 ;;; lang/org-private/autoload/hack.el -*- lexical-binding: t; -*-
-
 ;;;###autoload
 (defun *org-eldoc-get-timestamp (str)
   "Return timestamp if on a headline or nil."
@@ -61,6 +60,7 @@
 
 ;;;###autoload
 (defun +org-private/*org-ctrl-c-ctrl-c-counsel-org-tag ()
+  (require 'cl-lib)
   "Hook for `org-ctrl-c-ctrl-c-hook' to use `counsel-org-tag'."
   (if (save-excursion
         (beginning-of-line)
@@ -71,7 +71,7 @@
            "C-c C-c can do nothing useful at this location"))
     (let* ((context (org-element-context))
            (type (org-element-type context)))
-      (case type
+      (cl-case type
         ;; When at a link, act according to the parent instead.
         (link
          (setq context
@@ -117,7 +117,7 @@
                   parent
                   type
                   'item))))
-      (case type
+      (cl-case type
         ((headline inlinetask)
          (save-excursion
            (goto-char

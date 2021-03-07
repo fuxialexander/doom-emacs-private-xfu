@@ -6,6 +6,7 @@
 
 
 ;; * help
+(set-popup-rule! "^\\*org-roam\\*" :size 60 :side 'left :select nil :quit nil)
 (set-popup-rule! "^\\*info.*" :size 82 :side 'right :ttl t :select t :quit t)
 (set-popup-rule! "^\\*Man.*" :size 82 :side 'right :ttl t :select t :quit t)
 (set-popup-rule! "^\\*tldr\\*" :size 82 :side 'right :select t :quit t)

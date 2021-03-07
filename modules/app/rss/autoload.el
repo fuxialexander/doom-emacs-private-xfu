@@ -32,7 +32,7 @@
     (setq-local truncate-lines nil)
     (setq-local shr-width 120)
     (setq-local line-spacing 0.3)
-    (setq-local shr-current-font '(:family "charter" :height 1.2))
+    (setq-local shr-current-font '(:family "Charter" :height 1.2))
     (set-buffer-modified-p nil)))
 
 ;;;###autoload
@@ -47,7 +47,7 @@
 ;;;###autoload
 (defun +rss-popup-pane (buf)
   "Display BUF in a popup."
-  (select-window (display-buffer-at-bottom buf '((window-height . 0.6)))))
+  (select-window (display-buffer-in-direction buf '((direction . right) (window-width . 0.6)))))
 
 ;;;###autoload
 (defun +rss/open (entry)
@@ -107,11 +107,11 @@
          (title-width (- (window-width) elfeed-goodies/feed-source-column-width
                          elfeed-goodies/tag-column-width 4))
 
-         (tag-column (elfeed-format-column
-                      tags-str (elfeed-clamp (length tags-str)
-                                             elfeed-goodies/tag-column-width
-                                             elfeed-goodies/tag-column-width)
-                      :left))
+         ;; (tag-column (elfeed-format-column
+         ;;              tags-str (elfeed-clamp (length tags-str)
+         ;;                                     elfeed-goodies/tag-column-width
+         ;;                                     elfeed-goodies/tag-column-width)
+         ;;              :left))
          (feed-column (elfeed-format-column
                        feed-title (elfeed-clamp elfeed-goodies/feed-source-column-width
                                                 elfeed-goodies/feed-source-column-width
@@ -119,7 +119,7 @@
                        :left)))
 
     (insert (propertize feed-column 'face 'elfeed-search-feed-face) " ")
-    (insert (propertize tag-column 'face 'elfeed-search-tag-face) " ")
+    ;; (insert (propertize tag-column 'face 'elfeed-search-tag-face) " ")
     (insert (propertize title 'face title-faces 'kbd-help title))
     (setq-local line-spacing 0.5)))
 
@@ -235,7 +235,7 @@
     (if content
         (if (eq type 'html)
             (elfeed-insert-html content base)
-          (insert content))
+          (insert (propertize content 'face 'variable-pitch)))
       (insert (propertize "(empty)\n" 'face 'italic)))
     (goto-char (point-min))))
 
