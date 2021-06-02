@@ -276,27 +276,28 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
         +org-capture-todo-file "inbox.org"
         +org-capture-notes-file "inbox.org"
         org-capture-templates
-        `(("GSA" "General Skim Annotation" entry
-           (file+function (lambda () (buffer-file-name)) +org-move-point-to-heading)
-           "* %^{Logging for...} :skim_annotation:read:
-:PROPERTIES:
-:Created: %U
-:SKIM_NOTE: %(+org-reference-skim-get-annotation)
-:SKIM_PAGE: %(+org-reference-get-skim-page-number)
-:END:
-%i
-%?")
-          ("SA" "Skim Annotation" entry
-           (file+function org-ref-bibliography-notes +org-reference-org-move-point-to-capture-skim-annotation)
-           "* %^{Logging for...} :skim_annotation:read:literature:
-:PROPERTIES:
-:Created: %U
-:CITE: cite:%(+org-reference-skim-get-bibtex-key)
-:SKIM_NOTE: %(+org-reference-skim-get-annotation)
-:SKIM_PAGE: %(+org-reference-get-skim-page-number)
-:END:
-%i
-%?")
+        `(;; ("GSA" "General Skim Annotation" entry
+;;            (file+function (lambda () (buffer-file-name)) +org-move-point-to-heading)
+;;            "* %^{Logging for...} :skim_annotation:read:
+;; :PROPERTIES:
+;; :Created: %U
+;; :SKIM_NOTE: %(+org-reference-skim-get-annotation)
+;; :SKIM_PAGE: %(+org-reference-get-skim-page-number)
+;; :END:
+;; %i
+;; %?")
+          ;; ("SA" "Skim Annotation" entry
+;;            (file+function org-ref-bibliography-notes +org-reference-org-move-point-to-capture-skim-annotation)
+;;            "* %^{Logging for...} :skim_annotation:read:literature:
+;; :PROPERTIES:
+;; :Created: %U
+;; :CITE: cite:%(+org-reference-skim-get-bibtex-key)
+;; :SKIM_NOTE: %(+org-reference-skim-get-annotation)
+;; :SKIM_PAGE: %(+org-reference-get-skim-page-number)
+;; :END:
+;; %i
+;; %?"
+;;            :empty-lines 1)
           ("t" "Todo" entry
            (file ,(concat org-directory "inbox.org"))
            "* %^{Logging for...}
@@ -304,7 +305,8 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
 :Created: %U
 :END:
 %i
-%?")
+%?"
+           :empty-lines 1)
           ("tl" "Todo with link" entry
            (file ,(concat org-directory "inbox.org"))
            "* %^{Logging for...}
@@ -313,89 +315,105 @@ _;_ tag      _h_ headline      _c_ category     _r_ regexp     _d_ remove    "
 :Linked: %a
 :END:
 %i
-%?")
-          ("ic" "Idea from Chrome" entry
-           (file ,(concat org-directory "idea.org"))
-           "* %^{Logging for...} :idea:
-:PROPERTIES:
-:Created: %U
-:Linked: %(org-mac-chrome-get-frontmost-url)
-:END:
+%?"
+           :empty-lines 1)
+          ;; ("ic" "Idea from Chrome" entry
+;;            (file ,(concat org-directory "idea.org"))
+;;            "* %^{Logging for...} :idea:
+;; :PROPERTIES:
+;; :Created: %U
+;; :Linked: %(org-mac-chrome-get-frontmost-url)
+;; :END:
+;; %i
+;; %?"
+;;            :empty-lines 1)
+          ;; ("j" "Journal" entry
+;;            #'+org-move-point-to-heading
+;;            "* %^{Logging for...} :logs:
+;; :PROPERTIES:
+;; :Created: %U
+;; :Linked: %a
+;; :END:
+;; %i
+;; %?"
+;;            :clock-in t
+;;            :empty-lines 1)
+          ("s" "Seminar" entry
+           (file ,(concat org-directory "research.seminar.org"))
+           "* %^{Seminar Name} :seminar:
+%^{Effort}p
+%^{EXPORT_AUTHOR}p
 %i
-%?")
-          ("j" "Journal" entry
-           #'+org-move-point-to-heading
-           "* %^{Logging for...} :logs:
-:PROPERTIES:
-:Created: %U
-:Linked: %a
-:END:
-%i
-%?" :clock-in t)
-          ("M" "Meeting" entry
-           (file+olp+datetree ,(concat org-directory "meeting.org"))
+%?"
+           :clock-in t
+           :clock-keep t
+           :empty-lines 1
+           :jump-to-captured t)
+
+          ("m" "Meeting" entry
+           (file+olp+datetree ,(concat org-directory "research.meeting.org"))
            "* %^{Logging for...} :logs:communication:
 %^{Effort}p
 %i
-%?" :clock-in t)
-          ("m" "Meeting Minutes" entry
-           #'+org-move-point-to-heading
-           "* %^{Logging for...} :logs:
-:PROPERTIES:
-:Created: %U
-:Linked: %a
-:END:
-%i
-%?" :clock-in t)
-          ("u" "Write-up" entry
-           #'+org-move-point-to-heading
-           "* %^{Logging for...} :writeup:
-:PROPERTIES:
-:Created: %U
-:Linked: %a
-:END:
-%i
-%?" :clock-in t)
+%?"
+           :clock-in t
+           :empty-lines 1
+           :clock-keep t
+           :jump-to-captured t)
+
+          ;; ("w" "Write-up" entry
+;;            #'+org-move-point-to-heading
+;;            "* %^{Logging for...} :writeup:
+;; :PROPERTIES:
+;; :Created: %U
+;; :Linked: %a
+;; :END:
+;; %i
+;; %?"
+;;            :clock-in t
+;;            :empty-lines 1)
+          ("l" "Link" entry (file+headline "~/org/inbox.org" "Links")
+           "* %a %^g\n %?\n %T\n %i")
+
           ("i" "Idea" entry
-           (file ,(concat org-directory "idea.org"))
+           (file ,(concat org-directory "research.idea.org"))
            "* %A :idea:
 :PROPERTIES:
 :Created: %U
 :Linked: %a
 :END:
 %i
-%?")
-          ("drl" "Daily Review with link" entry
-           (file+olp+datetree ,(concat org-directory "review.org"))
-           "* %^{Review} :review:daily:
-:PROPERTIES:
-:Created: %U
-:Linked: %a
-:END:
-%?" :time-prompt t)
-          ("dr" "Daily Review" entry
+%?"
+           :empty-lines 1)
+          ("r" "Review Templates")
+          ("rd" "Daily Review" entry
            (file+olp+datetree ,(concat org-directory "review.org"))
            "* %^{Review} :review:daily:
 :PROPERTIES:
 :Created: %U
 :END:
-%?" :time-prompt t)
-          ("l" "Link" entry (file+headline "~/org/inbox.org" "Links")
-                    "* %a %^g\n %?\n %T\n %i")
-          ("wr" "Week Review" entry
+%?"
+           :time-prompt t
+           :empty-lines 1)
+                    ("rw" "Week Review" entry
            (file+olp+datetree ,(concat org-directory "review.org"))
            "* %^{Review for...|Mood|Research|Learn|Entertainment|Life} :review:week:%\\1:
 :PROPERTIES:
 :Created: %U
 :END:
-%?" :time-prompt t)
-          ("mr" "Month Review" entry
+%?"
+           :time-prompt t
+           :empty-lines 1)
+          ("rm" "Month Review" entry
            (file+olp+datetree ,(concat org-directory "review.org"))
            "* %^{Review for...|Mood|Research|Learn|Entertainment|Life} :review:month:%\\1:
 :PROPERTIES:
 :Created: %U
 :END:
-%?" :time-prompt t))))
+%?"
+           :time-prompt t
+           :empty-lines 1)
+          )))
 ;; * Other Plugins
 (use-package! org-clock-convenience
   :commands (org-clock-convenience-timestamp-up

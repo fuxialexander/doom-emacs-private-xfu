@@ -1,3 +1,9 @@
 [submodule "emacs-doom-themes"]
 	path = local/emacs-doom-themes
 	url = https://github.com/fuxialexander/emacs-doom-themes.git
+[submodule "local/awesome-tab"]
+	path = local/awesome-tab
+	url = https://github.com/manateelazycat/awesome-tab.git
+[submodule "local/emacs-application-framework"]
+	path = local/emacs-application-framework
+	url = https://github.com/manateelazycat/emacs-application-framework.git

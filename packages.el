@@ -8,8 +8,7 @@
 (package! ob-mongo :disable t)
 (package! ob-sql-mode :disable t)
 (package! ob-translate :disable t)
-(package! ob-translate :disable t)
-(unpin! t)
+;; (unpin! org-roam)
 ;; (package! org-bullets :disable t)
 ;; * UI
 ;; (package! prettify-utils :recipe (:host github :repo "Ilazki/prettify-utils.el" :files ("*")))

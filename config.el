@@ -19,6 +19,7 @@
      trash-directory "~/.Trash/"
      twittering-connection-type-order '(wget urllib-http native urllib-https)
      visual-fill-column-center-text t
+     evil-undo-system 'undo-redo
      evil-org-key-theme '(navigation shift todo
                                      additional operators insert textobjects))
 
@@ -162,7 +163,7 @@
                   (menu-bar-lines . t)
                   (window-system . x))))
 
-(use-package! nov)
+;; (use-package! nov)
 
-(use-package! keycast
-  :commands keycast-minor-mode)
+;; (use-package! keycast
+;;   :commands keycast-minor-mode)

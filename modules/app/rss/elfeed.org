@@ -2,30 +2,6 @@
   :PROPERTIES:
   :ID:       FDB20BAB-9C5D-4A12-A7B1-8EF067B3969E
   :END:
-** Emacs :emacs:
-   :PROPERTIES:
-   :ID:       6C9A20BA-735A-4B02-AF9C-6C6E60893EDD
-   :END:
-*** entry-title: \(emacs\|org-mode\)
-    :PROPERTIES:
-    :ID:       39BDF909-8BE9-44A4-A115-E474845A3F98
-    :END:
-*** [[http://planet.emacsen.org/atom.xml][Planet Emacsen]]
-    :PROPERTIES:
-    :ID:       7A18DBE9-F56A-459E-9110-4AA1C054CAB9
-    :END:
-*** [[https://www.reddit.com/r/emacs/.rss][r/M-x Emacs]]
-    :PROPERTIES:
-    :ID:       29C05341-9540-4D83-9EED-5127C4FD10FC
-    :END:
-*** [[https://www.reddit.com/r/orgmode/.rss][r/orgmode]]
-    :PROPERTIES:
-    :ID:       25178EB0-4C68-49AF-A1BD-4FE8AE1DDEBB
-    :END:
-*** [[http://oremacs.com/atom.xml][(or emacs irrelevant)]]
-    :PROPERTIES:
-    :ID:       6DAC16E7-B570-4EF2-B033-A290887DF3D8
-    :END:
 ** Literature :literature:
    :PROPERTIES:
    :ID:       6F8AE594-DF73-4A71-BDB9-073D12253A89

@@ -10,29 +10,29 @@
       :gnvime "M-s" #'save-buffer
       :gnvime "M-g" #'org-agenda-show-daily
       :nvime "M-u" #'org-store-link
-      :nvime "M-v" #'yank
+      :nvime "M-/" #'evilnc-comment-or-uncomment-lines
+      ;; :nvime "M-v" #'yank
       ;; :nvime "s-v" #'yank
-      :v "M-c" #'yank
+      ;; :v "M-c" #'yank
       ;; :v "s-c" #'evil-yank
-      :gnvime "M-w" #'delete-window
-      :gnvime "M-<down>" #'evil-window-down
-      :gnvime "M-<up>" #'evil-window-up
-      :gnvime "M-<left>" #'evil-window-left
-      :gnvime "M-<right>" #'evil-window-right
-      :gnvime "M-d" #'evil-window-vsplit
-      :gnvime "M-D" #'evil-window-split
+      ;; :gnvime "M-w" #'delete-window
+      ;; :gnvime "M-<down>" #'evil-window-down
+      ;; :gnvime "M-<up>" #'evil-window-up
+      ;; :gnvime "M-<left>" #'evil-window-left
+      ;; :gnvime "M-<right>" #'evil-window-right
+      ;; :gnvime "M-d" #'evil-window-vsplit
+      ;; :gnvime "M-D" #'evil-window-split
 
-      :nvime "C-`" #'+popup/toggle
-      :nvime "C-~" #'+popup/raise
-      :nvime "M-t" #'+workspace/new
-      :nvime "M-T" #'+workspace/display
-      :nvime "M-W" #'delete-frame
-      :nvime "C-M-f" #'toggle-frame-fullscreen
-      :nvime "M-n" #'evil-buffer-new
-      :nvime "M-N" #'make-frame
-      :nvime "M-0" #'+workspace/switch-to-last
+      ;; ;; :nvime "C-`" #'+popup/toggle
+      ;; :nvime "C-~" #'+popup/raise
+      ;; :nvime "M-t" #'+workspace/new
+      ;; :nvime "M-T" #'+workspace/display
+      ;; :nvime "M-W" #'delete-frame
+      ;; :nvime "C-M-f" #'toggle-frame-fullscreen
+      ;; :nvime "M-n" #'evil-buffer-new
+      ;; :nvime "M-N" #'make-frame
+      ;; :nvime "M-0" #'+workspace/switch-to-last
 
-      :nvie "M-/" #'evil-commentary-line
       ;; :gnvime "M-s-i" (lambda! (find-file "~/Dropbox/org/inbox.org"))
       ;; :gnvime "M-s-r" (lambda! (find-file "~/Dropbox/org/review.org"))
       ;; :m "C-u" #'evil-scroll-up
@@ -135,11 +135,7 @@
          :desc "Find file on TRAMP" :n "t" #'helm-tramp))
        (:desc "open" :prefix "o"
         :desc "RSS" :n "e" #'=rss
-        :desc "Calendar" :n "c" #'=calendar
-        :desc "Eshell" :n "s" #'+eshell/open-popup
-        :desc "Mail" :n "m" #'=mail
         :desc "OrgNoter" :n "o" #'org-noter
-        :desc "Treemacs" :n "n" #'+treemacs/toggle
         :n "E" nil
         :n "M" nil
         :n "T" nil
@@ -159,14 +155,14 @@
         :desc "Evil goggles" :n "g" #'+evil-goggles/toggle))
       ;; --- Personal vim-esque bindings ------------------
       :m "gh" #'+lookup/documentation
-      :m "gs" #'+default/easymotion
-      :m "gj" #'outline-next-heading
-      :m "gk" #'outline-previous-heading
-      :nm "gJ" #'outline-move-subtree-down
-      :nm "gK" #'outline-move-subtree-up
-      :nm "gH" #'outline-promote
-      :nm "gL" #'outline-demote
-      :m "g SPC" #'outline-toggle-children
+      ;; :m "gs" #'+default/easymotion
+      ;; :m "gj" #'outline-next-heading
+      ;; :m "gk" #'outline-previous-heading
+      ;; :nm "gJ" #'outline-move-subtree-down
+      ;; :nm "gK" #'outline-move-subtree-up
+      ;; :nm "gH" #'outline-promote
+      ;; :nm "gL" #'outline-demote
+      ;; :m "g SPC" #'outline-toggle-children
 
       ;; :nv "+" #'evil-numbers/inc-at-pt
       ;; :nv "-" #'evil-numbers/dec-at-pt
@@ -286,75 +282,75 @@
         :e "k" #'tablist-previous-line
         :e "j" #'tablist-next-line))
       ;; ** notmuch
-      (:after notmuch
-       (:map notmuch-show-mode-map
-        :nmv "o" #'ace-link-notmuch-show
-        :nmv "i" #'+mail/open-message-with-mail-app-notmuch-show
-        :nmv "I" #'notmuch-show-view-all-mime-parts
-        :nmv "q" #'notmuch-bury-or-kill-this-buffer
-        :nmv "s" #'counsel-notmuch
-        :nmv "t" #'notmuch-tree-from-show-current-query
-        :nmv "s-n" #'notmuch-mua-new-mail
-        :nmv "n" #'notmuch-show-next-thread-show
-        :nmv "r" #'notmuch-show-reply
-        :nmv "<tab>" #'notmuch-show-toggle-visibility-headers
-        :nmv "R" #'notmuch-show-reply-sender
-        :nmv "p" #'notmuch-show-previous-thread-show)
-       (:map notmuch-hello-mode-map
-        :nmv "o" #'ace-link-notmuch-hello
-        :nmv "t" #'notmuch-tree
-        :nmv "k" #'widget-backward
-        :nmv "n" #'notmuch-mua-new-mail
-        :nmv "s-n" #'notmuch-mua-new-mail
-        :nmv "j" #'widget-forward
-        :nmv "s" #'counsel-notmuch
-        :nmv "q" #'+mail/quit
-        :nmv "e" #'+mail/notmuch-update
-        :nmv "r" #'notmuch-hello-update)
-       (:map notmuch-search-mode-map
-        :nmv "j" #'notmuch-search-next-thread
-        :nmv "k" #'notmuch-search-previous-thread
-        :nmv "t" #'notmuch-tree-from-search-thread
-        :nmv "RET" #'notmuch-tree-from-search-thread
-        ;; :nmv "RET" #'notmuch-search-show-thread
-        :nmv "s-n" #'notmuch-mua-new-mail
-        :nmv "T" #'notmuch-tree-from-search-current-query
-        :nmv ";" #'notmuch-search-tag
-        :nmv "e" #'+mail/notmuch-update
-        :nmv "," #'notmuch-jump-search
-        :nmv "d" #'+mail/notmuch-search-delete
-        :nmv "a" #'notmuch-search-archive-thread
-        ;; :nmv "q"   #'notmuch
-        :nmv "q" #'+mail/quit
-        :nmv "R" #'notmuch-search-reply-to-thread-sender
-        :nmv "r" #'notmuch-search-reply-to-thread
-        :nmv "s" #'counsel-notmuch
-        :nmv "S" #'notmuch-search
-        :nmv "x" #'+mail/notmuch-search-spam)
-       (:map notmuch-tree-mode-map
-        :nmv "j" #'notmuch-tree-next-message
-        :nmv "k" #'notmuch-tree-prev-message
-        :nmv "S" #'notmuch-search-from-tree-current-query
-        :nmv "s" #'counsel-notmuch
-        :nmv "t" #'notmuch-tree
-        :nmv ";" #'notmuch-tree-tag
-        :nmv "RET" #'notmuch-tree-show-message
-        :nmv "q" #'notmuch-tree-quit
-        :nmv "s-n" #'notmuch-mua-new-mail
-        :nmv "r" #'notmuch-search-reply-to-thread-sender
-        :nmv "a" #'notmuch-tree-archive-message-then-next
-        :nmv "A" #'notmuch-tree-archive-thread
-        :nmv "i" #'+mail/open-message-with-mail-app-notmuch-tree
-        :nmv "d" #'+mail/notmuch-tree-delete
-        :nmv "x" #'+mail/notmuch-tree-spam)
-       (:map notmuch-message-mode-map
-        "M-s" #'notmuch-draft-save
-        "M-r" #'notmuch-draft-resume
-        :localleader
-        "," #'notmuch-mua-send-and-exit
-        "k" #'notmuch-mua-kill-buffer
-        "s" #'notmuch-draft-postpone
-        "f" #'mml-attach-file))
+      ;; (:after notmuch
+      ;;  (:map notmuch-show-mode-map
+      ;;   :nmv "o" #'ace-link-notmuch-show
+      ;;   :nmv "i" #'+mail/open-message-with-mail-app-notmuch-show
+      ;;   :nmv "I" #'notmuch-show-view-all-mime-parts
+      ;;   :nmv "q" #'notmuch-bury-or-kill-this-buffer
+      ;;   :nmv "s" #'counsel-notmuch
+      ;;   :nmv "t" #'notmuch-tree-from-show-current-query
+      ;;   :nmv "s-n" #'notmuch-mua-new-mail
+      ;;   :nmv "n" #'notmuch-show-next-thread-show
+      ;;   :nmv "r" #'notmuch-show-reply
+      ;;   :nmv "<tab>" #'notmuch-show-toggle-visibility-headers
+      ;;   :nmv "R" #'notmuch-show-reply-sender
+      ;;   :nmv "p" #'notmuch-show-previous-thread-show)
+      ;;  (:map notmuch-hello-mode-map
+      ;;   :nmv "o" #'ace-link-notmuch-hello
+      ;;   :nmv "t" #'notmuch-tree
+      ;;   :nmv "k" #'widget-backward
+      ;;   :nmv "n" #'notmuch-mua-new-mail
+      ;;   :nmv "s-n" #'notmuch-mua-new-mail
+      ;;   :nmv "j" #'widget-forward
+      ;;   :nmv "s" #'counsel-notmuch
+      ;;   :nmv "q" #'+mail/quit
+      ;;   :nmv "e" #'+mail/notmuch-update
+      ;;   :nmv "r" #'notmuch-hello-update)
+      ;;  (:map notmuch-search-mode-map
+      ;;   :nmv "j" #'notmuch-search-next-thread
+      ;;   :nmv "k" #'notmuch-search-previous-thread
+      ;;   :nmv "t" #'notmuch-tree-from-search-thread
+      ;;   :nmv "RET" #'notmuch-tree-from-search-thread
+      ;;   ;; :nmv "RET" #'notmuch-search-show-thread
+      ;;   :nmv "s-n" #'notmuch-mua-new-mail
+      ;;   :nmv "T" #'notmuch-tree-from-search-current-query
+      ;;   :nmv ";" #'notmuch-search-tag
+      ;;   :nmv "e" #'+mail/notmuch-update
+      ;;   :nmv "," #'notmuch-jump-search
+      ;;   :nmv "d" #'+mail/notmuch-search-delete
+      ;;   :nmv "a" #'notmuch-search-archive-thread
+      ;;   ;; :nmv "q"   #'notmuch
+      ;;   :nmv "q" #'+mail/quit
+      ;;   :nmv "R" #'notmuch-search-reply-to-thread-sender
+      ;;   :nmv "r" #'notmuch-search-reply-to-thread
+      ;;   :nmv "s" #'counsel-notmuch
+      ;;   :nmv "S" #'notmuch-search
+      ;;   :nmv "x" #'+mail/notmuch-search-spam)
+      ;;  (:map notmuch-tree-mode-map
+      ;;   :nmv "j" #'notmuch-tree-next-message
+      ;;   :nmv "k" #'notmuch-tree-prev-message
+      ;;   :nmv "S" #'notmuch-search-from-tree-current-query
+      ;;   :nmv "s" #'counsel-notmuch
+      ;;   :nmv "t" #'notmuch-tree
+      ;;   :nmv ";" #'notmuch-tree-tag
+      ;;   :nmv "RET" #'notmuch-tree-show-message
+      ;;   :nmv "q" #'notmuch-tree-quit
+      ;;   :nmv "s-n" #'notmuch-mua-new-mail
+      ;;   :nmv "r" #'notmuch-search-reply-to-thread-sender
+      ;;   :nmv "a" #'notmuch-tree-archive-message-then-next
+      ;;   :nmv "A" #'notmuch-tree-archive-thread
+      ;;   :nmv "i" #'+mail/open-message-with-mail-app-notmuch-tree
+      ;;   :nmv "d" #'+mail/notmuch-tree-delete
+      ;;   :nmv "x" #'+mail/notmuch-tree-spam)
+      ;;  (:map notmuch-message-mode-map
+      ;;   "M-s" #'notmuch-draft-save
+      ;;   "M-r" #'notmuch-draft-resume
+      ;;   :localleader
+      ;;   "," #'notmuch-mua-send-and-exit
+      ;;   "k" #'notmuch-mua-kill-buffer
+      ;;   "s" #'notmuch-draft-postpone
+      ;;   "f" #'mml-attach-file))
       ;; ** ESS
       (:after ess-help
        (:map ess-doc-map
@@ -402,81 +398,82 @@
        "x" #'ess-extra-map
        "p" #'ess-r-package-dev-map
        "v" #'ess-dev-map)
-      (:after dired
-       :map dired-mode-map
-       :n "q" #'quit-window
-       :n "v" #'evil-visual-char
-       :nv "j" #'dired-next-line
-       :nv "k" #'dired-previous-line
-       :n "h" #'dired-up-directory
-       :n "l" #'dired-find-file
-       :n "#" #'dired-flag-auto-save-files
-       :n "." #'evil-repeat
-       :n "~" #'dired-flag-backup-files
-       ;; Comparison commands
-       :n "=" #'dired-diff
-       :n "|" #'dired-compare-directories
-       ;; move to marked files
-       :m "[m" #'dired-prev-marked-file
-       :m "]m" #'dired-next-marked-file
-       :m "[d" #'dired-prev-dirline
-       :m "]d" #'dired-next-dirline
-       ;; Lower keys for commands not operating on all the marked files
-       :desc "wdired" :n "w" #'wdired-change-to-wdired-mode
-       :n "a" #'dired-find-alternate-file
-       :nv "d" #'dired-flag-file-deletion
-       :n "K" #'dired-do-kill-lines
-       :n "r" #'dired-do-redisplay
-       :nv "m" #'dired-mark
-       :nv "t" #'dired-toggle-marks
-       :nv "u" #'dired-unmark           ; also "*u"
-       :nv "p" #'dired-unmark-backward
-       ;; :n "W" #'browse-url-of-dired-file
-       :n "x" #'dired-do-flagged-delete
-       :n "y" #'dired-copy-filename-as-kill
-       :n "Y" (lambda! (dired-copy-filename-as-kill 0))
-       :n "+" #'dired-create-directory
-       :n "O" #'dired-open-mac
-       :n "o" #'dired-preview-mac
-       ;; hiding
-       :n "<tab>" #'dired-hide-subdir ;; FIXME: This can probably live on a better binding.
-       :n "<backtab>" #'dired-hide-all
-       :n "$" #'dired-hide-details-mode
-       ;; misc
-       :n "U" #'dired-undo
-       ;; subtree
-       )
-      (:after dired-quick-sort
-       :map dired-mode-map
-       :n "s" #'hydra-dired-quick-sort/body)
-      (:after dired-filter
-       :map dired-mode-map
-       :n "F" dired-filter-mark-map
-       :n "f" dired-filter-map)
-      (:after dired-subtree
-       :map dired-mode-map
-       :n "H" #'dired-subtree-remove
-       :n "L" #'dired-subtree-insert
-       :n "i" #'dired-subtree-insert
-       :localleader
-       :n "ii" #'dired-subtree-insert
-       :n "ir" #'dired-subtree-remove
-       :n "ij" #'dired-subtree-down
-       :n "ik" #'dired-subtree-up
-       :n "in" #'dired-subtree-next-sibling
-       :n "ip" #'dired-subtree-previous-sibling
-       :n "if" #'dired-subtree-apply-filter
-       :n "ia" #'dired-subtree-narrow
-       :n "i_" #'dired-subtree-beginning
-       :n "i$" #'dired-subtree-end
-       :n "im" #'dired-subtree-mark-subtree
-       :n "im" #'dired-subtree-unmark-subtree
-       :n "if" #'dired-subtree-only-this-file
-       :n "id" #'dired-subtree-only-this-directory)
-      (:after dired-narrow
-       :map dired-mode-map
-       :n "?" #'dired-narrow-regexp
-       :n "/" #'dired-narrow-fuzzy))
+      ;; (:after dired
+      ;;  :map dired-mode-map
+      ;;  :n "q" #'quit-window
+      ;;  :n "v" #'evil-visual-char
+      ;;  :nv "j" #'dired-next-line
+      ;;  :nv "k" #'dired-previous-line
+      ;;  :n "h" #'dired-up-directory
+      ;;  :n "l" #'dired-find-file
+      ;;  :n "#" #'dired-flag-auto-save-files
+      ;;  :n "." #'evil-repeat
+      ;;  :n "~" #'dired-flag-backup-files
+      ;;  ;; Comparison commands
+      ;;  :n "=" #'dired-diff
+      ;;  :n "|" #'dired-compare-directories
+      ;;  ;; move to marked files
+      ;;  :m "[m" #'dired-prev-marked-file
+      ;;  :m "]m" #'dired-next-marked-file
+      ;;  :m "[d" #'dired-prev-dirline
+      ;;  :m "]d" #'dired-next-dirline
+      ;;  ;; Lower keys for commands not operating on all the marked files
+      ;;  :desc "wdired" :n "w" #'wdired-change-to-wdired-mode
+      ;;  :n "a" #'dired-find-alternate-file
+      ;;  :nv "d" #'dired-flag-file-deletion
+      ;;  :n "K" #'dired-do-kill-lines
+      ;;  :n "r" #'dired-do-redisplay
+      ;;  :nv "m" #'dired-mark
+      ;;  :nv "t" #'dired-toggle-marks
+      ;;  :nv "u" #'dired-unmark           ; also "*u"
+      ;;  :nv "p" #'dired-unmark-backward
+      ;;  ;; :n "W" #'browse-url-of-dired-file
+      ;;  :n "x" #'dired-do-flagged-delete
+      ;;  :n "y" #'dired-copy-filename-as-kill
+      ;;  :n "Y" (lambda! (dired-copy-filename-as-kill 0))
+      ;;  :n "+" #'dired-create-directory
+      ;;  :n "O" #'dired-open-mac
+      ;;  :n "o" #'dired-preview-mac
+      ;;  ;; hiding
+      ;;  :n "<tab>" #'dired-hide-subdir ;; FIXME: This can probably live on a better binding.
+      ;;  :n "<backtab>" #'dired-hide-all
+      ;;  :n "$" #'dired-hide-details-mode
+      ;;  ;; misc
+      ;;  :n "U" #'dired-undo
+      ;;  ;; subtree
+      ;;  )
+      ;; (:after dired-quick-sort
+      ;;  :map dired-mode-map
+      ;;  :n "s" #'hydra-dired-quick-sort/body)
+      ;; (:after dired-filter
+      ;;  :map dired-mode-map
+      ;;  :n "F" dired-filter-mark-map
+      ;;  :n "f" dired-filter-map)
+      ;; (:after dired-subtree
+      ;;  :map dired-mode-map
+      ;;  :n "H" #'dired-subtree-remove
+      ;;  :n "L" #'dired-subtree-insert
+      ;;  :n "i" #'dired-subtree-insert
+      ;;  :localleader
+      ;;  :n "ii" #'dired-subtree-insert
+      ;;  :n "ir" #'dired-subtree-remove
+      ;;  :n "ij" #'dired-subtree-down
+      ;;  :n "ik" #'dired-subtree-up
+      ;;  :n "in" #'dired-subtree-next-sibling
+      ;;  :n "ip" #'dired-subtree-previous-sibling
+      ;;  :n "if" #'dired-subtree-apply-filter
+      ;;  :n "ia" #'dired-subtree-narrow
+      ;;  :n "i_" #'dired-subtree-beginning
+      ;;  :n "i$" #'dired-subtree-end
+      ;;  :n "im" #'dired-subtree-mark-subtree
+      ;;  :n "im" #'dired-subtree-unmark-subtree
+      ;;  :n "if" #'dired-subtree-only-this-file
+      ;;  :n "id" #'dired-subtree-only-this-directory)
+      ;; (:after dired-narrow
+      ;;  :map dired-mode-map
+      ;;  :n "?" #'dired-narrow-regexp
+      ;;  :n "/" #'dired-narrow-fuzzy)
+      )
 
 
 ;; ** which-key ui
@@ -487,4 +484,4 @@
         which-key-replacement-alist))
 
 ;; ** ex
-(evil-ex-define-cmd "tn" #'+workspace:new)
+;;(evil-ex-define-cmd "tn" #'+workspace:new)
